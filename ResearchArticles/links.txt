@@ -1,2 +1,3 @@
 https://github.com/EvotecIT/PSWriteHTML
 https://leanpub.com/powershell-scripting-toolmaking
+https://theitbros.com/fix-trust-relationship-failed-without-domain-rejoining/
