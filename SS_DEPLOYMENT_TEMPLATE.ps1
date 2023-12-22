@@ -1,6 +1,9 @@
-# the purpose of this script was to sneakernet
-# deployments of x,y,z
-# drivers, configs, software
+# the purpose of this script was to expidite the current sneakernetting deployment method
+# deployments of x,y,z can now be conducted through a PowerShell script found on a network share
+# Client example command: Get-Content \\MDF01\assets\script\deployment.ps1 | Set-Clipboard
+# Client keyboard: Press [CTRL] + V
+# Client keyboard: Press [ENTER]
+# The contents of deployment.ps1 which will be a version of the following template will then deploy
 
 <#
 - Confirm services running:
