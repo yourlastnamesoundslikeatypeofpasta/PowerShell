@@ -1,5 +1,5 @@
 # the purpose of this script is to quickly update
-# sysmon to a specific version
+# sysmon to a specific version on a client PC
 
 function Main {
 
