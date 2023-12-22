@@ -1,0 +1,108 @@
+
+https://theposhwolf.com/howtos/PS-Plus-Equals-Dangers/
+
+PowerShell’s plus equals (+=), the array serial killer
+November 05, 2019
+5 minute read
+
+I did a livestream recently where I created a function to parse an HTML table and convert it to a PowerShell object. If you followed along, you probably noticed that I used a += with no shame whatsoever. Luckily, @PrzemyslawKlys caught it and asked that I fix it (you can see the commit history here, the actual request was a Twitter DM). This was a great reminder to me that += should be avoided!
+
+UPDATE
+
+In the first version of this post I used [System.Collections.ArrayList], but according to Microsoft this should be avoided and [System.Collections.Generic.List] be used instead. Thank you to Andrew Wickham, Przemysław Kłys, and Joel Sallow for pointing this out on my Twitter post.
+
+The problem
+
+I know how sexy it looks to create an array:
+
+And then add to it with the slick +=:
+
+foreach ($puppy in $litter) {
+    $array += $puppy.Name
+}
+That looks great! And once you understand the += operator, it is easy to understand. The issue is here performance. Sure, you’ll never find a litter of puppies big enough that you’ll have time to even sip your coffee while you wait for that example, but what if you wanted to build a string array of 0-10000?
+
+$array = @()
+1..10000 | foreach-object {$array += "$_"}
+That feels slow. If you wrap it in Measure-Command, you might find that it takes several seconds! Even though that is still significantly faster than I could hand write that array, it is still rather sluggish.
+
+The reason this process takes so long is because in PowerShell, arrays are of a fixed size. This means that in the background each time you use the += you are creating a new array, copying $array to it while adding the new element at the same time. Once that process is completed, PowerShell is then executing the old one, and I’m talking capital punishment here. The old array is no more and you are left with its blood on your hands.
+
+Solutions
+
+There are a number of ways to solve this issue. Lets take a look at a couple:
+
+Using a list
+
+Thinking of lists always reminds me of grocery shopping, my honey-dos, or even bill paying, but in this case I’m talking about [System.Collections.Generic.List]. This object type allows us to create a list, which is essentially an array of variable size.
+
+One thing to note about this list type is that it does require a specific type to be declared. So in this example, I’m creating a list of strings. If you are unsure of the object type, you can use [System.Collections.Generic.List[object]] for most use cases.
+
+$list = [System.Collections.Generic.List[string]]::new()
+1..10000 | foreach-object {$null = $list.Add("$_")}
+On my system that barely took any time at all to run. Significantly faster! Plus I saved the lives of many fixed-size arrays in the process. Win-win.
+
+Moving the assignment out of the loop
+
+A cleaner looking method that requires no extra array or list declaration is to assign the array value outside of the loop. Here’s what I mean by that:
+
+$array = foreach ($num in 1..10000) {
+    "$num"
+}
+Now keep in mind that $array still is a fixed size array, but this time you are only creating it once. So there is no need to get genocidal using this tactic.
+
+Another fun way to use this method is to build and run a script block, no for, foreach, or while necessary, just the & operator:
+
+$array = & {
+    '1'
+    '2'
+    foreach ($num in 3..10000) {
+        "$num"
+    }
+}
+Again, this method is very performant because it creates one fixed-size array once.
+
+List vs external assignment
+
+So lets find out which one is faster! Here’s the code for a list, along with the median value of 3 test runs:
+
+Measure-Command {
+    $list = [System.Collections.Generic.List[string]]::new()
+    foreach ($num in 1..1000000) {
+        $null = $list.Add("$num")
+    }
+}
+
+# PS Core 6.2.3
+TotalMilliseconds : 1944.94
+
+# 7.0.0-preview.4
+TotalMilliseconds : 1234.8654
+And for the external assignment:
+
+Measure-Command {
+    $array = foreach ($num in 1..1000000) {
+        "$num"
+    }
+}
+
+# PS Core 6.2.3
+TotalMilliseconds : 1532.2473
+
+# PS Core 7.0.0-preview.4
+TotalMilliseconds : 925.5182
+Sidenote: PowerShell 7 is apparently a lot faster than 6.2.3. Wow. Maybe you should go try out the preview too!
+
+So adding to a list is actually about 1/3rd slower than simply creating a single, fixed-size array. That was not what I was expecting! I thought using a list would be faster. But this is good because I think externally assigning the value looks cleaner.
+
+Moral
+
+Do you want to be an array serial killer? Keep using +=. The rest of us will keep trying to bring you to justice.
+
+Further Reading
+
+Kevin Marquette has a great in depth post on arrays in Powershell.
+
+
+
+Sent from my iPad
