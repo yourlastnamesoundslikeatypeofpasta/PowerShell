@@ -1,0 +1,28 @@
+PowerShell Equivalent Cmdlets for IPConfig, PING, and NSLookup
+Kent ChenFebruary 19, 2016
+If you have been in the field long enough, you probably have a number of favorite command lines that you learned and use on a regular basis and that probably includes IPConfig, Ping, and NSLookup. While we are moving into the PowerShell realm, it’s nice to know what the equivalents are in PowerShell for these 3 popular network command lines.
+
+IPCONFIG
+
+If you are using IPConfig for showing IP address info for each network adapter installed on a Windows computer, here are 2 PowerShell cmdlets that do the similar functions.
+
+Get-NetIPConfiguration or Get-NetIPAddress
+Windows PowerShell 2016 02 18 23 46 47 4 600x391 - PowerShell Equivalent Cmdlets for IPConfig, PING, and NSLookup
+
+Get-NetIPConfiguration cmdlet gets network configuration for each available network adapter found on one computer while Get-NetIPAddress gets the entire IP address configuration for the computer which could pull out a long list of IP addresses in the result. So the former works a bit more similar to IPConfig than the latter.
+
+PING
+
+The equivalent in PowerShell is Test-NetConnection cmdlet that displays diagnostic information for a connection. The output includes the results of a DNS lookup, a listing of IP interfaces, an option to test a TCP connection, IPsec rules, and confirmation of connection establishment.
+
+Windows PowerShell 2016 02 18 23 58 54 600x423 - PowerShell Equivalent Cmdlets for IPConfig, PING, and NSLookup
+
+Noticed the last command line in the above screenshot? Using Test-NetConnection with the -TraceRoute parameter shows the IP route to a host, including all the hops between your computer and that host. A complete equivalent to Tracert command line, isn’t it?
+
+NSLOOKUP
+
+The equivalent in PowerShell is Resolve-DnsName cmdlet that performs a DNS query for the specified name. One of the nice things to use this PowerShell equivalent is that you can specify a different DNS server to perform the DNS lookup, very useful when doing the DNS related network troubleshoot.
+
+Windows PowerShell 2016 02 19 00 09 17 600x235 - PowerShell Equivalent Cmdlets for IPConfig, PING, and NSLookup
+
+That’s it for now…hope it helps.
