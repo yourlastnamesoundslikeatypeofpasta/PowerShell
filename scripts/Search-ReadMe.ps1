@@ -10,7 +10,7 @@ function Search-ReadMe {
     It will return the name, directory, last write time, and length of the file.
     
     This tool was written (which could be used as a one-liner) to assist in
-    locating a readme file. Infected machines of a ransomware attack at previous company 
+    locating a readme file. Infected machines of a ransomware attack at a previous company 
     had a readme file located somewhere on the system. This tool was written to assst.
     
     .EXAMPLE
