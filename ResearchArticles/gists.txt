@@ -1,0 +1,2 @@
+PowerShell 7 import active directory cmdlets:
+Import-Module microsoft.PowerShell.Management -UseWindowsPowerShell -WarningAction SilentlyContinue
