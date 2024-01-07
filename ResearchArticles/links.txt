@@ -3,3 +3,4 @@ https://leanpub.com/powershell-scripting-toolmaking
 https://theitbros.com/fix-trust-relationship-failed-without-domain-rejoining/
 https://adamtheautomator.com/powershell-delete-user-profile/
 https://growitsupport.wordpress.com/2022/11/02/powershell-permanently-clear-history/
+https://infrasos.com/how-to-setup-active-directory-on-windows-server-2022/
