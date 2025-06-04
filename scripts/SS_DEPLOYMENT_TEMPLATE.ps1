@@ -278,17 +278,3 @@ $serverSharePath = Get-ServerSharePath -Login -Ship
 $updateVersion = Get-UpdateVersion -Login -Ship
 
 
-# confirm services are running | sysmon64, arcticwolfagentmgr, sentinelagent are default
-Write-Information -MessageData "Confirming Services:`n$('-' * 20)" -InformationAction Continue
-
-$servicesToConfirmList = @()
-Confirm-ServiceRunning -ServiceList $servicesToConfirmList
-
-# export computer object data as xml
-Write-Information -MessageData "Exporting client`n$('-' * 20)" -InformationAction Continue
-
-$commandsToExport = @()
-Export-Client -ServerSharePath $serverSharePath -ScriptBlockArray $commandsToExport -UpdateVersion $updateVersion
-Write-Information -MessageData 'Exported client' -InformationAction Continue
-
-Set-Signoff -ServerSharePath

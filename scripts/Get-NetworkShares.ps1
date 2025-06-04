@@ -42,11 +42,6 @@ function Get-NetworkShares {
     return $result
 }
 
-# save network shares to a file
-$result = Get-NetworkShares -ComputerName $env:COMPUTERNAME
-
-# export $result to xml file
-$result | Export-Clixml -Path "$($env:COMPUTERNAME)-NetworkShares"
 
 
 
