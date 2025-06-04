@@ -18,3 +18,6 @@ For a list of the wrapped scripts and their descriptions see [scripts/README.md]
 Additional functions for cleaning up SharePoint archives have been added. Use
 `Invoke-ArchiveCleanup` and related helper commands to purge `zzz_Archive`
 folders from specific sites.
+
+The command `Invoke-ExchangeCalendarManager` offers an interactive menu for
+managing Exchange Online calendar permissions and removing meetings.
