@@ -22,6 +22,7 @@ Describe 'SupportTools Module' {
             'Set-TimeZoneEasternStandardTime',
             'SimpleCountdown',
             'Update-Sysmon',
+            'Set-SharedMailboxAutoReply',
             'Invoke-ExchangeCalendarManager'
         )
 
