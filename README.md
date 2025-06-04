@@ -5,3 +5,6 @@ This repository houses a collection of PowerShell scripts for a few challenges w
 While 100+ scripts have been developed and used, many have not been uploaded due to confidentiality agreements.
 
 Enjoy!
+
+For a list of available scripts and their purpose, see
+[scripts/README.md](scripts/README.md).

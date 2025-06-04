@@ -1,5 +1,14 @@
-# the purpose of this script is to automate the setup of Windows10 while
-# in audit mode
+#
+# <#
+# .SYNOPSIS
+# Automate Windows 10 setup while in audit mode.
+#
+# .DESCRIPTION
+# Contains helper functions to install applications, copy files, deploy
+# agents, set power options and join a computer to the domain. Intended
+# for use during post installation configuration while running in audit
+# mode.
+# #>
 
 
 # Functions listed here

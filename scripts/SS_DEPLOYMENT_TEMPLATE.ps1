@@ -1,9 +1,14 @@
-# the purpose of this script was to expidite the current sneakernetting deployment method
-# deployments of x,y,z can now be conducted through a PowerShell script found on a network share
-# Client example command: Get-Content \\MDF01\assets\script\deployment.ps1 | Set-Clipboard
-# Client keyboard: Press [CTRL] + V
-# Client keyboard: Press [ENTER]
-# The contents of deployment.ps1 which will be a version of the following template will then deploy
+#
+# <#
+# .SYNOPSIS
+# Template script for sneaker net deployments.
+#
+# .DESCRIPTION
+# Provides functions to confirm service status, export client data,
+# install agents and software, copy files, set power plans and join a
+# computer to the domain. The script acts as a starting point for custom
+# deployments executed from a network share.
+# #>
 
 <#
 - Confirm services running:
