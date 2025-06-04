@@ -211,6 +211,66 @@ function Update-Sysmon {
     }
 }
 
+function Set-SharedMailboxAutoReply {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$MailboxIdentity,
+        [Parameter(Mandatory)]
+        [datetime]$StartTime,
+        [Parameter(Mandatory)]
+        [datetime]$EndTime,
+        [Parameter(Mandatory)]
+        [string]$InternalMessage,
+        [string]$ExternalMessage,
+        [ValidateSet('None','Known','All')]
+        [string]$ExternalAudience = 'All',
+        [Parameter(Mandatory)]
+        [string]$AdminUser,
+        [switch]$UseWebLogin
+    )
+
+    if (-not $ExternalMessage) { $ExternalMessage = $InternalMessage }
+
+    Write-Verbose 'Checking ExchangeOnlineManagement module...'
+    $module = Get-InstalledModule ExchangeOnlineManagement -ErrorAction SilentlyContinue
+    $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
+
+    if (-not $module) {
+        Write-Host 'Installing Exchange Online module...'
+        Install-Module -Name ExchangeOnlineManagement -Force
+    } elseif ($updateVersion -and $module.Version -lt $updateVersion.Version) {
+        Write-Host 'Updating Exchange Online module...'
+        Update-Module -Name ExchangeOnlineManagement -Force
+    }
+
+    Import-Module ExchangeOnlineManagement
+
+    try {
+        if ($UseWebLogin) {
+            Connect-ExchangeOnline -UserPrincipalName $AdminUser -UseWebLogin -ErrorAction Stop
+        } else {
+            Connect-ExchangeOnline -UserPrincipalName $AdminUser -ErrorAction Stop
+        }
+    } catch {
+        throw "Failed to connect to Exchange Online: $($_.Exception.Message)"
+    }
+
+    Set-MailboxAutoReplyConfiguration -Identity $MailboxIdentity `
+        -AutoReplyState Scheduled `
+        -StartTime $StartTime `
+        -EndTime $EndTime `
+        -InternalMessage $InternalMessage `
+        -ExternalMessage $ExternalMessage `
+        -ExternalAudience $ExternalAudience
+
+    $result = Get-MailboxAutoReplyConfiguration -Identity $MailboxIdentity
+
+    Disconnect-ExchangeOnline -Confirm:$false
+
+    return $result
+}
+
 function Invoke-ExchangeCalendarManager {
     [CmdletBinding()]
     param()
@@ -256,12 +316,12 @@ function Invoke-ExchangeCalendarManager {
                 $userCalendar = Read-Host 'Calendar owner (first.last)'
                 $userRequesting = Read-Host 'Grant access to (first.last)'
                 $accessRights = Read-Host 'AccessRights'
-                Add-MailboxFolderPermission -Identity "$userCalendar:\Calendar" -User $userRequesting -AccessRights $accessRights
+                Add-MailboxFolderPermission -Identity "${userCalendar}:\Calendar" -User $userRequesting -AccessRights $accessRights
             }
             '2' {
                 $userCalendar = Read-Host 'Calendar owner (first.last)'
                 $userRequesting = Read-Host 'Remove access for (first.last)'
-                Remove-MailboxFolderPermission -Identity "$userCalendar:\Calendar" -User $userRequesting -Confirm:$false
+                Remove-MailboxFolderPermission -Identity "${userCalendar}:\Calendar" -User $userRequesting -Confirm:$false
             }
             '3' {
                 $userEmail = Read-Host 'User email (user@domain)'
@@ -283,4 +343,4 @@ function Invoke-ExchangeCalendarManager {
 
 
 
-Export-ModuleMember -Function 'AddUsersToGroup','CleanupArchive','Convert-ExcelToCsv','Get-CommonSystemInfo','Get-FailedLogins','Get-NetworkShares','Get-UniquePermissions','Install-Fonts','PostInstallScript','ProductKey','Invoke-DeploymentTemplate','Search-ReadMe','Set-ComputerIPAddress','Set-NetAdapterMetering','Set-TimeZoneEasternStandardTime','SimpleCountdown','Update-Sysmon','Invoke-ExchangeCalendarManager'
+Export-ModuleMember -Function 'AddUsersToGroup','CleanupArchive','Convert-ExcelToCsv','Get-CommonSystemInfo','Get-FailedLogins','Get-NetworkShares','Get-UniquePermissions','Install-Fonts','PostInstallScript','ProductKey','Invoke-DeploymentTemplate','Search-ReadMe','Set-ComputerIPAddress','Set-NetAdapterMetering','Set-TimeZoneEasternStandardTime','SimpleCountdown','Update-Sysmon','Set-SharedMailboxAutoReply','Invoke-ExchangeCalendarManager'
