@@ -24,4 +24,4 @@ The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.
 
 For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
-Example scripts can be found in the /Examples folder, including `Example_SetSharedMailboxAutoReply.ps1`.
+Example scripts for every function can be found in the `/Examples` folder.
