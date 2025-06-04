@@ -481,5 +481,102 @@ function Invoke-FileVersionCleanup {
     Write-Warning "Invoke-FileVersionCleanup is not yet implemented."
 }
 
+function Invoke-SharingLinkCleanup {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$SiteName,
+        [Parameter(Mandatory)]
+        [string]$SiteUrl,
+        [string]$LibraryName = 'Shared Documents',
+        [string]$FolderName,
+        [string]$ClientId = '<CLIENT-ID>',
+        [string]$TenantId = '<TENANT-ID>',
+        [string]$CertPath = '<PATH-TO-CERTIFICATE>'
+    )
+
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    $logPath = "$env:USERPROFILE/SHAREPOINT_LINK_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
+    Start-Transcript -Path $logPath -Append
+
+    $root = Get-PnPFolder -ListRootFolder $LibraryName
+    $folders = $root | Get-PnPFolderInFolder
+
+    if (-not $FolderName) {
+        $selectionMap = @{}
+        $i = 0
+        foreach ($f in $folders) {
+            Write-Host "$i - $($f.Name)"
+            $selectionMap[$i] = $f
+            $i++
+        }
+        $choice = Read-Host -Prompt 'Select folder number'
+        $targetFolder = $selectionMap[$choice]
+        if (-not $targetFolder) { throw 'Invalid folder selection.' }
+    } else {
+        $targetFolder = $folders | Where-Object Name -eq $FolderName
+        if (-not $targetFolder) { throw "Folder '$FolderName' not found." }
+    }
+
+    Write-Host "[>] Scanning $($targetFolder.Name) for sharing links..." -ForegroundColor Cyan
+    $items = $targetFolder | Get-PnPFolderItem -Recursive
+    $removed = [System.Collections.Generic.List[string]]::new()
+
+    foreach ($item in $items) {
+        try {
+            $link = (Get-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -ErrorAction Stop).Link.WebUrl
+            if ($link) {
+                Remove-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue
+                $removed.Add($item.ServerRelativeUrl)
+                Write-Warning "Removed file link: $($item.ServerRelativeUrl)"
+            }
+        } catch {
+            try {
+                $folderLink = (Get-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -ErrorAction Stop).Link.WebUrl
+                if ($folderLink) {
+                    Remove-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue
+                    $removed.Add($item.ServerRelativeUrl)
+                    Write-Warning "Removed folder link: $($item.ServerRelativeUrl)"
+                }
+            } catch {
+                # ignore if no links exist
+            }
+        }
+    }
+
+    if ($removed.Count) {
+        Write-Warning "Sharing links removed from the following items:" 
+        $removed | Write-Warning
+    } else {
+        Write-Host '[✓] No sharing links found.' -ForegroundColor Green
+    }
+
+    Stop-Transcript
+    Disconnect-PnPOnline
+}
+
+function Invoke-YFSharingLinkCleanup {
+    [CmdletBinding()]
+    param()
+
+    Invoke-SharingLinkCleanup -SiteName 'YF' -SiteUrl 'https://contoso.sharepoint.com/sites/YF'
+}
+
+function Invoke-IBCCentralFilesSharingLinkCleanup {
+    [CmdletBinding()]
+    param()
+
+    Invoke-SharingLinkCleanup -SiteName 'IBCCentralFiles' -SiteUrl 'https://contoso.sharepoint.com/sites/IBCCentralFiles'
+}
+
+function Invoke-MexCentralFilesSharingLinkCleanup {
+    [CmdletBinding()]
+    param()
+
+    Invoke-SharingLinkCleanup -SiteName 'MexCentralFiles' -SiteUrl 'https://contoso.sharepoint.com/sites/MexCentralFiles'
+}
+
 # endregion
 
