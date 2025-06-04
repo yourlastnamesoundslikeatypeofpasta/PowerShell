@@ -14,165 +14,201 @@ function Invoke-ScriptFile {
 function AddUsersToGroup {
     [CmdletBinding()]
     param(
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
         [string]$CsvPath,
+        [Parameter(ValueFromPipelineByPropertyName=$true)]
         [string]$GroupName
     )
 
-    $arguments = @()
-    if ($PSBoundParameters.ContainsKey('CsvPath')) {
-        $arguments += '-CsvPath'
-        $arguments += $CsvPath
-    }
-    if ($PSBoundParameters.ContainsKey('GroupName')) {
-        $arguments += '-GroupName'
-        $arguments += $GroupName
-    }
+    process {
+        $arguments = @()
+        if ($PSBoundParameters.ContainsKey('CsvPath')) {
+            $arguments += '-CsvPath'
+            $arguments += $CsvPath
+        }
+        if ($PSBoundParameters.ContainsKey('GroupName')) {
+            $arguments += '-GroupName'
+            $arguments += $GroupName
+        }
 
-    Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -Args $arguments
+        Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -Args $arguments
+    }
 }
 
 function CleanupArchive {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "CleanupArchive.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "CleanupArchive.ps1" -Args $Arguments
+    }
 }
 
 function Convert-ExcelToCsv {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Convert-ExcelToCsv.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Convert-ExcelToCsv.ps1" -Args $Arguments
+    }
 }
 
 function Get-CommonSystemInfo {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Get-CommonSystemInfo.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Get-CommonSystemInfo.ps1" -Args $Arguments
+    }
 }
 
 function Get-FailedLogins {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Get-FailedLogins.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Get-FailedLogins.ps1" -Args $Arguments
+    }
 }
 
 function Get-NetworkShares {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Get-NetworkShares.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Get-NetworkShares.ps1" -Args $Arguments
+    }
 }
 
 function Get-UniquePermissions {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Get-UniquePermissions.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Get-UniquePermissions.ps1" -Args $Arguments
+    }
 }
 
 function Install-Fonts {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Install-Fonts.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Install-Fonts.ps1" -Args $Arguments
+    }
 }
 
 function PostInstallScript {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "PostInstallScript.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "PostInstallScript.ps1" -Args $Arguments
+    }
 }
 
 function ProductKey {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "ProductKey.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "ProductKey.ps1" -Args $Arguments
+    }
 }
 
 function Invoke-DeploymentTemplate {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "SS_DEPLOYMENT_TEMPLATE.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "SS_DEPLOYMENT_TEMPLATE.ps1" -Args $Arguments
+    }
 }
 
 function Search-ReadMe {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Search-ReadMe.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Search-ReadMe.ps1" -Args $Arguments
+    }
 }
 
 function Set-ComputerIPAddress {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Set-ComputerIPAddress.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Set-ComputerIPAddress.ps1" -Args $Arguments
+    }
 }
 
 function Set-NetAdapterMetering {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Set-NetAdapterMetering.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Set-NetAdapterMetering.ps1" -Args $Arguments
+    }
 }
 
 function Set-TimeZoneEasternStandardTime {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Set-TimeZoneEasternStandardTime.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Set-TimeZoneEasternStandardTime.ps1" -Args $Arguments
+    }
 }
 
 function SimpleCountdown {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments
+    }
 }
 
 function Update-Sysmon {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
-    Invoke-ScriptFile -Name "Update-Sysmon.ps1" -Args $Arguments
+    process {
+        Invoke-ScriptFile -Name "Update-Sysmon.ps1" -Args $Arguments
+    }
 }
 
 function Invoke-ExchangeCalendarManager {

@@ -109,5 +109,5 @@ foreach ($item in $items)
     }
 }
 
-# Display the list of items with unique role assignments in a table format
-$uniqueRolesList | Format-Table
+# Return the list of items with unique role assignments
+return $uniqueRolesList

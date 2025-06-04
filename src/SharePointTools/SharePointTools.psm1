@@ -47,7 +47,7 @@ function Invoke-ArchiveCleanup {
     $logPath = "$env:USERPROFILE/SHAREPOINT_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
     Start-Transcript -Path $logPath -Append
 
-    Write-Host "[+] Scanning target: $SiteName" -ForegroundColor Green
+    Write-Verbose "[+] Scanning target: $SiteName"
     $items = Get-PnPListItem -List $LibraryName -PageSize 5000
 
     $files   = $items | Where-Object { $_.FileSystemObjectType -eq 'File' }
@@ -59,11 +59,11 @@ function Invoke-ArchiveCleanup {
     $filesDeleted = 0
     $foldersDeleted = 0
 
-    Write-Host "[>] Located $($archivedFiles.Count) archived files marked for deletion." -ForegroundColor Cyan
+    Write-Verbose "[>] Located $($archivedFiles.Count) archived files marked for deletion."
     foreach ($file in $archivedFiles) {
         $filePath = $file.FieldValues.FileRef
         try {
-            Write-Host "-- Deleting file: $filePath" -ForegroundColor DarkGray
+            Write-Verbose "-- Deleting file: $filePath"
             Remove-PnPFile -ServerRelativeUrl $filePath -Force -ErrorAction Stop
             $filesDeleted++
         } catch {
@@ -75,7 +75,7 @@ function Invoke-ArchiveCleanup {
         ($_.FieldValues.FileRef -split '/').Count
     } -Descending
 
-    Write-Host "[>] Initiating folder cleanup (leaf-first)" -ForegroundColor Yellow
+    Write-Verbose "[>] Initiating folder cleanup (leaf-first)"
     foreach ($folder in $archivedFoldersSorted) {
         $folderPath = $folder.FieldValues.FileDirRef
         $folderName = $folder.FieldValues.FileLeafRef
@@ -89,7 +89,7 @@ function Invoke-ArchiveCleanup {
         }
 
         try {
-            Write-Host "-- Deleting folder: $fullPath" -ForegroundColor Gray
+            Write-Verbose "-- Deleting folder: $fullPath"
             Remove-PnPFolder -Name $folderName -Folder $folderPath -Force -ErrorAction Stop
             $foldersDeleted++
         } catch {
@@ -97,15 +97,17 @@ function Invoke-ArchiveCleanup {
         }
     }
 
-    Write-Host "[✓] Cleanup complete for '$SiteName'. Log archived at $logPath" -ForegroundColor Green
-    Write-Host "======== CLEANUP REPORT ($SiteName) ========" -ForegroundColor Magenta
-    Write-Host "Total items scanned: $($items.Count)"
-    Write-Host "Archived files found: $($archivedFiles.Count)"
-    Write-Host "Archived folders found: $($archivedFolders.Count)"
-    Write-Host "Files deleted: $filesDeleted"
-    Write-Host "Folders deleted: $foldersDeleted"
-    Write-Host "===========================================" -ForegroundColor Magenta
     Stop-Transcript
+
+    [pscustomobject]@{
+        SiteName           = $SiteName
+        ItemsScanned       = $items.Count
+        ArchivedFilesFound = $archivedFiles.Count
+        ArchivedFoldersFound = $archivedFolders.Count
+        FilesDeleted       = $filesDeleted
+        FoldersDeleted     = $foldersDeleted
+        LogPath            = $logPath
+    }
 }
 
 function Invoke-YFFileVersionCleanup {
