@@ -14,10 +14,123 @@ function Invoke-ScriptFile {
 function AddUsersToGroup {
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true)]
-        [object[]]$Arguments
+        [string]$CsvPath,
+        [string]$GroupName
     )
-    Invoke-ScriptFile -Name "AddUsersToGroup.ps1" -Args $Arguments
+
+    function Get-CSVFilePath {
+        Write-Host -ForegroundColor DarkMagenta "Select CSV from file dialog..."
+        $openFileDialog = New-Object Microsoft.Win32.OpenFileDialog
+        $openFileDialog.InitialDirectory = [Environment]::GetFolderPath('MyDocuments')
+        $openFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*"
+        if ($openFileDialog.ShowDialog()) {
+            return (Get-ChildItem -Path $openFileDialog.FileName)
+        }
+        return $null
+    }
+
+    function Get-GroupNames {
+        Get-MgGroup -All | Select-Object DisplayName, Id
+    }
+
+    function Connect-MicrosoftGraph {
+        Write-Host -ForegroundColor DarkCyan "Connecting to Microsoft Graph..."
+        try {
+            Connect-MgGraph -Scopes "User.Read.All", "Group.ReadWrite.All", "Directory.ReadWrite.All" -NoWelcome
+        } catch {
+            Write-Error -Message "Error: $_.Exception.Message"
+            throw "Error: Cannot connect to Microsoft Graph"
+        }
+        $mgGraphAccount = (Get-MgContext).Account
+        $messageData = "Microsoft Graph Account: $mgGraphAccount"
+        Write-Information -MessageData $messageData
+        Write-Information -MessageData ('-' * $messageData.Length)
+    }
+
+    function Get-Group {
+        if ($GroupName) {
+            $grp = Get-MgGroup -Filter "displayName eq '$GroupName'" | Select-Object -First 1
+            if (-not $grp) { throw "Group '$GroupName' not found." }
+            Write-Host -ForegroundColor DarkYellow "Using group: $($grp.DisplayName)"
+            return $grp
+        }
+
+        $allGroupNames = Get-GroupNames | Sort-Object -Property DisplayName
+        $index = 0
+        foreach ($group in $allGroupNames) {
+            Write-Information -MessageData "[$($index)] - $($group.DisplayName)"
+            $index++
+        }
+        $groupSelection = Read-Host -Prompt "Select a group"
+        try {
+            $selectedGroup = $allGroupNames[$groupSelection]
+            Write-Host -ForegroundColor DarkYellow "You have selected: $($selectedGroup.DisplayName)"
+        } catch {
+            Write-Error "Error: $($_.Exception.Message)"
+            throw "Error: There was an error with your selection..."
+        }
+        $selectedGroup
+    }
+
+    function Get-GroupExistingMembers {
+        param([object]$Group)
+        $existingMembers = Get-MgGroupMember -GroupId $Group.Id
+        $existingMemberUPNList = [System.Collections.Generic.List[object]]::new()
+        foreach ($id in $existingMembers.Id) {
+            $UPN = Get-MgUser -UserId $id | Select-Object -ExpandProperty UserPrincipalName
+            $existingMemberUPNList.Add($UPN)
+        }
+        $existingMemberUPNList
+    }
+
+    function Get-UserID {
+        param([string]$UserPrincipalName)
+        Get-MgUser -UserId $UserPrincipalName -ErrorAction SilentlyContinue
+    }
+
+    Add-Type -AssemblyName PresentationFramework, System.Windows.Forms
+    $InformationPreference = "Continue"
+
+    if (-not (Get-Module -Name Microsoft.Graph.*)) {
+        Write-Host -ForegroundColor Yellow "Microsoft Graph not installed...installing Microsoft Graph PowerShell Module..."
+        Install-Module Microsoft.Graph -Force
+    }
+
+    Write-Host -ForegroundColor Yellow "Importing Microsoft Graph...this might take awhile..."
+    Import-Module Microsoft.Graph -Verbose
+
+    Connect-MicrosoftGraph
+
+    $group = Get-Group
+    $groupExistingMembers = Get-GroupExistingMembers -Group $group
+
+    if (-not $CsvPath) { $CsvPath = Get-CSVFilePath }
+    $users = (Import-Csv $CsvPath).UPN
+
+    foreach ($user in $users) {
+        $userInfo = Get-UserID -UserPrincipalName $user
+        if (-not $userInfo) {
+            Write-Warning "User '$user' not found."
+            continue
+        }
+        if ($groupExistingMembers -contains $userInfo.UserPrincipalName) {
+            Write-Host -ForegroundColor Yellow "UserIsInGroup: $user - $($group.DisplayName)"
+        } else {
+            Write-Host -ForegroundColor Yellow "AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)"
+            try {
+                New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $userInfo.Id -ErrorAction Stop
+                Write-Host -ForegroundColor Green "[SUCCESS] AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)"
+            } catch {
+                Write-Error "[FAIL] Error adding $user to $($group.Id)..."
+                throw "ErrorAddingUserToGroup: $user : $($userInfo.DisplayName)"
+            }
+        }
+    }
+
+    Write-Host -ForegroundColor Green "Task Completed."
+    Write-Host -ForegroundColor Yellow "Disconnecting from Microsoft Graph..."
+    Disconnect-MgGraph | Out-Null
+    Write-Host -ForegroundColor Green "Disconnected from Microsoft Graph"
 }
 
 function CleanupArchive {
