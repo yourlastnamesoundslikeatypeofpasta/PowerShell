@@ -475,10 +475,42 @@ function Invoke-FileVersionCleanup {
     [CmdletBinding()]
     param(
         [string]$SiteName,
-        [string]$SiteUrl
+        [string]$SiteUrl,
+        [string]$LibraryName = 'Shared Documents',
+        [string]$ClientId = '<CLIENT-ID>',
+        [string]$TenantId = '<TENANT-ID>',
+        [string]$CertPath = '<PATH-TO-CERTIFICATE>',
+        [string]$ReportPath = 'exportedReport.csv'
     )
 
-    Write-Warning "Invoke-FileVersionCleanup is not yet implemented."
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    $rootFolder = Get-PnPFolder -ListRootFolder $LibraryName
+    $subFolders = $rootFolder | Get-PnPFolderInFolder
+    $targetFolder = $subFolders | Where-Object { $_.Name -eq 'Marketing' }
+
+    Write-Host "[+] Scanning target: $SiteName"
+    $items = $targetFolder | Get-PnPFolderItem -Recursive -Verbose
+    Write-Host "[>] Located $($items.Count) files within $SiteUrl"
+
+    $files = $items | Where-Object { $_.GetType().Name -eq 'File' }
+
+    $report = foreach ($file in $files) {
+        $versions = Get-PnPProperty -ClientObject $file -Property Versions
+        if ($versions.Count -gt 1) {
+            [pscustomobject]@{
+                Name              = $file.Name
+                Path              = $file.ServerRelativePath
+                TotalVersionCount = $versions.Count
+                TotalVersionBytes = [math]::Round((($versions.Size | Measure-Object -Sum).Sum) / 1GB, 8)
+                TrueFileSize      = [math]::Round($file.Length / 1GB, 8)
+            }
+        }
+    }
+
+    $report | Export-Csv $ReportPath -NoTypeInformation
+    Write-Host "[✓] Report exported to $ReportPath" -ForegroundColor Green
 }
 
 # endregion
