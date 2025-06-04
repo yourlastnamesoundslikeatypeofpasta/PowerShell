@@ -1,8 +1,8 @@
 # PowerShell Scripts
 
-The `scripts` directory contains a collection of PowerShell utilities used in
-various deployment and automation scenarios. The following table provides a
-brief description of each script.
+These scripts are wrapped by the `SupportTools` module. Import the module and invoke the functions directly rather than running the `.ps1` files.
+
+The following table provides a brief description of each script.
 
 | Script | Description |
 |-------|-------------|
@@ -23,4 +23,3 @@ brief description of each script.
 | **SimpleCountdown.ps1** | Outputs a simple countdown from 10 to 1. |
 | **Update-Sysmon.ps1** | Reinstalls Sysmon from a removable drive and verifies it is running. |
 | **SS_DEPLOYMENT_TEMPLATE.ps1** | Template for sneaker net deployments that installs agents and configures a system. |
-

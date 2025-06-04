@@ -1,10 +1,16 @@
-# PowerShell
+# SupportTools PowerShell Module
 
-This repository houses a collection of PowerShell scripts for a few challenges within my helpdesk career. These scripts have been designed and crafted to address various challenges and streamline processes within the realm of deployments and general automation.
+This repository now packages the collection of scripts as a PowerShell module. The module wraps each script so they can be invoked as standard commands.
 
-While 100+ scripts have been developed and used, many have not been uploaded due to confidentiality agreements.
+## Usage
 
-Enjoy!
+1. Import the module from the `src/SupportTools` folder:
+   ```powershell
+   Import-Module ./src/SupportTools/SupportTools.psd1
+   ```
+2. Run any of the available commands, for example:
+   ```powershell
+   Get-CommonSystemInfo
+   ```
 
-For a list of available scripts and their purpose, see
-[scripts/README.md](scripts/README.md).
+For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
