@@ -24,3 +24,7 @@ multiple versions so large libraries can be reviewed.
 
 The command `Invoke-ExchangeCalendarManager` offers an interactive menu for
 managing Exchange Online calendar permissions and removing meetings.
+
+`Invoke-SharingLinkCleanup` removes existing sharing links from items within a
+document library. Wrapper commands such as `Invoke-YFSharingLinkCleanup` run the
+cleanup against predefined sites.
