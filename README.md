@@ -14,3 +14,7 @@ This repository now packages the collection of scripts as a PowerShell module. T
    ```
 
 For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
+
+Additional functions for cleaning up SharePoint archives have been added. Use
+`Invoke-ArchiveCleanup` and related helper commands to purge `zzz_Archive`
+folders from specific sites.
