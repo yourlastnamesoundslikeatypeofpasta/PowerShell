@@ -32,6 +32,4 @@ function Set-NetAdapterMetric {
 
 }
 
-Set-NetAdapterMetric -Adapter "Ethernet" -Metric 1
-Set-NetAdapterMetric -Adapter "Wi-Fi" -Metric 2
 

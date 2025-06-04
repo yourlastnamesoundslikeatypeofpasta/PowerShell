@@ -33,5 +33,4 @@ function Get-FailedLogins {
     return $failedLogins
 }
 
-Get-FailedLogins -ComputerName "DC01"
 

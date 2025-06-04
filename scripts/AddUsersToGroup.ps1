@@ -23,10 +23,16 @@ The name of the document library to be processed.
 .NOTES
 This script requires Microsoft Graph API permissions and assumes the user has the necessary permissions to connect to Microsoft Graph and manage groups and users. It is intended for use in scenarios where bulk user management is required for Microsoft 365 groups.
 
+
 .EXAMPLE
-.\AddUsersToGroup.ps1
-This example runs the script, connecting to Microsoft Graph and processing the selected CSV file to add users to the chosen Microsoft 365 group.
+    .\AddUsersToGroup.ps1 -CsvPath users.csv -GroupName "Target Group"
+This example runs the script with explicit parameters to process the provided CSV file and add the listed users to the specified Microsoft 365 group.
 #>
+
+param(
+    [string]$CsvPath,
+    [string]$GroupName
+)
 
 # Import necessary .NET assemblies
 Add-Type -AssemblyName PresentationFramework, System.Windows.Forms
@@ -86,11 +92,20 @@ function Connect-MicrosoftGraph {
 }
 
 function Get-Group {
-    # Display all group names
+    param(
+        [string]$GroupName
+    )
+
+    if ($GroupName) {
+        $grp = Get-MgGroup -Filter "displayName eq '$GroupName'" | Select-Object -First 1
+        if (-not $grp) { throw "Group '$GroupName' not found." }
+        Write-Host -ForegroundColor DarkYellow "Using group: $($grp.DisplayName)"
+        return $grp
+    }
+
     $allGroupNames = Get-GroupNames | Sort-Object -Property DisplayName
     $index = 0
-    foreach ($group in $allGroupNames)
-    {
+    foreach ($group in $allGroupNames) {
         Write-Information -MessageData "[$($index)] - $($group.DisplayName)"
         $index++
     }
@@ -100,8 +115,7 @@ function Get-Group {
     try {
         $selectedGroup = $allGroupNames[$groupSelection]
         Write-Host -ForegroundColor DarkYellow "You have selected: $($selectedGroup.DisplayName)"
-    }
-    catch {
+    } catch {
         Write-Error "Error: $($_.Exception.Message)"
         throw "Error: There was an error with your selection..."
     }
@@ -137,6 +151,10 @@ function Get-UserID {
 }
 
 function Start-Main {
+    param(
+        [string]$CsvPath,
+        [string]$GroupName
+    )
     # Connect to Microsoft Graph
     try {
         Connect-MicrosoftGraph -ErrorAction Stop
@@ -147,11 +165,12 @@ function Start-Main {
     }
 
     # Get all groups and query the user for a group index
-    $group = Get-Group
+    $group = Get-Group -GroupName $GroupName
     $groupExistingMembers = Get-GroupExistingMembers -Group $group
 
     # Import the CSV file with UPN header
-    $filePath = Get-CSVFilePath
+    if (-not $CsvPath) { $CsvPath = Get-CSVFilePath }
+    $filePath = $CsvPath
     $file = Import-Csv $filePath
     $users = $file.UPN
 
@@ -184,4 +203,4 @@ function Start-Main {
     Write-Host -ForegroundColor Green "Disconnected from Microsoft Graph"
 }
 
-Start-Main
+Start-Main -CsvPath $CsvPath -GroupName $GroupName

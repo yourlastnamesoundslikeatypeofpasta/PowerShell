@@ -57,4 +57,3 @@ function Main {
     New-Item "$($driverLetter):\LOG\$($env:COMPUTERNAME).txt"
 }
 
-Main

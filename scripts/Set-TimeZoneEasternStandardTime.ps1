@@ -15,4 +15,3 @@ function Set-TimeZoneEasternStandardTime {
     Set-TimeZone -ID "Eastern Standard Time"
 }
 
-Set-TimeZoneEasternStandardTime

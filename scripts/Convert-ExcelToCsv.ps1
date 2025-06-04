@@ -187,10 +187,3 @@ function Convert-ExcelCSVToJSON {
     }
 }
  
-# example 1
-# csv -> json
-Convert-ExcelCSVToJSON -FilePath .\services.csv -OutFilePath services.json
- 
-# example 2
-# xlsx -> csv -> json
-Convert-ExcelCSVToJSON -FilePath .\services.xlsx -OutFilePath services.json
