@@ -1,5 +1,13 @@
-# the purpose of this script is to quickly grab the windows 10 
-# product key off of decommissioned Win10 devices
+#
+# <#
+# .SYNOPSIS
+# Retrieve and export the Windows product key.
+#
+# .DESCRIPTION
+# Queries WMI for the original product key of the current system and
+# saves it to a text file. Useful for archiving keys from
+# decommissioned devices.
+# #>
 
 function Get-ProductKey 
 {

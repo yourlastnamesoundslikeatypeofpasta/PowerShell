@@ -1,5 +1,13 @@
-# the purpose of this script is to install fonts
-# for all users
+#
+# <#
+# .SYNOPSIS
+# Install fonts for all users.
+#
+# .DESCRIPTION
+# Provides helper functions for enumerating fonts in a folder and copying
+# them to the system fonts directory. Registry entries are created so the
+# fonts are available to all users. Administrator rights are required.
+# #>
 
 
 function Main {

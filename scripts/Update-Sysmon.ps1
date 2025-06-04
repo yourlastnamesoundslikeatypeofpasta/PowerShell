@@ -1,5 +1,13 @@
-# the purpose of this script is to quickly update
-# sysmon to a specific version on a client PC
+#
+# <#
+# .SYNOPSIS
+# Update Sysmon to a specific version.
+#
+# .DESCRIPTION
+# Locates the Sysmon files on a removable drive, copies them to the local
+# system, reinstalls the service and verifies that it is running. The
+# computer name is written to a log directory on the removable drive.
+# #>
 
 function Main {
 
