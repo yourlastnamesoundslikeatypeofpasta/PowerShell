@@ -58,14 +58,15 @@ Describe 'SupportTools Module' {
             Update_Sysmon                = 'Update-Sysmon.ps1'
         }
 
-        foreach ($entry in $map.GetEnumerator()) {
-            $case = $entry
-            It "$($case.Key) calls Invoke-ScriptFile" {
-                InModuleScope SupportTools {
-                    Mock Invoke-ScriptFile {}
-                    & $case.Key.ToString().Replace('_','-')
+        foreach ($key in $map.Keys) {
+            $cmdName = $key.Replace('_','-')
+            It "$key calls Invoke-ScriptFile" {
+                InModuleScope SupportTools -ScriptBlock {
+                    param($Name)
+                    Mock Invoke-ScriptFile {} -ModuleName SupportTools
+                    & $Name
                     Assert-MockCalled Invoke-ScriptFile -Times 1
-                }
+                } -ArgumentList $cmdName
             }
 
         }
@@ -75,9 +76,143 @@ Describe 'SupportTools Module' {
         It 'returns the object produced by the script' {
             InModuleScope SupportTools {
                 $expected = [pscustomobject]@{ GroupName = 'MyGroup'; AddedUsers = @('a'); SkippedUsers = @('b') }
-                Mock Invoke-ScriptFile { $expected }
+                Mock Invoke-ScriptFile { $expected } -ModuleName SupportTools
                 $result = Add-UsersToGroup -CsvPath 'users.csv' -GroupName 'MyGroup'
                 $result | Should -Be $expected
+            }
+        }
+    }
+
+    Context 'Set-SharedMailboxAutoReply behavior' {
+        It 'defaults ExternalMessage to InternalMessage' {
+            InModuleScope SupportTools {
+                function Connect-ExchangeOnline {}
+                function Disconnect-ExchangeOnline {}
+                function Install-Module {}
+                function Update-Module {}
+                function Get-InstalledModule {}
+                function Find-Module {}
+                function Import-Module {}
+                function global:Set-MailboxAutoReplyConfiguration {}
+                function global:Get-MailboxAutoReplyConfiguration {}
+                function global:Set-MailboxAutoReplyConfiguration {}
+                function global:Get-MailboxAutoReplyConfiguration { 'result' }
+                function Set-MailboxAutoReplyConfiguration {}
+                function Get-MailboxAutoReplyConfiguration { 'result' }
+
+                Mock Connect-ExchangeOnline {} -ModuleName SupportTools
+                Mock Disconnect-ExchangeOnline {} -ModuleName SupportTools
+                Mock Install-Module {} -ModuleName SupportTools
+                Mock Update-Module {} -ModuleName SupportTools
+                Mock Get-InstalledModule {} -ModuleName SupportTools
+                Mock Find-Module {} -ModuleName SupportTools
+                Mock Import-Module {} -ModuleName SupportTools
+                Mock Set-MailboxAutoReplyConfiguration {} -ModuleName SupportTools
+                Mock Get-MailboxAutoReplyConfiguration { 'result' } -ModuleName SupportTools
+
+                $result = Set-SharedMailboxAutoReply -MailboxIdentity 'm' -StartTime (Get-Date) -EndTime (Get-Date).AddHours(1) -InternalMessage 'hello' -AdminUser 'admin'
+
+                Assert-MockCalled Set-MailboxAutoReplyConfiguration -ParameterFilter { $ExternalMessage -eq 'hello' } -Times 1
+                $result | Should -Be 'result'
+            }
+        }
+
+        It 'uses web login when specified' {
+            InModuleScope SupportTools {
+                function Connect-ExchangeOnline {}
+                function Disconnect-ExchangeOnline {}
+                function Install-Module {}
+                function Update-Module {}
+                function Get-InstalledModule {}
+                function Find-Module {}
+                function Import-Module {}
+
+                Mock Connect-ExchangeOnline {} -ModuleName SupportTools
+                Mock Disconnect-ExchangeOnline {} -ModuleName SupportTools
+                Mock Install-Module {} -ModuleName SupportTools
+                Mock Update-Module {} -ModuleName SupportTools
+                Mock Get-InstalledModule {} -ModuleName SupportTools
+                Mock Find-Module {} -ModuleName SupportTools
+                Mock Import-Module {} -ModuleName SupportTools
+                Mock Set-MailboxAutoReplyConfiguration {} -ModuleName SupportTools
+                Mock Get-MailboxAutoReplyConfiguration {} -ModuleName SupportTools
+
+                Set-SharedMailboxAutoReply -MailboxIdentity 'm' -StartTime (Get-Date) -EndTime (Get-Date).AddHours(1) -InternalMessage 'i' -ExternalMessage 'e' -AdminUser 'admin' -UseWebLogin
+
+                Assert-MockCalled Connect-ExchangeOnline -ParameterFilter { $UseWebLogin } -Times 1
+            }
+        }
+    }
+
+    Context 'Invoke-ExchangeCalendarManager behavior' {
+        It 'connects to ExchangeOnline and exits when user quits' {
+            InModuleScope SupportTools {
+                function Connect-ExchangeOnline {}
+                function Disconnect-ExchangeOnline {}
+                function Install-Module {}
+                function Update-Module {}
+                function Get-InstalledModule {}
+                function Find-Module {}
+                function Import-Module {}
+                function Read-Host { param([string]$Prompt) 'q' }
+
+                Mock Connect-ExchangeOnline {} -ModuleName SupportTools
+                Mock Disconnect-ExchangeOnline {} -ModuleName SupportTools
+                Mock Install-Module {} -ModuleName SupportTools
+                Mock Update-Module {} -ModuleName SupportTools
+                Mock Get-InstalledModule {} -ModuleName SupportTools
+                Mock Find-Module {} -ModuleName SupportTools
+                Mock Import-Module {} -ModuleName SupportTools
+                Mock Read-Host { 'q' } -ModuleName SupportTools
+
+                Invoke-ExchangeCalendarManager
+
+                Assert-MockCalled Connect-ExchangeOnline -Times 1
+            }
+        }
+    }
+
+    Context 'Invoke-CompanyPlaceManagement behavior' {
+        It 'imports module when commands are missing' {
+            InModuleScope SupportTools {
+                function Get-Command {}
+                function Import-Module {}
+                function Connect-MicrosoftPlaces {}
+                function Get-PlaceV3 { @() }
+                function Write-Host {}
+
+                Mock Get-Command { $null } -ModuleName SupportTools
+                Mock Import-Module {} -ModuleName SupportTools
+                Mock Connect-MicrosoftPlaces {} -ModuleName SupportTools
+                Mock Get-PlaceV3 { @() } -ModuleName SupportTools
+                Mock Write-Host {} -ModuleName SupportTools
+
+                Invoke-CompanyPlaceManagement -Action Get -DisplayName 'b' -Type Building
+
+                Assert-MockCalled Import-Module -Times 1
+                Assert-MockCalled Connect-MicrosoftPlaces -Times 1
+            }
+        }
+
+        It 'adds default floor when creating a building with AutoAddFloor' {
+            InModuleScope SupportTools {
+                function Get-Command {}
+                function Connect-MicrosoftPlaces {}
+                function Get-PlaceV3 { @() }
+                function New-Place {}
+                function Write-Host {}
+
+                Mock Get-Command { @{ Name = 'Get-PlaceV3' } } -ModuleName SupportTools
+                Mock Connect-MicrosoftPlaces {} -ModuleName SupportTools
+                Mock Get-PlaceV3 { @() } -ModuleName SupportTools
+                Mock New-Place {
+                    if ($Type -eq 'Building') { return @{ PlaceId = '1' } }
+                } -ModuleName SupportTools
+                Mock Write-Host {} -ModuleName SupportTools
+
+                Invoke-CompanyPlaceManagement -Action Create -DisplayName 'B1' -Type Building -AutoAddFloor
+
+                Assert-MockCalled New-Place -ParameterFilter { $Type -eq 'Floor' -and $Name -eq '1' } -Times 1
             }
         }
     }
