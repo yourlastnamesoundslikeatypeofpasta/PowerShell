@@ -11,8 +11,9 @@ function Invoke-DeploymentTemplate {
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments,
         [string]$TranscriptPath
+        [switch]$Simulate
     )
     process {
-        Invoke-ScriptFile -Name "SS_DEPLOYMENT_TEMPLATE.ps1" -Args $Arguments -TranscriptPath $TranscriptPath
+        Invoke-ScriptFile -Name "SS_DEPLOYMENT_TEMPLATE.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
     }
 }

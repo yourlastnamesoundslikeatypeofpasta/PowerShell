@@ -23,10 +23,21 @@ function Set-SharedMailboxAutoReply {
         [string]$AdminUser,
         [switch]$UseWebLogin,
         [string]$TranscriptPath
+        [switch]$Simulate
     )
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-STStatus 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
+    if ($Simulate) {
+        Write-STStatus 'Simulation mode active - auto-reply settings will not be changed.' -Level WARN -Log
+        $mock = [pscustomobject]@{
+            MailboxIdentity = $MailboxIdentity
+            Simulated       = $true
+            Timestamp       = Get-Date
+        }
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+        return $mock
+    }
 
     if (-not $ExternalMessage) { $ExternalMessage = $InternalMessage }
 

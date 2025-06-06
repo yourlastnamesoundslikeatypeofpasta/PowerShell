@@ -11,8 +11,9 @@ function Set-NetAdapterMetering {
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments,
         [string]$TranscriptPath
+        [switch]$Simulate
     )
     process {
-        Invoke-ScriptFile -Name "Set-NetAdapterMetering.ps1" -Args $Arguments -TranscriptPath $TranscriptPath
+        Invoke-ScriptFile -Name "Set-NetAdapterMetering.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
     }
 }

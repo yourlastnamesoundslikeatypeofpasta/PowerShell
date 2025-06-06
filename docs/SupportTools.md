@@ -10,6 +10,12 @@ Import-Module ./src/SupportTools/SupportTools.psd1
 For a guided experience, run `./scripts/SupportToolsMenu.ps1` to select
 common tasks from an interactive menu.
 
+### Simulation Mode
+
+All commands now accept a `-Simulate` switch. When used, the command logs each
+step and returns randomized mock data without making changes. This is useful for
+testing in lab environments.
+
 ## Available Commands
 
 The table below lists each command and the script it invokes. Arguments not

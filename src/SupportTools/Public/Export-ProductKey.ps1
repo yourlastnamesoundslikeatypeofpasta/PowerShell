@@ -11,8 +11,9 @@ function Export-ProductKey {
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments,
         [string]$TranscriptPath
+        [switch]$Simulate
     )
     process {
-        Invoke-ScriptFile -Name "ProductKey.ps1" -Args $Arguments -TranscriptPath $TranscriptPath
+        Invoke-ScriptFile -Name "ProductKey.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
     }
 }

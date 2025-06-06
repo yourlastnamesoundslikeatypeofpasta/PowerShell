@@ -13,7 +13,8 @@ function Invoke-ScriptFile {
         [string]$Name,
         [Parameter(ValueFromRemainingArguments=$true)]
         [object[]]$Args,
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
+        [switch]$Simulate
     )
     $Path = Join-Path $PSScriptRoot '..' |
             Join-Path -ChildPath '..' |
@@ -24,6 +25,18 @@ function Invoke-ScriptFile {
     Write-STStatus "EXECUTING $Name" -Level SUCCESS -Log
     if ($Args) {
         Write-STStatus "ARGS: $($Args -join ' ')" -Level SUB -Log
+    }
+
+    if ($Simulate) {
+        Write-STStatus "SIMULATING $Name" -Level INFO -Log
+        if ($Args) {
+            Write-STStatus "ARGS: $($Args -join ' ')" -Level SUB -Log
+        }
+        $count = Get-Random -Minimum 1 -Maximum 5
+        $mock = for ($i = 1; $i -le $count; $i++) {
+            [pscustomobject]@{ Id = $i; Value = (Get-Random) }
+        }
+        return $mock
     }
 
     if ($TranscriptPath) {

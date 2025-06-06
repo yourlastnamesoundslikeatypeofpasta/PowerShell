@@ -11,8 +11,9 @@ function Search-ReadMe {
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments,
         [string]$TranscriptPath
+        [switch]$Simulate
     )
     process {
-        Invoke-ScriptFile -Name "Search-ReadMe.ps1" -Args $Arguments -TranscriptPath $TranscriptPath
+        Invoke-ScriptFile -Name "Search-ReadMe.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
     }
 }

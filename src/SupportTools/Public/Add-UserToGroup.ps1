@@ -17,6 +17,7 @@ function Add-UserToGroup {
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [string]$GroupName,
         [string]$TranscriptPath
+        [switch]$Simulate
     )
 
     process {
@@ -30,6 +31,6 @@ function Add-UserToGroup {
             $arguments += $GroupName
         }
 
-        Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath
+        Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
     }
 }

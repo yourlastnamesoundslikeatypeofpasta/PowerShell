@@ -29,10 +29,22 @@ function Invoke-CompanyPlaceManagement {
         [string]$CountryOrRegion,
         [switch]$AutoAddFloor,
         [string]$TranscriptPath
+        [switch]$Simulate
     )
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
+    if ($Simulate) {
+        Write-STStatus 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log
+        $mock = [pscustomobject]@{
+            Action      = $Action
+            DisplayName = $DisplayName
+            Simulated   = $true
+            Timestamp   = Get-Date
+        }
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+        return $mock
+    }
     if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
         try {
             Import-Module MicrosoftPlaces -ErrorAction Stop
