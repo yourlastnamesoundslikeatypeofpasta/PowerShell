@@ -8,6 +8,11 @@ if (Test-Path $settingsFile) {
     try { $SharePointToolsSettings = Import-PowerShellDataFile $settingsFile } catch {}
 }
 
+# Override configuration with environment variables when provided
+if ($env:SPTOOLS_CLIENT_ID) { $SharePointToolsSettings.ClientId = $env:SPTOOLS_CLIENT_ID }
+if ($env:SPTOOLS_TENANT_ID) { $SharePointToolsSettings.TenantId = $env:SPTOOLS_TENANT_ID }
+if ($env:SPTOOLS_CERT_PATH) { $SharePointToolsSettings.CertPath = $env:SPTOOLS_CERT_PATH }
+
 function Save-SPToolsSettings {
     <#
     .SYNOPSIS

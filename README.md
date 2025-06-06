@@ -49,6 +49,20 @@ Example scripts for every function can be found in the `/Examples` folder.
 
 For help using Microsoft Graph cmdlets, see the official [Microsoft Graph PowerShell documentation](https://learn.microsoft.com/en-us/powershell/microsoftgraph/get-started?view=graph-powershell-1.0).
 
+## Security Considerations
+
+### Secrets Management
+
+Avoid hardcoding credentials or certificate paths within scripts. The SharePoint tools module can read the following environment variables to provide connection details securely:
+
+```text
+SPTOOLS_CLIENT_ID
+SPTOOLS_TENANT_ID
+SPTOOLS_CERT_PATH
+```
+
+When set, these variables override values stored in `config/SharePointToolsSettings.psd1`.
+
 ## Roadmap
 
 Potential areas for improvement and extension include:
