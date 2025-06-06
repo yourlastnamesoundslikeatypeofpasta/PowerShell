@@ -507,4 +507,120 @@ function Get-SPToolsAllRecycleBinReports {
         Get-SPToolsRecycleBinReport -SiteName $entry.Key -SiteUrl $entry.Value
     }
 }
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports'
+function Get-SPPermissionsReport {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$SiteUrl,
+        [string]$FolderUrl,
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
+    )
+
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    if ($FolderUrl) {
+        $target = Get-PnPFolder -Url $FolderUrl
+    } else {
+        $target = Get-PnPSite
+    }
+
+    $assignments = Get-PnPProperty -ClientObject $target -Property RoleAssignments
+    $report = foreach ($assignment in $assignments) {
+        $member = Get-PnPProperty -ClientObject $assignment -Property Member
+        $roles = Get-PnPProperty -ClientObject $assignment -Property RoleDefinitionBindings | ForEach-Object { $_.Name } -join ','
+        [pscustomobject]@{
+            Member = $member.Title
+            Type   = $member.PrincipalType
+            Roles  = $roles
+        }
+    }
+
+    Disconnect-PnPOnline
+    $report
+}
+
+function Clean-SPVersionHistory {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$SiteUrl,
+        [string]$LibraryName = 'Shared Documents',
+        [int]$KeepVersions = 5,
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
+    )
+
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    $items = Get-PnPListItem -List $LibraryName -PageSize 2000
+    foreach ($item in $items) {
+        $versions = Get-PnPProperty -ClientObject $item -Property Versions
+        if ($versions.Count -gt $KeepVersions) {
+            $excess = $versions | Sort-Object -Property Created -Descending | Select-Object -Skip $KeepVersions
+            foreach ($v in $excess) { $v.DeleteObject() | Out-Null }
+            Invoke-PnPQuery
+        }
+    }
+    Disconnect-PnPOnline
+}
+
+function Find-OrphanedSPFiles {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$SiteUrl,
+        [string]$LibraryName = 'Shared Documents',
+        [int]$Days = 90,
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
+    )
+
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    $cutoff = (Get-Date).AddDays(-$Days)
+    $items = Get-PnPListItem -List $LibraryName -PageSize 2000
+    $report = foreach ($item in $items) {
+        $file = Get-PnPProperty -ClientObject $item -Property File
+        if ($file.TimeLastModified -lt $cutoff) {
+            [pscustomobject]@{
+                Name         = $file.Name
+                Path         = $file.ServerRelativeUrl
+                LastModified = $file.TimeLastModified
+            }
+        }
+    }
+    Disconnect-PnPOnline
+    $report
+}
+
+function List-OneDriveUsage {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$AdminUrl,
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
+    )
+
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $AdminUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    $sites = Get-PnPTenantSite -IncludeOneDriveSites
+    $report = foreach ($s in $sites) {
+        if ($s.Template -eq 'SPSPERS') {
+            [pscustomobject]@{
+                Url       = $s.Url
+                Owner     = $s.Owner
+                StorageGB = [math]::Round($s.StorageUsageCurrent / 1GB, 2)
+            }
+        }
+    }
+
+    Disconnect-PnPOnline
+    $report
+}
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','List-OneDriveUsage'
