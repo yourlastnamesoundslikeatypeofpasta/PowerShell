@@ -28,11 +28,12 @@ function Write-SPToolsHacker {
     param(
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$Message
+        [string]$Message,
+        [ValidateSet('INFO','SUCCESS','ERROR','WARN','SUB','FINAL','FATAL')]
+        [string]$Level = 'INFO'
     )
     process {
-        Write-Host $Message -ForegroundColor Green -BackgroundColor Black
-        Write-STLog $Message
+        Write-STStatus -Message $Message -Level $Level -Log
     }
 
 }

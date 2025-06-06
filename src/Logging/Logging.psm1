@@ -48,4 +48,48 @@ function Write-STStatus {
     if ($Log) { Write-STLog -Message "$prefix $Message" }
 }
 
-Export-ModuleMember -Function 'Write-STLog','Write-STStatus'
+function Show-STPrompt {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Command,
+        [string]$Path = (Get-Location).Path
+    )
+    $user = if ($env:USERNAME) { $env:USERNAME } else { $env:USER }
+    $host = if ($env:COMPUTERNAME) { $env:COMPUTERNAME } else { $env:HOSTNAME }
+    Write-Host "┌──($user@$host)-[$Path]" -ForegroundColor DarkGray
+    Write-Host "└─$ $Command" -ForegroundColor Gray
+}
+
+function Write-STDivider {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Title,
+        [ValidateSet('light','heavy')][string]$Style = 'light'
+    )
+    $char = if ($Style -eq 'heavy') { '═' } else { '─' }
+    $total = 65
+    $padding = $total - $Title.Length - 4
+    if ($padding -lt 0) { $padding = 0 }
+    $half = [math]::Floor($padding / 2)
+    $divider = ($char * $half) + "[ $Title ]" + ($char * ($padding - $half))
+    Write-Host $divider -ForegroundColor DarkGray
+}
+
+function Write-STBlock {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][hashtable]$Data)
+    $max = ($Data.Keys | Measure-Object -Property Length -Maximum).Maximum
+    foreach ($k in $Data.Keys) {
+        $label = ($k + ':').PadRight($max + 1)
+        Write-Host "> $label $($Data[$k])" -ForegroundColor Gray
+    }
+}
+
+function Write-STClosing {
+    [CmdletBinding()]
+    param([string]$Message = 'Task Complete')
+    Write-Host "┌──[ $Message ]──────────────" -ForegroundColor DarkGray
+}
+
+Export-ModuleMember -Function 'Write-STLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing'
