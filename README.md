@@ -97,9 +97,9 @@ Potential areas for improvement and extension include:
 1. **Dependency Management**
    Automate installation or checks for required modules to streamline setup and
    provide clear guidance when dependencies are missing.
-2. **Testing and Continuous Integration**
-   Add more Pester tests to cover complex functions and configure CI to run them
-   automatically.
+2. ~~**Testing and Continuous Integration**~~
+   ~~Add more Pester tests to cover complex functions and configure CI to run them automatically.~~
+   Test automation now runs on every push and pull request using GitHub Actions.
 3. **Documentation**
    Expand user guides and provide a quickstart summary for key commands.
 4. **Feature Enhancements**
