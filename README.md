@@ -95,8 +95,9 @@ module see [docs/CredentialStorage.md](docs/CredentialStorage.md).
 
 ## Centralized Logging
 
-Commands automatically record their activity to `%USERPROFILE%\SupportToolsLogs\supporttools.log`.
-Review this file with `Get-Content` when troubleshooting.
+Commands automatically record their activity to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default.
+Set the `ST_LOG_PATH` environment variable or use the `-Path` parameter of `Write-STLog` to write logs to a custom location.
+Review the resulting log file with `Get-Content` when troubleshooting.
 
 ## Roadmap
 
