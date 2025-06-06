@@ -13,8 +13,12 @@ if ($env:SPTOOLS_CLIENT_ID) { $SharePointToolsSettings.ClientId = $env:SPTOOLS_C
 if ($env:SPTOOLS_TENANT_ID) { $SharePointToolsSettings.TenantId = $env:SPTOOLS_TENANT_ID }
 if ($env:SPTOOLS_CERT_PATH) { $SharePointToolsSettings.CertPath = $env:SPTOOLS_CERT_PATH }
 
-# Load required module once at module scope
-Import-Module PnP.PowerShell -ErrorAction Stop
+# Load required module once at module scope if available
+try {
+    Import-Module PnP.PowerShell -ErrorAction Stop
+} catch {
+    Write-Verbose "PnP.PowerShell module not available. Some commands may fail."
+}
 
 function Write-SPToolsHacker {
     param([string]$Message)
