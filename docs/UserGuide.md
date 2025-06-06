@@ -79,6 +79,20 @@ Set-SharedMailboxAutoReply -MailboxIdentity 'team@contoso.com' \
 
 For descriptions of all scripts included in the SupportTools wrapper module see [scripts/README.md](../scripts/README.md). Example usage scripts are provided in the `Examples` folder.
 
+## Security Considerations
+
+### Secrets Management
+
+Do not store client IDs, tenant identifiers, or certificate paths directly in scripts. Instead, define the following environment variables before using the SharePoint tools module:
+
+```text
+SPTOOLS_CLIENT_ID
+SPTOOLS_TENANT_ID
+SPTOOLS_CERT_PATH
+```
+
+These values override settings from `config/SharePointToolsSettings.psd1` so credentials remain outside of source control.
+
 ## Updating
 
 If the repository is updated, pull the latest changes and re-import the modules. Incremented module versions are defined in the manifest files.
