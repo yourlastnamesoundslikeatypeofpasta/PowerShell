@@ -5,7 +5,7 @@
     Author = 'Contoso'
     Description = 'Collection of helper functions wrapping existing scripts.'
     FunctionsToExport = @(
-        'AddUsersToGroup',
+        'Add-UsersToGroup',
         'CleanupArchive',
         'Convert-ExcelToCsv',
         'Get-CommonSystemInfo',
