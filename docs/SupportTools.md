@@ -34,6 +34,7 @@ listed are forwarded to the underlying script unchanged.
 | `Start-Countdown` | `SimpleCountdown.ps1` | *passthrough* | `Start-Countdown -Seconds 30` |
 | `Update-Sysmon` | `Update-Sysmon.ps1` | *passthrough* | `Update-Sysmon -SourcePath D:\Tools` |
 | `Invoke-CompanyPlaceManagement` | `Invoke-CompanyPlaceManagement.ps1` | `Action`, `DisplayName`, `[Type]`, `Street`, `City`, `State`, `PostalCode`, `CountryOrRegion`, `[AutoAddFloor]` | `Invoke-CompanyPlaceManagement -Action Create -DisplayName 'HQ' -Type Building -City Seattle` |
+| `Submit-SystemInfoTicket` | `Submit-SystemInfoTicket.ps1` | `SiteName`, `RequesterEmail`, `[Subject]`, `[Description]`, `[LibraryName]`, `[FolderPath]` | `Submit-SystemInfoTicket -SiteName IT -RequesterEmail 'user@contoso.com'` |
 
 For details on what each script does see [scripts/README.md](../scripts/README.md).
 
