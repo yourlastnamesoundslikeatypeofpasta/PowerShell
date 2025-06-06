@@ -23,3 +23,9 @@ function Export-ProductKey
     $ProductKey | Add-Content "D:\keys.txt"
 }
 
+function ProductKey {
+    $key = Get-ProductKey
+    Export-ProductKey -ProductKey $key
+    return $key
+}
+

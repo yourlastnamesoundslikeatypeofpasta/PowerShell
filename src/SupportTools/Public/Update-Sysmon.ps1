@@ -1,4 +1,4 @@
-#
+function Update-Sysmon {
 # <#
 # .SYNOPSIS
 # Update Sysmon to a specific version.
@@ -57,3 +57,4 @@ function Main {
     New-Item "$($driverLetter):\LOG\$($env:COMPUTERNAME).txt"
 }
 
+}

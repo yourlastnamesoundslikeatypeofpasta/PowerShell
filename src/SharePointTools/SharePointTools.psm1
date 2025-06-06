@@ -1,6 +1,14 @@
+# Dot-source public and private functions
+$publicDir = Join-Path $PSScriptRoot 'Public'
+if (Test-Path $publicDir) {
+    Get-ChildItem -Path $publicDir -Filter '*.ps1' | ForEach-Object { . $_.FullName }
+}
+$privateDir = Join-Path $PSScriptRoot 'Private'
+if (Test-Path $privateDir) {
+    Get-ChildItem -Path $privateDir -Filter '*.ps1' | ForEach-Object { . $_.FullName }
+}
+
 # SharePoint cleanup helpers
-
-
 function Invoke-YFArchiveCleanup {
     [CmdletBinding()]
     param()

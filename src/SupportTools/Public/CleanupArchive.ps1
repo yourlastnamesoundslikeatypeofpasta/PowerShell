@@ -1,3 +1,4 @@
+function CleanupArchive {
 <#
 .SYNOPSIS
 This script connects to a SharePoint Online site, navigates to an archived directory, and deletes all files and folders within that directory.
@@ -113,4 +114,5 @@ foreach ($folder in $zzz_Archive_ProductionSharePointFolder)
         Remove-PnPFolder -Name $folder.Name -Folder $folder.ParentFolder -Force
         Write-Verbose -Message "RemovedFile: $($folder.ServerRelativeUrl)"
     }
+}
 }

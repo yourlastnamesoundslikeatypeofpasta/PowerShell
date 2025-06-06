@@ -1,3 +1,4 @@
+function Add-UsersToGroup {
 <#
 .SYNOPSIS
 This script connects to Microsoft Graph, imports a CSV file containing user principal names (UPNs), and adds the users to a specified Microsoft 365 group if they are not already members.
@@ -203,4 +204,5 @@ function Start-Main {
     Write-Host -ForegroundColor Green "Disconnected from Microsoft Graph"
 }
 
-Start-Main -CsvPath $CsvPath -GroupName $GroupName
+    Start-Main -CsvPath $CsvPath -GroupName $GroupName
+}

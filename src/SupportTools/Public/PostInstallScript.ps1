@@ -1,4 +1,5 @@
 #
+function PostInstallScript {
 # <#
 # .SYNOPSIS
 # Automate Windows 10 setup while in audit mode.
@@ -345,3 +346,4 @@ function Main
 
 }
 
+}

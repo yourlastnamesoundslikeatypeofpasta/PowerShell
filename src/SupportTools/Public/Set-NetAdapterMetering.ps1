@@ -1,4 +1,4 @@
-function Set-NetAdapterMetric {
+function Set-NetAdapterMetering {
     <#
     .SYNOPSIS
     Set a network adapters metric priority

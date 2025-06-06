@@ -1,4 +1,4 @@
-#
+function Invoke-DeploymentTemplate {
 # <#
 # .SYNOPSIS
 # Template script for sneaker net deployments.
@@ -278,3 +278,4 @@ $serverSharePath = Get-ServerSharePath -Login -Ship
 $updateVersion = Get-UpdateVersion -Login -Ship
 
 
+}

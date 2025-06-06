@@ -1,3 +1,4 @@
+function Get-UniquePermissions {
 <#
 .SYNOPSIS
 This script was developed to handle large SharePoint libraries that exceed the 5000 item limit by bypassing this restriction using PnP PowerShell cmdlets.
@@ -111,3 +112,4 @@ foreach ($item in $items)
 
 # Return the list of items with unique role assignments
 return $uniqueRolesList
+}
