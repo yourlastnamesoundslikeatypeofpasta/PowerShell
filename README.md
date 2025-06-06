@@ -23,6 +23,13 @@ Import-Module ./src/SupportTools/SupportTools.psd1
 Import-Module ./src/SharePointTools/SharePointTools.psd1
 ```
 
+Before running any SharePoint cleanup commands, execute the configuration script
+once to store your tenant details:
+
+```powershell
+./scripts/Configure-SharePointTools.ps1
+```
+
 Example command:
 
 ```powershell

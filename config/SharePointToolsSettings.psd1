@@ -1,0 +1,5 @@
+@{
+    ClientId = ''
+    TenantId = ''
+    CertPath = ''
+}

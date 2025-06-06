@@ -23,3 +23,4 @@ The following table provides a brief description of each script.
 | **SimpleCountdown.ps1** | Outputs a simple countdown from 10 to 1. |
 | **Update-Sysmon.ps1** | Reinstalls Sysmon from a removable drive and verifies it is running. |
 | **SS_DEPLOYMENT_TEMPLATE.ps1** | Template for sneaker net deployments that installs agents and configures a system. |
+| **Configure-SharePointTools.ps1** | Prompts for SharePoint application values and saves them to a settings file. |

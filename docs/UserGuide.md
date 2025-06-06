@@ -37,6 +37,12 @@ Import-Module ./src/SupportTools/SupportTools.psd1
 Import-Module ./src/SharePointTools/SharePointTools.psd1
 ```
 
+Run the configuration script once to store your SharePoint application details:
+
+```powershell
+./scripts/Configure-SharePointTools.ps1
+```
+
 You can place these commands in your profile or deployment scripts so the functions are available in each session.
 
 ## Running Commands
