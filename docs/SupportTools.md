@@ -7,6 +7,9 @@ Import the module and run the desired function rather than calling the script di
 Import-Module ./src/SupportTools/SupportTools.psd1
 ```
 
+For a guided experience, run `./scripts/SupportToolsMenu.ps1` to select
+common tasks from an interactive menu.
+
 ## Available Commands
 
 The table below lists each command and the script it invokes. Arguments not

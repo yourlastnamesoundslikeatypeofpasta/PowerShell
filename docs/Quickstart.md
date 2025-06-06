@@ -35,5 +35,9 @@ This short guide shows the basic steps to start using the modules in this reposi
    # Create a Service Desk ticket
    New-SDTicket -Title "Test" -Description "Quick start test"
    ```
+7. **Launch the interactive menu** (optional)
+   ```powershell
+   ./scripts/SupportToolsMenu.ps1
+   ```
 
 See [docs/UserGuide.md](UserGuide.md) for detailed deployment and usage instructions.
