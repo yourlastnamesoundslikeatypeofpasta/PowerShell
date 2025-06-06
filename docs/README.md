@@ -11,4 +11,5 @@ The key guides are:
 - [Module Style Guide](./ModuleStyleGuide.md) – how scripts display progress messages and log output.
 - [Get-FunctionDependencyGraph](./Get-FunctionDependencyGraph.md) – generate a visual map of function calls in a script.
 
+
 Command specific help topics live in the `SupportTools`, `SharePointTools` and `ServiceDeskTools` subfolders.
