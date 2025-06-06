@@ -1,4 +1,4 @@
-function Get-NetworkShares {
+function Get-NetworkShare {
     <#
     .SYNOPSIS
         Lists network shares on a specified computer.

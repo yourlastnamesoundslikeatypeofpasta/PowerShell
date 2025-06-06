@@ -5,29 +5,30 @@ online version:
 schema: 2.0.0
 ---
 
-# Clear-TempFiles
+# Get-NetworkShare
 
 ## SYNOPSIS
-Removes temporary files from the repository.
+Lists network shares on a specified computer.
 
 ## SYNTAX
 
 ```
-Clear-TempFiles [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+Get-NetworkShare [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Wraps the CleanupTempFiles.ps1 script in the scripts folder and forwards any provided arguments.
+Executes the Get-NetworkShares.ps1 script from the scripts folder and
+returns its results.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Clear-TempFiles -? # replace with actual parameters
+PS C:\> Get-NetworkShare -ComputerName $env:COMPUTERNAME
 ```
 
-Demonstrates typical usage of Clear-TempFiles.
+Demonstrates typical usage of Get-NetworkShare.
 
 ## PARAMETERS
 

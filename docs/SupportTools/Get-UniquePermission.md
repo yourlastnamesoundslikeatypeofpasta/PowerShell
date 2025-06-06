@@ -5,30 +5,30 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-NetworkShares
+# Get-UniquePermission
 
 ## SYNOPSIS
-Lists network shares on a specified computer.
+Returns items with unique permissions in a SharePoint site.
 
 ## SYNTAX
 
 ```
-Get-NetworkShares [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+Get-UniquePermission [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Executes the Get-NetworkShares.ps1 script from the scripts folder and
-returns its results.
+Calls the Get-UniquePermissions.ps1 script contained in the scripts
+directory and outputs its results.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Get-NetworkShares -ComputerName $env:COMPUTERNAME
+PS C:\> Get-UniquePermission -SiteUrl 'https://contoso.sharepoint.com/sites/Example'
 ```
 
-Demonstrates typical usage of Get-NetworkShares.
+Demonstrates typical usage of Get-UniquePermission.
 
 ## PARAMETERS
 

@@ -5,61 +5,45 @@ online version:
 schema: 2.0.0
 ---
 
-# Add-UsersToGroup
+# Get-FailedLogin
 
 ## SYNOPSIS
-Adds users from a CSV file to a Microsoft 365 group.
+Retrieves failed login attempts from the Security event log.
 
 ## SYNTAX
 
 ```
-Add-UsersToGroup [[-CsvPath] <String>] [[-GroupName] <String>] [[-TranscriptPath] <String>]
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Get-FailedLogin [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Wraps the AddUsersToGroup.ps1 script located in the repository's scripts
-folder.
-Parameters are passed directly through to the script file.
+Calls the Get-FailedLogins.ps1 script in the scripts folder and returns
+its output.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Add-UsersToGroup -CsvPath './users.csv' -GroupName 'MyGroup'
+PS C:\> Get-FailedLogin -ComputerName $env:COMPUTERNAME
 ```
 
-Demonstrates typical usage of Add-UsersToGroup.
+Demonstrates typical usage of Get-FailedLogin.
 
 ## PARAMETERS
 
-### -CsvPath
-Path to the CSV file containing user principal names.
+### -Arguments
+Arguments passed directly to the underlying script.
 
 ```yaml
-Type: String
+Type: Object[]
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: 1
 Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
-### -GroupName
-Name of the Microsoft 365 group to modify.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 2
-Default value: None
-Accept pipeline input: True (ByPropertyName)
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -72,7 +56,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 3
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
