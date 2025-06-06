@@ -84,8 +84,15 @@ function Get-GroupNames {
 function Connect-MicrosoftGraph {
     # Connect to Microsoft Graph API
     Write-STStatus 'Connecting to Microsoft Graph...' -Level INFO
+    $scopes = 'User.Read.All','Group.ReadWrite.All','Directory.ReadWrite.All'
     try {
-        Connect-MgGraph -Scopes "User.Read.All", "Group.ReadWrite.All", "Directory.ReadWrite.All" -NoWelcome
+        Connect-MgGraph -Scopes $scopes -NoWelcome
+        try {
+            Confirm-MgGraphScopes -Scopes $scopes
+        } catch {
+            Write-Warning 'Microsoft Graph scopes not granted. Exiting.'
+            throw
+        }
     }
     catch {
         Write-Error -Message "Error: $_.Exception.Message"
