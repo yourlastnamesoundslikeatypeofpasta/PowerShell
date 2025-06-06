@@ -30,6 +30,7 @@ Describe 'SupportTools Module' {
             'Submit-SystemInfoTicket',
             'Generate-SPUsageReport'
             'Install-MaintenanceTasks'
+            'Invoke-GroupMembershipCleanup'
         )
 
         $exported = (Get-Command -Module SupportTools).Name
@@ -64,6 +65,7 @@ Describe 'SupportTools Module' {
             Submit_SystemInfoTicket      = 'Submit-SystemInfoTicket.ps1'
             Generate_SPUsageReport       = 'Generate-SPUsageReport.ps1'
             Install_MaintenanceTasks = 'Setup-ScheduledMaintenance.ps1'
+            Invoke_GroupMembershipCleanup = 'CleanupGroupMembership.ps1'
         }
 
         $cases = foreach ($entry in $map.GetEnumerator()) {

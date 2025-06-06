@@ -7,6 +7,7 @@ The following table provides a brief description of each script.
 | Script | Description |
 |-------|-------------|
 | **AddUsersToGroup.ps1** | Adds users from a CSV file to a Microsoft 365 group using Microsoft Graph. |
+| **CleanupGroupMembership.ps1** | Removes users from a Microsoft 365 group based on a CSV list. |
 | **CleanupArchive.ps1** | Deletes files and folders inside the `zzz_Archive_Production` directory of a SharePoint library. |
 | **Convert-ExcelToCsv.ps1** | Converts Excel files to CSV format. |
 | **Get-CommonSystemInfo.ps1** | Retrieves operating system, processor, memory and disk information. |

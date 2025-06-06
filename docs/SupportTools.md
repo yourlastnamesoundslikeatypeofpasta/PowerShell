@@ -7,8 +7,9 @@ Import the module and run the desired function rather than calling the script di
 Import-Module ./src/SupportTools/SupportTools.psd1
 ```
 
-For a guided experience, run `./scripts/SupportToolsMenu.ps1` to select
-common tasks from an interactive menu.
+For a guided experience, run `./scripts/SupportToolsMenu.ps1` with the optional
+`-UserRole` parameter to select common tasks from an interactive menu tailored
+for `Helpdesk` or `Site Admin` roles.
 
 ## Available Commands
 
@@ -18,6 +19,7 @@ listed are forwarded to the underlying script unchanged.
 | Command | Wrapped Script | Key Parameters | Example |
 |---------|----------------|---------------|---------|
 | `Add-UserToGroup` | `AddUsersToGroup.ps1` | `CsvPath`, `GroupName` | `Add-UserToGroup -CsvPath users.csv -GroupName 'Team'` |
+| `Invoke-GroupMembershipCleanup` | `CleanupGroupMembership.ps1` | `CsvPath`, `GroupName` | `Invoke-GroupMembershipCleanup -CsvPath remove.csv -GroupName 'Team'` |
 | `Clear-ArchiveFolder` | `CleanupArchive.ps1` | *passthrough* | `Clear-ArchiveFolder -SiteUrl https://contoso.sharepoint.com/sites/Files` |
 | `Restore-ArchiveFolder` | `RollbackArchive.ps1` | `SnapshotPath`, `SiteUrl` | `Restore-ArchiveFolder -SiteUrl https://contoso.sharepoint.com/sites/Files -SnapshotPath preDeleteLog.json` |
 | `Convert-ExcelToCsv` | `Convert-ExcelToCsv.ps1` | *passthrough* | `Convert-ExcelToCsv -Path workbook.xlsx` |
