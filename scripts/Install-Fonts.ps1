@@ -11,8 +11,17 @@
 
 
 function Main {
-    
-    
+    param(
+        [Parameter(Mandatory)]
+        [string]$FontFolder
+    )
+
+    if (-not ([bool](New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator))) {
+        throw 'Administrator rights are required to install fonts.'
+    }
+
+    $fonts = Get-Fonts -FontFolder $FontFolder
+    Install-Fonts -Fonts $fonts
 }
 
 function Get-Fonts {
@@ -36,8 +45,8 @@ function Install-Fonts {
     foreach ($font in $Fonts)
     {
         $fontName = $font.Name
-        Copy-Item -Path $Font.FullName -Destination "C:\Windows\Fonts" 
-        New-ItemProperty -Name $font.BaseName -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Fonts" -PropertyType string -Value $Font.name   
+        Copy-Item -Path $font.FullName -Destination "C:\Windows\Fonts" -Force
+        New-ItemProperty -Name $font.BaseName -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Fonts" -PropertyType string -Value $font.Name -Force
     }
     
 }
