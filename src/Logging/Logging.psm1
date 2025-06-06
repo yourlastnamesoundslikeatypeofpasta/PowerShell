@@ -6,7 +6,8 @@ function Write-STLog {
         [ValidateSet('INFO','WARN','ERROR')]
         [string]$Level = 'INFO'
     )
-    $logDir = Join-Path $env:USERPROFILE 'SupportToolsLogs'
+    $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
+    $logDir = Join-Path $userProfile 'SupportToolsLogs'
     if (-not (Test-Path $logDir)) {
         New-Item -Path $logDir -ItemType Directory -Force | Out-Null
     }
