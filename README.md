@@ -4,6 +4,7 @@ This repository packages a collection of scripts into reusable modules.
 
 * **SupportTools** – general helper commands that wrap the scripts in the `/scripts` folder.
 * **SharePointTools** – commands for SharePoint cleanup tasks such as removing archives or sharing links.
+* **ServiceDeskTools** – interact with the Service Desk ticketing system.
 
 ## Requirements
 
@@ -27,6 +28,7 @@ This repository packages a collection of scripts into reusable modules.
    ```powershell
    Import-Module ./src/SupportTools/SupportTools.psd1
    Import-Module ./src/SharePointTools/SharePointTools.psd1
+   Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
    ```
 
 3. Run the SharePoint configuration script once to store tenant information:
@@ -53,7 +55,7 @@ Invoke-YFArchiveCleanup -Verbose
 Get-SPToolsAllLibraryReports | Format-Table
 ```
 
-See [docs/SupportTools.md](docs/SupportTools.md) and [docs/SharePointTools.md](docs/SharePointTools.md) for a full list of commands. For deployment guidance consult [docs/UserGuide.md](docs/UserGuide.md).
+See [docs/SupportTools.md](docs/SupportTools.md), [docs/SharePointTools.md](docs/SharePointTools.md) and [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md) for a full list of commands. For deployment guidance consult [docs/UserGuide.md](docs/UserGuide.md).
 
 The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.
@@ -77,6 +79,13 @@ Avoid hardcoding credentials or certificate paths within scripts. The SharePoint
 SPTOOLS_CLIENT_ID
 SPTOOLS_TENANT_ID
 SPTOOLS_CERT_PATH
+```
+
+ServiceDeskTools reads the following variables for API access:
+
+```text
+SD_API_TOKEN
+SD_BASE_URI
 ```
 
 When set, these variables override values stored in `config/SharePointToolsSettings.psd1`.
