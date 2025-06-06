@@ -6,4 +6,4 @@ Import-Module $loggingModule -ErrorAction SilentlyContinue
 Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 
-Export-ModuleMember -Function 'Get-SDTicket','New-SDTicket','Set-SDTicket'
+Export-ModuleMember -Function 'Get-SDTicket','New-SDTicket','Set-SDTicket','Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask'

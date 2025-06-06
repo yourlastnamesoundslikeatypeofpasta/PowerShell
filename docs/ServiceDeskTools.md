@@ -9,5 +9,8 @@ Commands for interacting with the Service Desk ticketing API.
 | `Get-SDTicket` | Retrieve an incident by ID | `Get-SDTicket -Id 42` |
 | `New-SDTicket` | Create a new incident | `New-SDTicket -Subject "Printer issue" -Description "Cannot print" -RequesterEmail 'jane.doe@example.com'` |
 | `Set-SDTicket` | Update an existing incident | `Set-SDTicket -Id 42 -Fields @{ status = 'Resolved' }` |
+| `Search-SDTicket` | Search incidents by keyword | `Search-SDTicket -Query 'printer'` |
+| `Set-SDTicketBulk` | Apply updates to multiple incidents | `Set-SDTicketBulk -Id 1,2,3 -Fields @{ status='Closed' }` |
+| `Link-SDTicketToSPTask` | Add a related SharePoint task link | `Link-SDTicketToSPTask -TicketId 42 -TaskUrl 'https://contoso.sharepoint.com/tasks/1'` |
 
 `SD_API_TOKEN` must be set in the environment. Optionally set `SD_BASE_URI` if your Service Desk API uses a custom URL.
