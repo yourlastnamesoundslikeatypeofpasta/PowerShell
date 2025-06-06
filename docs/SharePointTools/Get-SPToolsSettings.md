@@ -23,7 +23,7 @@ Description forthcoming for Get-SPToolsSettings.
 
 ### Example 1
 ```powershell
-PS C:\> Get-SPToolsSettings
+PS C:\> Get-SPToolsSettings -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Get-SPToolsSettings.

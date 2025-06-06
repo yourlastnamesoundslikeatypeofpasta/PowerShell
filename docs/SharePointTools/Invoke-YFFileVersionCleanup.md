@@ -23,7 +23,7 @@ Description forthcoming for Invoke-YFFileVersionCleanup.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-YFFileVersionCleanup
+PS C:\> Invoke-YFFileVersionCleanup -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Invoke-YFFileVersionCleanup.

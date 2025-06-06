@@ -23,7 +23,7 @@ Description forthcoming for Invoke-YFSharingLinkCleanup.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-YFSharingLinkCleanup
+PS C:\> Invoke-YFSharingLinkCleanup -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Invoke-YFSharingLinkCleanup.

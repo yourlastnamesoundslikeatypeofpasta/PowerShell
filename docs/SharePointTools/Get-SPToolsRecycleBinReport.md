@@ -24,7 +24,7 @@ Description forthcoming for Get-SPToolsRecycleBinReport.
 
 ### Example 1
 ```powershell
-PS C:\> Get-SPToolsRecycleBinReport -SiteName HR
+PS C:\> Get-SPToolsRecycleBinReport -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Get-SPToolsRecycleBinReport.

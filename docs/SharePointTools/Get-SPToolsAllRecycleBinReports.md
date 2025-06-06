@@ -23,7 +23,7 @@ Description forthcoming for Get-SPToolsAllRecycleBinReports.
 
 ### Example 1
 ```powershell
-PS C:\> Get-SPToolsAllRecycleBinReports
+PS C:\> Get-SPToolsAllRecycleBinReports -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Get-SPToolsAllRecycleBinReports.

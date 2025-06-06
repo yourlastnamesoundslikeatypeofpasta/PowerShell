@@ -23,7 +23,7 @@ Description forthcoming for Get-SPToolsAllPreservationHoldReports.
 
 ### Example 1
 ```powershell
-PS C:\> Get-SPToolsAllPreservationHoldReports
+PS C:\> Get-SPToolsAllPreservationHoldReports -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Get-SPToolsAllPreservationHoldReports.
