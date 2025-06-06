@@ -1,5 +1,7 @@
 $PublicDir = Join-Path $PSScriptRoot 'Public'
 $PrivateDir = Join-Path $PSScriptRoot 'Private'
+$loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
+Import-Module $loggingModule -ErrorAction SilentlyContinue
 
 Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
@@ -15,6 +17,7 @@ function Show-SupportToolsBanner {
         Write-Host $line -ForegroundColor Black -BackgroundColor Green
     }
     Write-Host '>> Welcome operator. Run ''Get-Command -Module SupportTools'' to view available tools.' -ForegroundColor Green -BackgroundColor Black
+    Write-STLog 'SupportTools module loaded'
 }
 
 Show-SupportToolsBanner

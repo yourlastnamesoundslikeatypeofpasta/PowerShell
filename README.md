@@ -92,6 +92,11 @@ When set, these variables override values stored in `config/SharePointToolsSetti
 For a step-by-step example of loading these variables from the SecretManagement
 module see [docs/CredentialStorage.md](docs/CredentialStorage.md).
 
+## Centralized Logging
+
+Commands automatically record their activity to `%USERPROFILE%\SupportToolsLogs\supporttools.log`.
+Review this file with `Get-Content` when troubleshooting.
+
 ## Roadmap
 
 Potential areas for improvement and extension include:
@@ -109,8 +114,8 @@ Potential areas for improvement and extension include:
 5. **Versioning and Distribution**
    Package the modules for easier updates via an internal feed and consider
    publishing them to an internal repository.
-6. **Centralized Logging**
-   Provide a consistent logging approach across all commands for easier troubleshooting.
+6. ~~**Centralized Logging**
+   Provide a consistent logging approach across all commands for easier troubleshooting.~~ - Commands now log to `%USERPROFILE%\SupportToolsLogs\supporttools.log`.
 7. **Error Handling**
    Add standardized error handling and optional transcript output.
 8. ~~**Configuration Guidance**

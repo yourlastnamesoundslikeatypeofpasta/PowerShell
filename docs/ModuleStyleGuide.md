@@ -12,3 +12,6 @@ Write-SPToolsHacker '>>> CLEANING FILES'
 
 Include a message when starting work and another when the task completes so the
 operator can follow along as scripts run.
+
+Every message output through `Write-SPToolsHacker` is also written to
+`%USERPROFILE%\SupportToolsLogs\supporttools.log` for troubleshooting.

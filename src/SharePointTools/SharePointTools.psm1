@@ -8,6 +8,9 @@ if (Test-Path $settingsFile) {
     try { $SharePointToolsSettings = Import-PowerShellDataFile $settingsFile } catch {}
 }
 
+$loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
+Import-Module $loggingModule -ErrorAction SilentlyContinue
+
 # Override configuration with environment variables when provided
 if ($env:SPTOOLS_CLIENT_ID) { $SharePointToolsSettings.ClientId = $env:SPTOOLS_CLIENT_ID }
 if ($env:SPTOOLS_TENANT_ID) { $SharePointToolsSettings.TenantId = $env:SPTOOLS_TENANT_ID }
@@ -23,6 +26,7 @@ try {
 function Write-SPToolsHacker {
     param([string]$Message)
     Write-Host $Message -ForegroundColor Green -BackgroundColor Black
+    Write-STLog $Message
 }
 
 function Save-SPToolsSettings {

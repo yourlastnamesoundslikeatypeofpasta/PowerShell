@@ -13,6 +13,7 @@ function Set-SDTicket {
         [Parameter(Mandatory)][hashtable]$Fields
     )
 
+    Write-STLog "Set-SDTicket $Id"
     $body = @{ incident = $Fields }
     Invoke-SDRequest -Method 'PUT' -Path "/incidents/$Id.json" -Body $body
 }
