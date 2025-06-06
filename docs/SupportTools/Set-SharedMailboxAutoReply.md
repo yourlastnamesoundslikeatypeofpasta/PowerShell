@@ -27,15 +27,15 @@ All specified parameters are forwarded to the script.
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Set-SharedMailboxAutoReply -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Set-SharedMailboxAutoReply.
 
 ## PARAMETERS
 
 ### -MailboxIdentity
-{{ Fill MailboxIdentity Description }}
+Mailbox identity to configure.
 
 ```yaml
 Type: String
@@ -50,7 +50,7 @@ Accept wildcard characters: False
 ```
 
 ### -StartTime
-{{ Fill StartTime Description }}
+Start time for the automatic reply.
 
 ```yaml
 Type: DateTime
@@ -65,7 +65,7 @@ Accept wildcard characters: False
 ```
 
 ### -EndTime
-{{ Fill EndTime Description }}
+End time for the automatic reply.
 
 ```yaml
 Type: DateTime
@@ -80,7 +80,7 @@ Accept wildcard characters: False
 ```
 
 ### -InternalMessage
-{{ Fill InternalMessage Description }}
+Internal auto-reply message.
 
 ```yaml
 Type: String
@@ -95,7 +95,7 @@ Accept wildcard characters: False
 ```
 
 ### -ExternalMessage
-{{ Fill ExternalMessage Description }}
+External auto-reply message.
 
 ```yaml
 Type: String
@@ -110,7 +110,7 @@ Accept wildcard characters: False
 ```
 
 ### -ExternalAudience
-{{ Fill ExternalAudience Description }}
+Audience for the external message.
 
 ```yaml
 Type: String
@@ -125,7 +125,7 @@ Accept wildcard characters: False
 ```
 
 ### -AdminUser
-{{ Fill AdminUser Description }}
+Administrative account used to connect.
 
 ```yaml
 Type: String
@@ -140,7 +140,7 @@ Accept wildcard characters: False
 ```
 
 ### -UseWebLogin
-{{ Fill UseWebLogin Description }}
+Use web login for authentication.
 
 ```yaml
 Type: SwitchParameter
@@ -155,7 +155,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

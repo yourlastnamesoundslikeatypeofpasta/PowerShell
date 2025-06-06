@@ -17,21 +17,21 @@ Invoke-YFArchiveCleanup [-ProgressAction <ActionPreference>] [<CommonParameters>
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for Invoke-YFArchiveCleanup.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Invoke-YFArchiveCleanup -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Invoke-YFArchiveCleanup.
 
 ## PARAMETERS
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

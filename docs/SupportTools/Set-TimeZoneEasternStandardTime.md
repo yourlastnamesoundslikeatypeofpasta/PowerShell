@@ -25,15 +25,15 @@ arguments.
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Set-TimeZoneEasternStandardTime -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Set-TimeZoneEasternStandardTime.
 
 ## PARAMETERS
 
 ### -Arguments
-{{ Fill Arguments Description }}
+Arguments passed directly to the underlying script.
 
 ```yaml
 Type: Object[]
@@ -48,7 +48,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

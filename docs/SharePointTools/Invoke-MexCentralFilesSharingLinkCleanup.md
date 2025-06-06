@@ -17,21 +17,21 @@ Invoke-MexCentralFilesSharingLinkCleanup [-ProgressAction <ActionPreference>] [<
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for Invoke-MexCentralFilesSharingLinkCleanup.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Invoke-MexCentralFilesSharingLinkCleanup -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Invoke-MexCentralFilesSharingLinkCleanup.
 
 ## PARAMETERS
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

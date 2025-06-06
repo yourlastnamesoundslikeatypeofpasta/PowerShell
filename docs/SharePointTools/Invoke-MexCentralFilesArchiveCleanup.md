@@ -17,21 +17,21 @@ Invoke-MexCentralFilesArchiveCleanup [-ProgressAction <ActionPreference>] [<Comm
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for Invoke-MexCentralFilesArchiveCleanup.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Invoke-MexCentralFilesArchiveCleanup -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Invoke-MexCentralFilesArchiveCleanup.
 
 ## PARAMETERS
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

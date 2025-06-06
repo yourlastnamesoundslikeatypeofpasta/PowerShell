@@ -17,21 +17,21 @@ Invoke-IBCCentralFilesArchiveCleanup [-ProgressAction <ActionPreference>] [<Comm
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for Invoke-IBCCentralFilesArchiveCleanup.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Invoke-IBCCentralFilesArchiveCleanup -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Invoke-IBCCentralFilesArchiveCleanup.
 
 ## PARAMETERS
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

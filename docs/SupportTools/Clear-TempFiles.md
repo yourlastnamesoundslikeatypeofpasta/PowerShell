@@ -23,15 +23,15 @@ Wraps the CleanupTempFiles.ps1 script in the scripts folder and forwards any pro
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Clear-TempFiles -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Clear-TempFiles.
 
 ## PARAMETERS
 
 ### -Arguments
-{{ Fill Arguments Description }}
+Arguments passed directly to the underlying script.
 
 ```yaml
 Type: Object[]
@@ -46,7 +46,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

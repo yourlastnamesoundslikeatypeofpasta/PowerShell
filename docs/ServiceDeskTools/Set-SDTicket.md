@@ -17,16 +17,16 @@ Set-SDTicket [-Id] <Int32> [-Fields] <Hashtable> [-ProgressAction <ActionPrefere
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for Set-SDTicket.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Set-SDTicket -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Set-SDTicket.
 
 ## PARAMETERS
 
@@ -61,7 +61,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-SPToolsRecycleBinReport
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+See DESCRIPTION section.
 
 ## SYNTAX
 
@@ -18,21 +18,21 @@ Get-SPToolsRecycleBinReport [-SiteName] <String> [[-SiteUrl] <String>] [[-Client
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for Get-SPToolsRecycleBinReport.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Get-SPToolsRecycleBinReport -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Get-SPToolsRecycleBinReport.
 
 ## PARAMETERS
 
 ### -CertPath
-{{ Fill CertPath Description }}
+Certificate path used for authentication.
 
 ```yaml
 Type: String
@@ -47,7 +47,7 @@ Accept wildcard characters: False
 ```
 
 ### -ClientId
-{{ Fill ClientId Description }}
+Client ID used for authentication.
 
 ```yaml
 Type: String
@@ -62,7 +62,7 @@ Accept wildcard characters: False
 ```
 
 ### -SiteName
-{{ Fill SiteName Description }}
+Friendly name of the site.
 
 ```yaml
 Type: String
@@ -77,7 +77,7 @@ Accept wildcard characters: False
 ```
 
 ### -SiteUrl
-{{ Fill SiteUrl Description }}
+URL of the SharePoint site.
 
 ```yaml
 Type: String
@@ -92,7 +92,7 @@ Accept wildcard characters: False
 ```
 
 ### -TenantId
-{{ Fill TenantId Description }}
+Tenant ID used for authentication.
 
 ```yaml
 Type: String
@@ -107,7 +107,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

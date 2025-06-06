@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-SPToolsAllLibraryReports
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+See DESCRIPTION section.
 
 ## SYNTAX
 
@@ -17,21 +17,21 @@ Get-SPToolsAllLibraryReports [-ProgressAction <ActionPreference>] [<CommonParame
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for Get-SPToolsAllLibraryReports.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Get-SPToolsAllLibraryReports -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Get-SPToolsAllLibraryReports.
 
 ## PARAMETERS
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

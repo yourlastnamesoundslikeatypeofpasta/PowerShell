@@ -24,15 +24,15 @@ ExchangeOnlineManagement module is installed before running.
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Invoke-ExchangeCalendarManager -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Invoke-ExchangeCalendarManager.
 
 ## PARAMETERS
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

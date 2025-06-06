@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-SPToolsAllPreservationHoldReports
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+See DESCRIPTION section.
 
 ## SYNTAX
 
@@ -17,21 +17,21 @@ Get-SPToolsAllPreservationHoldReports [-ProgressAction <ActionPreference>] [<Com
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for Get-SPToolsAllPreservationHoldReports.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Get-SPToolsAllPreservationHoldReports -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Get-SPToolsAllPreservationHoldReports.
 
 ## PARAMETERS
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference
