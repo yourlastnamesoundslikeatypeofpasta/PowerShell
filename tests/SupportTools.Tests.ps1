@@ -26,7 +26,8 @@ Describe 'SupportTools Module' {
             'Set-SharedMailboxAutoReply',
             'Invoke-ExchangeCalendarManager',
             'Invoke-CompanyPlaceManagement',
-            'Submit-SystemInfoTicket'
+            'Submit-SystemInfoTicket',
+            'Generate-SPUsageReport'
         )
 
         $exported = (Get-Command -Module SupportTools).Name
@@ -58,6 +59,7 @@ Describe 'SupportTools Module' {
             Start_Countdown              = 'SimpleCountdown.ps1'
             Update_Sysmon                = 'Update-Sysmon.ps1'
             Submit_SystemInfoTicket      = 'Submit-SystemInfoTicket.ps1'
+            Generate_SPUsageReport       = 'Generate-SPUsageReport.ps1'
         }
 
         $cases = foreach ($entry in $map.GetEnumerator()) {
