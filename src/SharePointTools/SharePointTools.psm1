@@ -671,3 +671,16 @@ function List-OneDriveUsage {
     $report
 }
 Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','List-OneDriveUsage'
+
+function Show-SharePointToolsBanner {
+    $lines = @(
+        '=======================================',
+        '=   SHAREPOINTTOOLS MODULE ENGAGED    =',
+        '=======================================')
+    foreach ($line in $lines) {
+        Write-Host $line -ForegroundColor Black -BackgroundColor Yellow
+    }
+    Write-Host ">> Welcome operator. Run 'Get-Command -Module SharePointTools' to view available tools." -ForegroundColor Yellow -BackgroundColor Black
+}
+
+Show-SharePointToolsBanner
