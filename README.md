@@ -116,3 +116,5 @@ Potential areas for improvement and extension include:
 8. ~~**Configuration Guidance**
    Document a recommended workflow for securely storing credentials.~~ - Example
 workflow added ([docs/CredentialStorage.md](docs/CredentialStorage.md)).
+9. ~~**Linting and Code Quality**
+   Check scripts with PSScriptAnalyzer on each commit.~~ - Linting automated via GitHub Actions.
