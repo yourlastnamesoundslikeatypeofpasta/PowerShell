@@ -13,7 +13,7 @@ Retrieves the current SharePoint Tools settings.
 ## SYNTAX
 
 ```
-Get-SPToolsSettings
+Get-SPToolsSettings [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,9 @@ PS C:\> Get-SPToolsSettings -? # replace with actual parameters
 Demonstrates typical usage of Get-SPToolsSettings.
 
 ## PARAMETERS
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
