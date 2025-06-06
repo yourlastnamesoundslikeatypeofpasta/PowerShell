@@ -30,8 +30,9 @@ jobs:
         run: |
           $modules = Get-ChildItem -Path ./src -Directory
           foreach ($module in $modules) {
+            # Import each module by path so platyPS can discover its commands
             $modulePath = Join-Path $module.FullName "$($module.Name).psd1"
-            Import-Module -Name $modulePath -Force
+            Import-Module -Name $modulePath -Force -ErrorAction Stop
             $outputFolder = Join-Path './docs' $module.Name
             if (Test-Path $outputFolder) {
               Update-MarkdownHelp -Path $outputFolder -Module $module.Name -Force
