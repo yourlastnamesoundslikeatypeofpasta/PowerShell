@@ -1,5 +1,13 @@
 # SharePoint cleanup helpers
 
+# Load configuration values if available
+$repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
+$settingsFile = Join-Path $repoRoot 'config/SharePointToolsSettings.psd1'
+$SharePointToolsSettings = @{ ClientId=''; TenantId=''; CertPath='' }
+if (Test-Path $settingsFile) {
+    try { $SharePointToolsSettings = Import-PowerShellDataFile $settingsFile } catch {}
+}
+
 
 function Invoke-YFArchiveCleanup {
     [CmdletBinding()]
@@ -36,9 +44,9 @@ function Invoke-ArchiveCleanup {
         [Parameter(Mandatory)]
         [string]$SiteUrl,
         [string]$LibraryName = 'Shared Documents',
-        [string]$ClientId = '<CLIENT-ID>',
-        [string]$TenantId = '<TENANT-ID>',
-        [string]$CertPath = '<PATH-TO-CERTIFICATE>'
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
     )
 
     Import-Module PnP.PowerShell -ErrorAction Stop
@@ -143,9 +151,9 @@ function Invoke-FileVersionCleanup {
         [string]$SiteName,
         [string]$SiteUrl,
         [string]$LibraryName = 'Shared Documents',
-        [string]$ClientId = '<CLIENT-ID>',
-        [string]$TenantId = '<TENANT-ID>',
-        [string]$CertPath = '<PATH-TO-CERTIFICATE>',
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath,
         [string]$ReportPath = 'exportedReport.csv'
     )
 
@@ -194,9 +202,9 @@ function Invoke-SharingLinkCleanup {
         [string]$SiteUrl,
         [string]$LibraryName = 'Shared Documents',
         [string]$FolderName,
-        [string]$ClientId = '<CLIENT-ID>',
-        [string]$TenantId = '<TENANT-ID>',
-        [string]$CertPath = '<PATH-TO-CERTIFICATE>'
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
     )
 
     Import-Module PnP.PowerShell -ErrorAction Stop
