@@ -57,9 +57,9 @@ Describe 'SharePointTools Module' {
 
         foreach ($m in $maps) {
             It "$($m.Fn) calls $($m.Target)" {
-                Mock $m.Target {}
+                Mock $m.Target {} -ModuleName SharePointTools
                 & $m.Fn
-                Assert-MockCalled $m.Target -ParameterFilter { $SiteName -eq $m.Site } -Times 1
+                Assert-MockCalled $m.Target -ModuleName SharePointTools -ParameterFilter { $SiteName -eq $m.Site } -Times 1
             }
         }
     }
@@ -69,10 +69,10 @@ Describe 'SharePointTools Module' {
             $SharePointToolsSettings.Sites.Clear()
             $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
             $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
-            Mock Get-SPToolsLibraryReport {}
+            Mock Get-SPToolsLibraryReport {} -ModuleName SharePointTools
             Get-SPToolsAllLibraryReports
-            Assert-MockCalled Get-SPToolsLibraryReport -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
-            Assert-MockCalled Get-SPToolsLibraryReport -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
+            Assert-MockCalled Get-SPToolsLibraryReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
+            Assert-MockCalled Get-SPToolsLibraryReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
         }
     }
     Context 'Recycle bin reporting wrapper' {
@@ -80,10 +80,10 @@ Describe 'SharePointTools Module' {
             $SharePointToolsSettings.Sites.Clear()
             $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
             $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
-            Mock Get-SPToolsRecycleBinReport {}
+            Mock Get-SPToolsRecycleBinReport {} -ModuleName SharePointTools
             Get-SPToolsAllRecycleBinReports
-            Assert-MockCalled Get-SPToolsRecycleBinReport -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
-            Assert-MockCalled Get-SPToolsRecycleBinReport -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
+            Assert-MockCalled Get-SPToolsRecycleBinReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
+            Assert-MockCalled Get-SPToolsRecycleBinReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
         }
     }
     Context 'Preservation hold reporting wrapper' {
@@ -91,10 +91,10 @@ Describe 'SharePointTools Module' {
             $SharePointToolsSettings.Sites.Clear()
             $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
             $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
-            Mock Get-SPToolsPreservationHoldReport {}
+            Mock Get-SPToolsPreservationHoldReport {} -ModuleName SharePointTools
             Get-SPToolsAllPreservationHoldReports
-            Assert-MockCalled Get-SPToolsPreservationHoldReport -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
-            Assert-MockCalled Get-SPToolsPreservationHoldReport -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
+            Assert-MockCalled Get-SPToolsPreservationHoldReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
+            Assert-MockCalled Get-SPToolsPreservationHoldReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
         }
     }
 }
