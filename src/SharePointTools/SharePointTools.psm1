@@ -409,4 +409,102 @@ function Invoke-MexCentralFilesSharingLinkCleanup {
 }
 
 
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite'
+function Get-SPToolsLibraryReport {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$SiteName,
+        [string]$SiteUrl,
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
+    )
+
+    if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
+
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    $lists = Get-PnPList | Where-Object { $_.BaseTemplate -eq 101 }
+    $report = foreach ($list in $lists) {
+        [pscustomobject]@{
+            SiteName     = $SiteName
+            LibraryName  = $list.Title
+            ItemCount    = $list.ItemCount
+            LastModified = $list.LastItemUserModifiedDate
+        }
+    }
+
+    Disconnect-PnPOnline
+    $report
+}
+
+function Get-SPToolsAllLibraryReports {
+    [CmdletBinding()]
+    param()
+
+    foreach ($entry in $SharePointToolsSettings.Sites.GetEnumerator()) {
+        Get-SPToolsLibraryReport -SiteName $entry.Key -SiteUrl $entry.Value
+    }
+}
+
+function Get-SPToolsRecycleBinReport {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$SiteName,
+        [string]$SiteUrl,
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
+    )
+
+    if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
+
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    $items = Get-PnPRecycleBinItem
+    $totalSize = ($items | Measure-Object -Property Size -Sum).Sum
+    $report = [pscustomobject]@{
+        SiteName    = $SiteName
+        ItemCount   = $items.Count
+        TotalSizeMB = [math]::Round($totalSize / 1MB, 2)
+    }
+
+    Disconnect-PnPOnline
+    $report
+}
+
+function Clear-SPToolsRecycleBin {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$SiteName,
+        [string]$SiteUrl,
+        [switch]$SecondStage,
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
+    )
+
+    if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
+
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    if ($SecondStage) {
+        Clear-PnPRecycleBinItem -SecondStage -Force
+    } else {
+        Clear-PnPRecycleBinItem -FirstStage -Force
+    }
+
+    Disconnect-PnPOnline
+}
+
+function Get-SPToolsAllRecycleBinReports {
+    [CmdletBinding()]
+    param()
+    foreach ($entry in $SharePointToolsSettings.Sites.GetEnumerator()) {
+        Get-SPToolsRecycleBinReport -SiteName $entry.Key -SiteUrl $entry.Value
+    }
+}
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports'

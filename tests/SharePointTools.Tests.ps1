@@ -21,7 +21,12 @@ Describe 'SharePointTools Module' {
             'Get-SPToolsSiteUrl',
             'Add-SPToolsSite',
             'Set-SPToolsSite',
-            'Remove-SPToolsSite'
+            'Remove-SPToolsSite',
+            'Get-SPToolsLibraryReport',
+            'Get-SPToolsAllLibraryReports',
+            'Get-SPToolsRecycleBinReport',
+            'Clear-SPToolsRecycleBin',
+            'Get-SPToolsAllRecycleBinReports'
         )
         $exported = (Get-Command -Module SharePointTools).Name
         foreach ($cmd in $expected) {
@@ -50,6 +55,29 @@ Describe 'SharePointTools Module' {
                 & $m.Fn
                 Assert-MockCalled $m.Target -ParameterFilter { $SiteName -eq $m.Site } -Times 1
             }
+        }
+    }
+
+    Context 'Library reporting wrapper' {
+        It 'calls Get-SPToolsLibraryReport for each site' {
+            $SharePointToolsSettings.Sites.Clear()
+            $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
+            $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
+            Mock Get-SPToolsLibraryReport {}
+            Get-SPToolsAllLibraryReports
+            Assert-MockCalled Get-SPToolsLibraryReport -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
+            Assert-MockCalled Get-SPToolsLibraryReport -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
+        }
+    }
+    Context 'Recycle bin reporting wrapper' {
+        It 'calls Get-SPToolsRecycleBinReport for each site' {
+            $SharePointToolsSettings.Sites.Clear()
+            $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
+            $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
+            Mock Get-SPToolsRecycleBinReport {}
+            Get-SPToolsAllRecycleBinReports
+            Assert-MockCalled Get-SPToolsRecycleBinReport -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
+            Assert-MockCalled Get-SPToolsRecycleBinReport -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
         }
     }
 }
