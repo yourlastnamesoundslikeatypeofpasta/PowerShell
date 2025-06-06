@@ -17,16 +17,16 @@ Add-SPToolsSite [-Name] <String> [-Url] <String> [-ProgressAction <ActionPrefere
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for Add-SPToolsSite.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Add-SPToolsSite -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Add-SPToolsSite.
 
 ## PARAMETERS
 
@@ -61,7 +61,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

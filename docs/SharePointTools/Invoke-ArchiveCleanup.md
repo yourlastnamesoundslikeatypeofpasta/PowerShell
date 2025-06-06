@@ -25,15 +25,15 @@ Connects using PnP.PowerShell and deletes items matching zzz_Archive.
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Invoke-ArchiveCleanup -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Invoke-ArchiveCleanup.
 
 ## PARAMETERS
 
 ### -SiteName
-{{ Fill SiteName Description }}
+Friendly name of the site.
 
 ```yaml
 Type: String
@@ -48,7 +48,7 @@ Accept wildcard characters: False
 ```
 
 ### -SiteUrl
-{{ Fill SiteUrl Description }}
+URL of the SharePoint site.
 
 ```yaml
 Type: String
@@ -63,7 +63,7 @@ Accept wildcard characters: False
 ```
 
 ### -LibraryName
-{{ Fill LibraryName Description }}
+Name of the document library.
 
 ```yaml
 Type: String
@@ -78,7 +78,7 @@ Accept wildcard characters: False
 ```
 
 ### -ClientId
-{{ Fill ClientId Description }}
+Client ID used for authentication.
 
 ```yaml
 Type: String
@@ -93,7 +93,7 @@ Accept wildcard characters: False
 ```
 
 ### -TenantId
-{{ Fill TenantId Description }}
+Tenant ID used for authentication.
 
 ```yaml
 Type: String
@@ -108,7 +108,7 @@ Accept wildcard characters: False
 ```
 
 ### -CertPath
-{{ Fill CertPath Description }}
+Certificate path used for authentication.
 
 ```yaml
 Type: String
@@ -123,7 +123,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

@@ -26,10 +26,10 @@ Parameters are passed directly through to the script file.
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Add-UsersToGroup -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Add-UsersToGroup.
 
 ## PARAMETERS
 
@@ -64,7 +64,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference

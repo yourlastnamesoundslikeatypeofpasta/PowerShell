@@ -68,6 +68,7 @@ Example scripts for every function can be found in the `/Examples` folder.
 ## Documentation
 
 For help using Microsoft Graph cmdlets, see the official [Microsoft Graph PowerShell documentation](https://learn.microsoft.com/en-us/powershell/microsoftgraph/get-started?view=graph-powershell-1.0).
+Additional module help topics are located in the [docs](docs/README.md) folder.
 
 ## Security Considerations
 

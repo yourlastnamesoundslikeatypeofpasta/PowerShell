@@ -17,16 +17,16 @@ Get-SPToolsSettings
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for Get-SPToolsSettings.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> Get-SPToolsSettings -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of Get-SPToolsSettings.
 
 ## PARAMETERS
 

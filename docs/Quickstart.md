@@ -21,7 +21,12 @@ This short guide shows the basic steps to start using the modules in this reposi
    ```powershell
    ./scripts/Configure-SharePointTools.ps1
    ```
-5. **Try a few common commands**
+5. **Load credentials** (optional)
+   ```powershell
+   # Example using SecretManagement
+   . ./docs/CredentialStorage.md
+   ```
+6. **Try a few common commands**
    ```powershell
    # System information
    Get-CommonSystemInfo | Format-Table

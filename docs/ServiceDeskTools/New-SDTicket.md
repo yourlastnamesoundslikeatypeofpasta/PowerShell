@@ -18,16 +18,16 @@ New-SDTicket [-Subject] <String> [-Description] <String> [-RequesterEmail] <Stri
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Description forthcoming for New-SDTicket.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> New-SDTicket -? # replace with actual parameters
 ```
 
-{{ Add example description here }}
+Demonstrates typical usage of New-SDTicket.
 
 ## PARAMETERS
 
@@ -77,7 +77,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how progress is displayed.
 
 ```yaml
 Type: ActionPreference
