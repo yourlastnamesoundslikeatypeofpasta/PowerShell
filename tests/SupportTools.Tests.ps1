@@ -58,13 +58,15 @@ Describe 'SupportTools Module' {
             Update_Sysmon                = 'Update-Sysmon.ps1'
         }
 
-        foreach ($entry in $map.GetEnumerator()) {
-            $case = $entry
-            It "$($case.Key) calls Invoke-ScriptFile" {
-                Mock Invoke-ScriptFile {} -ModuleName SupportTools
-                & $case.Key.ToString().Replace('_','-')
-                Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -ParameterFilter { $Name -eq $case.Value } -Times 1
-            }
+        $cases = foreach ($entry in $map.GetEnumerator()) {
+            @{ Fn = $entry.Key; Script = $entry.Value }
+        }
+
+        It '<Fn> calls Invoke-ScriptFile' -ForEach $cases {
+            param($Fn, $Script)
+            Mock Invoke-ScriptFile {} -ModuleName SupportTools
+            & $Fn.ToString().Replace('_','-')
+            Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -ParameterFilter { $Name -eq $Script } -Times 1
         }
     }
 
