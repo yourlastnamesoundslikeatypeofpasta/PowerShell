@@ -25,7 +25,7 @@ arguments.
 
 ### Example 1
 ```powershell
-PS C:\> Set-TimeZoneEasternStandardTime
+PS C:\> Set-TimeZoneEasternStandardTime -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Set-TimeZoneEasternStandardTime.

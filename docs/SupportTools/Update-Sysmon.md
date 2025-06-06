@@ -24,7 +24,7 @@ Calls the Update-Sysmon.ps1 script with the supplied arguments.
 
 ### Example 1
 ```powershell
-PS C:\> Update-Sysmon -SourcePath D:/Tools
+PS C:\> Update-Sysmon -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Update-Sysmon.

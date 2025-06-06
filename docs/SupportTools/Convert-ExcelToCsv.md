@@ -26,7 +26,7 @@ Any arguments provided are passed to the script.
 
 ### Example 1
 ```powershell
-PS C:\> Convert-ExcelToCsv -XlsxFilePath workbook.xlsx
+PS C:\> Convert-ExcelToCsv -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Convert-ExcelToCsv.

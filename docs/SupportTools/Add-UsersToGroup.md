@@ -26,7 +26,7 @@ Parameters are passed directly through to the script file.
 
 ### Example 1
 ```powershell
-PS C:\> Add-UsersToGroup -CsvPath users.csv -GroupName 'Team'
+PS C:\> Add-UsersToGroup -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Add-UsersToGroup.

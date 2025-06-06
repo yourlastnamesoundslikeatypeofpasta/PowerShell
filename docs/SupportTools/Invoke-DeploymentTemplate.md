@@ -25,7 +25,7 @@ scripts folder with any additional arguments supplied.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-DeploymentTemplate -Verbose
+PS C:\> Invoke-DeploymentTemplate -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Invoke-DeploymentTemplate.

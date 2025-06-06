@@ -25,7 +25,7 @@ arguments provided.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-PostInstall -Domain contoso.com
+PS C:\> Invoke-PostInstall -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Invoke-PostInstall.

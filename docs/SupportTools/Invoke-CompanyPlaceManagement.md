@@ -26,7 +26,7 @@ Supports creation, editing, and retrieval of Place records using the MicrosoftPl
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-CompanyPlaceManagement -Action Create -DisplayName 'HQ' -Type Building -City Seattle
+PS C:\> Invoke-CompanyPlaceManagement -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Invoke-CompanyPlaceManagement.
