@@ -32,7 +32,7 @@ Describe 'SharePointTools Module' {
             'Get-SPPermissionsReport',
             'Clean-SPVersionHistory',
             'Find-OrphanedSPFiles','Get-SPToolsFileReport',
-            'List-OneDriveUsage'
+            'Select-SPToolsFolder','List-OneDriveUsage'
         )
         $exported = (Get-Command -Module SharePointTools).Name
         foreach ($cmd in $expected) {
