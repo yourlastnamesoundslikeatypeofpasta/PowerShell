@@ -101,9 +101,10 @@ Review this file with `Get-Content` when troubleshooting.
 
 Potential areas for improvement and extension include:
 
-1. **Dependency Management**
+1. ~~**Dependency Management**
    Automate installation or checks for required modules to streamline setup and
-   provide clear guidance when dependencies are missing.
+   provide clear guidance when dependencies are missing.~~ - Dependencies can now
+   be installed with [scripts/Install-ModuleDependencies.ps1](scripts/Install-ModuleDependencies.ps1).
 2. ~~**Testing and Continuous Integration**
    Add more Pester tests to cover complex functions and configure CI to run them
    automatically.~~ - Tests automated with GitHub Actions.
