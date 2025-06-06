@@ -24,10 +24,10 @@ Description forthcoming for New-SDTicket.
 
 ### Example 1
 ```powershell
-PS C:\> New-SDTicket -? # replace with actual parameters
+PS C:\> New-SDTicket -Subject "Printer issue" -Description "Printer won't print" -RequesterEmail "jane.doe@example.com"
 ```
 
-Demonstrates typical usage of New-SDTicket.
+Creates a new incident describing a printer problem.
 
 ## PARAMETERS
 

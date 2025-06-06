@@ -25,7 +25,7 @@ Generates a CSV of files with more than one version.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-FileVersionCleanup -? # replace with actual parameters
+PS C:\> Invoke-FileVersionCleanup -SiteName 'Example' -SiteUrl 'https://contoso.sharepoint.com/sites/Example'
 ```
 
 Demonstrates typical usage of Invoke-FileVersionCleanup.

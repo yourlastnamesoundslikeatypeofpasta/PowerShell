@@ -25,7 +25,7 @@ arguments provided.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-PostInstall -? # replace with actual parameters
+PS C:\> Invoke-PostInstall -ConfigPath './install.json'
 ```
 
 Demonstrates typical usage of Invoke-PostInstall.

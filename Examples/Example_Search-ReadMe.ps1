@@ -1,2 +1,0 @@
-Import-Module ../src/SupportTools/SupportTools.psd1
-Search-ReadMe -StartPath 'C:\'

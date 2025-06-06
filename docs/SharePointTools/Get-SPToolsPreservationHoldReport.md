@@ -24,7 +24,7 @@ Description forthcoming for Get-SPToolsPreservationHoldReport.
 
 ### Example 1
 ```powershell
-PS C:\> Get-SPToolsPreservationHoldReport -? # replace with actual parameters
+PS C:\> Get-SPToolsPreservationHoldReport -SiteName 'Example' -SiteUrl 'https://contoso.sharepoint.com/sites/example'
 ```
 
 Demonstrates typical usage of Get-SPToolsPreservationHoldReport.

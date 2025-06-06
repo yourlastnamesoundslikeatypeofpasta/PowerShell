@@ -23,10 +23,10 @@ Description forthcoming for Get-SDTicket.
 
 ### Example 1
 ```powershell
-PS C:\> Get-SDTicket -? # replace with actual parameters
+PS C:\> Get-SDTicket -Id 123
 ```
 
-Demonstrates typical usage of Get-SDTicket.
+Retrieves incident 123 from the Service Desk.
 
 ## PARAMETERS
 

@@ -25,7 +25,7 @@ returns its results.
 
 ### Example 1
 ```powershell
-PS C:\> Get-NetworkShares -? # replace with actual parameters
+PS C:\> Get-NetworkShares -ComputerName $env:COMPUTERNAME
 ```
 
 Demonstrates typical usage of Get-NetworkShares.

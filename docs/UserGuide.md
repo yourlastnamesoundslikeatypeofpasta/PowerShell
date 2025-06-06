@@ -79,7 +79,7 @@ Set-SharedMailboxAutoReply -MailboxIdentity 'team@contoso.com' \
     -AdminUser 'admin@contoso.com'
 ```
 
-For descriptions of all scripts included in the SupportTools wrapper module see [scripts/README.md](../scripts/README.md). Example usage scripts are provided in the `Examples` folder.
+For descriptions of all scripts included in the SupportTools wrapper module see [scripts/README.md](../scripts/README.md). Example commands are now embedded directly in the documentation.
 
 ## Security Considerations
 
