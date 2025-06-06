@@ -19,6 +19,7 @@ Example command:
 ```powershell
 Get-CommonSystemInfo
 ```
+For deployment steps see [docs/UserGuide.md](docs/UserGuide.md).
 
 The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.
