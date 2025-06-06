@@ -1,10 +1,10 @@
-function SimpleCountdown {
+function Clear-ArchiveFolder {
     [CmdletBinding()]
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
     process {
-        Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments
+        Invoke-ScriptFile -Name "CleanupArchive.ps1" -Args $Arguments
     }
 }

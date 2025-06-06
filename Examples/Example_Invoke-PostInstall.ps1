@@ -1,2 +1,2 @@
 Import-Module ../src/SupportTools/SupportTools.psd1
-SimpleCountdown -Seconds 10
+Invoke-PostInstall -ConfigPath './install.json'

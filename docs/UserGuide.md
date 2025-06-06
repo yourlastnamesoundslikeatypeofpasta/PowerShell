@@ -8,7 +8,7 @@ This guide explains how to set up and use the **SupportTools** and **SharePointT
 * Required dependencies when running specific commands:
   * `PnP.PowerShell` for SharePoint cleanup functions
   * `ExchangeOnlineManagement` for mailbox functions
-  * `MicrosoftPlaces` for the `Manage-CompanyPlace` command
+* `MicrosoftPlaces` for the `Invoke-CompanyPlaceManagement` command
 
 Ensure the modules above are installed prior to running the included commands.
 

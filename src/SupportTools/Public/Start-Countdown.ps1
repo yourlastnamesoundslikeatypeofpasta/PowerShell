@@ -1,10 +1,10 @@
-function ProductKey {
+function Start-Countdown {
     [CmdletBinding()]
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
     process {
-        Invoke-ScriptFile -Name "ProductKey.ps1" -Args $Arguments
+        Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments
     }
 }
