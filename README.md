@@ -24,7 +24,7 @@ Import-Module ./src/SharePointTools/SharePointTools.psd1
 ```
 
 Before running any SharePoint cleanup commands, execute the configuration script
-once to store your tenant details:
+once to store your tenant details and define the SharePoint site URLs used by the module:
 
 ```powershell
 ./scripts/Configure-SharePointTools.ps1
@@ -40,6 +40,7 @@ For deployment steps see [docs/UserGuide.md](docs/UserGuide.md).
 The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.
 The module now includes `Invoke-CompanyPlaceManagement` for administering Microsoft Places buildings and floors.
+Functions like `Add-SPToolsSite` and `Remove-SPToolsSite` let you manage the list of SharePoint sites stored in the settings file.
 
 For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
 Example scripts for every function can be found in the `/Examples` folder.

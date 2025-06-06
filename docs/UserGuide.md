@@ -37,7 +37,7 @@ Import-Module ./src/SupportTools/SupportTools.psd1
 Import-Module ./src/SharePointTools/SharePointTools.psd1
 ```
 
-Run the configuration script once to store your SharePoint application details:
+Run the configuration script once to store your SharePoint application details and configure the SharePoint site URLs to target:
 
 ```powershell
 ./scripts/Configure-SharePointTools.ps1
@@ -55,6 +55,9 @@ Get-CommonSystemInfo | Format-Table -AutoSize
 
 # Remove archived SharePoint folders
 Invoke-YFArchiveCleanup -Verbose
+
+# Manage the site list
+Add-SPToolsSite -Name 'ContosoHR' -Url 'https://contoso.sharepoint.com/sites/HR'
 
 # Configure auto-reply on a shared mailbox
 $start = Get-Date '2025-06-02T00:00:00'
