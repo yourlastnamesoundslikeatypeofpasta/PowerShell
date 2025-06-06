@@ -63,6 +63,8 @@ Add-SPToolsSite -Name 'ContosoHR' -Url 'https://contoso.sharepoint.com/sites/HR'
 Get-SPToolsAllLibraryReports | Format-Table
 # Review recycle bin usage for all sites
 Get-SPToolsAllRecycleBinReports | Format-Table
+# Review Preservation Hold Library size for all sites
+Get-SPToolsAllPreservationHoldReports | Format-Table
 # Clear both recycle bin stages for a site
 Clear-SPToolsRecycleBin -SiteName 'ContosoHR' -SecondStage
 # Configure auto-reply on a shared mailbox
