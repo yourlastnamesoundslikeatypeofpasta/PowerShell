@@ -93,5 +93,7 @@ Potential areas for improvement and extension include:
    Expand user guides and provide a quickstart summary for key commands.
 4. **Feature Enhancements**  
    Continue expanding SupportTools and SharePointTools with additional automation.
-5. **Versioning and Distribution**  
+5. **Versioning and Distribution**
    Package the modules for easier updates via an internal feed.
+6. **Centralized Logging**
+   Provide a consistent logging approach across all commands for easier troubleshooting.
