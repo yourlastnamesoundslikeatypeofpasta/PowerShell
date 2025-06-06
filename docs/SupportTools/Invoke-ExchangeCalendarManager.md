@@ -25,7 +25,7 @@ ExchangeOnlineManagement module is installed before running.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-ExchangeCalendarManager -? # replace with actual parameters
+PS C:\> Invoke-ExchangeCalendarManager
 ```
 
 Demonstrates typical usage of Invoke-ExchangeCalendarManager.

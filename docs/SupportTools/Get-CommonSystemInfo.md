@@ -25,7 +25,7 @@ forwards any provided arguments.
 
 ### Example 1
 ```powershell
-PS C:\> Get-CommonSystemInfo -? # replace with actual parameters
+PS C:\> Get-CommonSystemInfo
 ```
 
 Demonstrates typical usage of Get-CommonSystemInfo.

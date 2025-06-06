@@ -26,7 +26,7 @@ Arguments are passed directly through.
 
 ### Example 1
 ```powershell
-PS C:\> Install-Fonts -? # replace with actual parameters
+PS C:\> Install-Fonts -FontFolder C:/Fonts
 ```
 
 Demonstrates typical usage of Install-Fonts.

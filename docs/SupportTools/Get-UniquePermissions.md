@@ -25,7 +25,7 @@ directory and outputs its results.
 
 ### Example 1
 ```powershell
-PS C:\> Get-UniquePermissions -? # replace with actual parameters
+PS C:\> Get-UniquePermissions -SiteUrl https://contoso.sharepoint.com/sites/HR
 ```
 
 Demonstrates typical usage of Get-UniquePermissions.
