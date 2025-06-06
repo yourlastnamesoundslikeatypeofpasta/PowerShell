@@ -1,2 +1,2 @@
 Import-Module ../src/SupportTools/SupportTools.psd1
-Get-NetworkShares -ComputerName 'SERVER1'
+Get-NetworkShares -ComputerName $env:COMPUTERNAME
