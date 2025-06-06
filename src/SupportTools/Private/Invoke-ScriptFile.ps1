@@ -22,7 +22,16 @@ function Invoke-ScriptFile {
         Write-Host "       ARGS: $($Args -join ' ')" -ForegroundColor DarkGreen -BackgroundColor Black
     }
 
-    & $Path @Args
+    $oldPref = $ErrorActionPreference
+    $ErrorActionPreference = 'Stop'
+    try {
+        & $Path @Args
+    } catch {
+        Write-Error "Execution of '$Name' failed: $_"
+        throw
+    } finally {
+        $ErrorActionPreference = $oldPref
+    }
 
     Write-Host "[***] COMPLETED $Name" -ForegroundColor Green -BackgroundColor Black
 }
