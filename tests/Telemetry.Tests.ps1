@@ -1,0 +1,44 @@
+Describe 'Telemetry Opt-In' {
+    BeforeAll {
+        Import-Module $PSScriptRoot/../src/SupportTools/SupportTools.psd1 -Force
+    }
+
+    It 'does not log telemetry when not opted in' {
+        $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+        $scriptFile = Join-Path $PSScriptRoot/.. 'scripts/TelemetryTest.ps1'
+        Set-Content $scriptFile "Write-Host 'test'"
+        try {
+            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
+            $env:ST_TELEMETRY_PATH = $log
+            InModuleScope SupportTools {
+                Invoke-ScriptFile -Name 'TelemetryTest.ps1'
+            }
+            Test-Path $log | Should -Be $false
+        } finally {
+            Remove-Item $scriptFile -ErrorAction SilentlyContinue
+            Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
+        }
+    }
+
+    It 'logs telemetry when opt-in variable is set' {
+        $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+        $scriptFile = Join-Path $PSScriptRoot/.. 'scripts/TelemetryTest.ps1'
+        Set-Content $scriptFile "Write-Host 'test'"
+        try {
+            $env:ST_ENABLE_TELEMETRY = '1'
+            $env:ST_TELEMETRY_PATH = $log
+            InModuleScope SupportTools {
+                Invoke-ScriptFile -Name 'TelemetryTest.ps1'
+            }
+            (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
+            $json = Get-Content $log | ConvertFrom-Json
+            $json.Script | Should -Be 'TelemetryTest.ps1'
+            $json.Result | Should -Be 'Success'
+        } finally {
+            Remove-Item $scriptFile -ErrorAction SilentlyContinue
+            Remove-Item $log -ErrorAction SilentlyContinue
+            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
+            Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
+        }
+    }
+}
