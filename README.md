@@ -122,12 +122,15 @@ Potential areas for improvement and extension include:
    Provide a consistent logging approach across all commands for easier troubleshooting.~~ - Commands now log to `%USERPROFILE%\SupportToolsLogs\supporttools.log`.
 7. **Error Handling**
    Add standardized error handling and optional transcript output.
-8. ~~**Configuration Guidance**
+8. **Telemetry (Opt-In)**
+   Track script usage patterns, failure rates and execution time.
+   Set the `ST_ENABLE_TELEMETRY` environment variable to `1` to enable collection.
+9. ~~**Configuration Guidance**
    Document a recommended workflow for securely storing credentials.~~ - Example
 workflow added ([docs/CredentialStorage.md](docs/CredentialStorage.md)).
-9. ~~**Linting and Code Quality**
+10. ~~**Linting and Code Quality**
    Check scripts with PSScriptAnalyzer on each commit.~~ - Linting automated via GitHub Actions.
-10. **Cmdlet Design Improvements**
+11. **Cmdlet Design Improvements**
     Convert module functions into full advanced functions with parameter validation,
     `SupportsShouldProcess`, and dynamic argument completers for easier interactive use.
 

@@ -30,6 +30,8 @@ function Invoke-ScriptFile {
         Start-Transcript -Path $TranscriptPath -Append | Out-Null
     }
 
+    $start = Get-Date
+    $result = 'Success'
     $oldPref = $ErrorActionPreference
     $ErrorActionPreference = 'Stop'
     try {
@@ -37,10 +39,13 @@ function Invoke-ScriptFile {
     } catch {
         Write-Error "Execution of '$Name' failed: $_"
         Write-STLog "Execution of '$Name' failed: $_" -Level 'ERROR'
+        $result = 'Failure'
         throw
     } finally {
         $ErrorActionPreference = $oldPref
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
+        $duration = (Get-Date) - $start
+        Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $duration
     }
     Write-STStatus "COMPLETED $Name" -Level FINAL -Log
 }
