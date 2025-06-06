@@ -13,6 +13,9 @@ if ($env:SPTOOLS_CLIENT_ID) { $SharePointToolsSettings.ClientId = $env:SPTOOLS_C
 if ($env:SPTOOLS_TENANT_ID) { $SharePointToolsSettings.TenantId = $env:SPTOOLS_TENANT_ID }
 if ($env:SPTOOLS_CERT_PATH) { $SharePointToolsSettings.CertPath = $env:SPTOOLS_CERT_PATH }
 
+# Load required module once at module scope
+Import-Module PnP.PowerShell -ErrorAction Stop
+
 function Write-SPToolsHacker {
     param([string]$Message)
     Write-Host $Message -ForegroundColor Green -BackgroundColor Black
@@ -161,7 +164,6 @@ function Invoke-ArchiveCleanup {
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     $logPath = "$env:USERPROFILE/SHAREPOINT_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
@@ -283,7 +285,6 @@ function Invoke-FileVersionCleanup {
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     $rootFolder = Get-PnPFolder -ListRootFolder $LibraryName
@@ -334,7 +335,6 @@ function Invoke-SharingLinkCleanup {
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     $logPath = "$env:USERPROFILE/SHAREPOINT_LINK_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
@@ -444,7 +444,6 @@ function Get-SPToolsLibraryReport {
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
     Write-SPToolsHacker ">>> LIBRARY REPORT: $SiteName"
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     $lists = Get-PnPList | Where-Object { $_.BaseTemplate -eq 101 }
@@ -487,7 +486,6 @@ function Get-SPToolsRecycleBinReport {
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
     Write-SPToolsHacker ">>> RECYCLE BIN REPORT: $SiteName"
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     $items = Get-PnPRecycleBinItem
@@ -517,7 +515,6 @@ function Clear-SPToolsRecycleBin {
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
     Write-SPToolsHacker ">>> CLEARING RECYCLE BIN: $SiteName"
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     if ($SecondStage) {
@@ -559,7 +556,6 @@ function Get-SPToolsPreservationHoldReport {
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
     Write-SPToolsHacker ">>> HOLD REPORT: $SiteName"
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     $items = Get-PnPListItem -List 'Preservation Hold Library' -PageSize 2000
@@ -595,7 +591,6 @@ function Get-SPPermissionsReport {
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Write-SPToolsHacker ">>> PERMISSIONS REPORT: $SiteUrl"
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
@@ -632,7 +627,6 @@ function Clean-SPVersionHistory {
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Write-SPToolsHacker ">>> CLEANING VERSIONS ON $SiteUrl"
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
@@ -660,7 +654,6 @@ function Find-OrphanedSPFiles {
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Write-SPToolsHacker ">>> SEARCHING ORPHANED FILES ON $SiteUrl"
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
@@ -690,7 +683,6 @@ function List-OneDriveUsage {
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
 
-    Import-Module PnP.PowerShell -ErrorAction Stop
     Write-SPToolsHacker '>>> GATHERING ONEDRIVE USAGE'
     Connect-PnPOnline -Url $AdminUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
