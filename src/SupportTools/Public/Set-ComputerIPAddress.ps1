@@ -1,4 +1,10 @@
 function Set-ComputerIPAddress {
+    <#
+    .SYNOPSIS
+        Configures the IP address of a local or remote computer.
+    .DESCRIPTION
+        Wraps the Set-ComputerIPAddress.ps1 script, forwarding all arguments.
+    #>
     [CmdletBinding()]
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]

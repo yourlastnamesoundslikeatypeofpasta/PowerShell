@@ -14,6 +14,13 @@
 # Functions listed here
 
 function MSStoreAppInstallerUpdate {
+    <#
+    .SYNOPSIS
+        Opens the Microsoft Store page for the App Installer.
+    .DESCRIPTION
+        Launches the Store page to allow the user to update the App Installer
+        application.
+    #>
     Start-Process ms-windows-store://pdp/?ProductId=9NBLGGH4NNS1
     if (!$LASTEXITCODE)
     {
@@ -27,10 +34,14 @@ function MSStoreAppInstallerUpdate {
 
 
 function Install-Chrome {
+    <#
+    .SYNOPSIS
+        Installs the Google Chrome browser using winget.
+    #>
     Write-Host 'Installing: Google Chrome'
 
-    $package_id = 'Google.Chrome'
-    winget install -e --id $package_id --scope machine --accept-source-agreements --silent
+    $PackageId = 'Google.Chrome'
+    winget install -e --id $PackageId --scope machine --accept-source-agreements --silent
 
     # validate install
     if (!$LASTEXITCODE) {
@@ -43,10 +54,14 @@ function Install-Chrome {
 
 
 function Install-AdobeAcrobatReader {
+    <#
+    .SYNOPSIS
+        Installs Adobe Acrobat Reader via winget.
+    #>
     Write-Host 'Installing: Adobe Acrobat Reader'
 
-    $package_id = 'Adobe.Acrobat.Reader.64-bit'
-    winget install -e --id $package_id --scope machine --accept-source-agreements --silent
+    $PackageId = 'Adobe.Acrobat.Reader.64-bit'
+    winget install -e --id $PackageId --scope machine --accept-source-agreements --silent
 
     # validate install
     if (!$LASTEXITCODE) {
@@ -59,10 +74,14 @@ function Install-AdobeAcrobatReader {
 
 
 function Install-ExcelMobile {
+    <#
+    .SYNOPSIS
+        Installs the Excel Mobile application via winget.
+    #>
     Write-Host 'Installing: Excel Mobile'
 
-    $package_id = '9WZDNCRFJBH3'
-    winget install -e --id $package_id --scope machine --accept-source-agreements --silent
+    $PackageId = '9WZDNCRFJBH3'
+    winget install -e --id $PackageId --scope machine --accept-source-agreements --silent
 
     # validate install
     if (!$LASTEXITCODE)
@@ -76,6 +95,10 @@ function Install-ExcelMobile {
 
 
 function Enable-NetFramework {
+    <#
+    .SYNOPSIS
+        Enables the .NET Framework 3.5 feature.
+    #>
     Write-Host ".NET 3.5 Framework: Enabling..."
     Enable-WindowsOptionalFeature -Online -FeatureName "NetFx3" -All -NoRestart -ErrorAction Stop > $null
 
@@ -89,68 +112,91 @@ function Enable-NetFramework {
 }
 
 
-function Get-ComputerName
-{
+function Get-ComputerName {
+    <#
+    .SYNOPSIS
+        Prompts the user for a computer name until the value is confirmed.
+    .OUTPUTS
+        System.String
+    #>
     # pipe the string returned to Rename-Computer
     # EX: Get-ComputerName | 
-    $unconfirmed = $true
-    while ($unconfirmed)
+    $Unconfirmed = $true
+    while ($Unconfirmed)
     {
-        $computerNameOne = Read-Host -Prompt 'What would you like to name this computer?'
+        $ComputerNameOne = Read-Host -Prompt 'What would you like to name this computer?'
 
-        $computerNameTwo = Read-Host -Prompt 'Re-enter the computer name previously entered'
+        $ComputerNameTwo = Read-Host -Prompt 'Re-enter the computer name previously entered'
 
-        if ($computerNameOne -eq $computerNameTwo)
+        if ($ComputerNameOne -eq $ComputerNameTwo)
         {
-            $unconfirmed = $false
+            $Unconfirmed = $false
         }
         else 
         {
             Write-Warning -Message "Computer names do not match up. Try again."
         }
     }
-    $computerNameOne
+    $ComputerNameOne
 }
 
 
 function Get-DriveLetter {
+    <#
+    .SYNOPSIS
+        Returns the drive letter containing installation media.
+    .OUTPUTS
+        System.String
+    #>
         # get the correct drive letter
-        $driveLetters = @("D", "E", "F", "G")
-        foreach ($driverLetter in $driveLetters)
+        $DriveLetters = @("D", "E", "F", "G")
+        foreach ($DriverLetter in $DriveLetters)
         {
-            $drivePath = "$($driverLetter):\"
-            $isDrivePathValid = Test-Path $drivePath
-            if ($isDrivePathValid)
+            $DrivePath = "$($DriverLetter):\"
+            $IsDrivePathValid = Test-Path $DrivePath
+            if ($IsDrivePathValid)
             {
-                return $drivePath
+                return $DrivePath
             }
         }
 }
 
 
 function Get-AgentPath {
+    <#
+    .SYNOPSIS
+        Retrieves the installation path for a specified agent.
+    .PARAMETER Agent
+        Name of the agent to locate.
+    .PARAMETER USB
+        Look for the agent on attached USB media.
+    .PARAMETER Local
+        Look for the agent in the local assets folder.
+    .OUTPUTS
+        System.String
+    #>
     param (
-        [string] $Agent,
-        [switch] $USB,
-        [switch] $Local
+        [string]$Agent,
+        [switch]$USB,
+        [switch]$Local
     )
 
-    $driveLetter = Get-DriveLetter
+    $DriveLetter = Get-DriveLetter
     if ($USB)
     {
     
         if ($Agent -eq "[REDACTED]")
         {
-            $agentPath = "$($driveLetter)assets\agents\[REDACTED]\[REDACTED].exe"
+            $AgentPath = "$($DriveLetter)assets\agents\[REDACTED]\[REDACTED].exe"
         }
         elseif ($Agent -eq "[REDACTED]") {
-            $agentPath = "$($driveLetter)assets\agents\[REDACTED]\[REDACTED].msi"
+            $AgentPath = "$($DriveLetter)assets\agents\[REDACTED]\[REDACTED].msi"
         }
         elseif ($Agent -eq "[REDACTED]") {
-            $agentPath = "$($driveLetter)assets\agents\[REDACTED]\[REDACTED].exe"
+            $AgentPath = "$($DriveLetter)assets\agents\[REDACTED]\[REDACTED].exe"
         }
         elseif ($Agent -eq "[REDACTED]") {
-            $agentPath = "$($driveLetter)assets\agents\[REDACTED]\[REDACTED].exe"
+            $AgentPath = "$($DriveLetter)assets\agents\[REDACTED]\[REDACTED].exe"
         }
     }
 
@@ -158,25 +204,28 @@ function Get-AgentPath {
     {
         if ($Agent -eq "[REDACTED]")
         {
-            $agentPath = ".\assets\agents\[REDACTED]\[REDACTED].exe"
+            $AgentPath = ".\assets\agents\[REDACTED]\[REDACTED].exe"
         }
         elseif ($Agent -eq "[REDACTED]") {
-            $agentPath = "$.\assets\agents\[REDACTED]\[REDACTED].msi"
+            $AgentPath = "$.\assets\agents\[REDACTED]\[REDACTED].msi"
         }
         elseif ($Agent -eq "Sysmon") {
-            $agentPath = ".\assets\agents\SysmonAgent\Sysmon64.exe"
+            $AgentPath = ".\assets\agents\SysmonAgent\Sysmon64.exe"
         }
         elseif ($Agent -eq "[REDACTED]") {
-            $agentPath = ".\assets\agents\[REDACTED]\[REDACTED].exe"
+            $AgentPath = ".\assets\agents\[REDACTED]\[REDACTED].exe"
         }
     }
 
-    return $agentPath
+    return $AgentPath
 
 }
 
-function Install-[REDACTED]
-{
+function Install-[REDACTED] {
+    <#
+    .SYNOPSIS
+        Copies a license key to the clipboard and launches the installer.
+    #>
     param (
         [switch] $USB,
         [switch] $Local
@@ -185,8 +234,8 @@ function Install-[REDACTED]
     if ($USB)
     {
         # copy key.txt to clipboard
-        $driveLetter = Get-DriveLetter
-        Get-Content "$($driveLetter)assets\agents\[REDACTED]\key.txt" | Set-Clipboard
+        $DriveLetter = Get-DriveLetter
+        Get-Content "$($DriveLetter)assets\agents\[REDACTED]\key.txt" | Set-Clipboard
     }
 
     if ($Local)
@@ -202,30 +251,46 @@ function Install-[REDACTED]
 }
 
 
-function Install-[REDACTED]
-{
+function Install-[REDACTED] {
+    <#
+    .SYNOPSIS
+        Launches the [REDACTED] installer from USB media.
+    #>
     # open [REDACTED]
     $Path = Get-AgentPath -Agent "[REDACTED]" -USB
     Start-Process $Path
 }
 
-function Install-[REDACTED]
-{
+function Install-[REDACTED] {
+    <#
+    .SYNOPSIS
+        Installs Sysmon using predefined arguments.
+    #>
     # Install Sysmon64.exe
     $Path = Get-AgentPath -Agent "[REDACTED]" -USB
 
     & $Path -i -accepteula
 }
 
-function Install-[REDACTED] 
-{
+function Install-[REDACTED] {
+    <#
+    .SYNOPSIS
+        Launches the ManageEngine agent installer.
+    #>
     # open ManageEngineAgentInstaller
     $Path = Get-AgentPath -Agent "[REDACTED]" -USB
     Start-Process $Path
 }
 
-function Copy-Files
-{
+function Copy-Files {
+    <#
+    .SYNOPSIS
+        Copies administration shortcuts from installation media to the public desktop.
+    .PARAMETER USB
+        Indicates the files should be copied from a USB drive.
+    .PARAMETER Local
+        Indicates the files should be copied from the local assets folder.
+    #>
     param (
         [switch] $USB,
         [switch] $Local
@@ -234,17 +299,17 @@ function Copy-Files
     if ($USB)
     {
     # Copy admin shortcut files from DesktopTools to public desktop
-    $driveLetter = Get-DriveLetter
-    $adminShortcuts = Get-ChildItem "$($driveLetter)assets\Tools\DesktopTools" 
+    $DriveLetter = Get-DriveLetter
+    $AdminShortcuts = Get-ChildItem "$($DriveLetter)assets\Tools\DesktopTools" 
     }
 
     if ($Local)
     {
-        $adminShortcuts = Get-ChildItem ".\assets\Tools\DesktopTools" 
+        $AdminShortcuts = Get-ChildItem ".\assets\Tools\DesktopTools" 
     }
 
 
-    foreach ($shortcut in $adminShortcuts)
+    foreach ($shortcut in $AdminShortcuts)
     {
         Copy-Item -Path $shortcut.Fullname -Destination "C:\Users\Public\Desktop\"
     }
@@ -254,7 +319,7 @@ function Copy-Files
     # Copy printer drivers to public desktop
     if ($USB)
     {
-        Copy-Item -Path "$($driveLetter)assets\PrinterDrivers" -Destination "C:\Users\Public\Desktop" -Recurse
+        Copy-Item -Path "$($DriveLetter)assets\PrinterDrivers" -Destination "C:\Users\Public\Desktop" -Recurse
     }
 
     if ($Local)
@@ -265,14 +330,20 @@ function Copy-Files
 
 
 function Set-PowerPlan {
-    # set power plan to high performance
-    $high_performance_guid = '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c'
-    $balanced_guid = '381b4222-f694-41f0-9685-ff5bb260df2e'
-    $power_saver_guid = 'a1841308-3541-4fab-bc81-f71556f20b4a'
+    <#
+    .SYNOPSIS
+        Configures the system power plan for performance.
+    .DESCRIPTION
+        Sets High Performance as the active plan and removes the Balanced and
+        Power Saver plans.
+    #>
+    $HighPerformanceGuid = '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c'
+    $BalancedGuid = '381b4222-f694-41f0-9685-ff5bb260df2e'
+    $PowerSaverGuid = 'a1841308-3541-4fab-bc81-f71556f20b4a'
 
     # set power plan to high performance
     Write-Host "Setting Power Plan: High Performance"
-    powercfg.exe /S $high_performance_guid
+    powercfg.exe /S $HighPerformanceGuid
     if (!$LASTEXITCODE) {
         Write-Host "Set Power Plan: High Performance"
     }
@@ -282,7 +353,7 @@ function Set-PowerPlan {
 
     # remove balanced power plan
     Write-Host "Deleting Power Plan: Balanced"
-    powercfg.exe /D $balanced_guid
+    powercfg.exe /D $BalancedGuid
     if (!$LASTEXITCODE) {
         Write-Host "Deleted Power Plan: Balanced"
     }
@@ -292,7 +363,7 @@ function Set-PowerPlan {
 
     # remove power saver power plan
     Write-Host "Deleting Power Plan: Power Saver"
-    powercfg.exe /D $power_saver_guid
+    powercfg.exe /D $PowerSaverGuid
     if (!$LASTEXITCODE) {
         Write-Host "Deleted Power Plan: Power Saver"
     }
@@ -301,8 +372,15 @@ function Set-PowerPlan {
     }
 }
 
-function Main
-{
+function Main {
+    <#
+    .SYNOPSIS
+        Executes the full post-installation workflow.
+    .DESCRIPTION
+        Installs required agents and applications, copies administrative files,
+        enables .NET Framework and sets the power plan before joining the
+        computer to the domain.
+    #>
     # install agents
     Write-Information -MessageData "Executing Agent Installers" -InformationAction Continue
     Install-[REDACTED] -USB
@@ -334,12 +412,12 @@ function Main
 
     # name computer
     Write-Information -MessageData "Renaming Computer..." -InformationAction Continue
-    $newComputerName = Get-ComputerName
-    Rename-Computer -NewName $newComputerName -Force
+    $NewComputerName = Get-ComputerName
+    Rename-Computer -NewName $NewComputerName -Force
 
     # add computer to domain
     Write-Warning "Adding Computer to domain...Press [CTRL] + [C] to abort..."
-    Add-Computer -NewName $newComputerName -DomainName "myus.local" -DomainCredential (Get-Credential) -Force
+    Add-Computer -NewName $NewComputerName -DomainName "myus.local" -DomainCredential (Get-Credential) -Force
 
     Write-Information -MessageData "Restart computer to apply changes..."
 

@@ -1,4 +1,11 @@
 function Get-NetworkShares {
+    <#
+    .SYNOPSIS
+        Lists network shares on a specified computer.
+    .DESCRIPTION
+        Executes the Get-NetworkShares.ps1 script from the scripts folder and
+        returns its results.
+    #>
     [CmdletBinding()]
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]

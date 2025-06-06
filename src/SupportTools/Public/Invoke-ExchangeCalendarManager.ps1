@@ -1,4 +1,11 @@
 function Invoke-ExchangeCalendarManager {
+    <#
+    .SYNOPSIS
+        Manages Exchange Online calendar permissions.
+    .DESCRIPTION
+        Wrapper around the ExchangeCalendarManager script which ensures the
+        ExchangeOnlineManagement module is installed before running.
+    #>
     [CmdletBinding()]
     param()
 

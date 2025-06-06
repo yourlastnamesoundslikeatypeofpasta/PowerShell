@@ -1,4 +1,11 @@
 function Get-CommonSystemInfo {
+    <#
+    .SYNOPSIS
+        Returns common system information such as OS and hardware details.
+    .DESCRIPTION
+        Wraps the Get-CommonSystemInfo.ps1 script in the scripts folder and
+        forwards any provided arguments.
+    #>
     [CmdletBinding()]
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]

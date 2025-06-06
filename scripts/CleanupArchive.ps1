@@ -32,12 +32,20 @@ Import-Module Pnp.PowerShell
 $InformationPreference = 'Continue'
 
 function Test-PathIsArchived {
+    <#
+    .SYNOPSIS
+        Validates that an item resides in the archive directory.
+    .DESCRIPTION
+        Throws an error if the provided item is outside of the
+        zzz_Archive_Production folder. Used as a guard before deleting files.
+    .PARAMETER ArchivedFileItem
+        The SharePoint item object to validate.
+    #>
     param(
-        [object]
-        $ArchivedFileItem
+        [object]$ArchivedFileItem
     )
-    $directoryPath = 'zzz_Archive_Production'
-    if (!$ArchivedFileItem.ServerRelativeUrl.Contains($directoryPath))
+    $DirectoryPath = 'zzz_Archive_Production'
+    if (!$ArchivedFileItem.ServerRelativeUrl.Contains($DirectoryPath))
     {
         Write-Error -Message "This is not an archived directory!"
         throw "STOPPING!"
@@ -45,35 +53,35 @@ function Test-PathIsArchived {
 }
 
 # Connect to SharePoint Online
-$siteUrl = "SITEURL"
-Connect-PnPOnline -Url $siteUrl -Interactive
-$libraries = "Shared Documents"
+$SiteUrl = "SITEURL"
+Connect-PnPOnline -Url $SiteUrl -Interactive
+$Libraries = "Shared Documents"
 Write-Debug -Message "Connected to SharePoint..."
 
 # Navigate to the root folder of the document library
-$sharedDocumentsLibrary = Get-PnPFolder -ListRootFolder $libraries
-$sharePointFolders = $sharedDocumentsLibrary | Get-PnPFolderInFolder
-Write-Debug -Message ($sharedDocumentsLibrary | Format-Table | Out-String)
-Write-Debug -Message ($sharePointFolders | Format-Table | Out-String)
+$SharedDocumentsLibrary = Get-PnPFolder -ListRootFolder $Libraries
+$SharePointFolders = $SharedDocumentsLibrary | Get-PnPFolderInFolder
+Write-Debug -Message ($SharedDocumentsLibrary | Format-Table | Out-String)
+Write-Debug -Message ($SharePointFolders | Format-Table | Out-String)
 
 # Navigate deeper into the folder structure
-$productionSharePointFolders = $sharePointFolders[2]
-$productionSharePointSubfolder = $productionSharePointFolders | Get-PnPFolderInFolder
-Write-Debug -Message ($productionSharePointFolders | Format-Table | Out-String)
-Write-Debug -Message ($productionSharePointSubfolder | Format-Table | Out-String)
+$ProductionSharePointFolders = $SharePointFolders[2]
+$ProductionSharePointSubfolder = $ProductionSharePointFolders | Get-PnPFolderInFolder
+Write-Debug -Message ($ProductionSharePointFolders | Format-Table | Out-String)
+Write-Debug -Message ($ProductionSharePointSubfolder | Format-Table | Out-String)
 
 # Navigate to the 'zzz_Archive_Production' folder
-$zzz_Archive_ProductionSharePointFolder = $productionSharePointSubfolder[7]
-$zzz_Archive_ProductionSharePointFolderItems = $zzz_Archive_ProductionSharePointFolder | Get-PnPFolderItem -Recursive -Verbose
-Write-Debug -Message ($zzz_Archive_ProductionSharePointFolder | Format-Table | Out-String)
-Write-Debug -Message ($zzz_Archive_ProductionSharePointFolderItems | Format-Table | Out-String)
+$ZzzArchiveProductionSharePointFolder = $ProductionSharePointSubfolder[7]
+$ZzzArchiveProductionSharePointFolderItems = $ZzzArchiveProductionSharePointFolder | Get-PnPFolderItem -Recursive -Verbose
+Write-Debug -Message ($ZzzArchiveProductionSharePointFolder | Format-Table | Out-String)
+Write-Debug -Message ($ZzzArchiveProductionSharePointFolderItems | Format-Table | Out-String)
 
 # Organize items into separate lists for files and folders
-[System.Collections.Generic.List[object]]$folders = $zzz_Archive_ProductionSharePointFolderItems | where {$_.GetType().Name -eq "Folder"}
-[System.Collections.Generic.List[object]]$files = $zzz_Archive_ProductionSharePointFolderItems | where {$_.GetType().Name -eq "File"}
+[System.Collections.Generic.List[object]]$Folders = $ZzzArchiveProductionSharePointFolderItems | where {$_.GetType().Name -eq "Folder"}
+[System.Collections.Generic.List[object]]$Files = $ZzzArchiveProductionSharePointFolderItems | where {$_.GetType().Name -eq "File"}
 
 # Delete all files
-foreach ($file in $files)
+foreach ($file in $Files)
 {
     Test-PathIsArchived -ArchivedFileItem $file
     Remove-PnPFile -ServerRelativeUrl $file.ServerRelativeUrl -Force
@@ -81,14 +89,14 @@ foreach ($file in $files)
 }
 
 # Delete folders
-while ($folders)
+while ($Folders)
 {
-    $folder = $folders | Get-Random
+    $folder = $Folders | Get-Random
     try {
         Test-PathIsArchived -ArchivedFileItem $folder
         Remove-PnPFolder -Name $folder.Name -Folder $folder.ParentFolder -Force
         Write-Verbose -Message "Deleted: $($folder.Name)"
-        $folders.Remove($folder) | Out-Null
+        $Folders.Remove($folder) | Out-Null
     }
     catch {
         Write-Error "Error: $($_.Exception.Message)"
@@ -96,7 +104,7 @@ while ($folders)
 }
 
 # Delete root folders and files within 'zzz_Archive_Production'
-foreach ($folder in $zzz_Archive_ProductionSharePointFolder)
+foreach ($folder in $ZzzArchiveProductionSharePointFolder)
 {
     if ($folder.Name -eq "zzz_Archive_Production")
     {
