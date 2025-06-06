@@ -65,6 +65,8 @@ Get-SPToolsAllLibraryReports | Format-Table
 Get-SPToolsAllRecycleBinReports | Format-Table
 # Clear both recycle bin stages for a site
 Clear-SPToolsRecycleBin -SiteName 'ContosoHR' -SecondStage
+# List site collection administrators for a site
+Get-SPToolsSiteAdmins -SiteName 'ContosoHR'
 # Configure auto-reply on a shared mailbox
 $start = Get-Date '2025-06-02T00:00:00'
 $end   = Get-Date '2025-06-09T23:59:59'

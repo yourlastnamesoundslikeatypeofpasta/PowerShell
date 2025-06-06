@@ -507,4 +507,47 @@ function Get-SPToolsAllRecycleBinReports {
         Get-SPToolsRecycleBinReport -SiteName $entry.Key -SiteUrl $entry.Value
     }
 }
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports'
+function Get-SPToolsSiteAdmins {
+    <#
+    .SYNOPSIS
+        Lists the site collection administrators for a SharePoint site.
+    .DESCRIPTION
+        Connects using PnP.PowerShell and returns the current site collection
+        administrators. Provide either a configured SiteName or the SiteUrl
+        directly.
+    .PARAMETER SiteName
+        Friendly name of the site saved via Add-SPToolsSite.
+    .PARAMETER SiteUrl
+        URL of the SharePoint site. Used if SiteName is not supplied.
+    .PARAMETER ClientId
+        Application Client ID to authenticate with.
+    .PARAMETER TenantId
+        Tenant ID for authentication.
+    .PARAMETER CertPath
+        Path to the certificate used for authentication.
+    #>
+    [CmdletBinding()]
+    param(
+        [string]$SiteName,
+        [string]$SiteUrl,
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
+    )
+
+    if (-not $SiteUrl) {
+        if (-not $SiteName) { throw 'SiteName or SiteUrl must be provided.' }
+        $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName
+    }
+
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    try {
+        $admins = Get-PnPSiteCollectionAdmin
+    } finally {
+        Disconnect-PnPOnline
+    }
+    return $admins
+}
+
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsSiteAdmins'

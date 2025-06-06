@@ -42,6 +42,7 @@ out-of-office replies on a shared mailbox.
 The module now includes `Invoke-CompanyPlaceManagement` for administering Microsoft Places buildings and floors.
 Functions like `Add-SPToolsSite` and `Remove-SPToolsSite` let you manage the list of SharePoint sites stored in the settings file.
 
+Use `Get-SPToolsSiteAdmins` to list the site collection administrators for any stored site.
 For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
 Example scripts for every function can be found in the `/Examples` folder.
 

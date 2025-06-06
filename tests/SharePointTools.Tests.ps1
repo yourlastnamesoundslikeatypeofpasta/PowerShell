@@ -27,6 +27,7 @@ Describe 'SharePointTools Module' {
             'Get-SPToolsRecycleBinReport',
             'Clear-SPToolsRecycleBin',
             'Get-SPToolsAllRecycleBinReports'
+            'Get-SPToolsSiteAdmins'
         )
         $exported = (Get-Command -Module SharePointTools).Name
         foreach ($cmd in $expected) {

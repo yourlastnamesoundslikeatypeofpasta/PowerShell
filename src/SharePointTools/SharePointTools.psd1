@@ -27,5 +27,6 @@
         'Get-SPToolsRecycleBinReport',
         'Clear-SPToolsRecycleBin',
         'Get-SPToolsAllRecycleBinReports'
+        'Get-SPToolsSiteAdmins'
     )
 }
