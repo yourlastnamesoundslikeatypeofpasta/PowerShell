@@ -22,3 +22,4 @@ Write-STClosing
 ```
 
 All messages can also be logged to `%USERPROFILE%\SupportToolsLogs\supporttools.log` using the `-Log` switch or by setting `ST_LOG_PATH`.
+Use the `-Structured` parameter of `Write-STLog` to output JSON lines with extra metadata for ingestion into a centralized dashboard.
