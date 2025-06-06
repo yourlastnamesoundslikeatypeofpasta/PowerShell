@@ -10,8 +10,9 @@ function Generate-SPUsageReport {
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments,
         [string]$TranscriptPath
+        [switch]$Simulate
     )
     process {
-        Invoke-ScriptFile -Name 'Generate-SPUsageReport.ps1' -Args $Arguments -TranscriptPath $TranscriptPath
+        Invoke-ScriptFile -Name 'Generate-SPUsageReport.ps1' -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
     }
 }

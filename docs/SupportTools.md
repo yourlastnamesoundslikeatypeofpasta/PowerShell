@@ -11,6 +11,12 @@ For a guided experience, run `./scripts/SupportToolsMenu.ps1` with the optional
 `-UserRole` parameter to select common tasks from an interactive menu tailored
 for `Helpdesk` or `Site Admin` roles.
 
+### Simulation Mode
+
+All commands now accept a `-Simulate` switch. When used, the command logs each
+step and returns randomized mock data without making changes. This is useful for
+testing in lab environments.
+
 ## Available Commands
 
 The table below lists each command and the script it invokes. Arguments not

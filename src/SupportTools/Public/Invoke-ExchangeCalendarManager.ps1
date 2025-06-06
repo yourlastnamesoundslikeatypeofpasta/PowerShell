@@ -9,10 +9,20 @@ function Invoke-ExchangeCalendarManager {
     [CmdletBinding()]
     param(
         [string]$TranscriptPath
+        [switch]$Simulate
     )
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-STStatus 'ExchangeCalendarManager launched' -Level SUCCESS -Log
+    if ($Simulate) {
+        Write-STStatus 'Simulation mode active - no Exchange operations will occur.' -Level WARN -Log
+        $mock = [pscustomobject]@{
+            Simulated = $true
+            Timestamp = Get-Date
+        }
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+        return $mock
+    }
 
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         throw 'This function requires PowerShell 7 or higher.'
