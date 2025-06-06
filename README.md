@@ -99,6 +99,7 @@ SD_BASE_URI
 ```
 
 When set, these variables override values stored in `config/SharePointToolsSettings.psd1`.
+Set `ST_CHAOS_MODE` to `1` or use the `-ChaosMode` switch on ServiceDeskTools commands to simulate throttled or failing API calls during testing.
 For a step-by-step example of loading these variables from the SecretManagement
 module see [docs/CredentialStorage.md](docs/CredentialStorage.md).
 

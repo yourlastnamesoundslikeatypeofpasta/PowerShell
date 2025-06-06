@@ -14,3 +14,7 @@ Commands for interacting with the Service Desk ticketing API.
 | `Link-SDTicketToSPTask` | Add a related SharePoint task link | `Link-SDTicketToSPTask -TicketId 42 -TaskUrl 'https://contoso.sharepoint.com/tasks/1'` |
 
 `SD_API_TOKEN` must be set in the environment. Optionally set `SD_BASE_URI` if your Service Desk API uses a custom URL.
+
+### Chaos Mode
+
+All commands accept the `-ChaosMode` switch (or set the `ST_CHAOS_MODE` environment variable) to simulate delays and random request failures. Use this in development to test how your automation handles throttling and unreliable responses.

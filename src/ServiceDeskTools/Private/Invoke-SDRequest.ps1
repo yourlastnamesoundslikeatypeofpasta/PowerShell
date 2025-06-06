@@ -3,13 +3,24 @@ function Invoke-SDRequest {
     param(
         [Parameter(Mandatory)][string]$Method,
         [Parameter(Mandatory)][string]$Path,
-        [hashtable]$Body
+        [hashtable]$Body,
+        [switch]$ChaosMode
     )
 
     $baseUri = $env:SD_BASE_URI
     if (-not $baseUri) { $baseUri = 'https://api.samanage.com' }
     $token = $env:SD_API_TOKEN
     if (-not $token) { throw 'SD_API_TOKEN environment variable must be set.' }
+
+    if (-not $ChaosMode) { $ChaosMode = [bool]$env:ST_CHAOS_MODE }
+    if ($ChaosMode) {
+        $delay = Get-Random -Minimum 500 -Maximum 1500
+        Write-STLog "CHAOS MODE delay $delay ms"
+        Start-Sleep -Milliseconds $delay
+        $roll = Get-Random -Minimum 1 -Maximum 100
+        if ($roll -le 10) { throw 'ChaosMode: simulated throttling (429 Too Many Requests)' }
+        elseif ($roll -le 20) { throw 'ChaosMode: simulated server error (500 Internal Server Error)' }
+    }
 
     $headers = @{ 'X-Samanage-Authorization' = "Bearer $token"; Accept = 'application/json' }
     $uri = $baseUri.TrimEnd('/') + $Path

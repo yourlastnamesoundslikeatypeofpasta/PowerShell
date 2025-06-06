@@ -13,10 +13,11 @@ function Link-SDTicketToSPTask {
     param(
         [Parameter(Mandatory)][int]$TicketId,
         [Parameter(Mandatory)][string]$TaskUrl,
-        [string]$FieldName = 'sharepoint_task_url'
+        [string]$FieldName = 'sharepoint_task_url',
+        [switch]$ChaosMode
     )
 
     Write-STLog "Link-SDTicketToSPTask $TicketId $TaskUrl"
     $fields = @{ $FieldName = $TaskUrl }
-    Set-SDTicket -Id $TicketId -Fields $fields
+    Set-SDTicket -Id $TicketId -Fields $fields -ChaosMode:$ChaosMode
 }

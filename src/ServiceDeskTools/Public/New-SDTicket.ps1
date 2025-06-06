@@ -13,10 +13,11 @@ function New-SDTicket {
     param(
         [Parameter(Mandatory)][string]$Subject,
         [Parameter(Mandatory)][string]$Description,
-        [Parameter(Mandatory)][string]$RequesterEmail
+        [Parameter(Mandatory)][string]$RequesterEmail,
+        [switch]$ChaosMode
     )
 
     Write-STLog "New-SDTicket $Subject"
     $body = @{ incident = @{ name = $Subject; description = $Description; requester_email = $RequesterEmail } }
-    Invoke-SDRequest -Method 'POST' -Path '/incidents.json' -Body $body
+    Invoke-SDRequest -Method 'POST' -Path '/incidents.json' -Body $body -ChaosMode:$ChaosMode
 }

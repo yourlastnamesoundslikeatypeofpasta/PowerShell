@@ -6,8 +6,11 @@ function Get-SDTicket {
         Incident ID to retrieve.
     #>
     [CmdletBinding()]
-    param([Parameter(Mandatory)][int]$Id)
+    param(
+        [Parameter(Mandatory)][int]$Id,
+        [switch]$ChaosMode
+    )
 
     Write-STLog "Get-SDTicket $Id"
-    Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id.json"
+    Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id.json" -ChaosMode:$ChaosMode
 }
