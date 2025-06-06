@@ -7,10 +7,11 @@ function Search-SDTicket {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$Query
+        [Parameter(Mandatory)][string]$Query,
+        [switch]$ChaosMode
     )
 
     Write-STLog "Search-SDTicket $Query"
     $encoded = [uri]::EscapeDataString($Query)
-    Invoke-SDRequest -Method 'GET' -Path "/incidents.json?search=$encoded"
+    Invoke-SDRequest -Method 'GET' -Path "/incidents.json?search=$encoded" -ChaosMode:$ChaosMode
 }
