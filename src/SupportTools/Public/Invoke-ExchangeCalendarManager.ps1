@@ -7,9 +7,18 @@ function Invoke-ExchangeCalendarManager {
         ExchangeOnlineManagement module is installed before running.
     #>
     [CmdletBinding()]
-    param()
+    param(
+        [string]$TranscriptPath,
+        [switch]$EnableTranscript
+    )
 
     Write-Host '[***] ExchangeCalendarManager launched' -ForegroundColor Green -BackgroundColor Black
+    if ($EnableTranscript -or $TranscriptPath) {
+        if (-not $TranscriptPath) {
+            $TranscriptPath = Join-Path $env:USERPROFILE "ExchangeCalendarManager_$(Get-Date -Format yyyyMMdd_HHmmss).log"
+        }
+        try { Start-Transcript -Path $TranscriptPath -Append | Out-Null } catch { Write-Warning "Failed to start transcript: $_" }
+    }
 
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         throw 'This function requires PowerShell 7 or higher.'
@@ -75,6 +84,11 @@ function Invoke-ExchangeCalendarManager {
     }
 
     Disconnect-ExchangeOnline -Confirm:$false
+
+    if ($EnableTranscript -or $TranscriptPath) {
+        try { Stop-Transcript | Out-Null } catch {}
+        Write-Host "[***] Transcript saved to $TranscriptPath" -ForegroundColor DarkGreen -BackgroundColor Black
+    }
 
     Write-Host '[***] ExchangeCalendarManager finished' -ForegroundColor Green -BackgroundColor Black
 }

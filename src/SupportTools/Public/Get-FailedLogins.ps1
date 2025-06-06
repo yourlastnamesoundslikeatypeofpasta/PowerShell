@@ -8,10 +8,12 @@ function Get-FailedLogins {
     #>
     [CmdletBinding()]
     param(
+        [string]$TranscriptPath,
+        [switch]$EnableTranscript,
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
     process {
-        Invoke-ScriptFile -Name "Get-FailedLogins.ps1" -Args $Arguments
+        Invoke-ScriptFile -Name "Get-FailedLogins.ps1" -TranscriptPath $TranscriptPath -EnableTranscript:$EnableTranscript -Args $Arguments
     }
 }

@@ -60,8 +60,8 @@ Describe 'SharePointTools Module' {
             $case = $m
             It "$($case.Fn) calls $($case.Target)" {
                 Mock $case.Target {} -ModuleName SharePointTools
-                & $case.Fn
-                Assert-MockCalled $case.Target -ModuleName SharePointTools -ParameterFilter { $SiteName -eq $case.Site } -Times 1
+                & ($using:case.Fn)
+                Assert-MockCalled $case.Target -ModuleName SharePointTools -ParameterFilter { $SiteName -eq $using:case.Site } -Times 1
             }
         }
     }

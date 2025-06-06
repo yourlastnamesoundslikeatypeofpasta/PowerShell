@@ -7,10 +7,12 @@ function Update-Sysmon {
     #>
     [CmdletBinding()]
     param(
+        [string]$TranscriptPath,
+        [switch]$EnableTranscript,
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
     process {
-        Invoke-ScriptFile -Name "Update-Sysmon.ps1" -Args $Arguments
+        Invoke-ScriptFile -Name "Update-Sysmon.ps1" -TranscriptPath $TranscriptPath -EnableTranscript:$EnableTranscript -Args $Arguments
     }
 }

@@ -8,10 +8,12 @@ function Clear-ArchiveFolder {
     #>
     [CmdletBinding()]
     param(
+        [string]$TranscriptPath,
+        [switch]$EnableTranscript,
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
     process {
-        Invoke-ScriptFile -Name "CleanupArchive.ps1" -Args $Arguments
+        Invoke-ScriptFile -Name "CleanupArchive.ps1" -TranscriptPath $TranscriptPath -EnableTranscript:$EnableTranscript -Args $Arguments
     }
 }

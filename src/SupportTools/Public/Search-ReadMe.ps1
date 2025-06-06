@@ -8,10 +8,12 @@ function Search-ReadMe {
     #>
     [CmdletBinding()]
     param(
+        [string]$TranscriptPath,
+        [switch]$EnableTranscript,
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments
     )
     process {
-        Invoke-ScriptFile -Name "Search-ReadMe.ps1" -Args $Arguments
+        Invoke-ScriptFile -Name "Search-ReadMe.ps1" -TranscriptPath $TranscriptPath -EnableTranscript:$EnableTranscript -Args $Arguments
     }
 }

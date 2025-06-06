@@ -62,8 +62,8 @@ Describe 'SupportTools Module' {
             $case = $entry
             It "$($case.Key) calls Invoke-ScriptFile" {
                 Mock Invoke-ScriptFile {} -ModuleName SupportTools
-                & $case.Key.ToString().Replace('_','-')
-                Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -ParameterFilter { $Name -eq $case.Value } -Times 1
+                & ($using:case.Key.ToString().Replace('_','-'))
+                Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -ParameterFilter { $Name -eq $using:case.Value } -Times 1
             }
         }
     }
@@ -74,6 +74,14 @@ Describe 'SupportTools Module' {
             Mock Invoke-ScriptFile { $expected } -ModuleName SupportTools
             $result = Add-UsersToGroup -CsvPath 'users.csv' -GroupName 'MyGroup'
             $result | Should -Be $expected
+        }
+    }
+
+    Context 'Transcript parameters' {
+        It 'forwards parameters to Invoke-ScriptFile' {
+            Mock Invoke-ScriptFile {} -ModuleName SupportTools
+            Get-NetworkShares -TranscriptPath 'out.log' -EnableTranscript
+            Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -ParameterFilter { $TranscriptPath -eq 'out.log' -and $EnableTranscript } -Times 1
         }
     }
 }

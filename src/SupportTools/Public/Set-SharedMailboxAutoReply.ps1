@@ -21,10 +21,18 @@ function Set-SharedMailboxAutoReply {
         [string]$ExternalAudience = 'All',
         [Parameter(Mandatory)]
         [string]$AdminUser,
-    [switch]$UseWebLogin
+        [switch]$UseWebLogin,
+        [string]$TranscriptPath,
+        [switch]$EnableTranscript
     )
 
     Write-Host '[***] Running Set-SharedMailboxAutoReply' -ForegroundColor Green -BackgroundColor Black
+    if ($EnableTranscript -or $TranscriptPath) {
+        if (-not $TranscriptPath) {
+            $TranscriptPath = Join-Path $env:USERPROFILE "Set-SharedMailboxAutoReply_$(Get-Date -Format yyyyMMdd_HHmmss).log"
+        }
+        try { Start-Transcript -Path $TranscriptPath -Append | Out-Null } catch { Write-Warning "Failed to start transcript: $_" }
+    }
 
     if (-not $ExternalMessage) { $ExternalMessage = $InternalMessage }
 
@@ -65,6 +73,10 @@ function Set-SharedMailboxAutoReply {
     Disconnect-ExchangeOnline -Confirm:$false
 
     Write-Host '[***] Auto-reply configuration complete' -ForegroundColor Green -BackgroundColor Black
+    if ($EnableTranscript -or $TranscriptPath) {
+        try { Stop-Transcript | Out-Null } catch {}
+        Write-Host "[***] Transcript saved to $TranscriptPath" -ForegroundColor DarkGreen -BackgroundColor Black
+    }
 
     return $result
 }

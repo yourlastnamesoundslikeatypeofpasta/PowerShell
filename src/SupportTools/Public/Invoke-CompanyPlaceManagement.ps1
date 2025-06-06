@@ -27,10 +27,18 @@ function Invoke-CompanyPlaceManagement {
         [string]$State,
         [string]$PostalCode,
         [string]$CountryOrRegion,
-        [switch]$AutoAddFloor
+        [switch]$AutoAddFloor,
+        [string]$TranscriptPath,
+        [switch]$EnableTranscript
     )
 
     Write-Host "[***] Invoke-CompanyPlaceManagement -Action $Action" -ForegroundColor Green -BackgroundColor Black
+    if ($EnableTranscript -or $TranscriptPath) {
+        if (-not $TranscriptPath) {
+            $TranscriptPath = Join-Path $env:USERPROFILE "CompanyPlaceManagement_$(Get-Date -Format yyyyMMdd_HHmmss).log"
+        }
+        try { Start-Transcript -Path $TranscriptPath -Append | Out-Null } catch { Write-Warning "Failed to start transcript: $_" }
+    }
     if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
         try {
             Import-Module MicrosoftPlaces -ErrorAction Stop
@@ -86,6 +94,11 @@ function Invoke-CompanyPlaceManagement {
             Set-PlaceV3 @updateParams
             Write-Host "✏️ Updated '$DisplayName' successfully."
         }
+    }
+
+    if ($EnableTranscript -or $TranscriptPath) {
+        try { Stop-Transcript | Out-Null } catch {}
+        Write-Host "[***] Transcript saved to $TranscriptPath" -ForegroundColor DarkGreen -BackgroundColor Black
     }
 
     Write-Host '[***] Invoke-CompanyPlaceManagement completed' -ForegroundColor Green -BackgroundColor Black

@@ -15,7 +15,9 @@ function Add-UsersToGroup {
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [string]$CsvPath,
         [Parameter(ValueFromPipelineByPropertyName=$true)]
-        [string]$GroupName
+        [string]$GroupName,
+        [string]$TranscriptPath,
+        [switch]$EnableTranscript
     )
 
     process {
@@ -29,6 +31,6 @@ function Add-UsersToGroup {
             $arguments += $GroupName
         }
 
-        Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -Args $arguments
+        Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -TranscriptPath $TranscriptPath -EnableTranscript:$EnableTranscript -Args $arguments
     }
 }
