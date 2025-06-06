@@ -1,4 +1,6 @@
-# SupportTools PowerShell Modules 🚀
+# SupportTools PowerShell Modules
+[![Pester Tests](https://github.com/your-org/PowerShell/actions/workflows/pester-tests.yml/badge.svg)](https://github.com/your-org/PowerShell/actions/workflows/pester-tests.yml)
+
 
 This repository packages a collection of scripts into reusable modules.
 
@@ -126,3 +128,7 @@ Potential areas for improvement and extension include:
 workflow added ([docs/CredentialStorage.md](docs/CredentialStorage.md)).
 9. ~~**Linting and Code Quality**
    Check scripts with PSScriptAnalyzer on each commit.~~ - Linting automated via GitHub Actions.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
