@@ -15,7 +15,8 @@ Removes archive folders and files from a SharePoint library.
 ```
 Invoke-ArchiveCleanup [-SiteName] <String> [[-SiteUrl] <String>] [[-LibraryName] <String>]
  [[-ClientId] <String>] [[-TenantId] <String>] [[-CertPath] <String>] [[-TranscriptPath] <String>]
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm] [<CommonParameters>]
+
 ```
 
 ## DESCRIPTION
@@ -136,6 +137,37 @@ Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
+
+### -WhatIf
+Shows what would happen if the cmdlet runs. The cmdlet is not run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: wi
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: cf
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 
 ### -ProgressAction
 Specifies how progress is displayed.

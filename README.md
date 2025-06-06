@@ -127,6 +127,9 @@ Potential areas for improvement and extension include:
 workflow added ([docs/CredentialStorage.md](docs/CredentialStorage.md)).
 9. ~~**Linting and Code Quality**
    Check scripts with PSScriptAnalyzer on each commit.~~ - Linting automated via GitHub Actions.
+10. **Cmdlet Design Improvements**
+    Convert module functions into full advanced functions with parameter validation,
+    `SupportsShouldProcess`, and dynamic argument completers for easier interactive use.
 
 ## License
 
