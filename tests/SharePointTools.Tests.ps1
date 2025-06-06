@@ -56,16 +56,14 @@ Describe 'SharePointTools Module' {
             @{ Fn = 'Invoke-MexCentralFilesSharingLinkCleanup'; Target = 'Invoke-SharingLinkCleanup'; Site = 'MexCentralFiles' }
         )
 
-        foreach ($m in $maps) {
-            $case = $m
-            It "$($case.Fn) calls $($case.Target)" {
-                InModuleScope SharePointTools {
-                    Mock $case.Target {}
-                    & $case.Fn
-                    Assert-MockCalled $case.Target -Times 1
-                }
-            }
+        $cases = foreach ($m in $maps) {
+            @{ Fn = $m.Fn; Target = $m.Target }
+        }
 
+        It '<Fn> calls <Target>' -ForEach $cases {
+            Mock $Target {} -ModuleName SharePointTools
+            & $Fn
+            Assert-MockCalled $Target -ModuleName SharePointTools -Times 1
         }
     }
 

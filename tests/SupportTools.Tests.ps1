@@ -58,17 +58,16 @@ Describe 'SupportTools Module' {
             Update_Sysmon                = 'Update-Sysmon.ps1'
         }
 
-        foreach ($entry in $map.GetEnumerator()) {
-            $case = $entry
-            It "$($case.Key) calls Invoke-ScriptFile" {
-                InModuleScope SupportTools {
-                    Mock Invoke-ScriptFile {}
-                    & $case.Key.ToString().Replace('_','-')
-                    Assert-MockCalled Invoke-ScriptFile -Times 1
-                }
-            }
-
+        $cases = foreach ($entry in $map.GetEnumerator()) {
+            @{ Fn = $entry.Key.ToString().Replace('_','-') }
         }
+
+        It 'calls Invoke-ScriptFile for <Fn>' -ForEach $cases {
+            Mock Invoke-ScriptFile {} -ModuleName SupportTools
+            & $Fn
+            Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1
+        }
+
     }
 
     Context 'Add-UsersToGroup output passthrough' {
