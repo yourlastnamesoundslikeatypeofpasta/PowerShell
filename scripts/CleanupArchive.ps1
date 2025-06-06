@@ -27,7 +27,8 @@ This script requires tenant admin access and assumes the user has the necessary 
 This example runs the script, connecting to the predefined SharePoint site and processing the 'Shared Documents' library to delete all items within the 'zzz_Archive_Production' folder.
 #>
 
-# Import the PnP PowerShell module
+$loggingModule = Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1'
+Import-Module $loggingModule -ErrorAction SilentlyContinue
 Import-Module Pnp.PowerShell
 $InformationPreference = 'Continue'
 
@@ -57,6 +58,13 @@ $SiteUrl = "SITEURL"
 Connect-PnPOnline -Url $SiteUrl -Interactive
 $Libraries = "Shared Documents"
 Write-Debug -Message "Connected to SharePoint..."
+
+Write-STStatus "About to delete contents of 'zzz_Archive_Production'." -Level WARN
+$confirm = Read-Host 'Proceed with deletion? (Y/N)'
+if ($confirm -ne 'Y') {
+    Write-STStatus 'Cleanup cancelled by user.' -Level WARN
+    return
+}
 
 # Navigate to the root folder of the document library
 $SharedDocumentsLibrary = Get-PnPFolder -ListRootFolder $Libraries

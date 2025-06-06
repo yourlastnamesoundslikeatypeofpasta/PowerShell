@@ -31,7 +31,8 @@ function Write-STStatus {
         [string]$Message,
         [ValidateSet('INFO','SUCCESS','ERROR','WARN','SUB','FINAL','FATAL')]
         [string]$Level = 'INFO',
-        [switch]$Log
+        [switch]$Log,
+        [switch]$MaskSensitive
     )
 
     switch ($Level) {
@@ -42,6 +43,10 @@ function Write-STStatus {
         'FINAL'   { $prefix = '[✔]'; $color = 'Green' }
         'FATAL'   { $prefix = '[✘]'; $color = 'Red' }
         default   { $prefix = '[*]'; $color = 'Cyan' }
+    }
+
+    if ($MaskSensitive -and $Message -match '(^[^:=]+[:=])\s*(.+)$') {
+        $Message = "$($Matches[1]) ****"
     }
 
     Write-Host "$prefix $Message" -ForegroundColor $color

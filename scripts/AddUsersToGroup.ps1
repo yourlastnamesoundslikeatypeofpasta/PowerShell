@@ -81,11 +81,24 @@ function Get-GroupNames {
     return $allGroups
 }
 
+function Confirm-RequiredScopes {
+    param(
+        [string[]]$RequiredScopes
+    )
+    $ctx = Get-MgContext
+    $missing = $RequiredScopes | Where-Object { $_ -notin $ctx.Scopes }
+    if ($missing) {
+        Write-STStatus "Missing required scopes: $($missing -join ', ')" -Level FATAL
+        throw 'Insufficient Graph permissions.'
+    }
+}
+
 function Connect-MicrosoftGraph {
     # Connect to Microsoft Graph API
     Write-STStatus 'Connecting to Microsoft Graph...' -Level INFO
     try {
         Connect-MgGraph -Scopes "User.Read.All", "Group.ReadWrite.All", "Directory.ReadWrite.All" -NoWelcome
+        Confirm-RequiredScopes -RequiredScopes @('User.Read.All','Group.ReadWrite.All','Directory.ReadWrite.All')
     }
     catch {
         Write-Error -Message "Error: $_.Exception.Message"
@@ -185,6 +198,17 @@ function Start-Main {
     $filePath = $CsvPath
     $file = Import-Csv $filePath
     $users = $file.UPN
+
+    $toAdd = @()
+    foreach ($u in $users) {
+        if ($groupExistingMembers -notcontains $u) { $toAdd += $u }
+    }
+    Write-STStatus "About to add $($toAdd.Count) user(s) to $($group.DisplayName)." -Level WARN
+    $confirmation = Read-Host 'Proceed with adding users? (Y/N)'
+    if ($confirmation -ne 'Y') {
+        Write-STStatus 'Operation cancelled by user.' -Level WARN
+        return
+    }
 
     $addedUsers = @()
     $skippedUsers = @()

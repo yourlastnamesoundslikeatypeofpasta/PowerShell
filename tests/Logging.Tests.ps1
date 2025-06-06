@@ -74,4 +74,16 @@ Describe 'Logging Module' {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
+
+    It 'masks sensitive data in status messages' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            $env:ST_LOG_PATH = $temp
+            Write-STStatus -Message 'Token: secret123' -MaskSensitive -Log
+            (Get-Content $temp) | Should -Match 'Token: \*\*\*\*'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+            Remove-Item env:ST_LOG_PATH
+        }
+    }
 }
