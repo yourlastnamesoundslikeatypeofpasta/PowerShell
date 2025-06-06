@@ -18,8 +18,10 @@ function Invoke-ScriptFile {
     if (-not (Test-Path $Path)) { throw "Script '$Name' not found." }
 
     Write-Host "[***] EXECUTING $Name" -ForegroundColor Green -BackgroundColor Black
+    Write-STLog "EXECUTING $Name"
     if ($Args) {
         Write-Host "       ARGS: $($Args -join ' ')" -ForegroundColor DarkGreen -BackgroundColor Black
+        Write-STLog "ARGS: $($Args -join ' ')"
     }
 
     $oldPref = $ErrorActionPreference
@@ -28,10 +30,12 @@ function Invoke-ScriptFile {
         & $Path @Args
     } catch {
         Write-Error "Execution of '$Name' failed: $_"
+        Write-STLog "Execution of '$Name' failed: $_" -Level 'ERROR'
         throw
     } finally {
         $ErrorActionPreference = $oldPref
     }
 
     Write-Host "[***] COMPLETED $Name" -ForegroundColor Green -BackgroundColor Black
+    Write-STLog "COMPLETED $Name"
 }

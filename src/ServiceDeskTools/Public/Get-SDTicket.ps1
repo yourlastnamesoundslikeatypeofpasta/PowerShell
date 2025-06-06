@@ -8,5 +8,6 @@ function Get-SDTicket {
     [CmdletBinding()]
     param([Parameter(Mandatory)][int]$Id)
 
+    Write-STLog "Get-SDTicket $Id"
     Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id.json"
 }

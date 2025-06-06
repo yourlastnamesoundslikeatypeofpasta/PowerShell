@@ -31,6 +31,7 @@ function Invoke-CompanyPlaceManagement {
     )
 
     Write-Host "[***] Invoke-CompanyPlaceManagement -Action $Action" -ForegroundColor Green -BackgroundColor Black
+    Write-STLog "Invoke-CompanyPlaceManagement -Action $Action"
     if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
         try {
             Import-Module MicrosoftPlaces -ErrorAction Stop
@@ -89,6 +90,7 @@ function Invoke-CompanyPlaceManagement {
     }
 
     Write-Host '[***] Invoke-CompanyPlaceManagement completed' -ForegroundColor Green -BackgroundColor Black
+    Write-STLog 'Invoke-CompanyPlaceManagement completed'
 }
 
 

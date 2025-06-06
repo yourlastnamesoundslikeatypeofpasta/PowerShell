@@ -10,6 +10,7 @@ function Invoke-ExchangeCalendarManager {
     param()
 
     Write-Host '[***] ExchangeCalendarManager launched' -ForegroundColor Green -BackgroundColor Black
+    Write-STLog 'ExchangeCalendarManager launched'
 
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         throw 'This function requires PowerShell 7 or higher.'
@@ -77,4 +78,5 @@ function Invoke-ExchangeCalendarManager {
     Disconnect-ExchangeOnline -Confirm:$false
 
     Write-Host '[***] ExchangeCalendarManager finished' -ForegroundColor Green -BackgroundColor Black
+    Write-STLog 'ExchangeCalendarManager finished'
 }
