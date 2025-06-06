@@ -16,12 +16,14 @@ function Main {
         [string]$FontFolder
     )
 
+    Write-Host "Installing fonts from $FontFolder..." -ForegroundColor Cyan
     if (-not ([bool](New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator))) {
         throw 'Administrator rights are required to install fonts.'
     }
 
     $fonts = Get-Fonts -FontFolder $FontFolder
     Install-Fonts -Fonts $fonts
+    Write-Host 'Font installation complete.' -ForegroundColor Green
 }
 
 function Get-Fonts {

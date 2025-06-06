@@ -20,8 +20,9 @@ function Search-ReadMe {
     This tool can be used as a one-liner.
     #>
 
+    Write-Host 'Searching for readme files...' -ForegroundColor Cyan
     $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction SilentlyContinue
-
+    Write-Host "Found $($results.Count) file(s)." -ForegroundColor Green
     return $results
 
 }

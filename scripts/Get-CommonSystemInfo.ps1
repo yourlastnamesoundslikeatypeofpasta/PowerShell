@@ -19,6 +19,8 @@ function Get-CommonSystemInfo {
     - DiskSpace
     #>
 
+    Write-Host 'Collecting system information...' -ForegroundColor Cyan
+
     $operatingSystemInfo = Get-CimInstance -ClassName Win32_OperatingSystem
     $processorInfo = Get-CimInstance -ClassName Win32_Processor
     $diskInfo = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType = 3"
@@ -32,5 +34,6 @@ function Get-CommonSystemInfo {
         Memory = $operatingSystemInfo.TotalVisibleMemorySize / 1MB
         DiskSpace = $diskInfo | Select-Object -Property DeviceID, @{Name = "Size"; Expression = { "{0:N2}" -f ($_.Size / 1GB) }}, @{Name = "FreeSpace"; Expression = { "{0:N2}" -f ($_.FreeSpace / 1GB) }}
     }
+    Write-Host 'System information collected.' -ForegroundColor Green
     return $commonSystemInfoObj
 }

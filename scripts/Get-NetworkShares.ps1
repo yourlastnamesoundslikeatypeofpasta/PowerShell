@@ -22,6 +22,7 @@ function Get-NetworkShares {
     if ($ComputerName -eq $null) {
         $ComputerName = $env:COMPUTERNAME
     }
+    Write-Host "Gathering network shares on $ComputerName..." -ForegroundColor Cyan
 
     $shares = Get-CimInstance -ClassName Win32_Share -ComputerName $ComputerName
 
@@ -39,6 +40,7 @@ function Get-NetworkShares {
         Shares       = $shareObjects
     }
 
+    Write-Host "Found $($shareObjects.Count) shares." -ForegroundColor Green
     return $result
 }
 

@@ -23,13 +23,16 @@ function Get-FailedLogins {
         [string]$ComputerName
     )
 
+    Write-Host "Retrieving failed login events from $ComputerName..." -ForegroundColor Cyan
+
     if ($ComputerName -eq $null) {
         $ComputerName = $env:COMPUTERNAME
     }
 
-    $failedLogins = Get-WinEvent -FilterHashTable @{LogName="Security"; ID=4625} -ComputerName $ComputerName | 
+    $failedLogins = Get-WinEvent -FilterHashTable @{LogName="Security"; ID=4625} -ComputerName $ComputerName |
         Select-Object TimeCreated, Message
 
+    Write-Host "Retrieved $($failedLogins.Count) events." -ForegroundColor Green
     return $failedLogins
 }
 
