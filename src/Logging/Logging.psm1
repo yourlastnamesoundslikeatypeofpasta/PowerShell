@@ -51,6 +51,44 @@ function Write-STLog {
     }
 }
 
+# Writes a structured JSON log entry following a common schema.
+function Write-STRichLog {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Tool,
+        [Parameter(Mandatory)][string]$Status,
+        [string]$User,
+        [timespan]$Duration,
+        [string[]]$Details,
+        [string]$Path
+    )
+
+    $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
+    if ($Path) {
+        $logFile = $Path
+    } elseif ($env:ST_LOG_PATH) {
+        $logFile = $env:ST_LOG_PATH
+    } else {
+        $logDir = Join-Path $userProfile 'SupportToolsLogs'
+        $logFile = Join-Path $logDir 'supporttools.log'
+    }
+    $dir = Split-Path -Path $logFile -Parent
+    if (-not (Test-Path $dir)) {
+        New-Item -Path $dir -ItemType Directory -Force | Out-Null
+    }
+
+    $entry = [ordered]@{
+        timestamp = (Get-Date).ToString('o')
+        tool      = $Tool
+        status    = $Status
+    }
+    if ($PSBoundParameters.ContainsKey('User'))     { $entry.user = $User }
+    if ($PSBoundParameters.ContainsKey('Duration')) { $entry.duration = $Duration.ToString() }
+    if ($PSBoundParameters.ContainsKey('Details'))  { $entry.details  = $Details }
+
+    ($entry | ConvertTo-Json -Depth 5 -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
+}
+
 function Write-STStatus {
     [CmdletBinding()]
     param(
@@ -119,4 +157,4 @@ function Write-STClosing {
     Write-Host "┌──[ $Message ]──────────────" -ForegroundColor DarkGray
 }
 
-Export-ModuleMember -Function 'Write-STLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing'
+Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing'

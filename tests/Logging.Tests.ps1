@@ -87,4 +87,20 @@ Describe 'Logging Module' {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
+
+    It 'writes rich JSON log entries' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            Write-STRichLog -Tool 'TestTool' -Status 'success' -User 'a@b.com' -Duration ([TimeSpan]::FromSeconds(5)) -Details 'ok' -Path $temp
+            $json = Get-Content $temp | ConvertFrom-Json
+            $json.tool | Should -Be 'TestTool'
+            $json.status | Should -Be 'success'
+            $json.user | Should -Be 'a@b.com'
+            $json.duration | Should -Be '00:00:05'
+            $json.details | Should -Contain 'ok'
+            $json.timestamp.ToString('o') | Should -Match '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
 }
