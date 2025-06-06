@@ -1,3 +1,5 @@
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 function Get-FailedLogins {
     <#
     .SYNOPSIS
@@ -23,7 +25,7 @@ function Get-FailedLogins {
         [string]$ComputerName
     )
 
-    Write-Host "Retrieving failed login events from $ComputerName..." -ForegroundColor Cyan
+    Write-STStatus "Retrieving failed login events from $ComputerName..." -Level INFO
 
     if ($ComputerName -eq $null) {
         $ComputerName = $env:COMPUTERNAME
@@ -32,7 +34,7 @@ function Get-FailedLogins {
     $failedLogins = Get-WinEvent -FilterHashTable @{LogName="Security"; ID=4625} -ComputerName $ComputerName |
         Select-Object TimeCreated, Message
 
-    Write-Host "Retrieved $($failedLogins.Count) events." -ForegroundColor Green
+    Write-STStatus "Retrieved $($failedLogins.Count) events." -Level SUCCESS
     return $failedLogins
 }
 

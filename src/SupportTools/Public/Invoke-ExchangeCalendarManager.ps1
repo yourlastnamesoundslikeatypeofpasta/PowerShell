@@ -12,8 +12,7 @@ function Invoke-ExchangeCalendarManager {
     )
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-    Write-Host '[***] ExchangeCalendarManager launched' -ForegroundColor Green -BackgroundColor Black
-    Write-STLog 'ExchangeCalendarManager launched'
+    Write-STStatus 'ExchangeCalendarManager launched' -Level SUCCESS -Log
 
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         throw 'This function requires PowerShell 7 or higher.'
@@ -24,10 +23,10 @@ function Invoke-ExchangeCalendarManager {
     $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
     if (-not $module) {
-        Write-Host 'Installing Exchange Online module...'
+        Write-STStatus 'Installing Exchange Online module...' -Level INFO -Log
         Install-Module -Name ExchangeOnlineManagement -Force
     } elseif ($updateVersion -and $module.Version -lt $updateVersion.Version) {
-        Write-Host 'Updating Exchange Online module...'
+        Write-STStatus 'Updating Exchange Online module...' -Level INFO -Log
         Update-Module -Name ExchangeOnlineManagement -Force
     }
 
@@ -41,12 +40,12 @@ function Invoke-ExchangeCalendarManager {
     }
 
     while ($true) {
-        Write-Host ('-' * 88) -ForegroundColor Yellow
-        Write-Host "1 - Grant calendar access" -ForegroundColor Yellow
-        Write-Host "2 - Revoke calendar access" -ForegroundColor Yellow
-        Write-Host "3 - Remove user's future meetings" -ForegroundColor Yellow
-        Write-Host "4 - List mailbox permissions" -ForegroundColor Yellow
-        Write-Host "Q - Quit" -ForegroundColor Yellow
+        Write-STStatus ('-' * 88) -Level INFO
+        Write-STStatus '1 - Grant calendar access' -Level INFO
+        Write-STStatus '2 - Revoke calendar access' -Level INFO
+        Write-STStatus "3 - Remove user's future meetings" -Level INFO
+        Write-STStatus '4 - List mailbox permissions' -Level INFO
+        Write-STStatus 'Q - Quit' -Level INFO
 
         $selection = Read-Host 'Please make a selection'
         if ($selection -match '^[Qq]$') { break }
@@ -73,14 +72,13 @@ function Invoke-ExchangeCalendarManager {
                 Get-Mailbox | Get-MailboxPermission -User $userEmail
             }
             default {
-                Write-Host 'Invalid selection.' -ForegroundColor Red
+                Write-STStatus 'Invalid selection.' -Level ERROR
             }
         }
     }
 
     Disconnect-ExchangeOnline -Confirm:$false
 
-    Write-Host '[***] ExchangeCalendarManager finished' -ForegroundColor Green -BackgroundColor Black
-    Write-STLog 'ExchangeCalendarManager finished'
+    Write-STStatus 'ExchangeCalendarManager finished' -Level FINAL -Log
     if ($TranscriptPath) { Stop-Transcript | Out-Null }
 }
