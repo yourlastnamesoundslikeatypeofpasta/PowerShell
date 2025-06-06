@@ -1,5 +1,5 @@
 # SupportTools PowerShell Modules
-[![Pester Tests](https://github.com/your-org/PowerShell/actions/workflows/pester-tests.yml/badge.svg)](https://github.com/your-org/PowerShell/actions/workflows/pester-tests.yml)
+[![Pester Tests](https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell/actions/workflows/pester-tests.yml/badge.svg)](https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell/actions/workflows/pester-tests.yml)
 
 
 This repository packages a collection of scripts into reusable modules.
