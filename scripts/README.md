@@ -26,3 +26,5 @@ The following table provides a brief description of each script.
 | **SS_DEPLOYMENT_TEMPLATE.ps1** | Template for sneaker net deployments that installs agents and configures a system. |
 | **Configure-SharePointTools.ps1** | Prompts for SharePoint application values and saves them to a settings file. |
 | **CleanupTempFiles.ps1** | Removes .tmp files and empty logs from the repository. |
+| **Cleanup-GroupMembership.ps1** | Removes disabled accounts from a Microsoft 365 group. |
+| **RoleAwareToolset.ps1** | Interactive menu showing commands based on user role. |

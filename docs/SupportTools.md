@@ -36,6 +36,8 @@ listed are forwarded to the underlying script unchanged.
 | `Invoke-CompanyPlaceManagement` | `Invoke-CompanyPlaceManagement.ps1` | `Action`, `DisplayName`, `[Type]`, `Street`, `City`, `State`, `PostalCode`, `CountryOrRegion`, `[AutoAddFloor]` | `Invoke-CompanyPlaceManagement -Action Create -DisplayName 'HQ' -Type Building -City Seattle` |
 | `Submit-SystemInfoTicket` | `Submit-SystemInfoTicket.ps1` | `SiteName`, `RequesterEmail`, `[Subject]`, `[Description]`, `[LibraryName]`, `[FolderPath]` | `Submit-SystemInfoTicket -SiteName IT -RequesterEmail 'user@contoso.com'` |
 | `Generate-SPUsageReport` | `Generate-SPUsageReport.ps1` | `[ItemThreshold]`, `[RequesterEmail]`, `[CsvPath]`, `[TranscriptPath]` | `Generate-SPUsageReport -RequesterEmail 'user@contoso.com'` |
+| `Invoke-GroupMembershipCleanup` | `Cleanup-GroupMembership.ps1` | `GroupName`, `[TranscriptPath]` | `Invoke-GroupMembershipCleanup -GroupName 'Team'` |
+| `Start-RoleAwareToolset` | `RoleAwareToolset.ps1` | `[UserRole]`, `[TranscriptPath]` | `Start-RoleAwareToolset -UserRole 'Helpdesk'` |
 
 For details on what each script does see [scripts/README.md](../scripts/README.md).
 
