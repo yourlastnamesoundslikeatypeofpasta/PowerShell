@@ -66,6 +66,19 @@ Describe 'Logging Module' {
         }
     }
 
+    It 'writes structured log entries when requested' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            Write-STLog -Message 'json test' -Path $temp -Structured -Metadata @{action='test'}
+            $json = Get-Content $temp | ConvertFrom-Json
+            $json.message | Should -Be 'json test'
+            $json.level | Should -Be 'INFO'
+            $json.action | Should -Be 'test'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
+
     It 'throws on invalid log level' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
