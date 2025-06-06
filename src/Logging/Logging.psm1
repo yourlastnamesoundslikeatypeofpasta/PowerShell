@@ -24,4 +24,28 @@ function Write-STLog {
     "$timestamp [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
 }
 
-Export-ModuleMember -Function 'Write-STLog'
+function Write-STStatus {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Message,
+        [ValidateSet('INFO','SUCCESS','ERROR','WARN','SUB','FINAL','FATAL')]
+        [string]$Level = 'INFO',
+        [switch]$Log
+    )
+
+    switch ($Level) {
+        'SUCCESS' { $prefix = '[+]'; $color = 'Green' }
+        'ERROR'   { $prefix = '[-]'; $color = 'Red' }
+        'WARN'    { $prefix = '[!]'; $color = 'Yellow' }
+        'SUB'     { $prefix = '[>]'; $color = 'DarkCyan' }
+        'FINAL'   { $prefix = '[✔]'; $color = 'Green' }
+        'FATAL'   { $prefix = '[✘]'; $color = 'Red' }
+        default   { $prefix = '[*]'; $color = 'Cyan' }
+    }
+
+    Write-Host "$prefix $Message" -ForegroundColor $color
+    if ($Log) { Write-STLog -Message "$prefix $Message" }
+}
+
+Export-ModuleMember -Function 'Write-STLog','Write-STStatus'

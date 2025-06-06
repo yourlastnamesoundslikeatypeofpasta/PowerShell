@@ -9,6 +9,8 @@
 # computer name is written to a log directory on the removable drive.
 # #>
 
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 function Main {
 
     # get the correct drive letter
@@ -16,7 +18,7 @@ function Main {
     foreach ($driverLetter in $driveLetters)
     {
         $drivePath = "$($driverLetter):\SYSV2\"
-        Write-Host $drivePath
+        Write-STStatus $drivePath -Level INFO
         $isDrivePathValid = Test-Path $drivePath
         if ($isDrivePathValid)
         {

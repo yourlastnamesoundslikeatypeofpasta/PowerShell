@@ -1,3 +1,5 @@
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 function Set-NetAdapterMetric {
     <#
     .SYNOPSIS
@@ -26,11 +28,11 @@ param (
     [Int32]
     $Metric
 )
-Write-Host "Setting metric $Metric on adapter $Adapter..." -ForegroundColor Cyan
+Write-STStatus "Setting metric $Metric on adapter $Adapter..." -Level INFO
 $Adapter = Get-NetAdapter -Name $Adapter
 
 $Adapter | Set-NetIPInterface -InterfaceMetric $Metric
-Write-Host 'Metric updated.' -ForegroundColor Green
+Write-STStatus 'Metric updated.' -Level SUCCESS
 
 }
 

@@ -34,6 +34,7 @@ function Write-SPToolsHacker {
         Write-Host $Message -ForegroundColor Green -BackgroundColor Black
         Write-STLog $Message
     }
+
 }
 
 function Save-SPToolsSettings {
@@ -267,7 +268,7 @@ function Invoke-ArchiveCleanup {
         $relativePath = $fullPath -replace '^.*?Shared Documents/?', ''
         $folderDepth = ($relativePath -split '/').Count
         if ($folderDepth -le 1) {
-            Write-Host "-- Skipping root-level folder: $fullPath" -ForegroundColor DarkYellow
+            Write-STStatus "-- Skipping root-level folder: $fullPath" -Level WARN
             continue
         }
 
@@ -354,9 +355,9 @@ function Invoke-FileVersionCleanup {
     $subFolders = $rootFolder | Get-PnPFolderInFolder
     $targetFolder = $subFolders | Where-Object { $_.Name -eq 'Marketing' }
 
-    Write-Host "[+] Scanning target: $SiteName"
+    Write-STStatus "Scanning target: $SiteName" -Level INFO
     $items = $targetFolder | Get-PnPFolderItem -Recursive -Verbose
-    Write-Host "[>] Located $($items.Count) files within $SiteUrl"
+    Write-STStatus "Located $($items.Count) files within $SiteUrl" -Level SUB
 
     $files = $items | Where-Object { $_.GetType().Name -eq 'File' }
 
@@ -374,7 +375,7 @@ function Invoke-FileVersionCleanup {
     }
 
     $report | Export-Csv $ReportPath -NoTypeInformation
-    Write-Host "[✓] Report exported to $ReportPath" -ForegroundColor Green
+    Write-STStatus "Report exported to $ReportPath" -Level SUCCESS
 }
 
 <#
@@ -413,7 +414,7 @@ function Invoke-SharingLinkCleanup {
         $selectionMap = @{}
         $i = 0
         foreach ($f in $folders) {
-            Write-Host "$i - $($f.Name)"
+            Write-STStatus "$i - $($f.Name)" -Level INFO
             $selectionMap[$i] = $f
             $i++
         }
@@ -425,7 +426,7 @@ function Invoke-SharingLinkCleanup {
         if (-not $targetFolder) { throw "Folder '$FolderName' not found." }
     }
 
-    Write-Host "[>] Scanning $($targetFolder.Name) for sharing links..." -ForegroundColor Cyan
+    Write-STStatus "Scanning $($targetFolder.Name) for sharing links..." -Level INFO
     $items = $targetFolder | Get-PnPFolderItem -Recursive
     $removed = [System.Collections.Generic.List[string]]::new()
 
@@ -455,7 +456,7 @@ function Invoke-SharingLinkCleanup {
         Write-Warning "Sharing links removed from the following items:" 
         $removed | Write-Warning
     } else {
-        Write-Host '[✓] No sharing links found.' -ForegroundColor Green
+        Write-STStatus 'No sharing links found.' -Level SUCCESS
     }
 
     Stop-Transcript
@@ -788,9 +789,9 @@ function Show-SharePointToolsBanner {
         '=   SHAREPOINTTOOLS MODULE ENGAGED    =',
         '=======================================')
     foreach ($line in $lines) {
-        Write-Host $line -ForegroundColor Black -BackgroundColor Yellow
+        Write-STStatus $line -Level INFO
     }
-    Write-Host ">> Welcome operator. Run 'Get-Command -Module SharePointTools' to view available tools." -ForegroundColor Yellow -BackgroundColor Black
+    Write-STStatus "Run 'Get-Command -Module SharePointTools' to view available tools." -Level SUB
 }
 
 Register-SPToolsCompleters

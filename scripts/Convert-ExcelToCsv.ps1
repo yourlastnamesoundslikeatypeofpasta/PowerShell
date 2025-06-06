@@ -1,7 +1,9 @@
  <#
 Convert .xlsx or .csv to .json
 #>
- 
+
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 function Convert-ExcelToCsv {
     <#
     .SYNOPSIS
@@ -28,7 +30,7 @@ function Convert-ExcelToCsv {
         [string]
         $XlsxFilePath
     )
-    Write-Host "Converting $XlsxFilePath to CSV..." -ForegroundColor Cyan
+    Write-STStatus "Converting $XlsxFilePath to CSV..." -Level INFO
     # initiate wb instance
     $excel = New-Object -ComObject Excel.Application
     $workbook = $excel.Workbooks.Open($XlsxFilePath)
@@ -52,7 +54,7 @@ function Convert-ExcelToCsv {
     [GC]::Collect()
     [GC]::WaitForPendingFinalizers()
 
-    Write-Host "CSV saved to $csvFilePath" -ForegroundColor Green
+    Write-STStatus "CSV saved to $csvFilePath" -Level SUCCESS
  
     # return csv obj
     $csv = Import-Csv $csvFilePath
