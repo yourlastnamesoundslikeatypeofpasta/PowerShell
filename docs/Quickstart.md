@@ -4,20 +4,24 @@ This short guide shows the basic steps to start using the modules in this reposi
 
 1. **Clone the repository**
    ```powershell
-   git clone <repository-url>
-   cd PowerShell
+ git clone <repository-url>
+ cd PowerShell
+  ```
+2. **Install required dependencies**
+   ```powershell
+   ./scripts/Install-ModuleDependencies.ps1
    ```
-2. **Import the modules**
+3. **Import the modules**
    ```powershell
    Import-Module ./src/SupportTools/SupportTools.psd1
    Import-Module ./src/SharePointTools/SharePointTools.psd1
    Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
    ```
-3. **Run configuration** (for SharePoint functions)
+4. **Run configuration** (for SharePoint functions)
    ```powershell
    ./scripts/Configure-SharePointTools.ps1
    ```
-4. **Try a few common commands**
+5. **Try a few common commands**
    ```powershell
    # System information
    Get-CommonSystemInfo | Format-Table

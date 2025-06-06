@@ -11,6 +11,8 @@ This guide explains how to set up and use the **SupportTools** and **SharePointT
 * `MicrosoftPlaces` for the `Invoke-CompanyPlaceManagement` command
 
 Ensure the modules above are installed prior to running the included commands.
+You can run `./scripts/Install-ModuleDependencies.ps1` to automatically check
+for and install any missing dependencies.
 
 ## Obtaining the Modules
 
