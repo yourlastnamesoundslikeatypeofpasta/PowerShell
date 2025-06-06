@@ -135,6 +135,7 @@ Potential areas for improvement and extension include:
 8. **Telemetry (Opt-In)**
    Track script usage patterns, failure rates and execution time.
    Set the `ST_ENABLE_TELEMETRY` environment variable to `1` to enable collection.
+   Summarize results with `Get-STTelemetryMetrics` and optionally export to CSV or SQLite.
 9. ~~**Configuration Guidance**
    Document a recommended workflow for securely storing credentials.~~ - Example
 workflow added ([docs/CredentialStorage.md](docs/CredentialStorage.md)).
