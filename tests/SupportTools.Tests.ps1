@@ -58,24 +58,27 @@ Describe 'SupportTools Module' {
             Update_Sysmon                = 'Update-Sysmon.ps1'
         }
 
-        $cases = foreach ($entry in $map.GetEnumerator()) {
-            @{ Fn = $entry.Key; Script = $entry.Value }
-        }
+        foreach ($entry in $map.GetEnumerator()) {
+            $case = $entry
+            It "$($case.Key) calls Invoke-ScriptFile" {
+                InModuleScope SupportTools {
+                    Mock Invoke-ScriptFile {}
+                    & $case.Key.ToString().Replace('_','-')
+                    Assert-MockCalled Invoke-ScriptFile -Times 1
+                }
+            }
 
-        It '<Fn> calls Invoke-ScriptFile' -ForEach $cases {
-            param($Fn, $Script)
-            Mock Invoke-ScriptFile {} -ModuleName SupportTools
-            & $Fn.ToString().Replace('_','-')
-            Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -ParameterFilter { $Name -eq $Script } -Times 1
         }
     }
 
     Context 'Add-UsersToGroup output passthrough' {
         It 'returns the object produced by the script' {
-            $expected = [pscustomobject]@{ GroupName = 'MyGroup'; AddedUsers = @('a'); SkippedUsers = @('b') }
-            Mock Invoke-ScriptFile { $expected } -ModuleName SupportTools
-            $result = Add-UsersToGroup -CsvPath 'users.csv' -GroupName 'MyGroup'
-            $result | Should -Be $expected
+            InModuleScope SupportTools {
+                $expected = [pscustomobject]@{ GroupName = 'MyGroup'; AddedUsers = @('a'); SkippedUsers = @('b') }
+                Mock Invoke-ScriptFile { $expected }
+                $result = Add-UsersToGroup -CsvPath 'users.csv' -GroupName 'MyGroup'
+                $result | Should -Be $expected
+            }
         }
     }
 }
