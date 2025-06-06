@@ -14,7 +14,11 @@ if ($env:SPTOOLS_TENANT_ID) { $SharePointToolsSettings.TenantId = $env:SPTOOLS_T
 if ($env:SPTOOLS_CERT_PATH) { $SharePointToolsSettings.CertPath = $env:SPTOOLS_CERT_PATH }
 
 # Load required module once at module scope
-Import-Module PnP.PowerShell -ErrorAction Stop
+try {
+    Import-Module PnP.PowerShell -ErrorAction Stop
+} catch {
+    Write-Warning 'PnP.PowerShell module not found. SharePoint functions may not work until it is installed.'
+}
 
 function Write-SPToolsHacker {
     param([string]$Message)
