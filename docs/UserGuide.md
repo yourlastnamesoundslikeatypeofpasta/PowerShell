@@ -6,7 +6,7 @@ This guide explains how to set up and use the **SupportTools** and **SharePointT
 
 * **PowerShell 7** or later
 * Required dependencies when running specific commands:
-  * `PnP.PowerShell` for SharePoint cleanup functions
+* `PnP.PowerShell` for SharePoint cleanup functions. See the [official PnP PowerShell documentation](https://pnp.github.io/powershell/index.html) for connection and usage guidance.
   * `ExchangeOnlineManagement` for mailbox functions
 * `MicrosoftPlaces` for the `Invoke-CompanyPlaceManagement` command
 
