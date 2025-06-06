@@ -6,23 +6,23 @@
     Description = 'Collection of helper functions wrapping existing scripts.'
     FunctionsToExport = @(
         'Add-UsersToGroup',
-        'CleanupArchive',
+        'Clear-ArchiveFolder',
         'Convert-ExcelToCsv',
         'Get-CommonSystemInfo',
         'Get-FailedLogins',
         'Get-NetworkShares',
         'Get-UniquePermissions',
         'Install-Fonts',
-        'PostInstallScript',
-        'ProductKey',
+        'Invoke-PostInstall',
+        'Export-ProductKey',
         'Invoke-DeploymentTemplate',
         'Search-ReadMe',
         'Set-ComputerIPAddress',
         'Set-NetAdapterMetering',
         'Set-TimeZoneEasternStandardTime',
-        'SimpleCountdown',
+        'Start-Countdown',
         'Update-Sysmon',
         'Set-SharedMailboxAutoReply',
-        'Invoke-ExchangeCalendarManager','Manage-CompanyPlace'
+        'Invoke-ExchangeCalendarManager','Invoke-CompanyPlaceManagement'
     )
 }

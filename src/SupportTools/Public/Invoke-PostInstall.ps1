@@ -1,4 +1,4 @@
-function PostInstallScript {
+function Invoke-PostInstall {
     [CmdletBinding()]
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]

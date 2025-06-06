@@ -1,4 +1,4 @@
-function Manage-CompanyPlace {
+function Invoke-CompanyPlaceManagement {
     <#
     .SYNOPSIS
         Manages Microsoft Places entries for your organization.
