@@ -22,6 +22,7 @@ jobs:
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
+          Import-Module PSScriptAnalyzer
           Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error |
             ConvertTo-Sarif | Set-Content -Path PSScriptAnalyzerResults.sarif
       - name: Upload lint results
