@@ -68,6 +68,8 @@ Describe 'SupportTools Module' {
             Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1
         }
 
+        }
+
     }
 
     Context 'Add-UserToGroup output passthrough' {
@@ -205,7 +207,7 @@ Describe 'SupportTools Module' {
                 Mock Get-PlaceV3 { @() } -ModuleName SupportTools
                 Mock New-Place {
                     if ($Type -eq 'Building') { return @{ PlaceId = '1' } }
-                } -ModuleName SupportTools
+                }
                 Mock Write-Host {} -ModuleName SupportTools
 
                 Invoke-CompanyPlaceManagement -Action Create -DisplayName 'B1' -Type Building -AutoAddFloor
