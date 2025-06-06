@@ -22,12 +22,12 @@ jobs:
       - name: Install SARIF conversion module
         shell: pwsh
         run: |
-          Install-Module Microsoft.PowerShell.Sarif -Force -Scope CurrentUser
+          Install-Module ConvertToSARIF -Force -Scope CurrentUser
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
           Import-Module PSScriptAnalyzer
-          Import-Module Microsoft.PowerShell.Sarif
+          Import-Module ConvertToSARIF
           Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error |
             ConvertTo-Sarif | Set-Content -Path PSScriptAnalyzerResults.sarif
       - name: Upload lint results
