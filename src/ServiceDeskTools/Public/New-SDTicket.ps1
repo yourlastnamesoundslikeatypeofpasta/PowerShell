@@ -17,6 +17,6 @@ function New-SDTicket {
     )
 
     Write-STLog "New-SDTicket $Subject"
-    $body = @{ incident = @{ name = $Subject; description = $Description; requestor_email = $RequesterEmail } }
+    $body = @{ incident = @{ name = $Subject; description = $Description; requester_email = $RequesterEmail } }
     Invoke-SDRequest -Method 'POST' -Path '/incidents.json' -Body $body
 }
