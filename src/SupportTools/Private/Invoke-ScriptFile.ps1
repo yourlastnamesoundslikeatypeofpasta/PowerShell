@@ -14,7 +14,10 @@ function Invoke-ScriptFile {
         [Parameter(ValueFromRemainingArguments=$true)]
         [object[]]$Args
     )
-    $Path = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath '..' | Join-Path -ChildPath "scripts/$Name"
+    $Path = Join-Path $PSScriptRoot '..' |
+            Join-Path -ChildPath '..' |
+            Join-Path -ChildPath '..' |
+            Join-Path -ChildPath "scripts/$Name"
     if (-not (Test-Path $Path)) { throw "Script '$Name' not found." }
 
     Write-Host "[***] EXECUTING $Name" -ForegroundColor Green -BackgroundColor Black
