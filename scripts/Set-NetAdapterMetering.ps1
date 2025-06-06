@@ -17,18 +17,20 @@ function Set-NetAdapterMetric {
     None
     #>
 
-    [CmdletBinding()]
-    param (
-        [Parameter()]
-        [string]
-        $Adapter,
-        [Parameter()]
-        [Int32]
-        $Metric
-    )
-    $Adapter = Get-NetAdapter -Name $Adapter
+[CmdletBinding()]
+param (
+    [Parameter()]
+    [string]
+    $Adapter,
+    [Parameter()]
+    [Int32]
+    $Metric
+)
+Write-Host "Setting metric $Metric on adapter $Adapter..." -ForegroundColor Cyan
+$Adapter = Get-NetAdapter -Name $Adapter
 
-    $Adapter | Set-NetIPInterface -InterfaceMetric $Metric
+$Adapter | Set-NetIPInterface -InterfaceMetric $Metric
+Write-Host 'Metric updated.' -ForegroundColor Green
 
 }
 

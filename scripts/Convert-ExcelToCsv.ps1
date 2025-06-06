@@ -28,6 +28,7 @@ function Convert-ExcelToCsv {
         [string]
         $XlsxFilePath
     )
+    Write-Host "Converting $XlsxFilePath to CSV..." -ForegroundColor Cyan
     # initiate wb instance
     $excel = New-Object -ComObject Excel.Application
     $workbook = $excel.Workbooks.Open($XlsxFilePath)
@@ -50,6 +51,8 @@ function Convert-ExcelToCsv {
     [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel)
     [GC]::Collect()
     [GC]::WaitForPendingFinalizers()
+
+    Write-Host "CSV saved to $csvFilePath" -ForegroundColor Green
  
     # return csv obj
     $csv = Import-Csv $csvFilePath
