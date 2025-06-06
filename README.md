@@ -43,3 +43,18 @@ The module now includes `Invoke-CompanyPlaceManagement` for administering Micros
 
 For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
 Example scripts for every function can be found in the `/Examples` folder.
+
+## Roadmap
+
+Potential areas for improvement and extension include:
+
+1. **Dependency Management**  
+   Automate installation or checks for required modules to streamline setup.
+2. **Testing and Continuous Integration**  
+   Add more Pester tests and configure CI to run them automatically.
+3. **Documentation**  
+   Expand user guides and provide a quickstart summary for key commands.
+4. **Feature Enhancements**  
+   Continue expanding SupportTools and SharePointTools with additional automation.
+5. **Versioning and Distribution**  
+   Package the modules for easier updates via an internal feed.
