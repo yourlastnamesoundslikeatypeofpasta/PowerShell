@@ -31,12 +31,14 @@ jobs:
           $modules = Get-ChildItem -Path ./src -Directory
           foreach ($module in $modules) {
             $modulePath = Join-Path $module.FullName "$($module.Name).psd1"
+            Import-Module -Name $modulePath -Force
             $outputFolder = Join-Path './docs' $module.Name
             if (Test-Path $outputFolder) {
-              Update-MarkdownHelp -Path $outputFolder -Module $modulePath -Force
+              Update-MarkdownHelp -Path $outputFolder -Module $module.Name -Force
             } else {
-              New-MarkdownHelp -OutputFolder $outputFolder -Module $modulePath
+              New-MarkdownHelp -OutputFolder $outputFolder -Module $module.Name
             }
+            Remove-Module $module.Name
           }
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
