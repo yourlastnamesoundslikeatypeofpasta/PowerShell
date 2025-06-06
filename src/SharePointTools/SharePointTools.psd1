@@ -21,6 +21,11 @@
         'Get-SPToolsSiteUrl',
         'Add-SPToolsSite',
         'Set-SPToolsSite',
-        'Remove-SPToolsSite'
+        'Remove-SPToolsSite',
+        'Get-SPToolsLibraryReport',
+        'Get-SPToolsAllLibraryReports',
+        'Get-SPToolsRecycleBinReport',
+        'Clear-SPToolsRecycleBin',
+        'Get-SPToolsAllRecycleBinReports'
     )
 }

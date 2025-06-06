@@ -59,11 +59,17 @@ Invoke-YFArchiveCleanup -Verbose
 # Manage the site list
 Add-SPToolsSite -Name 'ContosoHR' -Url 'https://contoso.sharepoint.com/sites/HR'
 
+# Generate a document library report for all configured sites
+Get-SPToolsAllLibraryReports | Format-Table
+# Review recycle bin usage for all sites
+Get-SPToolsAllRecycleBinReports | Format-Table
+# Clear both recycle bin stages for a site
+Clear-SPToolsRecycleBin -SiteName 'ContosoHR' -SecondStage
 # Configure auto-reply on a shared mailbox
 $start = Get-Date '2025-06-02T00:00:00'
 $end   = Get-Date '2025-06-09T23:59:59'
-Set-SharedMailboxAutoReply -MailboxIdentity 'team@contoso.com' \ 
-    -StartTime $start -EndTime $end \ 
+Set-SharedMailboxAutoReply -MailboxIdentity 'team@contoso.com' \
+    -StartTime $start -EndTime $end \
     -InternalMessage 'Out of office' \ 
     -ExternalMessage 'Out of office' \ 
     -AdminUser 'admin@contoso.com'
