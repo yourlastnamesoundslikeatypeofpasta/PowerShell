@@ -55,7 +55,7 @@ Invoke-YFArchiveCleanup -Verbose
 Get-SPToolsAllLibraryReports | Format-Table
 ```
 
-See [docs/SupportTools.md](docs/SupportTools.md), [docs/SharePointTools.md](docs/SharePointTools.md) and [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md) for a full list of commands. For deployment guidance consult [docs/UserGuide.md](docs/UserGuide.md).
+See [docs/SupportTools.md](docs/SupportTools.md), [docs/SharePointTools.md](docs/SharePointTools.md) and [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md) for a full list of commands. For a short introduction refer to [docs/Quickstart.md](docs/Quickstart.md). For detailed deployment guidance see [docs/UserGuide.md](docs/UserGuide.md).
 
 The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.
@@ -100,8 +100,8 @@ Potential areas for improvement and extension include:
 2. **Testing and Continuous Integration**
    Add more Pester tests to cover complex functions and configure CI to run them
    automatically.
-3. **Documentation**
-   Expand user guides and provide a quickstart summary for key commands.
+3. ~~**Documentation**
+   Expand user guides and provide a quickstart summary for key commands.~~ - Quickstart guide added ([docs/Quickstart.md](docs/Quickstart.md)).
 4. **Feature Enhancements**
    Continue expanding SupportTools and SharePointTools with additional automation.
 5. **Versioning and Distribution**
