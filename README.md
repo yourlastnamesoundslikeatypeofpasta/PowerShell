@@ -14,28 +14,46 @@ This repository packages a collection of scripts into reusable modules.
   * `MicrosoftPlaces` for the `Invoke-CompanyPlaceManagement` command.
 * Several scripts assume **tenant administrator permissions** to connect to the target SharePoint or Exchange Online environment. Review each script's notes and ensure you have the required access before running them.
 
+## Installation
+
+1. Clone or download this repository:
+
+   ```powershell
+   git clone <repository-url>
+   ```
+
+2. Import the module manifest files from the `src` folder:
+
+   ```powershell
+   Import-Module ./src/SupportTools/SupportTools.psd1
+   Import-Module ./src/SharePointTools/SharePointTools.psd1
+   ```
+
+3. Run the SharePoint configuration script once to store tenant information:
+
+   ```powershell
+   ./scripts/Configure-SharePointTools.ps1
+   ```
+
 ## Usage
 
-Import the module you need and then run any of the exported commands.
+Once installed, the modules expose a variety of helper commands. The most common examples are shown below.
 
-```powershell
-Import-Module ./src/SupportTools/SupportTools.psd1
-Import-Module ./src/SharePointTools/SharePointTools.psd1
-```
-
-Before running any SharePoint cleanup commands, execute the configuration script
-once to store your tenant details and define the SharePoint site URLs used by the module:
-
-```powershell
-./scripts/Configure-SharePointTools.ps1
-```
-
-Example command:
+### SupportTools example
 
 ```powershell
 Get-CommonSystemInfo
+Set-SharedMailboxAutoReply -MailboxIdentity 'team@contoso.com' -StartTime (Get-Date) -EndTime (Get-Date).AddDays(7) -InternalMessage 'Out of office' -AdminUser 'admin@contoso.com'
 ```
-For deployment steps see [docs/UserGuide.md](docs/UserGuide.md).
+
+### SharePointTools example
+
+```powershell
+Invoke-YFArchiveCleanup -Verbose
+Get-SPToolsAllLibraryReports | Format-Table
+```
+
+See [docs/SupportTools.md](docs/SupportTools.md) and [docs/SharePointTools.md](docs/SharePointTools.md) for a full list of commands. For deployment guidance consult [docs/UserGuide.md](docs/UserGuide.md).
 
 The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.
