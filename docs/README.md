@@ -9,5 +9,7 @@ The key guides are:
 - [SupportTools](./SupportTools.md), [SharePointTools](./SharePointTools.md), [ServiceDeskTools](./ServiceDeskTools.md) – high level summaries of each module and the commands they expose.
 - [Credential Storage](./CredentialStorage.md) – recommended approach to store secrets securely.
 - [Module Style Guide](./ModuleStyleGuide.md) – how scripts display progress messages and log output.
+- [Get-FunctionDependencyGraph](./Get-FunctionDependencyGraph.md) – generate a visual map of function calls in a script.
+
 
 Command specific help topics live in the `SupportTools`, `SharePointTools` and `ServiceDeskTools` subfolders.

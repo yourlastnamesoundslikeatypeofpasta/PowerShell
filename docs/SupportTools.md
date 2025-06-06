@@ -19,6 +19,7 @@ listed are forwarded to the underlying script unchanged.
 |---------|----------------|---------------|---------|
 | `Add-UserToGroup` | `AddUsersToGroup.ps1` | `CsvPath`, `GroupName` | `Add-UserToGroup -CsvPath users.csv -GroupName 'Team'` |
 | `Clear-ArchiveFolder` | `CleanupArchive.ps1` | *passthrough* | `Clear-ArchiveFolder -SiteUrl https://contoso.sharepoint.com/sites/Files` |
+| `Restore-ArchiveFolder` | `RollbackArchive.ps1` | `SnapshotPath`, `SiteUrl` | `Restore-ArchiveFolder -SiteUrl https://contoso.sharepoint.com/sites/Files -SnapshotPath preDeleteLog.json` |
 | `Convert-ExcelToCsv` | `Convert-ExcelToCsv.ps1` | *passthrough* | `Convert-ExcelToCsv -Path workbook.xlsx` |
 | `Export-ProductKey` | `ProductKey.ps1` | *passthrough* | `Export-ProductKey` |
 | `Get-CommonSystemInfo` | `Get-CommonSystemInfo.ps1` | *passthrough* | `Get-CommonSystemInfo` |
@@ -39,6 +40,7 @@ listed are forwarded to the underlying script unchanged.
 | `Invoke-CompanyPlaceManagement` | `Invoke-CompanyPlaceManagement.ps1` | `Action`, `DisplayName`, `[Type]`, `Street`, `City`, `State`, `PostalCode`, `CountryOrRegion`, `[AutoAddFloor]` | `Invoke-CompanyPlaceManagement -Action Create -DisplayName 'HQ' -Type Building -City Seattle` |
 | `Submit-SystemInfoTicket` | `Submit-SystemInfoTicket.ps1` | `SiteName`, `RequesterEmail`, `[Subject]`, `[Description]`, `[LibraryName]`, `[FolderPath]` | `Submit-SystemInfoTicket -SiteName IT -RequesterEmail 'user@contoso.com'` |
 | `Generate-SPUsageReport` | `Generate-SPUsageReport.ps1` | `[ItemThreshold]`, `[RequesterEmail]`, `[CsvPath]`, `[TranscriptPath]` | `Generate-SPUsageReport -RequesterEmail 'user@contoso.com'` |
+| `Install-MaintenanceTasks` | `Setup-ScheduledMaintenance.ps1` | `[Register]` | `Install-MaintenanceTasks -Register` |
 
 For details on what each script does see [scripts/README.md](../scripts/README.md).
 

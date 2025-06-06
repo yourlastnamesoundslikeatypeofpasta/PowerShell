@@ -27,6 +27,13 @@ This script requires tenant admin access and assumes the user has the necessary 
 This example runs the script, connecting to the predefined SharePoint site and processing the 'Shared Documents' library to delete all items within the 'zzz_Archive_Production' folder.
 #>
 
+param(
+    [string]$SiteUrl = 'SITEURL',
+    [string]$Libraries = 'Shared Documents',
+    [string]$SnapshotPath = (Join-Path $PSScriptRoot 'preDeleteLog.json'),
+    [switch]$Commit
+)
+
 # Import the PnP PowerShell module
 Import-Module Pnp.PowerShell
 $InformationPreference = 'Continue'
@@ -53,9 +60,7 @@ function Test-PathIsArchived {
 }
 
 # Connect to SharePoint Online
-$SiteUrl = "SITEURL"
 Connect-PnPOnline -Url $SiteUrl -Interactive
-$Libraries = "Shared Documents"
 Write-Debug -Message "Connected to SharePoint..."
 
 # Navigate to the root folder of the document library
@@ -77,15 +82,29 @@ Write-Debug -Message ($ZzzArchiveProductionSharePointFolder | Format-Table | Out
 Write-Debug -Message ($ZzzArchiveProductionSharePointFolderItems | Format-Table | Out-String)
 
 # Organize items into separate lists for files and folders
+
 [System.Collections.Generic.List[object]]$Folders = $ZzzArchiveProductionSharePointFolderItems | where {$_.GetType().Name -eq "Folder"}
 [System.Collections.Generic.List[object]]$Files = $ZzzArchiveProductionSharePointFolderItems | where {$_.GetType().Name -eq "File"}
+
+# snapshot data list
+$snapshot = @()
 
 # Delete all files
 foreach ($file in $Files)
 {
     Test-PathIsArchived -ArchivedFileItem $file
-    Remove-PnPFile -ServerRelativeUrl $file.ServerRelativeUrl -Force
-    Write-Information -MessageData "DeletedFile: $($file.ServerRelativeUrl)"
+    $record = [pscustomobject]@{ Type='File'; ServerRelativeUrl=$file.ServerRelativeUrl; RecycleBinItemId=$null }
+    if ($Commit)
+    {
+        $result = Remove-PnPFile -ServerRelativeUrl $file.ServerRelativeUrl -Force -Recycle
+        $record.RecycleBinItemId = $result.RecycleBinItemId
+        Write-Information -MessageData "DeletedFile: $($file.ServerRelativeUrl)"
+    }
+    else
+    {
+        Write-Information -MessageData "WouldDeleteFile: $($file.ServerRelativeUrl)"
+    }
+    $snapshot += $record
 }
 
 # Delete folders
@@ -94,8 +113,18 @@ while ($Folders)
     $folder = $Folders | Get-Random
     try {
         Test-PathIsArchived -ArchivedFileItem $folder
-        Remove-PnPFolder -Name $folder.Name -Folder $folder.ParentFolder -Force
-        Write-Verbose -Message "Deleted: $($folder.Name)"
+        $record = [pscustomobject]@{ Type='Folder'; ServerRelativeUrl=$folder.ServerRelativeUrl; RecycleBinItemId=$null }
+        if ($Commit)
+        {
+            $result = Remove-PnPFolder -Name $folder.Name -Folder $folder.ParentFolder -Force -Recycle
+            $record.RecycleBinItemId = $result.RecycleBinItemId
+            Write-Verbose -Message "Deleted: $($folder.Name)"
+        }
+        else
+        {
+            Write-Verbose -Message "WouldDelete: $($folder.Name)"
+        }
+        $snapshot += $record
         $Folders.Remove($folder) | Out-Null
     }
     catch {
@@ -113,12 +142,43 @@ foreach ($folder in $ZzzArchiveProductionSharePointFolder)
     Test-PathIsArchived -ArchivedFileItem $folder
     if ($folder.GetType().Name -eq 'File')
     {
-        Remove-PnPFile -ServerRelativeUrl $folder.ServerRelativeUrl -Force
-        Write-Verbose -Message "RemovedFile: $($folder.ServerRelativeUrl)"
+        $record = [pscustomobject]@{ Type='File'; ServerRelativeUrl=$folder.ServerRelativeUrl; RecycleBinItemId=$null }
+        if ($Commit)
+        {
+            $result = Remove-PnPFile -ServerRelativeUrl $folder.ServerRelativeUrl -Force -Recycle
+            $record.RecycleBinItemId = $result.RecycleBinItemId
+            Write-Verbose -Message "RemovedFile: $($folder.ServerRelativeUrl)"
+        }
+        else
+        {
+            Write-Verbose -Message "WouldRemoveFile: $($folder.ServerRelativeUrl)"
+        }
+        $snapshot += $record
     }
     if ($folder.GetType().Name -eq 'Folder')
     {
-        Remove-PnPFolder -Name $folder.Name -Folder $folder.ParentFolder -Force
-        Write-Verbose -Message "RemovedFile: $($folder.ServerRelativeUrl)"
+        $record = [pscustomobject]@{ Type='Folder'; ServerRelativeUrl=$folder.ServerRelativeUrl; RecycleBinItemId=$null }
+        if ($Commit)
+        {
+            $result = Remove-PnPFolder -Name $folder.Name -Folder $folder.ParentFolder -Force -Recycle
+            $record.RecycleBinItemId = $result.RecycleBinItemId
+            Write-Verbose -Message "RemovedFile: $($folder.ServerRelativeUrl)"
+        }
+        else
+        {
+            Write-Verbose -Message "WouldRemoveFolder: $($folder.ServerRelativeUrl)"
+        }
+        $snapshot += $record
     }
+}
+
+# save snapshot for rollback
+$snapshot | ConvertTo-Json -Depth 10 | Out-File -FilePath $SnapshotPath -Encoding utf8
+if (-not $Commit)
+{
+    Write-Information "Dry run complete. Snapshot saved to $SnapshotPath"
+}
+else
+{
+    Write-Information "Deletion complete. Snapshot saved to $SnapshotPath"
 }

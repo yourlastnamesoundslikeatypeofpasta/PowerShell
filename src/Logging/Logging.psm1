@@ -5,7 +5,9 @@ function Write-STLog {
         [string]$Message,
         [ValidateSet('INFO','WARN','ERROR')]
         [string]$Level = 'INFO',
-        [string]$Path
+        [string]$Path,
+        [hashtable]$Metadata,
+        [switch]$Structured
     )
     $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
     if ($Path) {
@@ -21,7 +23,21 @@ function Write-STLog {
         New-Item -Path $dir -ItemType Directory -Force | Out-Null
     }
     $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-    "$timestamp [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
+    if ($Structured) {
+        $user = if ($env:USERNAME) { $env:USERNAME } else { $env:USER }
+        $script = $MyInvocation.PSCommandPath
+        $entry = [ordered]@{
+            timestamp = $timestamp
+            user      = $user
+            script    = $script
+            level     = $Level
+            message   = $Message
+        }
+        if ($Metadata) { foreach ($k in $Metadata.Keys) { $entry[$k] = $Metadata[$k] } }
+        ($entry | ConvertTo-Json -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
+    } else {
+        "$timestamp [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
+    }
 }
 
 function Write-STStatus {

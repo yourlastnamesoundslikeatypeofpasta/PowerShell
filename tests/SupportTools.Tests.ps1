@@ -7,6 +7,7 @@ Describe 'SupportTools Module' {
         $expected = @(
             'Add-UserToGroup',
             'Clear-ArchiveFolder',
+            'Restore-ArchiveFolder',
             'Clear-TempFile',
             'Convert-ExcelToCsv',
             'Get-CommonSystemInfo',
@@ -28,6 +29,7 @@ Describe 'SupportTools Module' {
             'Invoke-CompanyPlaceManagement',
             'Submit-SystemInfoTicket',
             'Generate-SPUsageReport'
+            'Install-MaintenanceTasks'
         )
 
         $exported = (Get-Command -Module SupportTools).Name
@@ -42,6 +44,7 @@ Describe 'SupportTools Module' {
         $map = @{
             Add_UserToGroup             = 'AddUsersToGroup.ps1'
             Clear_ArchiveFolder          = 'CleanupArchive.ps1'
+            Restore_ArchiveFolder        = 'RollbackArchive.ps1'
             Clear_TempFile              = 'CleanupTempFiles.ps1'
             Convert_ExcelToCsv           = 'Convert-ExcelToCsv.ps1'
             Get_CommonSystemInfo         = 'Get-CommonSystemInfo.ps1'
@@ -60,6 +63,7 @@ Describe 'SupportTools Module' {
             Update_Sysmon                = 'Update-Sysmon.ps1'
             Submit_SystemInfoTicket      = 'Submit-SystemInfoTicket.ps1'
             Generate_SPUsageReport       = 'Generate-SPUsageReport.ps1'
+            Install_MaintenanceTasks = 'Setup-ScheduledMaintenance.ps1'
         }
 
         $cases = foreach ($entry in $map.GetEnumerator()) {

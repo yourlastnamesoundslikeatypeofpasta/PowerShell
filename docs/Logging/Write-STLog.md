@@ -14,7 +14,8 @@ schema: 2.0.0
 
 ```
 Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+[[-Metadata] <Hashtable>] [-Structured]
+[<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -74,6 +75,34 @@ Aliases:
 Required: False
 Position: 2
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Metadata
+Additional key/value pairs to add to structured log entries.
+```yaml
+Type: Hashtable
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Structured
+Outputs the log entry as a JSON object.
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
