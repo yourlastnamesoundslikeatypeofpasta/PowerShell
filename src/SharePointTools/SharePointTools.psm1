@@ -746,6 +746,79 @@ function Find-OrphanedSPFiles {
     $report
 }
 
+function Get-SPToolsFileReport {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$SiteName,
+        [string]$SiteUrl,
+        [string]$LibraryName = 'Documents',
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath,
+        [string]$ReportPath,
+        [int]$PageSize = 5000
+    )
+
+    if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
+    Write-SPToolsHacker ">>> FILE REPORT: $SiteName"
+
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    $items = Get-PnPListItem -List $LibraryName -PageSize $PageSize
+    $files = $items | Where-Object { $_.FileSystemObjectType -eq 'File' }
+    $report = [System.Collections.Generic.List[object]]::new()
+
+    foreach ($file in $files) {
+        try {
+            $field = $file.FieldValues
+            $obj = [pscustomobject]@{
+                FileName             = $field['FileLeafRef']
+                FileType             = $field['File_x0020_Type']
+                FileSizeBytes        = [int64]$field['File_x0020_Size']
+                CreatedDate          = [datetime]$field['Created_x0020_Date']
+                LastModifiedDate     = [datetime]$field['Last_x0020_Modified']
+                CreatedBy            = $field['Created_x0020_By']
+                ModifiedBy           = $field['Modified_x0020_By']
+                FilePath             = $field['FileRef']
+                DirectoryPath        = $field['FileDirRef']
+                UniqueId             = $field['UniqueId']
+                ParentUniqueId       = $field['ParentUniqueId']
+                SharePointItemId     = $field['ID']
+                ContentTypeId        = $field['ContentTypeId']
+                ComplianceAssetId    = $field['ComplianceAssetId']
+                VirusScanStatus      = $field['_VirusStatus']
+                RansomwareMetadata   = $field['_RansomwareAnomalyMetaInfo']
+                IsCurrentVersion     = $field['_IsCurrentVersion']
+                CreatedDisplayDate   = [datetime]$field['Created']
+                ModifiedDisplayDate  = [datetime]$field['Modified']
+                VersionString        = $field['_UIVersionString']
+                VersionNumber        = $field['_UIVersion']
+                DocGUID              = $field['GUID']
+                LastScanDate         = [datetime]$field['SMLastModifiedDate']
+                StorageStreamSize    = [int64]$field['SMTotalFileStreamSize']
+                MigrationId          = $field['MigrationWizId']
+                MigrationVersion     = $field['MigrationWizIdVersion']
+                OrderIndex           = $field['Order']
+                StreamHash           = $field['StreamHash']
+                ConcurrencyNumber    = $field['DocConcurrencyNumber']
+            }
+            $report.Add($obj)
+        }
+        catch {
+            Write-Warning "Error processing file: $_"
+        }
+    }
+
+    Disconnect-PnPOnline
+
+    if ($ReportPath) {
+        $report | Export-Csv $ReportPath -NoTypeInformation
+        Write-SPToolsHacker ">>> REPORT EXPORTED TO $ReportPath" -Level SUCCESS
+    }
+
+    Write-SPToolsHacker '>>> FILE REPORT COMPLETE'
+    $report
+}
 function List-OneDriveUsage {
     [CmdletBinding()]
     param(
@@ -773,10 +846,10 @@ function List-OneDriveUsage {
     Write-SPToolsHacker '>>> REPORT COMPLETE'
     $report
 }
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','List-OneDriveUsage' -Variable 'SharePointToolsSettings'
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','Get-SPToolsFileReport','List-OneDriveUsage' -Variable 'SharePointToolsSettings'
 
 function Register-SPToolsCompleters {
-    $siteCmds = 'Get-SPToolsSiteUrl','Get-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsPreservationHoldReport','Get-SPToolsAllLibraryReports','Get-SPToolsAllRecycleBinReports'
+    $siteCmds = 'Get-SPToolsSiteUrl','Get-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsPreservationHoldReport','Get-SPToolsAllLibraryReports','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport'
     Register-ArgumentCompleter -CommandName $siteCmds -ParameterName SiteName -ScriptBlock {
         param($commandName,$parameterName,$wordToComplete)
         $SharePointToolsSettings.Sites.Keys | Where-Object { $_ -like "$wordToComplete*" } |
