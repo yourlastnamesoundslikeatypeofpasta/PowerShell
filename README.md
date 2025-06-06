@@ -5,6 +5,15 @@ This repository packages a collection of scripts into reusable modules.
 * **SupportTools** – general helper commands that wrap the scripts in the `/scripts` folder.
 * **SharePointTools** – commands for SharePoint cleanup tasks such as removing archives or sharing links.
 
+## Requirements
+
+* **PowerShell 7 or later** must be installed to import these modules.
+* Specific commands rely on additional modules:
+  * `PnP.PowerShell` for SharePoint cleanup functions.
+  * `ExchangeOnlineManagement` for mailbox automation such as `Set-SharedMailboxAutoReply`.
+  * `MicrosoftPlaces` for the `Manage-CompanyPlace` command.
+* Several scripts assume **tenant administrator permissions** to connect to the target SharePoint or Exchange Online environment. Review each script's notes and ensure you have the required access before running them.
+
 ## Usage
 
 Import the module you need and then run any of the exported commands.
