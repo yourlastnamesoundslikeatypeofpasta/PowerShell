@@ -13,7 +13,8 @@ Configures the IP address of a local or remote computer.
 ## SYNTAX
 
 ```
-Set-ComputerIPAddress [[-Arguments] <Object[]>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Set-ComputerIPAddress [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -42,6 +43,21 @@ Required: False
 Position: 1
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -TranscriptPath
+{{ Fill TranscriptPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 2
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

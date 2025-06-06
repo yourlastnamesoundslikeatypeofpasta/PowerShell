@@ -13,8 +13,8 @@ Adds users from a CSV file to a Microsoft 365 group.
 ## SYNTAX
 
 ```
-Add-UsersToGroup [[-CsvPath] <String>] [[-GroupName] <String>] [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+Add-UsersToGroup [[-CsvPath] <String>] [[-GroupName] <String>] [[-TranscriptPath] <String>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -60,6 +60,21 @@ Required: False
 Position: 2
 Default value: None
 Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -TranscriptPath
+{{ Fill TranscriptPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 3
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

@@ -13,7 +13,8 @@ Returns items with unique permissions in a SharePoint site.
 ## SYNTAX
 
 ```
-Get-UniquePermissions [[-Arguments] <Object[]>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Get-UniquePermissions [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -43,6 +44,21 @@ Required: False
 Position: 1
 Default value: None
 Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
+
+### -TranscriptPath
+{{ Fill TranscriptPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 2
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 

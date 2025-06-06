@@ -14,8 +14,8 @@ Removes archive folders and files from a SharePoint library.
 
 ```
 Invoke-ArchiveCleanup [-SiteName] <String> [[-SiteUrl] <String>] [[-LibraryName] <String>]
- [[-ClientId] <String>] [[-TenantId] <String>] [[-CertPath] <String>] [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+ [[-ClientId] <String>] [[-TenantId] <String>] [[-CertPath] <String>] [[-TranscriptPath] <String>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -118,6 +118,21 @@ Aliases:
 Required: False
 Position: 6
 Default value: $SharePointToolsSettings.CertPath
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TranscriptPath
+{{ Fill TranscriptPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 7
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

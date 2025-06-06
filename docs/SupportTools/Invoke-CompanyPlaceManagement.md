@@ -15,7 +15,8 @@ Manages Microsoft Places entries for your organization.
 ```
 Invoke-CompanyPlaceManagement [-Action] <String> [-DisplayName] <String> [[-Type] <String>]
  [[-Street] <String>] [[-City] <String>] [[-State] <String>] [[-PostalCode] <String>]
- [[-CountryOrRegion] <String>] [-AutoAddFloor] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [[-CountryOrRegion] <String>] [-AutoAddFloor] [[-TranscriptPath] <String>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -164,6 +165,21 @@ Aliases:
 Required: False
 Position: Named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TranscriptPath
+{{ Fill TranscriptPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 9
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

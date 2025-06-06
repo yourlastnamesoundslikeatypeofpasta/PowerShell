@@ -15,7 +15,7 @@ Configures automatic replies for a shared mailbox.
 ```
 Set-SharedMailboxAutoReply [-MailboxIdentity] <String> [-StartTime] <DateTime> [-EndTime] <DateTime>
  [-InternalMessage] <String> [[-ExternalMessage] <String>] [[-ExternalAudience] <String>] [-AdminUser] <String>
- [-UseWebLogin] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [-UseWebLogin] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -150,6 +150,21 @@ Aliases:
 Required: False
 Position: Named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -TranscriptPath
+{{ Fill TranscriptPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 8
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

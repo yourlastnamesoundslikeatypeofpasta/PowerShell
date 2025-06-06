@@ -13,7 +13,8 @@ Manages Exchange Online calendar permissions.
 ## SYNTAX
 
 ```
-Invoke-ExchangeCalendarManager [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Invoke-ExchangeCalendarManager [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +31,21 @@ PS C:\> Invoke-ExchangeCalendarManager -? # replace with actual parameters
 Demonstrates typical usage of Invoke-ExchangeCalendarManager.
 
 ## PARAMETERS
+
+### -TranscriptPath
+{{ Fill TranscriptPath Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -ProgressAction
 Specifies how progress is displayed.
