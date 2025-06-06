@@ -16,6 +16,7 @@ listed are forwarded to the underlying script unchanged.
 |---------|----------------|---------------|---------|
 | `Add-UserToGroup` | `AddUsersToGroup.ps1` | `CsvPath`, `GroupName` | `Add-UserToGroup -CsvPath users.csv -GroupName 'Team'` |
 | `Clear-ArchiveFolder` | `CleanupArchive.ps1` | *passthrough* | `Clear-ArchiveFolder -SiteUrl https://contoso.sharepoint.com/sites/Files` |
+| `Restore-ArchiveFolder` | `RollbackArchive.ps1` | `SnapshotPath`, `SiteUrl` | `Restore-ArchiveFolder -SiteUrl https://contoso.sharepoint.com/sites/Files -SnapshotPath preDeleteLog.json` |
 | `Convert-ExcelToCsv` | `Convert-ExcelToCsv.ps1` | *passthrough* | `Convert-ExcelToCsv -Path workbook.xlsx` |
 | `Export-ProductKey` | `ProductKey.ps1` | *passthrough* | `Export-ProductKey` |
 | `Get-CommonSystemInfo` | `Get-CommonSystemInfo.ps1` | *passthrough* | `Get-CommonSystemInfo` |
