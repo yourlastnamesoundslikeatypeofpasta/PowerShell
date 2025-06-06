@@ -23,7 +23,7 @@ Description forthcoming for Invoke-YFArchiveCleanup.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-YFArchiveCleanup -? # replace with actual parameters
+PS C:\> Invoke-YFArchiveCleanup -Verbose
 ```
 
 Demonstrates typical usage of Invoke-YFArchiveCleanup.

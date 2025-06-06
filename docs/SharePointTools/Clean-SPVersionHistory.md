@@ -25,7 +25,7 @@ Description forthcoming for Clean-SPVersionHistory.
 
 ### Example 1
 ```powershell
-PS C:\> Clean-SPVersionHistory -? # replace with actual parameters
+PS C:\> Clean-SPVersionHistory -SiteUrl https://contoso.sharepoint.com/sites/hr -KeepVersions 5
 ```
 
 Demonstrates typical usage of Clean-SPVersionHistory.
