@@ -29,6 +29,8 @@ This script requires Microsoft Graph API permissions and assumes the user has th
 This example runs the script with explicit parameters to process the provided CSV file and add the listed users to the specified Microsoft 365 group.
 #>
 
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 param(
     [Parameter()]
     [ValidateScript({ Test-Path $_ -PathType Leaf })]
@@ -47,16 +49,16 @@ $InformationPreference = "Continue"
 $isMicrosoftGraphInstalled = Get-Module -Name Microsoft.Graph.*
 if (!$isMicrosoftGraphInstalled)
 {
-    Write-Host -ForegroundColor Yellow "Microsoft Graph not installed...installing Microsoft Graph PowerShell Module..."
+    Write-STStatus 'Microsoft Graph not installed...installing Microsoft Graph PowerShell Module...' -Level WARN
     Install-Module Microsoft.Graph
 }
 
 # Import Microsoft Graph module
-Write-Host -ForegroundColor Yellow "Importing Microsoft Graph...this might take awhile..."
+Write-STStatus 'Importing Microsoft Graph...this might take awhile...' -Level INFO
 Import-Module Microsoft.Graph -Verbose
 
 function Get-CSVFilePath {
-    Write-Host -ForegroundColor DarkMagenta "Select CSV from file dialog..."
+    Write-STStatus 'Select CSV from file dialog...' -Level SUB
     # Open file dialog to get CSV path
     $openFileDialog = New-Object Microsoft.Win32.OpenFileDialog
     $openFileDialog.InitialDirectory = [Environment]::GetFolderPath('MyDocuments')
@@ -81,7 +83,7 @@ function Get-GroupNames {
 
 function Connect-MicrosoftGraph {
     # Connect to Microsoft Graph API
-    Write-Host -ForegroundColor DarkCyan "Connecting to Microsoft Graph..."
+    Write-STStatus 'Connecting to Microsoft Graph...' -Level INFO
     try {
         Connect-MgGraph -Scopes "User.Read.All", "Group.ReadWrite.All", "Directory.ReadWrite.All" -NoWelcome
     }
@@ -104,7 +106,7 @@ function Get-Group {
     if ($GroupName) {
         $grp = Get-MgGroup -Filter "displayName eq '$GroupName'" | Select-Object -First 1
         if (-not $grp) { throw "Group '$GroupName' not found." }
-        Write-Host -ForegroundColor DarkYellow "Using group: $($grp.DisplayName)"
+            Write-STStatus "Using group: $($grp.DisplayName)" -Level SUB
         return $grp
     }
 
@@ -119,7 +121,7 @@ function Get-Group {
 
     try {
         $selectedGroup = $allGroupNames[$groupSelection]
-        Write-Host -ForegroundColor DarkYellow "You have selected: $($selectedGroup.DisplayName)"
+        Write-STStatus "You have selected: $($selectedGroup.DisplayName)" -Level SUB
     } catch {
         Write-Error "Error: $($_.Exception.Message)"
         throw "Error: There was an error with your selection..."
@@ -202,14 +204,14 @@ function Start-Main {
         # Add the user to the group if they are not in the group
         if ($groupExistingMembers -contains $userInfo.UserPrincipalName)
         {
-            Write-Host -ForegroundColor Yellow "UserIsInGroup: $($user) - $($group.DisplayName)"
+            Write-STStatus "UserIsInGroup: $($user) - $($group.DisplayName)" -Level WARN
             $skippedUsers += $userInfo.UserPrincipalName
         }
         else {
-            Write-Host -ForegroundColor Yellow "AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)"
+            Write-STStatus "AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)" -Level INFO
             try {
                 New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $userInfo.Id -ErrorAction Stop
-                Write-Host -ForegroundColor Green "[SUCCESS] AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)"
+                Write-STStatus "[SUCCESS] AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)" -Level SUCCESS
                 $addedUsers += $userInfo.UserPrincipalName
             }
             catch {
@@ -219,10 +221,10 @@ function Start-Main {
         }
     }
 
-    Write-Host -ForegroundColor Green "Task Completed."
-    Write-Host -ForegroundColor Yellow "Disconnecting from Microsoft Graph..."
+    Write-STStatus 'Task Completed.' -Level FINAL
+    Write-STStatus 'Disconnecting from Microsoft Graph...' -Level INFO
     Disconnect-MgGraph | Out-Null
-    Write-Host -ForegroundColor Green "Disconnected from Microsoft Graph"
+    Write-STStatus 'Disconnected from Microsoft Graph' -Level SUCCESS
 
     [pscustomobject]@{
         GroupName    = $group.DisplayName

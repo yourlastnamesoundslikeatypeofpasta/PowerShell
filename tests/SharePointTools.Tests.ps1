@@ -56,16 +56,14 @@ Describe 'SharePointTools Module' {
             @{ Fn = 'Invoke-MexCentralFilesSharingLinkCleanup'; Target = 'Invoke-SharingLinkCleanup'; Site = 'MexCentralFiles' }
         )
 
-        foreach ($m in $maps) {
-            $case = $m
-            It "$($case.Fn) calls $($case.Target)" {
-                InModuleScope SharePointTools {
-                    Mock $case.Target {}
-                    & $case.Fn
-                    Assert-MockCalled $case.Target -Times 1
-                }
-            }
+        $cases = foreach ($m in $maps) {
+            @{ Fn = $m.Fn; Target = $m.Target }
+        }
 
+        It '<Fn> calls <Target>' -ForEach $cases {
+            Mock $Target {} -ModuleName SharePointTools
+            & $Fn
+            Assert-MockCalled $Target -ModuleName SharePointTools -Times 1
         }
     }
 
@@ -100,6 +98,63 @@ Describe 'SharePointTools Module' {
             Get-SPToolsAllPreservationHoldReports
             Assert-MockCalled Get-SPToolsPreservationHoldReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
             Assert-MockCalled Get-SPToolsPreservationHoldReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
+        }
+    }
+
+    Context 'Site management functions' {
+        BeforeEach {
+            $script:tempCfg = [System.IO.Path]::GetTempFileName()
+            InModuleScope SharePointTools {
+                $SharePointToolsSettings = @{ ClientId=''; TenantId=''; CertPath=''; Sites=@{} }
+                $script:settingsFile = $tempCfg
+            }
+        }
+        AfterEach {
+            Remove-Item $tempCfg -ErrorAction SilentlyContinue
+        }
+
+        It 'Add-SPToolsSite stores the URL and saves settings' {
+            InModuleScope SharePointTools {
+                Mock Save-SPToolsSettings {}
+                Add-SPToolsSite -Name 'SiteA' -Url 'https://contoso.sharepoint.com/sites/a'
+                $SharePointToolsSettings.Sites['SiteA'] | Should -Be 'https://contoso.sharepoint.com/sites/a'
+                Assert-MockCalled Save-SPToolsSettings -Times 1
+            }
+        }
+
+        It 'Set-SPToolsSite updates an existing entry' {
+            InModuleScope SharePointTools {
+                Mock Save-SPToolsSettings {}
+                $SharePointToolsSettings.Sites['SiteA'] = 'https://old'
+                Set-SPToolsSite -Name 'SiteA' -Url 'https://new'
+                $SharePointToolsSettings.Sites['SiteA'] | Should -Be 'https://new'
+                Assert-MockCalled Save-SPToolsSettings -Times 1
+            }
+        }
+
+        It 'Remove-SPToolsSite deletes the entry' {
+            InModuleScope SharePointTools {
+                Mock Save-SPToolsSettings {}
+                $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso'
+                Remove-SPToolsSite -Name 'SiteA'
+                $SharePointToolsSettings.Sites.ContainsKey('SiteA') | Should -BeFalse
+                Assert-MockCalled Save-SPToolsSettings -Times 1
+            }
+        }
+
+        It 'Get-SPToolsSiteUrl returns the url and throws when missing' {
+            InModuleScope SharePointTools {
+                $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso'
+                Get-SPToolsSiteUrl -SiteName 'SiteA' | Should -Be 'https://contoso'
+                { Get-SPToolsSiteUrl -SiteName 'Missing' } | Should -Throw
+            }
+        }
+
+        It 'Get-SPToolsSettings returns the current settings object' {
+            InModuleScope SharePointTools {
+                $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso'
+                (Get-SPToolsSettings).Sites['SiteA'] | Should -Be 'https://contoso'
+            }
         }
     }
 }

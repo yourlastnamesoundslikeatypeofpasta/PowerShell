@@ -69,7 +69,13 @@ Describe 'SupportTools Module' {
                 } -ArgumentList $cmdName
             }
 
+
+        It 'calls Invoke-ScriptFile for <Fn>' -ForEach $cases {
+            Mock Invoke-ScriptFile {} -ModuleName SupportTools
+            & $Fn
+            Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1
         }
+
     }
 
     Context 'Add-UsersToGroup output passthrough' {

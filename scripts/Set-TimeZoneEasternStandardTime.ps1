@@ -1,3 +1,5 @@
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 function Set-TimeZoneEasternStandardTime {
     <#
     .SYNOPSIS
@@ -12,8 +14,8 @@ function Set-TimeZoneEasternStandardTime {
     .NOTES
     Can be used as a one liner.
     #>
-    Write-Host 'Setting time zone to Eastern Standard Time...' -ForegroundColor Cyan
+    Write-STStatus 'Setting time zone to Eastern Standard Time...' -Level INFO
     Set-TimeZone -ID "Eastern Standard Time"
-    Write-Host 'Time zone updated.' -ForegroundColor Green
+    Write-STStatus 'Time zone updated.' -Level SUCCESS
 }
 

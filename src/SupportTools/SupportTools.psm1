@@ -9,14 +9,10 @@ Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-O
 Export-ModuleMember -Function 'Add-UsersToGroup','Clear-ArchiveFolder','Clear-TempFiles','Convert-ExcelToCsv','Get-CommonSystemInfo','Get-FailedLogins','Get-NetworkShares','Get-UniquePermissions','Install-Fonts','Invoke-PostInstall','Export-ProductKey','Invoke-DeploymentTemplate','Search-ReadMe','Set-ComputerIPAddress','Set-NetAdapterMetering','Set-TimeZoneEasternStandardTime','Start-Countdown','Update-Sysmon','Set-SharedMailboxAutoReply','Invoke-ExchangeCalendarManager','Invoke-CompanyPlaceManagement'
 
 function Show-SupportToolsBanner {
-    $lines = @(
-        '=======================================',
-        '=    SUPPORTTOOLS MODULE ACTIVATED    =',
-        '=======================================')
-    foreach ($line in $lines) {
-        Write-Host $line -ForegroundColor Black -BackgroundColor Green
-    }
-    Write-Host '>> Welcome operator. Run ''Get-Command -Module SupportTools'' to view available tools.' -ForegroundColor Green -BackgroundColor Black
+    Write-STStatus '════════════════════════════════════════════' -Level INFO
+    Write-STStatus 'SUPPORTTOOLS MODULE ACTIVATED' -Level SUCCESS
+    Write-STStatus '════════════════════════════════════════════' -Level INFO
+    Write-STStatus "Run 'Get-Command -Module SupportTools' to view available tools." -Level SUB
     Write-STLog 'SupportTools module loaded'
 }
 

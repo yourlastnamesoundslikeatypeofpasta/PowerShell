@@ -9,6 +9,7 @@
 # fonts are available to all users. Administrator rights are required.
 # #>
 
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
 
 function Main {
     param(
@@ -16,14 +17,14 @@ function Main {
         [string]$FontFolder
     )
 
-    Write-Host "Installing fonts from $FontFolder..." -ForegroundColor Cyan
+    Write-STStatus "Installing fonts from $FontFolder..." -Level INFO
     if (-not ([bool](New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator))) {
         throw 'Administrator rights are required to install fonts.'
     }
 
     $fonts = Get-Fonts -FontFolder $FontFolder
     Install-Fonts -Fonts $fonts
-    Write-Host 'Font installation complete.' -ForegroundColor Green
+    Write-STStatus 'Font installation complete.' -Level SUCCESS
 }
 
 function Get-Fonts {
