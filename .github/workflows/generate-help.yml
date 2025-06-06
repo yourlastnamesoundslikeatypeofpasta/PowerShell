@@ -34,7 +34,7 @@ jobs:
             $imported = Import-Module -Name $modulePath -Force -PassThru
             $outputFolder = Join-Path './docs' $module.Name
             if (Test-Path $outputFolder) {
-              Update-MarkdownHelp -Path $outputFolder -Module $imported -Force
+              Update-MarkdownHelp -Path $outputFolder -Force
             } else {
               New-MarkdownHelp -OutputFolder $outputFolder -Module $imported
             }
