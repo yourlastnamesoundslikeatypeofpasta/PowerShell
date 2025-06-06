@@ -13,12 +13,19 @@ if ($env:SPTOOLS_CLIENT_ID) { $SharePointToolsSettings.ClientId = $env:SPTOOLS_C
 if ($env:SPTOOLS_TENANT_ID) { $SharePointToolsSettings.TenantId = $env:SPTOOLS_TENANT_ID }
 if ($env:SPTOOLS_CERT_PATH) { $SharePointToolsSettings.CertPath = $env:SPTOOLS_CERT_PATH }
 
+function Write-SPToolsHacker {
+    param([string]$Message)
+    Write-Host $Message -ForegroundColor Green -BackgroundColor Black
+}
+
 function Save-SPToolsSettings {
     <#
     .SYNOPSIS
         Persists SharePoint Tools configuration to disk.
     #>
+    Write-SPToolsHacker '>>> SAVING CONFIGURATION'
     $SharePointToolsSettings | Out-File -FilePath $settingsFile -Encoding utf8
+    Write-SPToolsHacker '>>> CONFIGURATION SAVED'
 }
 
 function Get-SPToolsSettings {
@@ -26,6 +33,7 @@ function Get-SPToolsSettings {
     .SYNOPSIS
         Retrieves the current SharePoint Tools settings.
     #>
+    Write-SPToolsHacker '>>> RETRIEVING SETTINGS'
     $SharePointToolsSettings
 }
 
@@ -37,8 +45,10 @@ function Get-SPToolsSiteUrl {
         Friendly name of the site.
     #>
     param([Parameter(Mandatory)][string]$SiteName)
+    Write-SPToolsHacker ">>> LOOKING UP $SiteName"
     $url = $SharePointToolsSettings.Sites[$SiteName]
     if (-not $url) { throw "Site '$SiteName' not found in settings." }
+    Write-SPToolsHacker ">>> URL FOUND: $url"
     $url
 }
 
@@ -56,8 +66,10 @@ function Add-SPToolsSite {
         [Parameter(Mandatory)][string]$Name,
         [Parameter(Mandatory)][string]$Url
     )
+    Write-SPToolsHacker ">>> ADDING SITE $Name"
     $SharePointToolsSettings.Sites[$Name] = $Url
     Save-SPToolsSettings
+    Write-SPToolsHacker ">>> SITE ADDED"
 }
 
 function Set-SPToolsSite {
@@ -74,8 +86,10 @@ function Set-SPToolsSite {
         [Parameter(Mandatory)][string]$Name,
         [Parameter(Mandatory)][string]$Url
     )
+    Write-SPToolsHacker ">>> UPDATING SITE $Name"
     $SharePointToolsSettings.Sites[$Name] = $Url
     Save-SPToolsSettings
+    Write-SPToolsHacker ">>> SITE UPDATED"
 }
 
 function Remove-SPToolsSite {
@@ -87,8 +101,10 @@ function Remove-SPToolsSite {
     #>
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$Name)
+    Write-SPToolsHacker ">>> REMOVING SITE $Name"
     [void]$SharePointToolsSettings.Sites.Remove($Name)
     Save-SPToolsSettings
+    Write-SPToolsHacker ">>> SITE REMOVED"
 }
 
 
@@ -426,6 +442,7 @@ function Get-SPToolsLibraryReport {
     )
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
+    Write-SPToolsHacker ">>> LIBRARY REPORT: $SiteName"
 
     Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
@@ -441,6 +458,7 @@ function Get-SPToolsLibraryReport {
     }
 
     Disconnect-PnPOnline
+    Write-SPToolsHacker '>>> REPORT COMPLETE'
     $report
 }
 
@@ -448,9 +466,12 @@ function Get-SPToolsAllLibraryReports {
     [CmdletBinding()]
     param()
 
+    Write-SPToolsHacker '>>> GENERATING ALL LIBRARY REPORTS'
+
     foreach ($entry in $SharePointToolsSettings.Sites.GetEnumerator()) {
         Get-SPToolsLibraryReport -SiteName $entry.Key -SiteUrl $entry.Value
     }
+    Write-SPToolsHacker '>>> REPORTS COMPLETE'
 }
 
 function Get-SPToolsRecycleBinReport {
@@ -464,6 +485,7 @@ function Get-SPToolsRecycleBinReport {
     )
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
+    Write-SPToolsHacker ">>> RECYCLE BIN REPORT: $SiteName"
 
     Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
@@ -477,6 +499,7 @@ function Get-SPToolsRecycleBinReport {
     }
 
     Disconnect-PnPOnline
+    Write-SPToolsHacker '>>> REPORT COMPLETE'
     $report
 }
 
@@ -492,6 +515,7 @@ function Clear-SPToolsRecycleBin {
     )
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
+    Write-SPToolsHacker ">>> CLEARING RECYCLE BIN: $SiteName"
 
     Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
@@ -503,14 +527,17 @@ function Clear-SPToolsRecycleBin {
     }
 
     Disconnect-PnPOnline
+    Write-SPToolsHacker '>>> RECYCLE BIN CLEARED'
 }
 
 function Get-SPToolsAllRecycleBinReports {
     [CmdletBinding()]
     param()
+    Write-SPToolsHacker '>>> GENERATING ALL RECYCLE BIN REPORTS'
     foreach ($entry in $SharePointToolsSettings.Sites.GetEnumerator()) {
         Get-SPToolsRecycleBinReport -SiteName $entry.Key -SiteUrl $entry.Value
     }
+    Write-SPToolsHacker '>>> REPORTS COMPLETE'
 }
 
 function Get-SPToolsPreservationHoldReport {
@@ -530,6 +557,7 @@ function Get-SPToolsPreservationHoldReport {
     )
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
+    Write-SPToolsHacker ">>> HOLD REPORT: $SiteName"
 
     Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
@@ -544,15 +572,18 @@ function Get-SPToolsPreservationHoldReport {
     }
 
     Disconnect-PnPOnline
+    Write-SPToolsHacker '>>> REPORT COMPLETE'
     $report
 }
 
 function Get-SPToolsAllPreservationHoldReports {
     [CmdletBinding()]
     param()
+    Write-SPToolsHacker '>>> GENERATING ALL HOLD REPORTS'
     foreach ($entry in $SharePointToolsSettings.Sites.GetEnumerator()) {
         Get-SPToolsPreservationHoldReport -SiteName $entry.Key -SiteUrl $entry.Value
     }
+    Write-SPToolsHacker '>>> REPORTS COMPLETE'
 }
 function Get-SPPermissionsReport {
     [CmdletBinding()]
@@ -565,6 +596,7 @@ function Get-SPPermissionsReport {
     )
 
     Import-Module PnP.PowerShell -ErrorAction Stop
+    Write-SPToolsHacker ">>> PERMISSIONS REPORT: $SiteUrl"
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     if ($FolderUrl) {
@@ -585,6 +617,7 @@ function Get-SPPermissionsReport {
     }
 
     Disconnect-PnPOnline
+    Write-SPToolsHacker '>>> REPORT COMPLETE'
     $report
 }
 
@@ -600,6 +633,7 @@ function Clean-SPVersionHistory {
     )
 
     Import-Module PnP.PowerShell -ErrorAction Stop
+    Write-SPToolsHacker ">>> CLEANING VERSIONS ON $SiteUrl"
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     $items = Get-PnPListItem -List $LibraryName -PageSize 2000
@@ -612,6 +646,7 @@ function Clean-SPVersionHistory {
         }
     }
     Disconnect-PnPOnline
+    Write-SPToolsHacker '>>> CLEANUP COMPLETE'
 }
 
 function Find-OrphanedSPFiles {
@@ -626,6 +661,7 @@ function Find-OrphanedSPFiles {
     )
 
     Import-Module PnP.PowerShell -ErrorAction Stop
+    Write-SPToolsHacker ">>> SEARCHING ORPHANED FILES ON $SiteUrl"
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     $cutoff = (Get-Date).AddDays(-$Days)
@@ -641,6 +677,7 @@ function Find-OrphanedSPFiles {
         }
     }
     Disconnect-PnPOnline
+    Write-SPToolsHacker '>>> SEARCH COMPLETE'
     $report
 }
 
@@ -654,6 +691,7 @@ function List-OneDriveUsage {
     )
 
     Import-Module PnP.PowerShell -ErrorAction Stop
+    Write-SPToolsHacker '>>> GATHERING ONEDRIVE USAGE'
     Connect-PnPOnline -Url $AdminUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     $sites = Get-PnPTenantSite -IncludeOneDriveSites
@@ -668,6 +706,7 @@ function List-OneDriveUsage {
     }
 
     Disconnect-PnPOnline
+    Write-SPToolsHacker '>>> REPORT COMPLETE'
     $report
 }
 Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','List-OneDriveUsage'
