@@ -174,6 +174,9 @@ function Start-Main {
     $file = Import-Csv $filePath
     $users = $file.UPN
 
+    $addedUsers = @()
+    $skippedUsers = @()
+
     # Check if user is in the group and add the user if not
     foreach ($user in $users)
     {
@@ -184,12 +187,14 @@ function Start-Main {
         if ($groupExistingMembers -contains $userInfo.UserPrincipalName)
         {
             Write-Host -ForegroundColor Yellow "UserIsInGroup: $($user) - $($group.DisplayName)"
+            $skippedUsers += $userInfo.UserPrincipalName
         }
         else {
             Write-Host -ForegroundColor Yellow "AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)"
             try {
                 New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $userInfo.Id -ErrorAction Stop
                 Write-Host -ForegroundColor Green "[SUCCESS] AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)"
+                $addedUsers += $userInfo.UserPrincipalName
             }
             catch {
                 Write-Error "[FAIL] Error adding $($user) to $($group.Id)..."
@@ -197,10 +202,17 @@ function Start-Main {
             }
         }
     }
+
     Write-Host -ForegroundColor Green "Task Completed."
     Write-Host -ForegroundColor Yellow "Disconnecting from Microsoft Graph..."
     Disconnect-MgGraph | Out-Null
     Write-Host -ForegroundColor Green "Disconnected from Microsoft Graph"
+
+    [pscustomobject]@{
+        GroupName    = $group.DisplayName
+        AddedUsers   = $addedUsers
+        SkippedUsers = $skippedUsers
+    }
 }
 
 Start-Main -CsvPath $CsvPath -GroupName $GroupName
