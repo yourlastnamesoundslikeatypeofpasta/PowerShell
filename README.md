@@ -9,7 +9,7 @@ This repository packages a collection of scripts into reusable modules.
 
 * **PowerShell 7 or later** must be installed to import these modules.
 * Specific commands rely on additional modules:
-  * `PnP.PowerShell` for SharePoint cleanup functions.
+  * `PnP.PowerShell` for SharePoint cleanup functions. See the [official PnP PowerShell documentation](https://pnp.github.io/powershell/index.html) for connection and usage guidance.
   * `ExchangeOnlineManagement` for mailbox automation such as `Set-SharedMailboxAutoReply`.
   * `MicrosoftPlaces` for the `Invoke-CompanyPlaceManagement` command.
 * Several scripts assume **tenant administrator permissions** to connect to the target SharePoint or Exchange Online environment. Review each script's notes and ensure you have the required access before running them.
