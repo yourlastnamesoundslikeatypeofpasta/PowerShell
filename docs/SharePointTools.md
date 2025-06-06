@@ -8,7 +8,7 @@ Import-Module ./src/SharePointTools/SharePointTools.psd1
 
 Before running any command ensure the settings file has been configured using `./scripts/Configure-SharePointTools.ps1` or by setting the environment variables `SPTOOLS_CLIENT_ID`, `SPTOOLS_TENANT_ID` and `SPTOOLS_CERT_PATH`.
 
-All functions emit short status messages. See [ModuleStyleGuide.md](ModuleStyleGuide.md) for the console style used.
+All functions emit short, high contrast messages following the style in [ModuleStyleGuide.md](ModuleStyleGuide.md).
 
 ## Available Commands
 
