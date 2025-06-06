@@ -34,6 +34,14 @@ param(
     [switch]$Commit
 )
 
+if ($Commit) {
+    $response = Read-Host 'This will permanently delete items from the archive. Continue? (y/N)'
+    if ($response -notmatch '^[Yy]$') {
+        Write-Host 'Operation cancelled.'
+        return
+    }
+}
+
 # Import the PnP PowerShell module
 Import-Module Pnp.PowerShell
 $InformationPreference = 'Continue'
