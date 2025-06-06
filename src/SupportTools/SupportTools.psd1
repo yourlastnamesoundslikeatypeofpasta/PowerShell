@@ -7,6 +7,7 @@
     FunctionsToExport = @(
         'Add-UsersToGroup',
         'Clear-ArchiveFolder',
+        'Clear-TempFiles',
         'Convert-ExcelToCsv',
         'Get-CommonSystemInfo',
         'Get-FailedLogins',
