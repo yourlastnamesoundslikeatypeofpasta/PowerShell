@@ -24,7 +24,7 @@ Description forthcoming for Clear-SPToolsRecycleBin.
 
 ### Example 1
 ```powershell
-PS C:\> Clear-SPToolsRecycleBin -? # replace with actual parameters
+PS C:\> Clear-SPToolsRecycleBin -SiteName HR -SecondStage
 ```
 
 Demonstrates typical usage of Clear-SPToolsRecycleBin.

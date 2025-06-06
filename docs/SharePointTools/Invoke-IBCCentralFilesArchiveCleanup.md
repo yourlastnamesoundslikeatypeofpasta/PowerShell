@@ -23,7 +23,7 @@ Description forthcoming for Invoke-IBCCentralFilesArchiveCleanup.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-IBCCentralFilesArchiveCleanup -? # replace with actual parameters
+PS C:\> Invoke-IBCCentralFilesArchiveCleanup
 ```
 
 Demonstrates typical usage of Invoke-IBCCentralFilesArchiveCleanup.

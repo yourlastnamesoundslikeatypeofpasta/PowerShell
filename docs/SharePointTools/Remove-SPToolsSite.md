@@ -23,7 +23,7 @@ Description forthcoming for Remove-SPToolsSite.
 
 ### Example 1
 ```powershell
-PS C:\> Remove-SPToolsSite -? # replace with actual parameters
+PS C:\> Remove-SPToolsSite -Name HR
 ```
 
 Demonstrates typical usage of Remove-SPToolsSite.

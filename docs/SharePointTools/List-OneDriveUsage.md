@@ -24,7 +24,7 @@ Description forthcoming for List-OneDriveUsage.
 
 ### Example 1
 ```powershell
-PS C:\> List-OneDriveUsage -? # replace with actual parameters
+PS C:\> List-OneDriveUsage -AdminUrl https://contoso-admin.sharepoint.com
 ```
 
 Demonstrates typical usage of List-OneDriveUsage.
