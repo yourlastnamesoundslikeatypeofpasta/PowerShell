@@ -27,6 +27,8 @@ Describe 'SharePointTools Module' {
             'Get-SPToolsRecycleBinReport',
             'Clear-SPToolsRecycleBin',
             'Get-SPToolsAllRecycleBinReports',
+            'Get-SPToolsPreservationHoldReport',
+            'Get-SPToolsAllPreservationHoldReports',
             'Get-SPPermissionsReport',
             'Clean-SPVersionHistory',
             'Find-OrphanedSPFiles',
@@ -82,6 +84,17 @@ Describe 'SharePointTools Module' {
             Get-SPToolsAllRecycleBinReports
             Assert-MockCalled Get-SPToolsRecycleBinReport -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
             Assert-MockCalled Get-SPToolsRecycleBinReport -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
+        }
+    }
+    Context 'Preservation hold reporting wrapper' {
+        It 'calls Get-SPToolsPreservationHoldReport for each site' {
+            $SharePointToolsSettings.Sites.Clear()
+            $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
+            $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
+            Mock Get-SPToolsPreservationHoldReport {}
+            Get-SPToolsAllPreservationHoldReports
+            Assert-MockCalled Get-SPToolsPreservationHoldReport -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
+            Assert-MockCalled Get-SPToolsPreservationHoldReport -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
         }
     }
 }

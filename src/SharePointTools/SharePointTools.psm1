@@ -507,6 +507,48 @@ function Get-SPToolsAllRecycleBinReports {
         Get-SPToolsRecycleBinReport -SiteName $entry.Key -SiteUrl $entry.Value
     }
 }
+
+function Get-SPToolsPreservationHoldReport {
+    <#
+    .SYNOPSIS
+        Reports the size of the Preservation Hold Library.
+    .NOTES
+        Uses PnP.PowerShell commands. See https://pnp.github.io/powershell/ for details.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$SiteName,
+        [string]$SiteUrl,
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
+    )
+
+    if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
+
+    Import-Module PnP.PowerShell -ErrorAction Stop
+    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+
+    $items = Get-PnPListItem -List 'Preservation Hold Library' -PageSize 2000
+    $files = foreach ($item in $items) { Get-PnPProperty -ClientObject $item -Property File }
+    $totalSize = ($files | Measure-Object -Property Length -Sum).Sum
+    $report = [pscustomobject]@{
+        SiteName    = $SiteName
+        ItemCount   = $files.Count
+        TotalSizeMB = [math]::Round($totalSize / 1MB, 2)
+    }
+
+    Disconnect-PnPOnline
+    $report
+}
+
+function Get-SPToolsAllPreservationHoldReports {
+    [CmdletBinding()]
+    param()
+    foreach ($entry in $SharePointToolsSettings.Sites.GetEnumerator()) {
+        Get-SPToolsPreservationHoldReport -SiteName $entry.Key -SiteUrl $entry.Value
+    }
+}
 function Get-SPPermissionsReport {
     [CmdletBinding()]
     param(
@@ -623,4 +665,4 @@ function List-OneDriveUsage {
     Disconnect-PnPOnline
     $report
 }
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','List-OneDriveUsage'
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','List-OneDriveUsage'
