@@ -25,7 +25,15 @@ This repository packages a collection of scripts into reusable modules.
    git clone <repository-url>
    ```
 
-2. Import the module manifest files from the `src` folder:
+2. Install the published modules (optional):
+
+   ```powershell
+   ./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
+   # or pin a specific build
+   Install-Module -Name SupportTools -RequiredVersion 1.0.4
+   ```
+
+3. Import the module manifest files from the `src` folder:
 
    ```powershell
    Import-Module ./src/SupportTools/SupportTools.psd1
@@ -33,7 +41,7 @@ This repository packages a collection of scripts into reusable modules.
    Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
    ```
 
-3. Run the SharePoint configuration script once to store tenant information:
+4. Run the SharePoint configuration script once to store tenant information:
 
    ```powershell
    ./scripts/Configure-SharePointTools.ps1
