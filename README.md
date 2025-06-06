@@ -89,6 +89,8 @@ SD_BASE_URI
 ```
 
 When set, these variables override values stored in `config/SharePointToolsSettings.psd1`.
+For a step-by-step example of loading these variables from the SecretManagement
+module see [docs/CredentialStorage.md](docs/CredentialStorage.md).
 
 ## Roadmap
 
@@ -111,5 +113,6 @@ Potential areas for improvement and extension include:
    Provide a consistent logging approach across all commands for easier troubleshooting.
 7. **Error Handling**
    Add standardized error handling and optional transcript output.
-8. **Configuration Guidance**
-   Document a recommended workflow for securely storing credentials.
+8. ~~**Configuration Guidance**
+   Document a recommended workflow for securely storing credentials.~~ - Example
+workflow added ([docs/CredentialStorage.md](docs/CredentialStorage.md)).
