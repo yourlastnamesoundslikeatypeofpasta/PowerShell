@@ -45,6 +45,10 @@ Functions like `Add-SPToolsSite` and `Remove-SPToolsSite` let you manage the lis
 For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
 Example scripts for every function can be found in the `/Examples` folder.
 
+## Documentation
+
+For help using Microsoft Graph cmdlets, see the official [Microsoft Graph PowerShell documentation](https://learn.microsoft.com/en-us/powershell/microsoftgraph/get-started?view=graph-powershell-1.0).
+
 ## Roadmap
 
 Potential areas for improvement and extension include:
