@@ -408,22 +408,11 @@ function Invoke-SharingLinkCleanup {
     }
     Start-Transcript -Path $TranscriptPath -Append
 
-    $root = Get-PnPFolder -ListRootFolder $LibraryName
-    $folders = $root | Get-PnPFolderInFolder
-
     if (-not $FolderName) {
-        $selectionMap = @{}
-        $i = 0
-        foreach ($f in $folders) {
-            Write-STStatus "$i - $($f.Name)" -Level INFO
-            $selectionMap[$i] = $f
-            $i++
-        }
-        $choice = Read-Host -Prompt 'Select folder number'
-        $targetFolder = $selectionMap[$choice]
-        if (-not $targetFolder) { throw 'Invalid folder selection.' }
+        $targetFolder = Select-SPToolsFolder -SiteUrl $SiteUrl -LibraryName $LibraryName
     } else {
-        $targetFolder = $folders | Where-Object Name -eq $FolderName
+        $allFolders = Get-PnPFolderItem -List $LibraryName -ItemType Folder -Recursive
+        $targetFolder = $allFolders | Where-Object Name -eq $FolderName | Select-Object -First 1
         if (-not $targetFolder) { throw "Folder '$FolderName' not found." }
     }
 
@@ -746,6 +735,62 @@ function Find-OrphanedSPFiles {
     $report
 }
 
+function Select-SPToolsFolder {
+    <#
+    .SYNOPSIS
+        Interactively choose a folder from a document library.
+    .DESCRIPTION
+        Recursively enumerates folders and prompts for a selection. A filter
+        string can be provided to narrow results.
+    #>
+    [CmdletBinding()]
+    param(
+        [string]$SiteName,
+        [string]$SiteUrl,
+        [string]$LibraryName = 'Shared Documents',
+        [string]$Filter,
+        [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [string]$TenantId = $SharePointToolsSettings.TenantId,
+        [string]$CertPath = $SharePointToolsSettings.CertPath
+    )
+
+    if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
+
+    $conn = Get-PnPConnection -ErrorAction SilentlyContinue
+    if (-not $conn) {
+        Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+        $needsDisconnect = $true
+    }
+
+    $list = Get-PnPList -Identity $LibraryName -ErrorAction Stop
+    $items = Get-PnPFolderItem -List $list -ItemType Folder -Recursive
+    $rootPath = $list.RootFolder.ServerRelativeUrl
+
+    $folders = foreach ($item in $items) {
+        $relative = $item.ServerRelativeUrl.Substring($rootPath.Length).TrimStart('/')
+        [pscustomobject]@{ Path = $relative; Object = $item }
+    }
+
+    if ($Filter) { $folders = $folders | Where-Object { $_.Path -like "*$Filter*" } }
+    if (-not $folders) { throw 'No folders found.' }
+
+    $map = @{}
+    $i = 0
+    foreach ($f in $folders) {
+        Write-STStatus "$i - $($f.Path)" -Level INFO
+        $map[$i] = $f.Object
+        $i++
+    }
+
+    do {
+        $choice = Read-Host -Prompt 'Select folder number'
+    } until ($map.ContainsKey([int]$choice))
+
+    if ($needsDisconnect) { Disconnect-PnPOnline }
+
+    $map[[int]$choice]
+}
+
 function Get-SPToolsFileReport {
     [CmdletBinding()]
     param(
@@ -846,10 +891,10 @@ function List-OneDriveUsage {
     Write-SPToolsHacker '>>> REPORT COMPLETE'
     $report
 }
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','Get-SPToolsFileReport','List-OneDriveUsage' -Variable 'SharePointToolsSettings'
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','Select-SPToolsFolder','List-OneDriveUsage' -Variable 'SharePointToolsSettings'
 
 function Register-SPToolsCompleters {
-    $siteCmds = 'Get-SPToolsSiteUrl','Get-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsPreservationHoldReport','Get-SPToolsAllLibraryReports','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport'
+    $siteCmds = 'Get-SPToolsSiteUrl','Get-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsPreservationHoldReport','Get-SPToolsAllLibraryReports','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Select-SPToolsFolder'
     Register-ArgumentCompleter -CommandName $siteCmds -ParameterName SiteName -ScriptBlock {
         param($commandName,$parameterName,$wordToComplete)
         $SharePointToolsSettings.Sites.Keys | Where-Object { $_ -like "$wordToComplete*" } |
