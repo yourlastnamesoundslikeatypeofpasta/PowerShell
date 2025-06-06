@@ -9,9 +9,10 @@ function Start-Countdown {
     [CmdletBinding()]
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
-        [object[]]$Arguments
+        [object[]]$Arguments,
+        [string]$TranscriptPath
     )
     process {
-        Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments
+        Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments -TranscriptPath $TranscriptPath
     }
 }

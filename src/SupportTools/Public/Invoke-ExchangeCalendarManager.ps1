@@ -7,8 +7,11 @@ function Invoke-ExchangeCalendarManager {
         ExchangeOnlineManagement module is installed before running.
     #>
     [CmdletBinding()]
-    param()
+    param(
+        [string]$TranscriptPath
+    )
 
+    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-Host '[***] ExchangeCalendarManager launched' -ForegroundColor Green -BackgroundColor Black
     Write-STLog 'ExchangeCalendarManager launched'
 
@@ -79,4 +82,5 @@ function Invoke-ExchangeCalendarManager {
 
     Write-Host '[***] ExchangeCalendarManager finished' -ForegroundColor Green -BackgroundColor Black
     Write-STLog 'ExchangeCalendarManager finished'
+    if ($TranscriptPath) { Stop-Transcript | Out-Null }
 }

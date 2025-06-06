@@ -12,7 +12,8 @@ function Invoke-ScriptFile {
         [Parameter(Mandatory)]
         [string]$Name,
         [Parameter(ValueFromRemainingArguments=$true)]
-        [object[]]$Args
+        [object[]]$Args,
+        [string]$TranscriptPath
     )
     $Path = Join-Path $PSScriptRoot '..' |
             Join-Path -ChildPath '..' |
@@ -27,6 +28,10 @@ function Invoke-ScriptFile {
         Write-STLog "ARGS: $($Args -join ' ')"
     }
 
+    if ($TranscriptPath) {
+        Start-Transcript -Path $TranscriptPath -Append | Out-Null
+    }
+
     $oldPref = $ErrorActionPreference
     $ErrorActionPreference = 'Stop'
     try {
@@ -37,8 +42,8 @@ function Invoke-ScriptFile {
         throw
     } finally {
         $ErrorActionPreference = $oldPref
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
-
     Write-Host "[***] COMPLETED $Name" -ForegroundColor Green -BackgroundColor Black
     Write-STLog "COMPLETED $Name"
 }
