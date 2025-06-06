@@ -13,6 +13,8 @@
 
 # Functions listed here
 
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 function MSStoreAppInstallerUpdate {
     <#
     .SYNOPSIS
@@ -38,14 +40,14 @@ function Install-Chrome {
     .SYNOPSIS
         Installs the Google Chrome browser using winget.
     #>
-    Write-Host 'Installing: Google Chrome'
+    Write-STStatus 'Installing: Google Chrome' -Level INFO
 
     $PackageId = 'Google.Chrome'
     winget install -e --id $PackageId --scope machine --accept-source-agreements --silent
 
     # validate install
     if (!$LASTEXITCODE) {
-        Write-Host 'Google Chrome: Installed'
+        Write-STStatus 'Google Chrome: Installed' -Level SUCCESS
     } 
     else {
         Write-Error 'GoogleChromeNotInstalled'
@@ -58,14 +60,14 @@ function Install-AdobeAcrobatReader {
     .SYNOPSIS
         Installs Adobe Acrobat Reader via winget.
     #>
-    Write-Host 'Installing: Adobe Acrobat Reader'
+    Write-STStatus 'Installing: Adobe Acrobat Reader' -Level INFO
 
     $PackageId = 'Adobe.Acrobat.Reader.64-bit'
     winget install -e --id $PackageId --scope machine --accept-source-agreements --silent
 
     # validate install
     if (!$LASTEXITCODE) {
-        Write-Host 'Adobe Acrobat Reader: Installed'
+        Write-STStatus 'Adobe Acrobat Reader: Installed' -Level SUCCESS
     } 
     else {
         Write-Error 'AdobeAcrobatReaderNotInstalled'
@@ -78,7 +80,7 @@ function Install-ExcelMobile {
     .SYNOPSIS
         Installs the Excel Mobile application via winget.
     #>
-    Write-Host 'Installing: Excel Mobile'
+    Write-STStatus 'Installing: Excel Mobile' -Level INFO
 
     $PackageId = '9WZDNCRFJBH3'
     winget install -e --id $PackageId --scope machine --accept-source-agreements --silent
@@ -86,7 +88,7 @@ function Install-ExcelMobile {
     # validate install
     if (!$LASTEXITCODE)
     {
-        Write-Host 'Excel Mobile: Installed'
+        Write-STStatus 'Excel Mobile: Installed' -Level SUCCESS
     }
     else {
         Write-Error 'ExcelMobileNotInstalled'
@@ -99,12 +101,12 @@ function Enable-NetFramework {
     .SYNOPSIS
         Enables the .NET Framework 3.5 feature.
     #>
-    Write-Host ".NET 3.5 Framework: Enabling..."
+    Write-STStatus '.NET 3.5 Framework: Enabling...' -Level INFO
     Enable-WindowsOptionalFeature -Online -FeatureName "NetFx3" -All -NoRestart -ErrorAction Stop > $null
 
     # validate install
     if (!$LASTEXITCODE) {
-        Write-Host '.NET Framework 3.5: ENABLED'
+        Write-STStatus '.NET Framework 3.5: ENABLED' -Level SUCCESS
     } 
     else {
         Write-Error '.NETFramework3.5NotEnabled'
@@ -342,30 +344,30 @@ function Set-PowerPlan {
     $PowerSaverGuid = 'a1841308-3541-4fab-bc81-f71556f20b4a'
 
     # set power plan to high performance
-    Write-Host "Setting Power Plan: High Performance"
+    Write-STStatus 'Setting Power Plan: High Performance' -Level INFO
     powercfg.exe /S $HighPerformanceGuid
     if (!$LASTEXITCODE) {
-        Write-Host "Set Power Plan: High Performance"
+        Write-STStatus 'Set Power Plan: High Performance' -Level SUCCESS
     }
     else {
         Write-Error 'PowerPlanHighPerformanceNotSet'
     }
 
     # remove balanced power plan
-    Write-Host "Deleting Power Plan: Balanced"
+    Write-STStatus 'Deleting Power Plan: Balanced' -Level INFO
     powercfg.exe /D $BalancedGuid
     if (!$LASTEXITCODE) {
-        Write-Host "Deleted Power Plan: Balanced"
+        Write-STStatus 'Deleted Power Plan: Balanced' -Level SUCCESS
     }
     else {
         Write-Error 'PowerPlanBalancedNotDeleted'
     }
 
     # remove power saver power plan
-    Write-Host "Deleting Power Plan: Power Saver"
+    Write-STStatus 'Deleting Power Plan: Power Saver' -Level INFO
     powercfg.exe /D $PowerSaverGuid
     if (!$LASTEXITCODE) {
-        Write-Host "Deleted Power Plan: Power Saver"
+        Write-STStatus 'Deleted Power Plan: Power Saver' -Level SUCCESS
     }
     else {
         Write-Error 'PowerPlanPowerSaverNotDeleted'

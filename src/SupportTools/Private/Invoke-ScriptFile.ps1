@@ -21,11 +21,9 @@ function Invoke-ScriptFile {
             Join-Path -ChildPath "scripts/$Name"
     if (-not (Test-Path $Path)) { throw "Script '$Name' not found." }
 
-    Write-Host "[***] EXECUTING $Name" -ForegroundColor Green -BackgroundColor Black
-    Write-STLog "EXECUTING $Name"
+    Write-STStatus "EXECUTING $Name" -Level SUCCESS -Log
     if ($Args) {
-        Write-Host "       ARGS: $($Args -join ' ')" -ForegroundColor DarkGreen -BackgroundColor Black
-        Write-STLog "ARGS: $($Args -join ' ')"
+        Write-STStatus "ARGS: $($Args -join ' ')" -Level SUB -Log
     }
 
     if ($TranscriptPath) {
@@ -44,6 +42,5 @@ function Invoke-ScriptFile {
         $ErrorActionPreference = $oldPref
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
-    Write-Host "[***] COMPLETED $Name" -ForegroundColor Green -BackgroundColor Black
-    Write-STLog "COMPLETED $Name"
+    Write-STStatus "COMPLETED $Name" -Level FINAL -Log
 }

@@ -26,7 +26,7 @@ function Set-SharedMailboxAutoReply {
     )
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-    Write-Host '[***] Running Set-SharedMailboxAutoReply' -ForegroundColor Green -BackgroundColor Black
+    Write-STStatus 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
 
     if (-not $ExternalMessage) { $ExternalMessage = $InternalMessage }
 
@@ -35,10 +35,10 @@ function Set-SharedMailboxAutoReply {
     $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
     if (-not $module) {
-        Write-Host 'Installing Exchange Online module...'
+        Write-STStatus 'Installing Exchange Online module...' -Level INFO -Log
         Install-Module -Name ExchangeOnlineManagement -Force
     } elseif ($updateVersion -and $module.Version -lt $updateVersion.Version) {
-        Write-Host 'Updating Exchange Online module...'
+        Write-STStatus 'Updating Exchange Online module...' -Level INFO -Log
         Update-Module -Name ExchangeOnlineManagement -Force
     }
 
@@ -66,7 +66,7 @@ function Set-SharedMailboxAutoReply {
 
     Disconnect-ExchangeOnline -Confirm:$false
 
-    Write-Host '[***] Auto-reply configuration complete' -ForegroundColor Green -BackgroundColor Black
+    Write-STStatus 'Auto-reply configuration complete' -Level FINAL -Log
     if ($TranscriptPath) { Stop-Transcript | Out-Null }
 
     return $result

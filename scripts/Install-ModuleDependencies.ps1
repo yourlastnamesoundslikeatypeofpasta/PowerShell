@@ -6,6 +6,8 @@
     Prompts to install from the PowerShell Gallery when a module is missing.
 #>
 
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 $requiredModules = @{ 
     'PnP.PowerShell' = 'SharePoint cleanup functions';
     'ExchangeOnlineManagement' = 'mailbox automation commands';
@@ -19,7 +21,7 @@ foreach ($name in $requiredModules.Keys) {
         if ($install -match '^[Yy]') {
             try {
                 Install-Module -Name $name -Scope CurrentUser -Force -ErrorAction Stop
-                Write-Host "Installed $name" -ForegroundColor Green
+                Write-STStatus "Installed $name" -Level SUCCESS
             } catch {
                 Write-Warning "Failed to install $name: $($_.Exception.Message)"
             }
@@ -27,6 +29,6 @@ foreach ($name in $requiredModules.Keys) {
             Write-Warning "$name was not installed. Some commands may not work."
         }
     } else {
-        Write-Host "Module '$name' already installed." -ForegroundColor Green
+        Write-STStatus "Module '$name' already installed." -Level SUCCESS
     }
 }

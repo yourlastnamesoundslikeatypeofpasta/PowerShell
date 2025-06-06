@@ -1,3 +1,5 @@
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 function Get-CommonSystemInfo {
     <#
     .SYNOPSIS
@@ -19,7 +21,7 @@ function Get-CommonSystemInfo {
     - DiskSpace
     #>
 
-    Write-Host 'Collecting system information...' -ForegroundColor Cyan
+    Write-STStatus 'Collecting system information...' -Level INFO
 
     $operatingSystemInfo = Get-CimInstance -ClassName Win32_OperatingSystem
     $processorInfo = Get-CimInstance -ClassName Win32_Processor
@@ -34,6 +36,6 @@ function Get-CommonSystemInfo {
         Memory = $operatingSystemInfo.TotalVisibleMemorySize / 1MB
         DiskSpace = $diskInfo | Select-Object -Property DeviceID, @{Name = "Size"; Expression = { "{0:N2}" -f ($_.Size / 1GB) }}, @{Name = "FreeSpace"; Expression = { "{0:N2}" -f ($_.FreeSpace / 1GB) }}
     }
-    Write-Host 'System information collected.' -ForegroundColor Green
+    Write-STStatus 'System information collected.' -Level SUCCESS
     return $commonSystemInfoObj
 }

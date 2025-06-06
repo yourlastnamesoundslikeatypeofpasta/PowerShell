@@ -32,8 +32,7 @@ function Invoke-CompanyPlaceManagement {
     )
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-    Write-Host "[***] Invoke-CompanyPlaceManagement -Action $Action" -ForegroundColor Green -BackgroundColor Black
-    Write-STLog "Invoke-CompanyPlaceManagement -Action $Action"
+    Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
     if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
         try {
             Import-Module MicrosoftPlaces -ErrorAction Stop
@@ -62,15 +61,15 @@ function Invoke-CompanyPlaceManagement {
         'Create' {
             $existing = Get-PlaceV3 -Type $Type | Where-Object { $_.DisplayName -eq $DisplayName }
             if ($existing) {
-                Write-Host "⚠️ Place already exists: $DisplayName" -ForegroundColor Yellow
+                Write-STStatus "⚠️ Place already exists: $DisplayName" -Level WARN -Log
                 return $existing
             }
             $params = @{ Type = $Type; DisplayName = $DisplayName; Street = $Street; City = $City; State = $State; PostalCode = $PostalCode; CountryOrRegion = $CountryOrRegion }
             $place = New-Place @params
-            Write-Host "✅ Created: $DisplayName [$($place.PlaceId)]"
+            Write-STStatus "✅ Created: $DisplayName [$($place.PlaceId)]" -Level SUCCESS -Log
             if ($Type -eq 'Building' -and $AutoAddFloor) {
                 New-Place -Type Floor -Name '1' -ParentId $place.PlaceId | Out-Null
-                Write-Host "➕ Added default floor '1'"
+                Write-STStatus "➕ Added default floor '1'" -Level SUB -Log
             }
             return $place
         }
@@ -87,12 +86,11 @@ function Invoke-CompanyPlaceManagement {
             if ($PostalCode) { $updateParams['PostalCode'] = $PostalCode }
             if ($CountryOrRegion) { $updateParams['CountryOrRegion'] = $CountryOrRegion }
             Set-PlaceV3 @updateParams
-            Write-Host "✏️ Updated '$DisplayName' successfully."
+            Write-STStatus "✏️ Updated '$DisplayName' successfully." -Level SUCCESS -Log
         }
     }
 
-    Write-Host '[***] Invoke-CompanyPlaceManagement completed' -ForegroundColor Green -BackgroundColor Black
-    Write-STLog 'Invoke-CompanyPlaceManagement completed'
+    Write-STStatus 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
     if ($TranscriptPath) { Stop-Transcript | Out-Null }
 }
 

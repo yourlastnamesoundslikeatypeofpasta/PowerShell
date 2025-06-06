@@ -1,5 +1,7 @@
 param()
 
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $settingsPath = Join-Path $repoRoot 'config/SharePointToolsSettings.psd1'
 
@@ -15,7 +17,7 @@ if (Test-Path $settingsPath) {
 
 if (-not $settings.ContainsKey('Sites')) { $settings.Sites = @{} }
 
-Write-Host 'Enter SharePoint application settings. Leave blank to keep existing values.' -ForegroundColor Cyan
+Write-STStatus 'Enter SharePoint application settings. Leave blank to keep existing values.' -Level INFO
 $clientId = Read-Host "Client ID (current: $($settings.ClientId))"
 if ($clientId) { $settings.ClientId = $clientId }
 
@@ -27,7 +29,7 @@ if ($certPath) { $settings.CertPath = $certPath }
 
 # Configure SharePoint sites
 $currentSites = if ($settings.Sites.Count) { $settings.Sites.Keys -join ', ' } else { 'none' }
-Write-Host "Current sites: $currentSites" -ForegroundColor Cyan
+Write-STStatus "Current sites: $currentSites" -Level INFO
 $siteInput = Read-Host 'Enter site pairs as Name=Url (comma separated) or leave blank to skip'
 if ($siteInput) {
     foreach ($pair in ($siteInput -split ',')) {
@@ -41,7 +43,7 @@ if ($siteInput) {
 }
 
 $settings | Out-File -FilePath $settingsPath -Encoding utf8
-Write-Host "Settings saved to $settingsPath" -ForegroundColor Green
+Write-STStatus "Settings saved to $settingsPath" -Level SUCCESS
 
 $banner = @'
           .-"""-.
@@ -61,4 +63,4 @@ ___ooo____\_____/_______ooo___
 |___/_||_\__,_|_| \___|_| \___/_|_||_\__|   |_|\___/\___/_/__/
 '@
 
-Write-Host $banner -ForegroundColor Green
+Write-STStatus $banner -Level SUCCESS

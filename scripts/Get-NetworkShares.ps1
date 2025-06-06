@@ -1,4 +1,6 @@
 
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 function Get-NetworkShares {
     <#
     .SYNOPSIS
@@ -22,7 +24,7 @@ function Get-NetworkShares {
     if ($ComputerName -eq $null) {
         $ComputerName = $env:COMPUTERNAME
     }
-    Write-Host "Gathering network shares on $ComputerName..." -ForegroundColor Cyan
+    Write-STStatus "Gathering network shares on $ComputerName..." -Level INFO
 
     $shares = Get-CimInstance -ClassName Win32_Share -ComputerName $ComputerName
 
@@ -40,7 +42,7 @@ function Get-NetworkShares {
         Shares       = $shareObjects
     }
 
-    Write-Host "Found $($shareObjects.Count) shares." -ForegroundColor Green
+    Write-STStatus "Found $($shareObjects.Count) shares." -Level SUCCESS
     return $result
 }
 

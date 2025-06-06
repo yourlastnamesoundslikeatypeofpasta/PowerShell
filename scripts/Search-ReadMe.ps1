@@ -1,4 +1,6 @@
 
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
 function Search-ReadMe {
     <#
     .SYNOPSIS
@@ -20,9 +22,9 @@ function Search-ReadMe {
     This tool can be used as a one-liner.
     #>
 
-    Write-Host 'Searching for readme files...' -ForegroundColor Cyan
+    Write-STStatus 'Searching for readme files...' -Level INFO
     $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction SilentlyContinue
-    Write-Host "Found $($results.Count) file(s)." -ForegroundColor Green
+    Write-STStatus "Found $($results.Count) file(s)." -Level SUCCESS
     return $results
 
 }
