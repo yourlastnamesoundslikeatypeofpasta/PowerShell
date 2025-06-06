@@ -19,10 +19,15 @@ jobs:
         shell: pwsh
         run: |
           Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+      - name: Install SARIF conversion module
+        shell: pwsh
+        run: |
+          Install-Module Microsoft.PowerShell.Sarif -Force -Scope CurrentUser
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
           Import-Module PSScriptAnalyzer
+          Import-Module Microsoft.PowerShell.Sarif
           Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error |
             ConvertTo-Sarif | Set-Content -Path PSScriptAnalyzerResults.sarif
       - name: Upload lint results
