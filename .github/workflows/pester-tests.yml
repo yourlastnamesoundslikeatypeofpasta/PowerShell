@@ -24,4 +24,9 @@ jobs:
       - name: Run Pester tests
         shell: pwsh
         run: |
-          Invoke-Pester -Path tests -CI
+          $cfg = Import-PowerShellDataFile ./PesterConfiguration.psd1
+          Invoke-Pester -Configuration $cfg -CI
+      - uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage.xml
