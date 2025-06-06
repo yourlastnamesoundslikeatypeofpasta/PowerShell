@@ -1,4 +1,4 @@
-function Get-FailedLogins {
+function Get-FailedLogin {
     <#
     .SYNOPSIS
         Retrieves failed login attempts from the Security event log.

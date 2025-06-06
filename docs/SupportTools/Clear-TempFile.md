@@ -5,30 +5,29 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-FailedLogins
+# Clear-TempFile
 
 ## SYNOPSIS
-Retrieves failed login attempts from the Security event log.
+Removes temporary files from the repository.
 
 ## SYNTAX
 
 ```
-Get-FailedLogins [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+Clear-TempFile [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Calls the Get-FailedLogins.ps1 script in the scripts folder and returns
-its output.
+Wraps the CleanupTempFiles.ps1 script in the scripts folder and forwards any provided arguments.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Get-FailedLogins -ComputerName $env:COMPUTERNAME
+PS C:\> Clear-TempFile -? # replace with actual parameters
 ```
 
-Demonstrates typical usage of Get-FailedLogins.
+Demonstrates typical usage of Clear-TempFile.
 
 ## PARAMETERS
 

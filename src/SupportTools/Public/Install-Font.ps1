@@ -1,4 +1,4 @@
-function Install-Fonts {
+function Install-Font {
     <#
     .SYNOPSIS
         Installs font files for all users.

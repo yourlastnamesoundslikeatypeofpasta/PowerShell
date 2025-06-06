@@ -14,15 +14,15 @@ listed are forwarded to the underlying script unchanged.
 
 | Command | Wrapped Script | Key Parameters | Example |
 |---------|----------------|---------------|---------|
-| `Add-UsersToGroup` | `AddUsersToGroup.ps1` | `CsvPath`, `GroupName` | `Add-UsersToGroup -CsvPath users.csv -GroupName 'Team'` |
+| `Add-UserToGroup` | `AddUsersToGroup.ps1` | `CsvPath`, `GroupName` | `Add-UserToGroup -CsvPath users.csv -GroupName 'Team'` |
 | `Clear-ArchiveFolder` | `CleanupArchive.ps1` | *passthrough* | `Clear-ArchiveFolder -SiteUrl https://contoso.sharepoint.com/sites/Files` |
 | `Convert-ExcelToCsv` | `Convert-ExcelToCsv.ps1` | *passthrough* | `Convert-ExcelToCsv -Path workbook.xlsx` |
 | `Export-ProductKey` | `ProductKey.ps1` | *passthrough* | `Export-ProductKey` |
 | `Get-CommonSystemInfo` | `Get-CommonSystemInfo.ps1` | *passthrough* | `Get-CommonSystemInfo` |
-| `Get-FailedLogins` | `Get-FailedLogins.ps1` | *passthrough* | `Get-FailedLogins -ComputerName PC1` |
-| `Get-NetworkShares` | `Get-NetworkShares.ps1` | *passthrough* | `Get-NetworkShares -ComputerName FS01` |
-| `Get-UniquePermissions` | `Get-UniquePermissions.ps1` | *passthrough* | `Get-UniquePermissions -SiteUrl https://contoso.sharepoint.com/sites/HR` |
-| `Install-Fonts` | `Install-Fonts.ps1` | *passthrough* | `Install-Fonts -Source C:\Fonts` |
+| `Get-FailedLogin` | `Get-FailedLogins.ps1` | *passthrough* | `Get-FailedLogin -ComputerName PC1` |
+| `Get-NetworkShare` | `Get-NetworkShares.ps1` | *passthrough* | `Get-NetworkShare -ComputerName FS01` |
+| `Get-UniquePermission` | `Get-UniquePermissions.ps1` | *passthrough* | `Get-UniquePermission -SiteUrl https://contoso.sharepoint.com/sites/HR` |
+| `Install-Font` | `Install-Fonts.ps1` | *passthrough* | `Install-Font -Source C:\Fonts` |
 | `Invoke-DeploymentTemplate` | `SS_DEPLOYMENT_TEMPLATE.ps1` | *passthrough* | `Invoke-DeploymentTemplate -Verbose` |
 | `Invoke-ExchangeCalendarManager` | `ExchangeCalendarManager.ps1` | *interactive* | `Invoke-ExchangeCalendarManager` |
 | `Invoke-PostInstall` | `PostInstallScript.ps1` | *passthrough* | `Invoke-PostInstall -Domain contoso.com` |

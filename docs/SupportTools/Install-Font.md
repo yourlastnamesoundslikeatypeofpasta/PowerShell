@@ -5,30 +5,31 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-UniquePermissions
+# Install-Font
 
 ## SYNOPSIS
-Returns items with unique permissions in a SharePoint site.
+Installs font files for all users.
 
 ## SYNTAX
 
 ```
-Get-UniquePermissions [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Install-Font [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Calls the Get-UniquePermissions.ps1 script contained in the scripts
-directory and outputs its results.
+Simple wrapper for the Install-Fonts.ps1 script which performs the
+installation work.
+Arguments are passed directly through.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Get-UniquePermissions -SiteUrl 'https://contoso.sharepoint.com/sites/Example'
+PS C:\> Install-Font -Path './Fonts'
 ```
 
-Demonstrates typical usage of Get-UniquePermissions.
+Demonstrates typical usage of Install-Font.
 
 ## PARAMETERS
 
