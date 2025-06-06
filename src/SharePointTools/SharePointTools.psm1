@@ -24,9 +24,16 @@ try {
 }
 
 function Write-SPToolsHacker {
-    param([string]$Message)
-    Write-Host $Message -ForegroundColor Green -BackgroundColor Black
-    Write-STLog $Message
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Message
+    )
+    process {
+        Write-Host $Message -ForegroundColor Green -BackgroundColor Black
+        Write-STLog $Message
+    }
 }
 
 function Save-SPToolsSettings {
@@ -34,9 +41,15 @@ function Save-SPToolsSettings {
     .SYNOPSIS
         Persists SharePoint Tools configuration to disk.
     #>
-    Write-SPToolsHacker '>>> SAVING CONFIGURATION'
-    $SharePointToolsSettings | Out-File -FilePath $settingsFile -Encoding utf8
-    Write-SPToolsHacker '>>> CONFIGURATION SAVED'
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    param()
+    process {
+        if ($PSCmdlet.ShouldProcess($settingsFile, 'Save configuration')) {
+            Write-SPToolsHacker '>>> SAVING CONFIGURATION'
+            $SharePointToolsSettings | Out-File -FilePath $settingsFile -Encoding utf8
+            Write-SPToolsHacker '>>> CONFIGURATION SAVED'
+        }
+    }
 }
 
 function Get-SPToolsSettings {
@@ -44,8 +57,12 @@ function Get-SPToolsSettings {
     .SYNOPSIS
         Retrieves the current SharePoint Tools settings.
     #>
-    Write-SPToolsHacker '>>> RETRIEVING SETTINGS'
-    $SharePointToolsSettings
+    [CmdletBinding()]
+    param()
+    process {
+        Write-SPToolsHacker '>>> RETRIEVING SETTINGS'
+        $SharePointToolsSettings
+    }
 }
 
 function Get-SPToolsSiteUrl {
@@ -55,12 +72,20 @@ function Get-SPToolsSiteUrl {
     .PARAMETER SiteName
         Friendly name of the site.
     #>
-    param([Parameter(Mandatory)][string]$SiteName)
-    Write-SPToolsHacker ">>> LOOKING UP $SiteName"
-    $url = $SharePointToolsSettings.Sites[$SiteName]
-    if (-not $url) { throw "Site '$SiteName' not found in settings." }
-    Write-SPToolsHacker ">>> URL FOUND: $url"
-    $url
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateScript({ $SharePointToolsSettings.Sites.ContainsKey($_) })]
+        [string]$SiteName
+    )
+    process {
+        Write-SPToolsHacker ">>> LOOKING UP $SiteName"
+        $url = $SharePointToolsSettings.Sites[$SiteName]
+        if (-not $url) { throw "Site '$SiteName' not found in settings." }
+        Write-SPToolsHacker ">>> URL FOUND: $url"
+        $url
+    }
 }
 
 function Add-SPToolsSite {
@@ -72,15 +97,23 @@ function Add-SPToolsSite {
     .PARAMETER Url
         Full URL of the SharePoint site.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)][string]$Name,
-        [Parameter(Mandatory)][string]$Url
+        [Parameter(Mandatory)]
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
+        [string]$Name,
+        [Parameter(Mandatory)]
+        [ValidateScript({ $_ -match '^https?://' })]
+        [string]$Url
     )
-    Write-SPToolsHacker ">>> ADDING SITE $Name"
-    $SharePointToolsSettings.Sites[$Name] = $Url
-    Save-SPToolsSettings
-    Write-SPToolsHacker ">>> SITE ADDED"
+    process {
+        if ($PSCmdlet.ShouldProcess($Name, 'Add site')) {
+            Write-SPToolsHacker ">>> ADDING SITE $Name"
+            $SharePointToolsSettings.Sites[$Name] = $Url
+            Save-SPToolsSettings
+            Write-SPToolsHacker ">>> SITE ADDED"
+        }
+    }
 }
 
 function Set-SPToolsSite {
@@ -92,15 +125,23 @@ function Set-SPToolsSite {
     .PARAMETER Url
         New URL to set for the site.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)][string]$Name,
-        [Parameter(Mandatory)][string]$Url
+        [Parameter(Mandatory)]
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
+        [string]$Name,
+        [Parameter(Mandatory)]
+        [ValidateScript({ $_ -match '^https?://' })]
+        [string]$Url
     )
-    Write-SPToolsHacker ">>> UPDATING SITE $Name"
-    $SharePointToolsSettings.Sites[$Name] = $Url
-    Save-SPToolsSettings
-    Write-SPToolsHacker ">>> SITE UPDATED"
+    process {
+        if ($PSCmdlet.ShouldProcess($Name, 'Update site')) {
+            Write-SPToolsHacker ">>> UPDATING SITE $Name"
+            $SharePointToolsSettings.Sites[$Name] = $Url
+            Save-SPToolsSettings
+            Write-SPToolsHacker ">>> SITE UPDATED"
+        }
+    }
 }
 
 function Remove-SPToolsSite {
@@ -110,12 +151,20 @@ function Remove-SPToolsSite {
     .PARAMETER Name
         Key of the site to remove.
     #>
-    [CmdletBinding()]
-    param([Parameter(Mandatory)][string]$Name)
-    Write-SPToolsHacker ">>> REMOVING SITE $Name"
-    [void]$SharePointToolsSettings.Sites.Remove($Name)
-    Save-SPToolsSettings
-    Write-SPToolsHacker ">>> SITE REMOVED"
+    [CmdletBinding(SupportsShouldProcess=$true)]
+    param(
+        [Parameter(Mandatory)]
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
+        [string]$Name
+    )
+    process {
+        if ($PSCmdlet.ShouldProcess($Name, 'Remove site')) {
+            Write-SPToolsHacker ">>> REMOVING SITE $Name"
+            [void]$SharePointToolsSettings.Sites.Remove($Name)
+            Save-SPToolsSettings
+            Write-SPToolsHacker ">>> SITE REMOVED"
+        }
+    }
 }
 
 
@@ -159,7 +208,7 @@ function Invoke-MexCentralFilesArchiveCleanup {
   Connects using PnP.PowerShell and deletes items matching zzz_Archive.
 #>
 function Invoke-ArchiveCleanup {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory)]
         [string]$SiteName,
@@ -193,16 +242,17 @@ function Invoke-ArchiveCleanup {
     $foldersDeleted = 0
 
     Write-Verbose "[>] Located $($archivedFiles.Count) archived files marked for deletion."
-    foreach ($file in $archivedFiles) {
-        $filePath = $file.FieldValues.FileRef
-        try {
-            Write-Verbose "-- Deleting file: $filePath"
-            Remove-PnPFile -ServerRelativeUrl $filePath -Force -ErrorAction Stop
-            $filesDeleted++
-        } catch {
-            Write-Warning "[!] FILE DELETE FAIL: $filePath :: $_"
+    if ($PSCmdlet.ShouldProcess($SiteName, 'Remove archived files and folders')) {
+        foreach ($file in $archivedFiles) {
+            $filePath = $file.FieldValues.FileRef
+            try {
+                Write-Verbose "-- Deleting file: $filePath"
+                Remove-PnPFile -ServerRelativeUrl $filePath -Force -ErrorAction Stop
+                $filesDeleted++
+            } catch {
+                Write-Warning "[!] FILE DELETE FAIL: $filePath :: $_"
+            }
         }
-    }
 
     $archivedFoldersSorted = $archivedFolders | Sort-Object {
         ($_.FieldValues.FileRef -split '/').Count
@@ -228,6 +278,8 @@ function Invoke-ArchiveCleanup {
         } catch {
             Write-Warning "[!] FOLDER DELETE FAIL: $fullPath :: $_"
         }
+    }
+
     }
 
     Stop-Transcript
@@ -516,7 +568,7 @@ function Get-SPToolsRecycleBinReport {
 }
 
 function Clear-SPToolsRecycleBin {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory)][string]$SiteName,
         [string]$SiteUrl,
@@ -531,10 +583,12 @@ function Clear-SPToolsRecycleBin {
 
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
-    if ($SecondStage) {
-        Clear-PnPRecycleBinItem -SecondStage -Force
-    } else {
-        Clear-PnPRecycleBinItem -FirstStage -Force
+    if ($PSCmdlet.ShouldProcess($SiteName, 'Clear recycle bin')) {
+        if ($SecondStage) {
+            Clear-PnPRecycleBinItem -SecondStage -Force
+        } else {
+            Clear-PnPRecycleBinItem -FirstStage -Force
+        }
     }
 
     Disconnect-PnPOnline
@@ -631,7 +685,7 @@ function Get-SPPermissionsReport {
 }
 
 function Clean-SPVersionHistory {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory)][string]$SiteUrl,
         [string]$LibraryName = 'Shared Documents',
@@ -645,12 +699,14 @@ function Clean-SPVersionHistory {
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
     $items = Get-PnPListItem -List $LibraryName -PageSize 2000
-    foreach ($item in $items) {
-        $versions = Get-PnPProperty -ClientObject $item -Property Versions
-        if ($versions.Count -gt $KeepVersions) {
-            $excess = $versions | Sort-Object -Property Created -Descending | Select-Object -Skip $KeepVersions
-            foreach ($v in $excess) { $v.DeleteObject() | Out-Null }
-            Invoke-PnPQuery
+    if ($PSCmdlet.ShouldProcess($SiteUrl, 'Clean version history')) {
+        foreach ($item in $items) {
+            $versions = Get-PnPProperty -ClientObject $item -Property Versions
+            if ($versions.Count -gt $KeepVersions) {
+                $excess = $versions | Sort-Object -Property Created -Descending | Select-Object -Skip $KeepVersions
+                foreach ($v in $excess) { $v.DeleteObject() | Out-Null }
+                Invoke-PnPQuery
+            }
         }
     }
     Disconnect-PnPOnline
@@ -717,6 +773,15 @@ function List-OneDriveUsage {
 }
 Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','List-OneDriveUsage' -Variable 'SharePointToolsSettings'
 
+function Register-SPToolsCompleters {
+    $siteCmds = 'Get-SPToolsSiteUrl','Get-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsPreservationHoldReport','Get-SPToolsAllLibraryReports','Get-SPToolsAllRecycleBinReports'
+    Register-ArgumentCompleter -CommandName $siteCmds -ParameterName SiteName -ScriptBlock {
+        param($commandName,$parameterName,$wordToComplete)
+        $SharePointToolsSettings.Sites.Keys | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_,$_, 'ParameterValue', $_) }
+    }
+}
+
 function Show-SharePointToolsBanner {
     $lines = @(
         '=======================================',
@@ -728,4 +793,5 @@ function Show-SharePointToolsBanner {
     Write-Host ">> Welcome operator. Run 'Get-Command -Module SharePointTools' to view available tools." -ForegroundColor Yellow -BackgroundColor Black
 }
 
+Register-SPToolsCompleters
 Show-SharePointToolsBanner
