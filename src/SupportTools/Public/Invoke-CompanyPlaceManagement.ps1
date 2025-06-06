@@ -29,6 +29,8 @@ function Invoke-CompanyPlaceManagement {
         [string]$CountryOrRegion,
         [switch]$AutoAddFloor
     )
+
+    Write-Host "[***] Invoke-CompanyPlaceManagement -Action $Action" -ForegroundColor Green -BackgroundColor Black
     if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
         try {
             Import-Module MicrosoftPlaces -ErrorAction Stop
@@ -85,6 +87,8 @@ function Invoke-CompanyPlaceManagement {
             Write-Host "✏️ Updated '$DisplayName' successfully."
         }
     }
+
+    Write-Host '[***] Invoke-CompanyPlaceManagement completed' -ForegroundColor Green -BackgroundColor Black
 }
 
 

@@ -21,8 +21,10 @@ function Set-SharedMailboxAutoReply {
         [string]$ExternalAudience = 'All',
         [Parameter(Mandatory)]
         [string]$AdminUser,
-        [switch]$UseWebLogin
+    [switch]$UseWebLogin
     )
+
+    Write-Host '[***] Running Set-SharedMailboxAutoReply' -ForegroundColor Green -BackgroundColor Black
 
     if (-not $ExternalMessage) { $ExternalMessage = $InternalMessage }
 
@@ -61,6 +63,8 @@ function Set-SharedMailboxAutoReply {
     $result = Get-MailboxAutoReplyConfiguration -Identity $MailboxIdentity
 
     Disconnect-ExchangeOnline -Confirm:$false
+
+    Write-Host '[***] Auto-reply configuration complete' -ForegroundColor Green -BackgroundColor Black
 
     return $result
 }
