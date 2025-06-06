@@ -57,10 +57,11 @@ Describe 'SupportTools Module' {
         }
 
         foreach ($entry in $map.GetEnumerator()) {
-            It "$($entry.Key) calls Invoke-ScriptFile" {
-                Mock Invoke-ScriptFile {}
-                & $entry.Key.ToString().Replace('_','-')
-                Assert-MockCalled Invoke-ScriptFile -ParameterFilter { $Name -eq $entry.Value } -Times 1
+            $case = $entry
+            It "$($case.Key) calls Invoke-ScriptFile" {
+                Mock Invoke-ScriptFile {} -ModuleName SupportTools
+                & $case.Key.ToString().Replace('_','-')
+                Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -ParameterFilter { $Name -eq $case.Value } -Times 1
             }
         }
     }
@@ -68,7 +69,7 @@ Describe 'SupportTools Module' {
     Context 'Add-UsersToGroup output passthrough' {
         It 'returns the object produced by the script' {
             $expected = [pscustomobject]@{ GroupName = 'MyGroup'; AddedUsers = @('a'); SkippedUsers = @('b') }
-            Mock Invoke-ScriptFile { $expected }
+            Mock Invoke-ScriptFile { $expected } -ModuleName SupportTools
             $result = Add-UsersToGroup -CsvPath 'users.csv' -GroupName 'MyGroup'
             $result | Should -Be $expected
         }

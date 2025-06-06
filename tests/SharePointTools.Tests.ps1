@@ -36,8 +36,9 @@ Describe 'SharePointTools Module' {
         )
         $exported = (Get-Command -Module SharePointTools).Name
         foreach ($cmd in $expected) {
-            It "Exports $cmd" {
-                $exported | Should -Contain $cmd
+            $c = $cmd
+            It "Exports $c" {
+                $exported | Should -Contain $c
             }
         }
     }
@@ -56,10 +57,11 @@ Describe 'SharePointTools Module' {
         )
 
         foreach ($m in $maps) {
-            It "$($m.Fn) calls $($m.Target)" {
-                Mock $m.Target {}
-                & $m.Fn
-                Assert-MockCalled $m.Target -ParameterFilter { $SiteName -eq $m.Site } -Times 1
+            $case = $m
+            It "$($case.Fn) calls $($case.Target)" {
+                Mock $case.Target {} -ModuleName SharePointTools
+                & $case.Fn
+                Assert-MockCalled $case.Target -ModuleName SharePointTools -ParameterFilter { $SiteName -eq $case.Site } -Times 1
             }
         }
     }
@@ -69,10 +71,10 @@ Describe 'SharePointTools Module' {
             $SharePointToolsSettings.Sites.Clear()
             $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
             $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
-            Mock Get-SPToolsLibraryReport {}
+            Mock Get-SPToolsLibraryReport {} -ModuleName SharePointTools
             Get-SPToolsAllLibraryReports
-            Assert-MockCalled Get-SPToolsLibraryReport -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
-            Assert-MockCalled Get-SPToolsLibraryReport -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
+            Assert-MockCalled Get-SPToolsLibraryReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
+            Assert-MockCalled Get-SPToolsLibraryReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
         }
     }
     Context 'Recycle bin reporting wrapper' {
@@ -80,10 +82,10 @@ Describe 'SharePointTools Module' {
             $SharePointToolsSettings.Sites.Clear()
             $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
             $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
-            Mock Get-SPToolsRecycleBinReport {}
+            Mock Get-SPToolsRecycleBinReport {} -ModuleName SharePointTools
             Get-SPToolsAllRecycleBinReports
-            Assert-MockCalled Get-SPToolsRecycleBinReport -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
-            Assert-MockCalled Get-SPToolsRecycleBinReport -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
+            Assert-MockCalled Get-SPToolsRecycleBinReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
+            Assert-MockCalled Get-SPToolsRecycleBinReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
         }
     }
     Context 'Preservation hold reporting wrapper' {
@@ -91,10 +93,10 @@ Describe 'SharePointTools Module' {
             $SharePointToolsSettings.Sites.Clear()
             $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
             $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
-            Mock Get-SPToolsPreservationHoldReport {}
+            Mock Get-SPToolsPreservationHoldReport {} -ModuleName SharePointTools
             Get-SPToolsAllPreservationHoldReports
-            Assert-MockCalled Get-SPToolsPreservationHoldReport -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
-            Assert-MockCalled Get-SPToolsPreservationHoldReport -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
+            Assert-MockCalled Get-SPToolsPreservationHoldReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteA' } -Times 1
+            Assert-MockCalled Get-SPToolsPreservationHoldReport -ModuleName SharePointTools -ParameterFilter { $SiteName -eq 'SiteB' } -Times 1
         }
     }
 }
