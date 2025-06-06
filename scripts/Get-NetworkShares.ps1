@@ -25,18 +25,18 @@ function Get-NetworkShares {
 
     $shares = Get-CimInstance -ClassName Win32_Share -ComputerName $ComputerName
 
-    $result = [pscustomobject]@{
-        ComputerName = $env:COMPUTERNAME
-        Shares = @(
-        foreach ($share in $shares) {
+    $shareObjects = foreach ($share in $shares) {
         [pscustomobject]@{
-        ShareName = $share.Name
-        Path = $share.Path
-        Description = $share.Description
-        Type = $share.Type
-                }
-            }
-        )
+            ShareName   = $share.Name
+            Path        = $share.Path
+            Description = $share.Description
+            Type        = $share.Type
+        }
+    }
+
+    $result = [pscustomobject]@{
+        ComputerName = $ComputerName
+        Shares       = $shareObjects
     }
 
     return $result

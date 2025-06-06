@@ -40,10 +40,16 @@ function Convert-ExcelToCsv {
     $csvFilePath = "$($directory)\$($basename)$($csvFileExtension)"
  
     # save as csv
-    foreach ($worksheet in $workbook) {
-        $worksheet.SaveAs($csvFilePath, 6)  # i have no idea what 6 is referring to. i'm assuming its a save mode.
+    $xlCSV = 6
+    foreach ($worksheet in $workbook.Worksheets) {
+        $worksheet.SaveAs($csvFilePath, $xlCSV)
     }
+    $workbook.Close($false)
     $excel.Quit()
+    [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($workbook)
+    [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel)
+    [GC]::Collect()
+    [GC]::WaitForPendingFinalizers()
  
     # return csv obj
     $csv = Import-Csv $csvFilePath

@@ -30,7 +30,12 @@ This example runs the script with explicit parameters to process the provided CS
 #>
 
 param(
+    [Parameter()]
+    [ValidateScript({ Test-Path $_ -PathType Leaf })]
     [string]$CsvPath,
+
+    [Parameter()]
+    [ValidateNotNullOrEmpty()]
     [string]$GroupName
 )
 
@@ -145,9 +150,14 @@ function Get-UserID {
         [string]
         $UserPrincipalName
     )
-    $id = Get-MgUser -All | where {$_.UserPrincipalName -eq $UserPrincipalName}
 
-    $id
+    try {
+        return Get-MgUser -UserId $UserPrincipalName -ErrorAction Stop
+    }
+    catch {
+        Write-Warning "User not found: $UserPrincipalName"
+        return $null
+    }
 }
 
 function Start-Main {
@@ -182,6 +192,12 @@ function Start-Main {
     {
         # Pull all info | select UPN
         $userInfo = Get-UserID -UserPrincipalName $user
+
+        if (-not $userInfo) {
+            $skippedUsers += $user
+            Write-Warning "User not found: $user"
+            continue
+        }
 
         # Add the user to the group if they are not in the group
         if ($groupExistingMembers -contains $userInfo.UserPrincipalName)
