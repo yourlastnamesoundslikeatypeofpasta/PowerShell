@@ -43,5 +43,6 @@ All functions emit short, high contrast messages following the style in [ModuleS
 | `Clean-SPVersionHistory` | Trim file versions beyond a limit. | `SiteUrl`, `[LibraryName]`, `[KeepVersions]`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `Clean-SPVersionHistory -SiteUrl https://contoso.sharepoint.com/sites/hr -KeepVersions 5` |
 | `Find-OrphanedSPFiles` | Locate files not modified for a period. | `SiteUrl`, `[LibraryName]`, `[Days]`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `Find-OrphanedSPFiles -SiteUrl https://contoso.sharepoint.com/sites/hr -Days 90` |
 | `List-OneDriveUsage` | Report OneDrive storage use across the tenant. | `AdminUrl`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `List-OneDriveUsage -AdminUrl https://contoso-admin.sharepoint.com` |
+| `Get-SPToolsFileReport` | Export detailed file metadata from a library. | `SiteUrl`, `[LibraryName]`, `[ClientId]`, `[TenantId]`, `[CertPath]`, `[OutputPath]` | `Get-SPToolsFileReport -SiteUrl https://contoso.sharepoint.com/sites/hr -OutputPath files.csv` |
 
 

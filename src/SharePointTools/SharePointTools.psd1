@@ -32,6 +32,7 @@
         'Get-SPPermissionsReport',
         'Clean-SPVersionHistory',
         'Find-OrphanedSPFiles',
+        'Get-SPToolsFileReport',
         'List-OneDriveUsage'
     )
 }
