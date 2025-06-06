@@ -64,4 +64,13 @@ Describe 'SupportTools Module' {
             }
         }
     }
+
+    Context 'Add-UsersToGroup output passthrough' {
+        It 'returns the object produced by the script' {
+            $expected = [pscustomobject]@{ GroupName = 'MyGroup'; AddedUsers = @('a'); SkippedUsers = @('b') }
+            Mock Invoke-ScriptFile { $expected }
+            $result = Add-UsersToGroup -CsvPath 'users.csv' -GroupName 'MyGroup'
+            $result | Should -Be $expected
+        }
+    }
 }
