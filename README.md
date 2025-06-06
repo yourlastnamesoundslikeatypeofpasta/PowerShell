@@ -85,15 +85,22 @@ When set, these variables override values stored in `config/SharePointToolsSetti
 
 Potential areas for improvement and extension include:
 
-1. **Dependency Management**  
-   Automate installation or checks for required modules to streamline setup.
-2. **Testing and Continuous Integration**  
-   Add more Pester tests and configure CI to run them automatically.
-3. **Documentation**  
+1. **Dependency Management**
+   Automate installation or checks for required modules to streamline setup and
+   provide clear guidance when dependencies are missing.
+2. **Testing and Continuous Integration**
+   Add more Pester tests to cover complex functions and configure CI to run them
+   automatically.
+3. **Documentation**
    Expand user guides and provide a quickstart summary for key commands.
-4. **Feature Enhancements**  
+4. **Feature Enhancements**
    Continue expanding SupportTools and SharePointTools with additional automation.
 5. **Versioning and Distribution**
-   Package the modules for easier updates via an internal feed.
+   Package the modules for easier updates via an internal feed and consider
+   publishing them to an internal repository.
 6. **Centralized Logging**
    Provide a consistent logging approach across all commands for easier troubleshooting.
+7. **Error Handling**
+   Add standardized error handling and optional transcript output.
+8. **Configuration Guidance**
+   Document a recommended workflow for securely storing credentials.
