@@ -8,9 +8,10 @@ function Update-Sysmon {
     [CmdletBinding()]
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
-        [object[]]$Arguments
+        [object[]]$Arguments,
+        [string]$TranscriptPath
     )
     process {
-        Invoke-ScriptFile -Name "Update-Sysmon.ps1" -Args $Arguments
+        Invoke-ScriptFile -Name "Update-Sysmon.ps1" -Args $Arguments -TranscriptPath $TranscriptPath
     }
 }

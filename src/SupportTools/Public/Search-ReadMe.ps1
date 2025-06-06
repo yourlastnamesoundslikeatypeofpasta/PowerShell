@@ -9,9 +9,10 @@ function Search-ReadMe {
     [CmdletBinding()]
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
-        [object[]]$Arguments
+        [object[]]$Arguments,
+        [string]$TranscriptPath
     )
     process {
-        Invoke-ScriptFile -Name "Search-ReadMe.ps1" -Args $Arguments
+        Invoke-ScriptFile -Name "Search-ReadMe.ps1" -Args $Arguments -TranscriptPath $TranscriptPath
     }
 }

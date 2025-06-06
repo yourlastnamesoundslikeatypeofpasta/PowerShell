@@ -27,9 +27,11 @@ function Invoke-CompanyPlaceManagement {
         [string]$State,
         [string]$PostalCode,
         [string]$CountryOrRegion,
-        [switch]$AutoAddFloor
+        [switch]$AutoAddFloor,
+        [string]$TranscriptPath
     )
 
+    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-Host "[***] Invoke-CompanyPlaceManagement -Action $Action" -ForegroundColor Green -BackgroundColor Black
     Write-STLog "Invoke-CompanyPlaceManagement -Action $Action"
     if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
@@ -91,6 +93,7 @@ function Invoke-CompanyPlaceManagement {
 
     Write-Host '[***] Invoke-CompanyPlaceManagement completed' -ForegroundColor Green -BackgroundColor Black
     Write-STLog 'Invoke-CompanyPlaceManagement completed'
+    if ($TranscriptPath) { Stop-Transcript | Out-Null }
 }
 
 

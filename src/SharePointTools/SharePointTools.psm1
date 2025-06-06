@@ -167,15 +167,18 @@ function Invoke-ArchiveCleanup {
         [string]$LibraryName = 'Shared Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
-        [string]$CertPath = $SharePointToolsSettings.CertPath
+        [string]$CertPath = $SharePointToolsSettings.CertPath,
+        [string]$TranscriptPath
     )
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
-    $logPath = "$env:USERPROFILE/SHAREPOINT_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
-    Start-Transcript -Path $logPath -Append
+    if (-not $TranscriptPath) {
+        $TranscriptPath = "$env:USERPROFILE/SHAREPOINT_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
+    }
+    Start-Transcript -Path $TranscriptPath -Append
 
     Write-Verbose "[+] Scanning target: $SiteName"
     $items = Get-PnPListItem -List $LibraryName -PageSize 5000
@@ -236,7 +239,7 @@ function Invoke-ArchiveCleanup {
         ArchivedFoldersFound = $archivedFolders.Count
         FilesDeleted       = $filesDeleted
         FoldersDeleted     = $foldersDeleted
-        LogPath            = $logPath
+        LogPath            = $TranscriptPath
     }
 }
 
@@ -338,15 +341,18 @@ function Invoke-SharingLinkCleanup {
         [string]$FolderName,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
-        [string]$CertPath = $SharePointToolsSettings.CertPath
+        [string]$CertPath = $SharePointToolsSettings.CertPath,
+        [string]$TranscriptPath
     )
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
 
-    $logPath = "$env:USERPROFILE/SHAREPOINT_LINK_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
-    Start-Transcript -Path $logPath -Append
+    if (-not $TranscriptPath) {
+        $TranscriptPath = "$env:USERPROFILE/SHAREPOINT_LINK_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
+    }
+    Start-Transcript -Path $TranscriptPath -Append
 
     $root = Get-PnPFolder -ListRootFolder $LibraryName
     $folders = $root | Get-PnPFolderInFolder

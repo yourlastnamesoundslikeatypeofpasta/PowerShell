@@ -9,9 +9,10 @@ function Get-FailedLogins {
     [CmdletBinding()]
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
-        [object[]]$Arguments
+        [object[]]$Arguments,
+        [string]$TranscriptPath
     )
     process {
-        Invoke-ScriptFile -Name "Get-FailedLogins.ps1" -Args $Arguments
+        Invoke-ScriptFile -Name "Get-FailedLogins.ps1" -Args $Arguments -TranscriptPath $TranscriptPath
     }
 }

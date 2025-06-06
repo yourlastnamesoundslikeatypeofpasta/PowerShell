@@ -21,9 +21,11 @@ function Set-SharedMailboxAutoReply {
         [string]$ExternalAudience = 'All',
         [Parameter(Mandatory)]
         [string]$AdminUser,
-    [switch]$UseWebLogin
+        [switch]$UseWebLogin,
+        [string]$TranscriptPath
     )
 
+    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-Host '[***] Running Set-SharedMailboxAutoReply' -ForegroundColor Green -BackgroundColor Black
 
     if (-not $ExternalMessage) { $ExternalMessage = $InternalMessage }
@@ -65,6 +67,7 @@ function Set-SharedMailboxAutoReply {
     Disconnect-ExchangeOnline -Confirm:$false
 
     Write-Host '[***] Auto-reply configuration complete' -ForegroundColor Green -BackgroundColor Black
+    if ($TranscriptPath) { Stop-Transcript | Out-Null }
 
     return $result
 }
