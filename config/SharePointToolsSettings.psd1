@@ -2,4 +2,5 @@
     ClientId = ''
     TenantId = ''
     CertPath = ''
+    Sites = @{}
 }

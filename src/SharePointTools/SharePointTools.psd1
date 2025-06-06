@@ -16,6 +16,11 @@
         'Invoke-SharingLinkCleanup',
         'Invoke-YFSharingLinkCleanup',
         'Invoke-IBCCentralFilesSharingLinkCleanup',
-        'Invoke-MexCentralFilesSharingLinkCleanup'
+        'Invoke-MexCentralFilesSharingLinkCleanup',
+        'Get-SPToolsSettings',
+        'Get-SPToolsSiteUrl',
+        'Add-SPToolsSite',
+        'Set-SPToolsSite',
+        'Remove-SPToolsSite'
     )
 }

@@ -3,9 +3,51 @@
 # Load configuration values if available
 $repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
 $settingsFile = Join-Path $repoRoot 'config/SharePointToolsSettings.psd1'
-$SharePointToolsSettings = @{ ClientId=''; TenantId=''; CertPath='' }
+$SharePointToolsSettings = @{ ClientId=''; TenantId=''; CertPath=''; Sites=@{} }
 if (Test-Path $settingsFile) {
     try { $SharePointToolsSettings = Import-PowerShellDataFile $settingsFile } catch {}
+}
+
+function Save-SPToolsSettings {
+    $SharePointToolsSettings | Out-File -FilePath $settingsFile -Encoding utf8
+}
+
+function Get-SPToolsSettings {
+    $SharePointToolsSettings
+}
+
+function Get-SPToolsSiteUrl {
+    param([Parameter(Mandatory)][string]$SiteName)
+    $url = $SharePointToolsSettings.Sites[$SiteName]
+    if (-not $url) { throw "Site '$SiteName' not found in settings." }
+    $url
+}
+
+function Add-SPToolsSite {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)][string]$Url
+    )
+    $SharePointToolsSettings.Sites[$Name] = $Url
+    Save-SPToolsSettings
+}
+
+function Set-SPToolsSite {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)][string]$Url
+    )
+    $SharePointToolsSettings.Sites[$Name] = $Url
+    Save-SPToolsSettings
+}
+
+function Remove-SPToolsSite {
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][string]$Name)
+    [void]$SharePointToolsSettings.Sites.Remove($Name)
+    Save-SPToolsSettings
 }
 
 
@@ -13,21 +55,21 @@ function Invoke-YFArchiveCleanup {
     [CmdletBinding()]
     param()
 
-    Invoke-ArchiveCleanup -SiteName 'YF' -SiteUrl 'https://contoso.sharepoint.com/sites/YF'
+    Invoke-ArchiveCleanup -SiteName 'YF'
 }
 
 function Invoke-IBCCentralFilesArchiveCleanup {
     [CmdletBinding()]
     param()
 
-    Invoke-ArchiveCleanup -SiteName 'IBCCentralFiles' -SiteUrl 'https://contoso.sharepoint.com/sites/IBCCentralFiles'
+    Invoke-ArchiveCleanup -SiteName 'IBCCentralFiles'
 }
 
 function Invoke-MexCentralFilesArchiveCleanup {
     [CmdletBinding()]
     param()
 
-    Invoke-ArchiveCleanup -SiteName 'MexCentralFiles' -SiteUrl 'https://contoso.sharepoint.com/sites/MexCentralFiles'
+    Invoke-ArchiveCleanup -SiteName 'MexCentralFiles'
 }
 
 <#
@@ -41,13 +83,14 @@ function Invoke-ArchiveCleanup {
     param(
         [Parameter(Mandatory)]
         [string]$SiteName,
-        [Parameter(Mandatory)]
         [string]$SiteUrl,
         [string]$LibraryName = 'Shared Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
+
+    if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
     Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
@@ -122,21 +165,21 @@ function Invoke-YFFileVersionCleanup {
     [CmdletBinding()]
     param()
 
-    Invoke-FileVersionCleanup -SiteName 'YF' -SiteUrl 'https://contoso.sharepoint.com/sites/YF'
+    Invoke-FileVersionCleanup -SiteName 'YF'
 }
 
 function Invoke-IBCCentralFilesFileVersionCleanup {
     [CmdletBinding()]
     param()
 
-    Invoke-FileVersionCleanup -SiteName 'IBCCentralFiles' -SiteUrl 'https://contoso.sharepoint.com/sites/IBCCentralFiles'
+    Invoke-FileVersionCleanup -SiteName 'IBCCentralFiles'
 }
 
 function Invoke-MexCentralFilesFileVersionCleanup {
     [CmdletBinding()]
     param()
 
-    Invoke-FileVersionCleanup -SiteName 'MexCentralFiles' -SiteUrl 'https://contoso.sharepoint.com/sites/MexCentralFiles'
+    Invoke-FileVersionCleanup -SiteName 'MexCentralFiles'
 }
 
 <#
@@ -156,6 +199,8 @@ function Invoke-FileVersionCleanup {
         [string]$CertPath = $SharePointToolsSettings.CertPath,
         [string]$ReportPath = 'exportedReport.csv'
     )
+
+    if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
     Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
@@ -198,7 +243,6 @@ function Invoke-SharingLinkCleanup {
     param(
         [Parameter(Mandatory)]
         [string]$SiteName,
-        [Parameter(Mandatory)]
         [string]$SiteUrl,
         [string]$LibraryName = 'Shared Documents',
         [string]$FolderName,
@@ -206,6 +250,8 @@ function Invoke-SharingLinkCleanup {
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
+
+    if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
     Import-Module PnP.PowerShell -ErrorAction Stop
     Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
@@ -273,22 +319,22 @@ function Invoke-YFSharingLinkCleanup {
     [CmdletBinding()]
     param()
 
-    Invoke-SharingLinkCleanup -SiteName 'YF' -SiteUrl 'https://contoso.sharepoint.com/sites/YF'
+    Invoke-SharingLinkCleanup -SiteName 'YF'
 }
 
 function Invoke-IBCCentralFilesSharingLinkCleanup {
     [CmdletBinding()]
     param()
 
-    Invoke-SharingLinkCleanup -SiteName 'IBCCentralFiles' -SiteUrl 'https://contoso.sharepoint.com/sites/IBCCentralFiles'
+    Invoke-SharingLinkCleanup -SiteName 'IBCCentralFiles'
 }
 
 function Invoke-MexCentralFilesSharingLinkCleanup {
     [CmdletBinding()]
     param()
 
-    Invoke-SharingLinkCleanup -SiteName 'MexCentralFiles' -SiteUrl 'https://contoso.sharepoint.com/sites/MexCentralFiles'
+    Invoke-SharingLinkCleanup -SiteName 'MexCentralFiles'
 }
 
 
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup'
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite'
