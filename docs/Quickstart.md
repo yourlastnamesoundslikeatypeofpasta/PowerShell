@@ -22,10 +22,8 @@ This short guide shows the basic steps to start using the modules in this reposi
    ./scripts/Configure-SharePointTools.ps1
    ```
 5. **Load credentials** (optional)
-   ```powershell
-   # Example using SecretManagement
-   . ./docs/CredentialStorage.md
-   ```
+   Refer to [CredentialStorage.md](CredentialStorage.md) for a step‑by‑step
+   walkthrough of using SecretManagement to load environment variables.
 6. **Try a few common commands**
    ```powershell
    # System information
