@@ -41,3 +41,25 @@ $env:SD_BASE_URI       = Get-Secret SD_BASE_URI -AsPlainText
 With the variables set, you can import the modules and run the commands normally.
 
 This workflow keeps credentials encrypted within the SecretStore and prevents accidental exposure in scripts or source control.
+
+## Using Windows Credential Manager
+
+If you prefer storing secrets in the built-in Windows Credential Manager, install the CredMan extension for SecretManagement and register it as a vault:
+
+```powershell
+Install-Module SecretManagement.CredMan -Scope CurrentUser
+Register-SecretVault -Name WinCred -ModuleName SecretManagement.CredMan
+```
+
+Secrets saved to `WinCred` can be retrieved with `Get-Secret` the same way as the SecretStore examples above.
+
+## Using Azure Key Vault
+
+To pull secrets from Azure Key Vault, install the Az.KeyVault extension and register your vault:
+
+```powershell
+Install-Module Az.Accounts, Az.KeyVault -Scope CurrentUser
+Register-SecretVault -Name CompanyVault -ModuleName Az.KeyVault -VaultName 'MyKeyVault'
+```
+
+After logging in with `Connect-AzAccount`, calls to `Get-Secret -Vault CompanyVault` will fetch the values directly from your key vault.
