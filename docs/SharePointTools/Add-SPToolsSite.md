@@ -23,7 +23,7 @@ Description forthcoming for Add-SPToolsSite.
 
 ### Example 1
 ```powershell
-PS C:\> Add-SPToolsSite -Name HR -Url https://contoso.sharepoint.com/sites/hr
+PS C:\> Add-SPToolsSite -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Add-SPToolsSite.

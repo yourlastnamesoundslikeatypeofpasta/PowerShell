@@ -23,7 +23,7 @@ Description forthcoming for Invoke-MexCentralFilesFileVersionCleanup.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-MexCentralFilesFileVersionCleanup
+PS C:\> Invoke-MexCentralFilesFileVersionCleanup -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Invoke-MexCentralFilesFileVersionCleanup.

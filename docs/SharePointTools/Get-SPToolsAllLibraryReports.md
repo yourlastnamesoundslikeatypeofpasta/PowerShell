@@ -23,7 +23,7 @@ Description forthcoming for Get-SPToolsAllLibraryReports.
 
 ### Example 1
 ```powershell
-PS C:\> Get-SPToolsAllLibraryReports
+PS C:\> Get-SPToolsAllLibraryReports -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Get-SPToolsAllLibraryReports.

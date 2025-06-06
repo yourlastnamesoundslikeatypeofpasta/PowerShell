@@ -23,7 +23,7 @@ Description forthcoming for Invoke-IBCCentralFilesSharingLinkCleanup.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-IBCCentralFilesSharingLinkCleanup
+PS C:\> Invoke-IBCCentralFilesSharingLinkCleanup -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Invoke-IBCCentralFilesSharingLinkCleanup.

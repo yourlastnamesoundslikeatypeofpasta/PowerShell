@@ -24,7 +24,7 @@ Description forthcoming for Find-OrphanedSPFiles.
 
 ### Example 1
 ```powershell
-PS C:\> Find-OrphanedSPFiles -SiteUrl https://contoso.sharepoint.com/sites/hr -Days 90
+PS C:\> Find-OrphanedSPFiles -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Find-OrphanedSPFiles.
