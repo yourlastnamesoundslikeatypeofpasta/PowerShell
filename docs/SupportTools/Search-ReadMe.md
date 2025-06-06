@@ -25,7 +25,7 @@ the specified arguments.
 
 ### Example 1
 ```powershell
-PS C:\> Search-ReadMe -? # replace with actual parameters
+PS C:\> Search-ReadMe -Pattern 'setup'
 ```
 
 Demonstrates typical usage of Search-ReadMe.

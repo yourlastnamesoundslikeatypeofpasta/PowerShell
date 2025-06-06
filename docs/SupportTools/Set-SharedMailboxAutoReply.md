@@ -27,7 +27,7 @@ All specified parameters are forwarded to the script.
 
 ### Example 1
 ```powershell
-PS C:\> Set-SharedMailboxAutoReply -? # replace with actual parameters
+PS C:\> Set-SharedMailboxAutoReply -MailboxIdentity help@contoso.com -StartTime (Get-Date) -EndTime (Get-Date).AddDays(7) -InternalMessage 'OOO' -AdminUser admin@contoso.com
 ```
 
 Demonstrates typical usage of Set-SharedMailboxAutoReply.

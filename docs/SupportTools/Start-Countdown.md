@@ -25,7 +25,7 @@ arguments.
 
 ### Example 1
 ```powershell
-PS C:\> Start-Countdown -? # replace with actual parameters
+PS C:\> Start-Countdown -Seconds 30
 ```
 
 Demonstrates typical usage of Start-Countdown.
