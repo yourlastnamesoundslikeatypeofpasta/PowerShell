@@ -22,7 +22,8 @@ jobs:
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
-          Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error -OutFile PSScriptAnalyzerResults.sarif -ReportSummary
+          Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error |
+            ConvertTo-Sarif | Set-Content -Path PSScriptAnalyzerResults.sarif
       - name: Upload lint results
         uses: actions/upload-artifact@v4
         with:

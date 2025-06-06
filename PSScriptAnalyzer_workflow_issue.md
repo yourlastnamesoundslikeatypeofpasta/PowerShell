@@ -40,5 +40,12 @@ The command should run successfully and create `PSScriptAnalyzerResults.sarif` s
 - The log excerpt shows `Invoke-ScriptAnalyzer` does not accept the `-OutFile` parameter, which implies that either the installed version is older than expected or the command is incorrect.
 
 ## Suggested Fix
-Update the workflow to use `Invoke-ScriptAnalyzer`'s supported parameters. If the intent is to save results to a SARIF file, `Invoke-ScriptAnalyzer` can output objects which can then be converted using `ConvertTo-Sarif`. Alternatively, confirm that the latest PSScriptAnalyzer version is installed or replace `-OutFile` with `-ReportSummary` only.
+Update the workflow to use `Invoke-ScriptAnalyzer`'s supported parameters. If the intent is to save results to a SARIF file, pipe the results into `ConvertTo-Sarif` and write them to disk:
+
+```pwsh
+Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error |
+  ConvertTo-Sarif | Set-Content -Path PSScriptAnalyzerResults.sarif
+```
+
+Alternatively, confirm that the latest PSScriptAnalyzer version is installed or replace `-OutFile` with `-ReportSummary` only.
 
