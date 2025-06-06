@@ -1,13 +1,14 @@
 # SupportTools PowerShell Modules
 [![Pester Tests](https://github.com/your-org/PowerShell/actions/workflows/pester-tests.yml/badge.svg)](https://github.com/your-org/PowerShell/actions/workflows/pester-tests.yml)
 
+
 This repository packages a collection of scripts into reusable modules.
 
 * **SupportTools** – general helper commands that wrap the scripts in the `/scripts` folder.
 * **SharePointTools** – commands for SharePoint cleanup tasks such as removing archives or sharing links.
 * **ServiceDeskTools** – interact with the Service Desk ticketing system.
 
-## Requirements
+## Requirements 📋
 
 * **PowerShell 7 or later** must be installed to import these modules.
 * Specific commands rely on additional modules:
@@ -16,7 +17,7 @@ This repository packages a collection of scripts into reusable modules.
   * `MicrosoftPlaces` for the `Invoke-CompanyPlaceManagement` command.
 * Several scripts assume **tenant administrator permissions** to connect to the target SharePoint or Exchange Online environment. Review each script's notes and ensure you have the required access before running them.
 
-## Installation
+## Installation 📦
 
 1. Clone or download this repository:
 
@@ -38,7 +39,7 @@ This repository packages a collection of scripts into reusable modules.
    ./scripts/Configure-SharePointTools.ps1
    ```
 
-## Usage
+## Usage 💡
 
 Once installed, the modules expose a variety of helper commands. The most common examples are shown below.
 
@@ -66,14 +67,14 @@ Functions like `Add-SPToolsSite` and `Remove-SPToolsSite` let you manage the lis
 For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
 Example scripts for every function can be found in the `/Examples` folder.
 
-## Documentation
+## Documentation 📚
 
 For help using Microsoft Graph cmdlets, see the official [Microsoft Graph PowerShell documentation](https://learn.microsoft.com/en-us/powershell/microsoftgraph/get-started?view=graph-powershell-1.0).
 Additional module help topics are located in the [docs](docs/README.md) folder.
 
-## Security Considerations
+## Security Considerations 🛡️
 
-### Secrets Management
+### Secrets Management 🔑
 
 Avoid hardcoding credentials or certificate paths within scripts. The SharePoint tools module can read the following environment variables to provide connection details securely:
 
@@ -94,12 +95,13 @@ When set, these variables override values stored in `config/SharePointToolsSetti
 For a step-by-step example of loading these variables from the SecretManagement
 module see [docs/CredentialStorage.md](docs/CredentialStorage.md).
 
-## Centralized Logging
+## Centralized Logging 📝
 
-Commands automatically record their activity to `%USERPROFILE%\SupportToolsLogs\supporttools.log`.
-Review this file with `Get-Content` when troubleshooting.
+Commands automatically record their activity to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default.
+Set the `ST_LOG_PATH` environment variable or use the `-Path` parameter of `Write-STLog` to write logs to a custom location.
+Review the resulting log file with `Get-Content` when troubleshooting.
 
-## Roadmap
+## Roadmap 🛣️
 
 Potential areas for improvement and extension include:
 

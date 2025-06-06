@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Write-STLog [-Message] <String> [[-Level] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -56,6 +56,22 @@ Aliases:
 
 Required: True
 Position: 0
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Custom path to the log file. Overrides the default location and the `ST_LOG_PATH`
+environment variable.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
