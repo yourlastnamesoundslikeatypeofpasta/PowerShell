@@ -16,7 +16,6 @@ Removes archive folders and files from a SharePoint library.
 Invoke-ArchiveCleanup [-SiteName] <String> [[-SiteUrl] <String>] [[-LibraryName] <String>]
  [[-ClientId] <String>] [[-TenantId] <String>] [[-CertPath] <String>] [[-TranscriptPath] <String>]
  [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm] [<CommonParameters>]
-
 ```
 
 ## DESCRIPTION
@@ -167,7 +166,6 @@ Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
-
 
 ### -ProgressAction
 Specifies how progress is displayed.
