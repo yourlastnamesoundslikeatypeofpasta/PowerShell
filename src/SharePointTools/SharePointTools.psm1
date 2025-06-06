@@ -9,14 +9,28 @@ if (Test-Path $settingsFile) {
 }
 
 function Save-SPToolsSettings {
+    <#
+    .SYNOPSIS
+        Persists SharePoint Tools configuration to disk.
+    #>
     $SharePointToolsSettings | Out-File -FilePath $settingsFile -Encoding utf8
 }
 
 function Get-SPToolsSettings {
+    <#
+    .SYNOPSIS
+        Retrieves the current SharePoint Tools settings.
+    #>
     $SharePointToolsSettings
 }
 
 function Get-SPToolsSiteUrl {
+    <#
+    .SYNOPSIS
+        Gets the site URL mapped to a given name.
+    .PARAMETER SiteName
+        Friendly name of the site.
+    #>
     param([Parameter(Mandatory)][string]$SiteName)
     $url = $SharePointToolsSettings.Sites[$SiteName]
     if (-not $url) { throw "Site '$SiteName' not found in settings." }
@@ -24,6 +38,14 @@ function Get-SPToolsSiteUrl {
 }
 
 function Add-SPToolsSite {
+    <#
+    .SYNOPSIS
+        Adds a new SharePoint site entry to the settings file.
+    .PARAMETER Name
+        Key used to reference the site.
+    .PARAMETER Url
+        Full URL of the SharePoint site.
+    #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$Name,
@@ -34,6 +56,14 @@ function Add-SPToolsSite {
 }
 
 function Set-SPToolsSite {
+    <#
+    .SYNOPSIS
+        Updates an existing SharePoint site entry.
+    .PARAMETER Name
+        Key used to reference the site.
+    .PARAMETER Url
+        New URL to set for the site.
+    #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$Name,
@@ -44,6 +74,12 @@ function Set-SPToolsSite {
 }
 
 function Remove-SPToolsSite {
+    <#
+    .SYNOPSIS
+        Removes a SharePoint site entry from the settings file.
+    .PARAMETER Name
+        Key of the site to remove.
+    #>
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$Name)
     [void]$SharePointToolsSettings.Sites.Remove($Name)
@@ -52,6 +88,10 @@ function Remove-SPToolsSite {
 
 
 function Invoke-YFArchiveCleanup {
+    <#
+    .SYNOPSIS
+        Removes archive items from the YF site.
+    #>
     [CmdletBinding()]
     param()
 
@@ -59,6 +99,10 @@ function Invoke-YFArchiveCleanup {
 }
 
 function Invoke-IBCCentralFilesArchiveCleanup {
+    <#
+    .SYNOPSIS
+        Removes archive items from the IBCCentralFiles site.
+    #>
     [CmdletBinding()]
     param()
 
@@ -66,6 +110,10 @@ function Invoke-IBCCentralFilesArchiveCleanup {
 }
 
 function Invoke-MexCentralFilesArchiveCleanup {
+    <#
+    .SYNOPSIS
+        Removes archive items from the MexCentralFiles site.
+    #>
     [CmdletBinding()]
     param()
 
@@ -162,6 +210,10 @@ function Invoke-ArchiveCleanup {
 }
 
 function Invoke-YFFileVersionCleanup {
+    <#
+    .SYNOPSIS
+        Removes old file versions from the YF site.
+    #>
     [CmdletBinding()]
     param()
 
@@ -169,6 +221,10 @@ function Invoke-YFFileVersionCleanup {
 }
 
 function Invoke-IBCCentralFilesFileVersionCleanup {
+    <#
+    .SYNOPSIS
+        Removes old file versions from the IBCCentralFiles site.
+    #>
     [CmdletBinding()]
     param()
 
@@ -176,6 +232,10 @@ function Invoke-IBCCentralFilesFileVersionCleanup {
 }
 
 function Invoke-MexCentralFilesFileVersionCleanup {
+    <#
+    .SYNOPSIS
+        Removes old file versions from the MexCentralFiles site.
+    #>
     [CmdletBinding()]
     param()
 
@@ -316,6 +376,10 @@ function Invoke-SharingLinkCleanup {
 }
 
 function Invoke-YFSharingLinkCleanup {
+    <#
+    .SYNOPSIS
+        Removes sharing links from the YF site.
+    #>
     [CmdletBinding()]
     param()
 
@@ -323,6 +387,10 @@ function Invoke-YFSharingLinkCleanup {
 }
 
 function Invoke-IBCCentralFilesSharingLinkCleanup {
+    <#
+    .SYNOPSIS
+        Removes sharing links from the IBCCentralFiles site.
+    #>
     [CmdletBinding()]
     param()
 
@@ -330,6 +398,10 @@ function Invoke-IBCCentralFilesSharingLinkCleanup {
 }
 
 function Invoke-MexCentralFilesSharingLinkCleanup {
+    <#
+    .SYNOPSIS
+        Removes sharing links from the MexCentralFiles site.
+    #>
     [CmdletBinding()]
     param()
 

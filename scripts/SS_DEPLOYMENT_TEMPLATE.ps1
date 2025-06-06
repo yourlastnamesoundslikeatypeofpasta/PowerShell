@@ -24,6 +24,16 @@
 
 
 function Install-Something {
+    <#
+    .SYNOPSIS
+        Installs a package from a server share.
+    .PARAMETER ServerSharePath
+        UNC path to the deployment share.
+    .PARAMETER FilePath
+        Relative path to the installer file.
+    .PARAMETER Arguments
+        Additional arguments to pass to Start-Process.
+    #>
     param (
         [Parameter()]
         [string]
@@ -42,6 +52,12 @@ function Install-Something {
 }
 
 function Confirm-ServiceRunning {
+    <#
+    .SYNOPSIS
+        Confirms required services are running.
+    .PARAMETER ServiceList
+        Names of additional services to check.
+    #>
     [CmdletBinding()]
     param (
         [Parameter()]
@@ -76,6 +92,16 @@ function Confirm-ServiceRunning {
 }
 
 function Export-Client {
+    <#
+    .SYNOPSIS
+        Exports client system information to an XML file on a share.
+    .PARAMETER ServerSharePath
+        UNC path to the deployment share.
+    .PARAMETER ScriptBlockArray
+        Additional script blocks whose output will be included.
+    .PARAMETER UpdateVersion
+        Version identifier for the deployment.
+    #>
     [CmdletBinding()]
     param (
         [Parameter()]
@@ -126,6 +152,14 @@ function Export-Client {
 }
 
 function Get-WHVersions {
+    <#
+    .SYNOPSIS
+        Checks file versions for deployment validation.
+    .PARAMETER Shipping
+        Validate versions for shipping files.
+    .PARAMETER Login
+        Validate versions for login files.
+    #>
     [CmdletBinding()]
     param (
         [Parameter()]
@@ -206,6 +240,14 @@ function Get-WHVersions {
 }
 
 function Get-ServerSharePath {
+    <#
+    .SYNOPSIS
+        Returns the UNC path to the deployment server.
+    .PARAMETER Login
+        Retrieve the share path for login files.
+    .PARAMETER Ship
+        Retrieve the share path for shipping files.
+    #>
     [CmdletBinding()]
     param (
         [Parameter()]
@@ -226,6 +268,14 @@ function Get-ServerSharePath {
 }
 
 function Get-UpdateVersion {
+    <#
+    .SYNOPSIS
+        Generates a string representing the deployment version.
+    .PARAMETER Login
+        Create a version for login deployments.
+    .PARAMETER Ship
+        Create a version for shipping deployments.
+    #>
     [CmdletBinding()]
     param (
         [Parameter()]
@@ -247,13 +297,19 @@ function Get-UpdateVersion {
 }
 
 function Set-Signoff {
+    <#
+    .SYNOPSIS
+        Displays a completion image at the end of deployment.
+    .PARAMETER ServerSharePath
+        UNC path to the deployment share containing assets.
+    #>
     [CmdletBinding()]
     param (
         [Parameter()]
         [string]
         $ServerSharePath
     )
-    $filePath = "\\$($serverSharePath)\assets\mermaidMan.jpg"
+    $filePath = "\\$($ServerSharePath)\assets\mermaidMan.jpg"
     [void][reflection.assembly]::LoadWithPartialName("System.Windows.Forms")
 
     $file = (get-item $filePath)
@@ -274,7 +330,7 @@ function Set-Signoff {
     $form.ShowDialog()    
 }
 
-$serverSharePath = Get-ServerSharePath -Login -Ship
+$ServerSharePath = Get-ServerSharePath -Login -Ship
 $updateVersion = Get-UpdateVersion -Login -Ship
 
 
