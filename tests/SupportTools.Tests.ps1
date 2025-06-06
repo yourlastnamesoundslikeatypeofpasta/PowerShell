@@ -68,8 +68,6 @@ Describe 'SupportTools Module' {
             Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1
         }
 
-        }
-
     }
 
     Context 'Add-UserToGroup output passthrough' {
