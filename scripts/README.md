@@ -24,3 +24,4 @@ The following table provides a brief description of each script.
 | **Update-Sysmon.ps1** | Reinstalls Sysmon from a removable drive and verifies it is running. |
 | **SS_DEPLOYMENT_TEMPLATE.ps1** | Template for sneaker net deployments that installs agents and configures a system. |
 | **Configure-SharePointTools.ps1** | Prompts for SharePoint application values and saves them to a settings file. |
+| **CleanupTempFiles.ps1** | Removes .tmp files and empty logs from the repository. |

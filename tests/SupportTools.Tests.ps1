@@ -7,6 +7,7 @@ Describe 'SupportTools Module' {
         $expected = @(
             'Add-UsersToGroup',
             'Clear-ArchiveFolder',
+            'Clear-TempFiles',
             'Convert-ExcelToCsv',
             'Get-CommonSystemInfo',
             'Get-FailedLogins',
@@ -39,6 +40,7 @@ Describe 'SupportTools Module' {
         $map = @{
             Add_UsersToGroup             = 'AddUsersToGroup.ps1'
             Clear_ArchiveFolder          = 'CleanupArchive.ps1'
+            Clear_TempFiles              = 'CleanupTempFiles.ps1'
             Convert_ExcelToCsv           = 'Convert-ExcelToCsv.ps1'
             Get_CommonSystemInfo         = 'Get-CommonSystemInfo.ps1'
             Get_FailedLogins             = 'Get-FailedLogins.ps1'
