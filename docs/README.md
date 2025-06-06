@@ -10,6 +10,7 @@ The key guides are:
 - [Credential Storage](./CredentialStorage.md) – recommended approach to store secrets securely.
 - [Module Style Guide](./ModuleStyleGuide.md) – how scripts display progress messages and log output.
 - [Get-FunctionDependencyGraph](./Get-FunctionDependencyGraph.md) – generate a visual map of function calls in a script.
+- [Local Mock API](./LocalMockApi.md) – run a lightweight HTTP server for offline tests.
 
 
 Command specific help topics live in the `SupportTools`, `SharePointTools` and `ServiceDeskTools` subfolders.
