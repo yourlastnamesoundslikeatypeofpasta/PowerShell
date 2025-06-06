@@ -59,9 +59,11 @@ Describe 'SharePointTools Module' {
         foreach ($m in $maps) {
             $case = $m
             It "$($case.Fn) calls $($case.Target)" {
-                Mock $case.Target {} -ModuleName SharePointTools
-                & $case.Fn
-                Assert-MockCalled $case.Target -ModuleName SharePointTools -ParameterFilter { $SiteName -eq $case.Site } -Times 1
+                InModuleScope SharePointTools {
+                    Mock $case.Target {}
+                    & $case.Fn
+                    Assert-MockCalled $case.Target -Times 1
+                }
             }
         }
     }
