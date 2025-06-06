@@ -42,3 +42,28 @@ Describe 'Telemetry Opt-In' {
         }
     }
 }
+
+Describe 'Telemetry Metrics Summary' {
+    BeforeAll {
+        Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
+    }
+
+    It 'aggregates telemetry data' {
+        $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+        $events = @(
+            @{Timestamp='2024-01-01T00:00:00Z'; Script='Test.ps1'; Result='Success'; Duration=2},
+            @{Timestamp='2024-01-01T00:00:01Z'; Script='Test.ps1'; Result='Failure'; Duration=4}
+        ) | ForEach-Object { $_ | ConvertTo-Json -Compress }
+        Set-Content -Path $log -Value $events
+
+        try {
+            $metrics = Get-STTelemetryMetrics -LogPath $log
+            $test = $metrics | Where-Object Script -eq 'Test.ps1'
+            $test.Executions | Should -Be 2
+            $test.Failures   | Should -Be 1
+            $test.AverageSeconds | Should -Be 3
+        } finally {
+            Remove-Item $log -ErrorAction SilentlyContinue
+        }
+    }
+}

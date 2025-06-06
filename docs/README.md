@@ -9,6 +9,7 @@ The key guides are:
 - [SupportTools](./SupportTools.md), [SharePointTools](./SharePointTools.md), [ServiceDeskTools](./ServiceDeskTools.md) – high level summaries of each module and the commands they expose.
 - [Credential Storage](./CredentialStorage.md) – recommended approach to store secrets securely.
 - [Module Style Guide](./ModuleStyleGuide.md) – how scripts display progress messages and log output.
+- [Telemetry Metrics](./Telemetry/Get-STTelemetryMetrics.md) – summarize execution statistics and output to CSV or SQLite.
 - [Get-FunctionDependencyGraph](./Get-FunctionDependencyGraph.md) – generate a visual map of function calls in a script.
 - [Local Mock API](./LocalMockApi.md) – run a lightweight HTTP server for offline tests.
 
