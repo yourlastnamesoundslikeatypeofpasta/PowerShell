@@ -5,15 +5,15 @@ Describe 'SupportTools Module' {
 
     Context 'Exported commands' {
         $expected = @(
-            'Add-UsersToGroup',
+            'Add-GroupUser',
             'Clear-ArchiveFolder',
-            'Clear-TempFiles',
+            'Clear-TempFile',
             'Convert-ExcelToCsv',
             'Get-CommonSystemInfo',
-            'Get-FailedLogins',
-            'Get-NetworkShares',
-            'Get-UniquePermissions',
-            'Install-Fonts',
+            'Get-FailedLogin',
+            'Get-NetworkShare',
+            'Get-UniquePermission',
+            'Install-Font',
             'Invoke-PostInstall',
             'Export-ProductKey',
             'Invoke-DeploymentTemplate',
@@ -38,15 +38,15 @@ Describe 'SupportTools Module' {
 
     Context 'Wrapper script invocation' {
         $map = @{
-            Add_UsersToGroup             = 'AddUsersToGroup.ps1'
+            Add_GroupUser                = 'AddUsersToGroup.ps1'
             Clear_ArchiveFolder          = 'CleanupArchive.ps1'
-            Clear_TempFiles              = 'CleanupTempFiles.ps1'
+            Clear_TempFile               = 'CleanupTempFiles.ps1'
             Convert_ExcelToCsv           = 'Convert-ExcelToCsv.ps1'
             Get_CommonSystemInfo         = 'Get-CommonSystemInfo.ps1'
-            Get_FailedLogins             = 'Get-FailedLogins.ps1'
-            Get_NetworkShares            = 'Get-NetworkShares.ps1'
-            Get_UniquePermissions        = 'Get-UniquePermissions.ps1'
-            Install_Fonts                = 'Install-Fonts.ps1'
+            Get_FailedLogin              = 'Get-FailedLogins.ps1'
+            Get_NetworkShare             = 'Get-NetworkShares.ps1'
+            Get_UniquePermission         = 'Get-UniquePermissions.ps1'
+            Install_Font                 = 'Install-Fonts.ps1'
             Invoke_PostInstall           = 'PostInstallScript.ps1'
             Export_ProductKey            = 'ProductKey.ps1'
             Invoke_DeploymentTemplate    = 'SS_DEPLOYMENT_TEMPLATE.ps1'
@@ -70,12 +70,12 @@ Describe 'SupportTools Module' {
 
     }
 
-    Context 'Add-UsersToGroup output passthrough' {
+    Context 'Add-GroupUser output passthrough' {
         It 'returns the object produced by the script' {
             InModuleScope SupportTools {
                 $expected = [pscustomobject]@{ GroupName = 'MyGroup'; AddedUsers = @('a'); SkippedUsers = @('b') }
                 Mock Invoke-ScriptFile { $expected }
-                $result = Add-UsersToGroup -CsvPath 'users.csv' -GroupName 'MyGroup'
+                $result = Add-GroupUser -CsvPath 'users.csv' -GroupName 'MyGroup'
                 $result | Should -Be $expected
             }
         }

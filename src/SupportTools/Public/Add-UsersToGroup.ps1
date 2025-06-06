@@ -1,4 +1,4 @@
-function Add-UsersToGroup {
+function Add-GroupUser {
     <#
     .SYNOPSIS
         Adds users from a CSV file to a Microsoft 365 group.

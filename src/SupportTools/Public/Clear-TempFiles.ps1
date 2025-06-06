@@ -1,4 +1,4 @@
-function Clear-TempFiles {
+function Clear-TempFile {
     <#
     .SYNOPSIS
         Removes temporary files from the repository.

@@ -1,4 +1,4 @@
-function Get-UniquePermissions {
+function Get-UniquePermission {
     <#
     .SYNOPSIS
         Returns items with unique permissions in a SharePoint site.

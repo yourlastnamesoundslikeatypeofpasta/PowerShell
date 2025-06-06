@@ -630,7 +630,7 @@ function Get-SPPermissionsReport {
     $report
 }
 
-function Clean-SPVersionHistory {
+function Clear-SPVersionHistory {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$SiteUrl,
@@ -657,7 +657,7 @@ function Clean-SPVersionHistory {
     Write-SPToolsHacker '>>> CLEANUP COMPLETE'
 }
 
-function Find-OrphanedSPFiles {
+function Find-OrphanedSPFile {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$SiteUrl,
@@ -688,7 +688,7 @@ function Find-OrphanedSPFiles {
     $report
 }
 
-function List-OneDriveUsage {
+function Get-OneDriveUsage {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$AdminUrl,
@@ -715,7 +715,7 @@ function List-OneDriveUsage {
     Write-SPToolsHacker '>>> REPORT COMPLETE'
     $report
 }
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','List-OneDriveUsage' -Variable 'SharePointToolsSettings'
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clear-SPVersionHistory','Find-OrphanedSPFile','Get-OneDriveUsage' -Variable 'SharePointToolsSettings'
 
 function Show-SharePointToolsBanner {
     $lines = @(

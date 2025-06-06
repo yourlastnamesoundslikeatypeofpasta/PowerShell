@@ -5,15 +5,15 @@
     Author = 'Contoso'
     Description = 'Collection of helper functions wrapping existing scripts.'
     FunctionsToExport = @(
-        'Add-UsersToGroup',
+        'Add-GroupUser',
         'Clear-ArchiveFolder',
-        'Clear-TempFiles',
+        'Clear-TempFile',
         'Convert-ExcelToCsv',
         'Get-CommonSystemInfo',
-        'Get-FailedLogins',
-        'Get-NetworkShares',
-        'Get-UniquePermissions',
-        'Install-Fonts',
+        'Get-FailedLogin',
+        'Get-NetworkShare',
+        'Get-UniquePermission',
+        'Install-Font',
         'Invoke-PostInstall',
         'Export-ProductKey',
         'Invoke-DeploymentTemplate',
