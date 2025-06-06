@@ -23,7 +23,8 @@ Describe 'SupportTools Module' {
             'SimpleCountdown',
             'Update-Sysmon',
             'Set-SharedMailboxAutoReply',
-            'Invoke-ExchangeCalendarManager'
+            'Invoke-ExchangeCalendarManager',
+            'Manage-CompanyPlace'
         )
 
         $exported = (Get-Command -Module SupportTools).Name

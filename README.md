@@ -22,6 +22,7 @@ Get-CommonSystemInfo
 
 The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.
+The module now includes `Manage-CompanyPlace` for administering Microsoft Places buildings and floors.
 
 For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
 Example scripts for every function can be found in the `/Examples` folder.
