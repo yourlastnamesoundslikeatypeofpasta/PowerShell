@@ -65,6 +65,7 @@ Describe 'SharePointTools Module' {
                     Assert-MockCalled $case.Target -Times 1
                 }
             }
+
         }
     }
 

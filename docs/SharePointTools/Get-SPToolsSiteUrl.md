@@ -23,7 +23,7 @@ Description forthcoming for Get-SPToolsSiteUrl.
 
 ### Example 1
 ```powershell
-PS C:\> Get-SPToolsSiteUrl -? # replace with actual parameters
+PS C:\> Get-SPToolsSiteUrl -SiteName HR
 ```
 
 Demonstrates typical usage of Get-SPToolsSiteUrl.

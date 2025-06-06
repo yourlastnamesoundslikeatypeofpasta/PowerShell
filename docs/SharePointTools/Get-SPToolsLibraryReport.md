@@ -24,7 +24,7 @@ Description forthcoming for Get-SPToolsLibraryReport.
 
 ### Example 1
 ```powershell
-PS C:\> Get-SPToolsLibraryReport -? # replace with actual parameters
+PS C:\> Get-SPToolsLibraryReport -SiteName HR
 ```
 
 Demonstrates typical usage of Get-SPToolsLibraryReport.

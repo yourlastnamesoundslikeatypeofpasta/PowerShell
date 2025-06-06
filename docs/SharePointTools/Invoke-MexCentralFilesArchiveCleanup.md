@@ -23,7 +23,7 @@ Description forthcoming for Invoke-MexCentralFilesArchiveCleanup.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-MexCentralFilesArchiveCleanup -? # replace with actual parameters
+PS C:\> Invoke-MexCentralFilesArchiveCleanup
 ```
 
 Demonstrates typical usage of Invoke-MexCentralFilesArchiveCleanup.

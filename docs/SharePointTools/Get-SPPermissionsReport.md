@@ -24,7 +24,7 @@ Description forthcoming for Get-SPPermissionsReport.
 
 ### Example 1
 ```powershell
-PS C:\> Get-SPPermissionsReport -? # replace with actual parameters
+PS C:\> Get-SPPermissionsReport -SiteUrl https://contoso.sharepoint.com/sites/hr
 ```
 
 Demonstrates typical usage of Get-SPPermissionsReport.

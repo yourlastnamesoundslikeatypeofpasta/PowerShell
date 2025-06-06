@@ -67,6 +67,7 @@ Describe 'SupportTools Module' {
                     Assert-MockCalled Invoke-ScriptFile -Times 1
                 }
             }
+
         }
     }
 
