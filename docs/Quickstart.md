@@ -45,7 +45,7 @@ This short guide shows the basic steps to start using the modules in this reposi
    ```
 9. **Launch the interactive menu** (optional)
    ```powershell
-   ./scripts/SupportToolsMenu.ps1
+   ./scripts/SupportToolsMenu.ps1 -UserRole Helpdesk
    ```
 
 See [docs/UserGuide.md](UserGuide.md) for detailed deployment and usage instructions.
