@@ -18,6 +18,8 @@ function Get-NetworkShares {
         [string]$ComputerName
     )
 
+    Write-Debug "Get-NetworkShares called with ComputerName '$ComputerName'"
+
     # if $ComputerName is null, use the local computer
     if ($ComputerName -eq $null) {
         $ComputerName = $env:COMPUTERNAME
@@ -38,6 +40,8 @@ function Get-NetworkShares {
         ComputerName = $ComputerName
         Shares       = $shareObjects
     }
+
+    Write-Debug "Get-NetworkShares returning $($shareObjects.Count) shares for '$ComputerName'"
 
     return $result
 }

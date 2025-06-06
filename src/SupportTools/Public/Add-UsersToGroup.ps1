@@ -19,6 +19,7 @@ function Add-UsersToGroup {
     )
 
     process {
+        Write-Debug "Add-UsersToGroup called with CsvPath '$CsvPath' and GroupName '$GroupName'"
         $arguments = @()
         if ($PSBoundParameters.ContainsKey('CsvPath')) {
             $arguments += '-CsvPath'
@@ -30,5 +31,6 @@ function Add-UsersToGroup {
         }
 
         Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -Args $arguments
+        Write-Debug "Add-UsersToGroup completed"
     }
 }

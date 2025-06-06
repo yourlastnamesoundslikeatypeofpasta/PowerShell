@@ -12,6 +12,8 @@ function Get-NetworkShares {
         [object[]]$Arguments
     )
     process {
+        Write-Debug "Get-NetworkShares wrapper calling script with args: $($Arguments -join ' ')"
         Invoke-ScriptFile -Name "Get-NetworkShares.ps1" -Args $Arguments
+        Write-Debug "Get-NetworkShares wrapper completed"
     }
 }

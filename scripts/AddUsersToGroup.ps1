@@ -39,6 +39,8 @@ param(
     [string]$GroupName
 )
 
+Write-Debug "Starting AddUsersToGroup with CsvPath '$CsvPath' and GroupName '$GroupName'"
+
 # Import necessary .NET assemblies
 Add-Type -AssemblyName PresentationFramework, System.Windows.Forms
 $InformationPreference = "Continue"
@@ -232,3 +234,4 @@ function Start-Main {
 }
 
 Start-Main -CsvPath $CsvPath -GroupName $GroupName
+Write-Debug "Finished AddUsersToGroup"
