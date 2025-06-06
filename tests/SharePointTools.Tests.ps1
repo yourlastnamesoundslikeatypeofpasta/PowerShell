@@ -26,7 +26,11 @@ Describe 'SharePointTools Module' {
             'Get-SPToolsAllLibraryReports',
             'Get-SPToolsRecycleBinReport',
             'Clear-SPToolsRecycleBin',
-            'Get-SPToolsAllRecycleBinReports'
+            'Get-SPToolsAllRecycleBinReports',
+            'Get-SPPermissionsReport',
+            'Clean-SPVersionHistory',
+            'Find-OrphanedSPFiles',
+            'List-OneDriveUsage'
         )
         $exported = (Get-Command -Module SharePointTools).Name
         foreach ($cmd in $expected) {

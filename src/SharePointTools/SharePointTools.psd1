@@ -26,6 +26,10 @@
         'Get-SPToolsAllLibraryReports',
         'Get-SPToolsRecycleBinReport',
         'Clear-SPToolsRecycleBin',
-        'Get-SPToolsAllRecycleBinReports'
+        'Get-SPPermissionsReport',
+        'Clean-SPVersionHistory',
+        'Find-OrphanedSPFiles',
+        'List-OneDriveUsage',
+        'Get-SPToolsAllRecycleBinReports',
     )
 }
