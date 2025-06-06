@@ -24,7 +24,7 @@ Wraps the CleanupTempFiles.ps1 script in the scripts folder and forwards any pro
 
 ### Example 1
 ```powershell
-PS C:\> Clear-TempFiles
+PS C:\> Clear-TempFiles -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Clear-TempFiles.

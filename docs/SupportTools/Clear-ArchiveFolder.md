@@ -25,7 +25,7 @@ All parameters are forwarded to that script.
 
 ### Example 1
 ```powershell
-PS C:\> Clear-ArchiveFolder -SiteUrl https://contoso.sharepoint.com/sites/Files
+PS C:\> Clear-ArchiveFolder -? # replace with actual parameters
 ```
 
 Demonstrates typical usage of Clear-ArchiveFolder.
