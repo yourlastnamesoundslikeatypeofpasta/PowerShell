@@ -1,3 +1,14 @@
+$repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
+$configFile = Join-Path $repoRoot 'config/supporttools.json'
+$SupportToolsConfig = @{ maintenanceMode = $false }
+if (Test-Path $configFile) {
+    try { $SupportToolsConfig = Get-Content $configFile | ConvertFrom-Json } catch {}
+}
+if ($SupportToolsConfig.maintenanceMode) {
+    Write-Host 'SupportTools is currently in maintenance mode. Exiting.' -ForegroundColor Yellow
+    exit 1
+}
+
 function Write-STLog {
     [CmdletBinding()]
     param(
