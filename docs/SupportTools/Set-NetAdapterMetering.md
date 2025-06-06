@@ -25,7 +25,7 @@ arguments.
 
 ### Example 1
 ```powershell
-PS C:\> Set-NetAdapterMetering -? # replace with actual parameters
+PS C:\> Set-NetAdapterMetering -InterfaceName 'Ethernet0'
 ```
 
 Demonstrates typical usage of Set-NetAdapterMetering.

@@ -25,7 +25,7 @@ its output.
 
 ### Example 1
 ```powershell
-PS C:\> Get-FailedLogins -? # replace with actual parameters
+PS C:\> Get-FailedLogins -ComputerName $env:COMPUTERNAME
 ```
 
 Demonstrates typical usage of Get-FailedLogins.

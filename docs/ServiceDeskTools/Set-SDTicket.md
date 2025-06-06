@@ -23,10 +23,10 @@ Description forthcoming for Set-SDTicket.
 
 ### Example 1
 ```powershell
-PS C:\> Set-SDTicket -? # replace with actual parameters
+PS C:\> Set-SDTicket -Id 123 -Fields @{ status = 'Resolved'; assignee = 'jane.doe@example.com' }
 ```
 
-Demonstrates typical usage of Set-SDTicket.
+Marks incident 123 as resolved and assigns it to Jane Doe.
 
 ## PARAMETERS
 

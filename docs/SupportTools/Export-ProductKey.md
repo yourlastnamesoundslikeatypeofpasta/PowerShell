@@ -25,7 +25,7 @@ Any arguments are forwarded to that script.
 
 ### Example 1
 ```powershell
-PS C:\> Export-ProductKey -? # replace with actual parameters
+PS C:\> Export-ProductKey -OutputPath './ProductKey.txt'
 ```
 
 Demonstrates typical usage of Export-ProductKey.

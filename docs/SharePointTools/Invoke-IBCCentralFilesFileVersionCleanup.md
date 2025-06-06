@@ -23,7 +23,7 @@ Description forthcoming for Invoke-IBCCentralFilesFileVersionCleanup.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-IBCCentralFilesFileVersionCleanup -? # replace with actual parameters
+PS C:\> Invoke-IBCCentralFilesFileVersionCleanup
 ```
 
 Demonstrates typical usage of Invoke-IBCCentralFilesFileVersionCleanup.

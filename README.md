@@ -65,7 +65,6 @@ The module now includes `Invoke-CompanyPlaceManagement` for administering Micros
 Functions like `Add-SPToolsSite` and `Remove-SPToolsSite` let you manage the list of SharePoint sites stored in the settings file.
 
 For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
-Example scripts for every function can be found in the `/Examples` folder.
 
 ## Documentation 📚
 

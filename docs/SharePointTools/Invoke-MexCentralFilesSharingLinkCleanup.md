@@ -23,7 +23,7 @@ Description forthcoming for Invoke-MexCentralFilesSharingLinkCleanup.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-MexCentralFilesSharingLinkCleanup -? # replace with actual parameters
+PS C:\> Invoke-MexCentralFilesSharingLinkCleanup
 ```
 
 Demonstrates typical usage of Invoke-MexCentralFilesSharingLinkCleanup.

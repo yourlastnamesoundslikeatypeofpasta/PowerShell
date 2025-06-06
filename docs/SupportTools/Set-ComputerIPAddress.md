@@ -24,7 +24,7 @@ Wraps the Set-ComputerIPAddress.ps1 script, forwarding all arguments.
 
 ### Example 1
 ```powershell
-PS C:\> Set-ComputerIPAddress -? # replace with actual parameters
+PS C:\> Set-ComputerIPAddress -CSVPath './ComputerIPAddress.csv'
 ```
 
 Demonstrates typical usage of Set-ComputerIPAddress.

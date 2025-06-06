@@ -25,7 +25,7 @@ Connects using PnP.PowerShell and deletes items matching zzz_Archive.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-ArchiveCleanup -? # replace with actual parameters
+PS C:\> Invoke-ArchiveCleanup -SiteName 'Example' -SiteUrl 'https://contoso.sharepoint.com/sites/Example'
 ```
 
 Demonstrates typical usage of Invoke-ArchiveCleanup.

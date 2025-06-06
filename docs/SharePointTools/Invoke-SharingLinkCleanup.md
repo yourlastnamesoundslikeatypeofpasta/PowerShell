@@ -25,7 +25,7 @@ Recursively scans a folder and deletes all file and folder sharing links.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-SharingLinkCleanup -? # replace with actual parameters
+PS C:\> Invoke-SharingLinkCleanup -SiteName 'Example' -SiteUrl 'https://contoso.sharepoint.com/sites/Example'
 ```
 
 Demonstrates typical usage of Invoke-SharingLinkCleanup.
