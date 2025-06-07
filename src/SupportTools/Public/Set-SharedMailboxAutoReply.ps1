@@ -45,7 +45,9 @@ function Set-SharedMailboxAutoReply {
         return $mock
     }
 
-    if (-not $ExternalMessage) { $ExternalMessage = $InternalMessage }
+    if ([string]::IsNullOrWhiteSpace($ExternalMessage)) {
+        $ExternalMessage = $InternalMessage
+    }
 
     Write-Verbose 'Checking ExchangeOnlineManagement module...'
     $module = Get-InstalledModule ExchangeOnlineManagement -ErrorAction SilentlyContinue
