@@ -5,6 +5,14 @@ $telemetryModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Telemetr
 Import-Module $loggingModule -ErrorAction SilentlyContinue
 Import-Module $telemetryModule -ErrorAction SilentlyContinue
 
+# Determine the version of the SupportTools module for logging purposes
+$manifestPath = Join-Path $PSScriptRoot 'SupportTools.psd1'
+$STModuleVersion = try {
+    (Import-PowerShellDataFile $manifestPath).ModuleVersion
+} catch {
+    'unknown'
+}
+
 Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue |
     ForEach-Object { . $_.FullName }
 Get-ChildItem -Path "$PublicDir" -Filter *.ps1 -ErrorAction SilentlyContinue |
