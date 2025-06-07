@@ -31,6 +31,7 @@ Describe 'SupportTools Module' {
             'New-SPUsageReport'
             'Install-MaintenanceTasks'
             'Invoke-GroupMembershipCleanup'
+            'Invoke-RemoteAudit'
             'Sync-SupportTools'
             'Invoke-JobBundle'
         )
@@ -296,6 +297,29 @@ Describe 'SupportTools Module' {
                 Invoke-CompanyPlaceManagement -Action Create -DisplayName 'B1' -Type Building -AutoAddFloor
 
                 Assert-MockCalled New-Place -ParameterFilter { $Type -eq 'Floor' -and $Name -eq '1' } -Times 1
+            }
+        }
+    }
+
+    Context 'Invoke-RemoteAudit behavior' {
+        It 'invokes remote commands for each computer' {
+            InModuleScope SupportTools {
+                function New-PSSession {}
+                function Invoke-Command {}
+                function Remove-PSSession {}
+                function Write-STStatus {}
+                function Import-Module {}
+
+                Mock New-PSSession { 's' } -ModuleName SupportTools
+                Mock Invoke-Command { @{ result = 'ok' } } -ModuleName SupportTools
+                Mock Remove-PSSession {} -ModuleName SupportTools
+                Mock Write-STStatus {} -ModuleName SupportTools
+                Mock Import-Module {} -ModuleName SupportTools
+
+                $result = Invoke-RemoteAudit -ComputerName 'pc1','pc2'
+
+                Assert-MockCalled Invoke-Command -ModuleName SupportTools -Times 2
+                $result.Count | Should -Be 2
             }
         }
     }
