@@ -19,6 +19,8 @@ This short guide shows the basic steps to start using the modules in this reposi
    ```powershell
    ./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
    ```
+   If the gallery is unavailable the script automatically imports the modules
+   from the `src` folder instead.
 5. **Import the modules**
    ```powershell
    Import-Module ./src/SupportTools/SupportTools.psd1
