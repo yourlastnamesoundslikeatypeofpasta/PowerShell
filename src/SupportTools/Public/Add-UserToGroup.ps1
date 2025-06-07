@@ -22,16 +22,18 @@ function Add-UserToGroup {
     )
 
     process {
-        $arguments = @()
-        if ($PSBoundParameters.ContainsKey('CsvPath')) {
-            $arguments += '-CsvPath'
-            $arguments += $CsvPath
-        }
-        if ($PSBoundParameters.ContainsKey('GroupName')) {
-            $arguments += '-GroupName'
-            $arguments += $GroupName
-        }
+        Invoke-STSafe -OperationName 'Add-UserToGroup' -ScriptBlock {
+            $arguments = @()
+            if ($PSBoundParameters.ContainsKey('CsvPath')) {
+                $arguments += '-CsvPath'
+                $arguments += $CsvPath
+            }
+            if ($PSBoundParameters.ContainsKey('GroupName')) {
+                $arguments += '-GroupName'
+                $arguments += $GroupName
+            }
 
-        Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+            Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

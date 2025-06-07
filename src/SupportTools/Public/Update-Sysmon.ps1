@@ -14,6 +14,8 @@ function Update-Sysmon {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Update-Sysmon.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Update-Sysmon' -ScriptBlock {
+            Invoke-ScriptFile -Name "Update-Sysmon.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

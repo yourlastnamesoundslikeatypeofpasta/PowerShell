@@ -38,31 +38,32 @@ function Invoke-CompanyPlaceManagement {
         return
     }
 
-    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-    Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
-    if ($Simulate) {
-        Write-STStatus 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log
-        $mock = [pscustomobject]@{
-            Action      = $Action
-            DisplayName = $DisplayName
-            Simulated   = $true
-            Timestamp   = Get-Date
+    Invoke-STSafe -OperationName 'Invoke-CompanyPlaceManagement' -ScriptBlock {
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
+        if ($Simulate) {
+            Write-STStatus 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log
+            $mock = [pscustomobject]@{
+                Action      = $Action
+                DisplayName = $DisplayName
+                Simulated   = $true
+                Timestamp   = Get-Date
+            }
+            if ($TranscriptPath) { Stop-Transcript | Out-Null }
+            return $mock
         }
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
-        return $mock
-    }
-    if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
-        try {
-            Import-Module MicrosoftPlaces -ErrorAction Stop
-            Connect-MicrosoftPlaces -ErrorAction Stop
-        } catch {
-            Write-Error "Failed to load MicrosoftPlaces module or connect: $_"
-            return
+        if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
+            try {
+                Import-Module MicrosoftPlaces -ErrorAction Stop
+                Connect-MicrosoftPlaces -ErrorAction Stop
+            } catch {
+                Write-Error "Failed to load MicrosoftPlaces module or connect: $_"
+                return
+            }
+        } else {
+            Connect-MicrosoftPlaces -ErrorAction SilentlyContinue | Out-Null
         }
-    } else {
-        Connect-MicrosoftPlaces -ErrorAction SilentlyContinue | Out-Null
-    }
-    switch ($Action) {
+        switch ($Action) {
         'Get' {
             if (-not $Type) {
                 Write-Error "For 'Get', the -Type parameter is required."
@@ -110,7 +111,9 @@ function Invoke-CompanyPlaceManagement {
 
     Write-STStatus 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
     if ($TranscriptPath) { Stop-Transcript | Out-Null }
+    }
+)
+
+
+
 }
-
-
-

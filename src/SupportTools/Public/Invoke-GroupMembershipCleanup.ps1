@@ -19,9 +19,11 @@ function Invoke-GroupMembershipCleanup {
         [switch]$Explain
     )
     process {
-        $arguments = @()
-        if ($PSBoundParameters.ContainsKey('CsvPath')) { $arguments += '-CsvPath'; $arguments += $CsvPath }
-        if ($PSBoundParameters.ContainsKey('GroupName')) { $arguments += '-GroupName'; $arguments += $GroupName }
-        Invoke-ScriptFile -Name 'CleanupGroupMembership.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Explain:$Explain
+        Invoke-STSafe -OperationName 'Invoke-GroupMembershipCleanup' -ScriptBlock {
+            $arguments = @()
+            if ($PSBoundParameters.ContainsKey('CsvPath')) { $arguments += '-CsvPath'; $arguments += $CsvPath }
+            if ($PSBoundParameters.ContainsKey('GroupName')) { $arguments += '-GroupName'; $arguments += $GroupName }
+            Invoke-ScriptFile -Name 'CleanupGroupMembership.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Explain:$Explain
+        }
     }
 }

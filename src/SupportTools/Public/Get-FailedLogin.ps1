@@ -15,6 +15,8 @@ function Get-FailedLogin {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Get-FailedLogins.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Get-FailedLogin' -ScriptBlock {
+            Invoke-ScriptFile -Name "Get-FailedLogins.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

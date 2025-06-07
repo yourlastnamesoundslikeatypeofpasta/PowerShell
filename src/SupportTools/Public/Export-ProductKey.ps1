@@ -15,6 +15,8 @@ function Export-ProductKey {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "ProductKey.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Export-ProductKey' -ScriptBlock {
+            Invoke-ScriptFile -Name "ProductKey.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

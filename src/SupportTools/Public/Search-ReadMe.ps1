@@ -15,6 +15,8 @@ function Search-ReadMe {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Search-ReadMe.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Search-ReadMe' -ScriptBlock {
+            Invoke-ScriptFile -Name "Search-ReadMe.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

@@ -22,18 +22,20 @@ function Sync-SupportTools {
         return
     }
 
-    if (Test-Path (Join-Path $InstallPath '.git')) {
-        git -C $InstallPath pull
-    }
-    else {
-        git clone $RepositoryUrl $InstallPath
-    }
+    Invoke-STSafe -OperationName 'Sync-SupportTools' -ScriptBlock {
+        if (Test-Path (Join-Path $InstallPath '.git')) {
+            git -C $InstallPath pull
+        }
+        else {
+            git clone $RepositoryUrl $InstallPath
+        }
 
-    Import-Module (Join-Path $InstallPath 'src/SupportTools/SupportTools.psd1') -Force
-    $sp = Join-Path $InstallPath 'src/SharePointTools/SharePointTools.psd1'
-    if (Test-Path $sp) { Import-Module $sp -ErrorAction SilentlyContinue }
-    $sd = Join-Path $InstallPath 'src/ServiceDeskTools/ServiceDeskTools.psd1'
-    if (Test-Path $sd) { Import-Module $sd -ErrorAction SilentlyContinue }
+        Import-Module (Join-Path $InstallPath 'src/SupportTools/SupportTools.psd1') -Force
+        $sp = Join-Path $InstallPath 'src/SharePointTools/SharePointTools.psd1'
+        if (Test-Path $sp) { Import-Module $sp -ErrorAction SilentlyContinue }
+        $sd = Join-Path $InstallPath 'src/ServiceDeskTools/ServiceDeskTools.psd1'
+        if (Test-Path $sd) { Import-Module $sd -ErrorAction SilentlyContinue }
 
-    Write-STStatus 'SupportTools synchronized' -Level FINAL
+        Write-STStatus 'SupportTools synchronized' -Level FINAL
+    }
 }

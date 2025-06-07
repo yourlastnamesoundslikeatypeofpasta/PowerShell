@@ -18,31 +18,33 @@ function Measure-STCommand {
         [switch]$Quiet
     )
 
-    $before = Get-Process -Id $PID
-    $cpuStart = $before.TotalProcessorTime
-    $memStart = $before.WorkingSet64
+    Invoke-STSafe -OperationName 'Measure-STCommand' -ScriptBlock {
+        $before = Get-Process -Id $PID
+        $cpuStart = $before.TotalProcessorTime
+        $memStart = $before.WorkingSet64
 
-    $sw = [System.Diagnostics.Stopwatch]::StartNew()
-    & $ScriptBlock
-    $sw.Stop()
+        $sw = [System.Diagnostics.Stopwatch]::StartNew()
+        & $ScriptBlock
+        $sw.Stop()
 
-    $after = Get-Process -Id $PID
-    $cpuEnd = $after.TotalProcessorTime
-    $memEnd = $after.WorkingSet64
+        $after = Get-Process -Id $PID
+        $cpuEnd = $after.TotalProcessorTime
+        $memEnd = $after.WorkingSet64
 
-    $result = [pscustomobject]@{
-        DurationSeconds = [math]::Round($sw.Elapsed.TotalSeconds, 2)
-        CpuSeconds      = [math]::Round(($cpuEnd - $cpuStart).TotalSeconds, 2)
-        MemoryDeltaMB   = [math]::Round(($memEnd - $memStart) / 1MB, 2)
-    }
+        $result = [pscustomobject]@{
+            DurationSeconds = [math]::Round($sw.Elapsed.TotalSeconds, 2)
+            CpuSeconds      = [math]::Round(($cpuEnd - $cpuStart).TotalSeconds, 2)
+            MemoryDeltaMB   = [math]::Round(($memEnd - $memStart) / 1MB, 2)
+        }
 
-    if (-not $Quiet) {
-        Write-STStatus "Duration: $($result.DurationSeconds)s" -Level INFO
-        Write-STStatus "CPU Time: $($result.CpuSeconds)s" -Level INFO
-        Write-STStatus "Memory Change: $($result.MemoryDeltaMB) MB" -Level INFO
-    }
+        if (-not $Quiet) {
+            Write-STStatus "Duration: $($result.DurationSeconds)s" -Level INFO
+            Write-STStatus "CPU Time: $($result.CpuSeconds)s" -Level INFO
+            Write-STStatus "Memory Change: $($result.MemoryDeltaMB) MB" -Level INFO
+        }
 
-    return $result
+        return $result
+    } -ThrowOnError:$false
 }
 
 Export-ModuleMember -Function 'Measure-STCommand'

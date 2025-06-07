@@ -15,6 +15,8 @@ function Get-UniquePermission {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Get-UniquePermissions.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Get-UniquePermission' -ScriptBlock {
+            Invoke-ScriptFile -Name "Get-UniquePermissions.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

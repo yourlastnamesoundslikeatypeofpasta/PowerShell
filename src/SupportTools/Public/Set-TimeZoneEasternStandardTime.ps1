@@ -15,6 +15,8 @@ function Set-TimeZoneEasternStandardTime {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Set-TimeZoneEasternStandardTime.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Set-TimeZoneEasternStandardTime' -ScriptBlock {
+            Invoke-ScriptFile -Name "Set-TimeZoneEasternStandardTime.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }
