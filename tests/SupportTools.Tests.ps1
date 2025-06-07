@@ -1,5 +1,9 @@
 Describe 'SupportTools Module' {
     BeforeAll {
+        Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
+        Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
+        Import-Module $PSScriptRoot/../src/SharePointTools/SharePointTools.psd1 -Force
+        Import-Module $PSScriptRoot/../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force
         Import-Module $PSScriptRoot/../src/SupportTools/SupportTools.psd1 -Force
     }
 
@@ -27,13 +31,16 @@ Describe 'SupportTools Module' {
             'Set-SharedMailboxAutoReply',
             'Invoke-ExchangeCalendarManager',
             'Invoke-CompanyPlaceManagement',
+            'Invoke-IncidentResponse',
             'Submit-SystemInfoTicket',
             'New-SPUsageReport'
             'Install-MaintenanceTasks'
-            'Invoke-GroupMembershipCleanup'
-            'Sync-SupportTools'
-            'Invoke-JobBundle'
-            'New-STProfile'
+            'Invoke-GroupMembershipCleanup',
+            'Sync-SupportTools',
+            'Invoke-JobBundle',
+            'Invoke-PerformanceAudit',
+            'Invoke-FullSystemAudit',
+            'New-STProfile',
             'Invoke-STProfile'
         )
 
@@ -65,11 +72,13 @@ Describe 'SupportTools Module' {
             Set_TimeZoneEasternStandardTime = 'Set-TimeZoneEasternStandardTime.ps1'
             Start_Countdown              = 'SimpleCountdown.ps1'
             Update_Sysmon                = 'Update-Sysmon.ps1'
+            Invoke_IncidentResponse      = 'Invoke-IncidentResponse.ps1'
             Submit_SystemInfoTicket      = 'Submit-SystemInfoTicket.ps1'
             New_SPUsageReport            = 'Generate-SPUsageReport.ps1'
             Install_MaintenanceTasks = 'Setup-ScheduledMaintenance.ps1'
             Invoke_GroupMembershipCleanup = 'CleanupGroupMembership.ps1'
             Invoke_JobBundle = 'Run-JobBundle.ps1'
+            Invoke_PerformanceAudit = 'Invoke-PerformanceAudit.ps1'
         }
 
         $cases = foreach ($entry in $map.GetEnumerator()) {

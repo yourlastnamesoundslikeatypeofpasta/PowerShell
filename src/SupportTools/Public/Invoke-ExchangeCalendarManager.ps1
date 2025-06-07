@@ -10,25 +10,42 @@ function Invoke-ExchangeCalendarManager {
     param(
         [string]$TranscriptPath,
         [switch]$Simulate,
-        [switch]$Explain
+        [switch]$Explain,
+        [object]$Logger,
+        [object]$TelemetryClient,
+        [object]$Config
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
-
-    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-    Write-STStatus 'ExchangeCalendarManager launched' -Level SUCCESS -Log
-    if ($Simulate) {
-        Write-STStatus 'Simulation mode active - no Exchange operations will occur.' -Level WARN -Log
-        $mock = [pscustomobject]@{
-            Simulated = $true
-            Timestamp = Get-Date
+    try {
+        if ($Logger) {
+            Import-Module $Logger -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
         }
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
-        return $mock
-    }
+        if ($TelemetryClient) {
+            Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+        }
+        if ($Config) {
+            Import-Module $Config -ErrorAction SilentlyContinue
+        }
+
+        if ($Explain) {
+            Get-Help $MyInvocation.PSCommandPath -Full
+            return
+        }
+
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        Write-STStatus 'ExchangeCalendarManager launched' -Level SUCCESS -Log
+        if ($Simulate) {
+            Write-STStatus 'Simulation mode active - no Exchange operations will occur.' -Level WARN -Log
+            $mock = [pscustomobject]@{
+                Simulated = $true
+                Timestamp = Get-Date
+            }
+            return $mock
+        }
 
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         throw 'This function requires PowerShell 7 or higher.'
@@ -93,8 +110,13 @@ function Invoke-ExchangeCalendarManager {
         }
     }
 
-    Disconnect-ExchangeOnline -Confirm:$false
-
-    Write-STStatus 'ExchangeCalendarManager finished' -Level FINAL -Log
-    if ($TranscriptPath) { Stop-Transcript | Out-Null }
+        Write-STStatus 'ExchangeCalendarManager finished' -Level FINAL -Log
+    } catch {
+        Write-STStatus "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR -Log
+        Write-STLog -Message "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR
+        return New-STErrorObject -Message $_.Exception.Message -Category 'Exchange'
+    } finally {
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+        Disconnect-ExchangeOnline -Confirm:$false | Out-Null
+    }
 }

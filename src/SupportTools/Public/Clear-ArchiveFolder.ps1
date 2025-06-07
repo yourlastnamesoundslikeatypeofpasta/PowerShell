@@ -12,9 +12,12 @@ function Clear-ArchiveFolder {
         [object[]]$Arguments,
         [string]$TranscriptPath,
         [switch]$Simulate,
-        [switch]$Explain
+        [switch]$Explain,
+        [object]$Logger,
+        [object]$TelemetryClient,
+        [object]$Config
     )
     process {
-        Invoke-ScriptFile -Name "CleanupArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "CleanupArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

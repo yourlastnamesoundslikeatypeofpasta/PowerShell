@@ -1,3 +1,5 @@
+$coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
+Import-Module $coreModule -ErrorAction SilentlyContinue
 $loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
 Import-Module $loggingModule -ErrorAction SilentlyContinue
 
@@ -18,13 +20,22 @@ function Measure-STCommand {
         [switch]$Quiet
     )
 
+    Assert-ParameterNotNull $ScriptBlock 'ScriptBlock'
+
     $before = Get-Process -Id $PID
     $cpuStart = $before.TotalProcessorTime
     $memStart = $before.WorkingSet64
-
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
-    & $ScriptBlock
-    $sw.Stop()
+    $errorObj = $null
+    try {
+        & $ScriptBlock
+    } catch {
+        Write-STStatus "Measure-STCommand failed: $_" -Level ERROR -Log
+        Write-STLog -Message "Measure-STCommand failed: $_" -Level ERROR
+        $errorObj = New-STErrorObject -Message $_.Exception.Message -Category 'Performance'
+    } finally {
+        $sw.Stop()
+    }
 
     $after = Get-Process -Id $PID
     $cpuEnd = $after.TotalProcessorTime
@@ -42,6 +53,7 @@ function Measure-STCommand {
         Write-STStatus "Memory Change: $($result.MemoryDeltaMB) MB" -Level INFO
     }
 
+    if ($errorObj) { return $errorObj }
     return $result
 }
 

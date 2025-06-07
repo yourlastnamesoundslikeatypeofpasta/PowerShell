@@ -3,7 +3,8 @@
     TestResult = @{ Enabled = $true; OutputFormat = 'NUnitXml'; OutputPath = 'TestResults.xml' }
     CodeCoverage = @{
         Enabled = $true
-        Path = @('src/**/*.ps1','scripts/*.ps1')
+        Path = @('./src','./scripts')
+        RecursePaths = $true
         OutputFormat = 'JaCoCo'
         OutputPath = 'coverage.xml'
     }

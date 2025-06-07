@@ -30,86 +30,109 @@ function Invoke-CompanyPlaceManagement {
         [switch]$AutoAddFloor,
         [string]$TranscriptPath,
         [switch]$Simulate,
-        [switch]$Explain
+        [switch]$Explain,
+        [object]$Logger,
+        [object]$TelemetryClient,
+        [object]$Config
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
-
-    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-    Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
-    if ($Simulate) {
-        Write-STStatus 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log
-        $mock = [pscustomobject]@{
-            Action      = $Action
-            DisplayName = $DisplayName
-            Simulated   = $true
-            Timestamp   = Get-Date
+    try {
+        if ($Logger) {
+            Import-Module $Logger -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
         }
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
-        return $mock
-    }
-    if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
-        try {
-            Import-Module MicrosoftPlaces -ErrorAction Stop
-            Connect-MicrosoftPlaces -ErrorAction Stop
-        } catch {
-            Write-Error "Failed to load MicrosoftPlaces module or connect: $_"
+        if ($TelemetryClient) {
+            Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+        }
+        if ($Config) {
+            Import-Module $Config -ErrorAction SilentlyContinue
+        }
+
+        if ($Explain) {
+            Get-Help $MyInvocation.PSCommandPath -Full
             return
         }
-    } else {
-        Connect-MicrosoftPlaces -ErrorAction SilentlyContinue | Out-Null
-    }
-    switch ($Action) {
-        'Get' {
-            if (-not $Type) {
-                Write-Error "For 'Get', the -Type parameter is required."
-                return
-            }
-            $results = Get-PlaceV3 -Type $Type | Where-Object { $_.DisplayName -like "$DisplayName" }
-            if ($results) {
-                $results | Format-Table DisplayName, Type, City, State, CountryOrRegion, PlaceId
-                return $results
-            } else {
-                Write-STStatus "No matching places found for '$DisplayName' of type '$Type'" -Level WARN
-            }
-        }
-        'Create' {
-            $existing = Get-PlaceV3 -Type $Type | Where-Object { $_.DisplayName -eq $DisplayName }
-            if ($existing) {
-                Write-STStatus "⚠️ Place already exists: $DisplayName" -Level WARN -Log
-                return $existing
-            }
-            $params = @{ Type = $Type; DisplayName = $DisplayName; Street = $Street; City = $City; State = $State; PostalCode = $PostalCode; CountryOrRegion = $CountryOrRegion }
-            $place = New-Place @params
-            Write-STStatus "✅ Created: $DisplayName [$($place.PlaceId)]" -Level SUCCESS -Log
-            if ($Type -eq 'Building' -and $AutoAddFloor) {
-                New-Place -Type Floor -Name '1' -ParentId $place.PlaceId | Out-Null
-                Write-STStatus "➕ Added default floor '1'" -Level SUB -Log
-            }
-            return $place
-        }
-        'Edit' {
-            $place = Get-PlaceV3 -Type $Type | Where-Object { $_.DisplayName -eq $DisplayName }
-            if (-not $place) {
-                Write-Error "❌ Cannot edit. Place '$DisplayName' of type '$Type' not found."
-                return
-            }
-            $updateParams = @{ Identity = "$($place.DisplayName)_$($place.PlaceId)" }
-            if ($Street) { $updateParams['Street'] = $Street }
-            if ($City) { $updateParams['City'] = $City }
-            if ($State) { $updateParams['State'] = $State }
-            if ($PostalCode) { $updateParams['PostalCode'] = $PostalCode }
-            if ($CountryOrRegion) { $updateParams['CountryOrRegion'] = $CountryOrRegion }
-            Set-PlaceV3 @updateParams
-            Write-STStatus "✏️ Updated '$DisplayName' successfully." -Level SUCCESS -Log
-        }
-    }
 
-    Write-STStatus 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
-    if ($TranscriptPath) { Stop-Transcript | Out-Null }
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
+        if ($Simulate) {
+            Write-STStatus 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log
+            $mock = [pscustomobject]@{
+                Action      = $Action
+                DisplayName = $DisplayName
+                Simulated   = $true
+                Timestamp   = Get-Date
+            }
+            return $mock
+        }
+        if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
+            try {
+                Import-Module MicrosoftPlaces -ErrorAction Stop
+                Connect-MicrosoftPlaces -ErrorAction Stop
+            } catch {
+                Write-Error "Failed to load MicrosoftPlaces module or connect: $_"
+                return
+            }
+        } else {
+            Connect-MicrosoftPlaces -ErrorAction SilentlyContinue | Out-Null
+        }
+        switch ($Action) {
+            'Get' {
+                if (-not $Type) {
+                    Write-Error "For 'Get', the -Type parameter is required."
+                    return
+                }
+                $results = Get-PlaceV3 -Type $Type | Where-Object { $_.DisplayName -like "$DisplayName" }
+                if ($results) {
+                    $results | Format-Table DisplayName, Type, City, State, CountryOrRegion, PlaceId
+                    return $results
+                } else {
+                    Write-STStatus "No matching places found for '$DisplayName' of type '$Type'" -Level WARN
+                }
+            }
+            'Create' {
+                $existing = Get-PlaceV3 -Type $Type | Where-Object { $_.DisplayName -eq $DisplayName }
+                if ($existing) {
+                    Write-STStatus "⚠️ Place already exists: $DisplayName" -Level WARN -Log
+                    return $existing
+                }
+                $params = @{ Type = $Type; DisplayName = $DisplayName; Street = $Street; City = $City; State = $State; PostalCode = $PostalCode; CountryOrRegion = $CountryOrRegion }
+                $place = New-Place @params
+                Write-STStatus "✅ Created: $DisplayName [$($place.PlaceId)]" -Level SUCCESS -Log
+                if ($Type -eq 'Building' -and $AutoAddFloor) {
+                    New-Place -Type Floor -Name '1' -ParentId $place.PlaceId | Out-Null
+                    Write-STStatus "➕ Added default floor '1'" -Level SUB -Log
+                }
+                return $place
+            }
+            'Edit' {
+                $place = Get-PlaceV3 -Type $Type | Where-Object { $_.DisplayName -eq $DisplayName }
+                if (-not $place) {
+                    Write-Error "❌ Cannot edit. Place '$DisplayName' of type '$Type' not found."
+                    return
+                }
+                $updateParams = @{ Identity = "$($place.DisplayName)_$($place.PlaceId)" }
+                if ($Street) { $updateParams['Street'] = $Street }
+                if ($City) { $updateParams['City'] = $City }
+                if ($State) { $updateParams['State'] = $State }
+                if ($PostalCode) { $updateParams['PostalCode'] = $PostalCode }
+                if ($CountryOrRegion) { $updateParams['CountryOrRegion'] = $CountryOrRegion }
+                Set-PlaceV3 @updateParams
+                Write-STStatus "✏️ Updated '$DisplayName' successfully." -Level SUCCESS -Log
+            }
+        }
+
+        Write-STStatus 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
+    } catch {
+        Write-STStatus "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Log
+        Write-STLog -Message "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR
+        return New-STErrorObject -Message $_.Exception.Message -Category 'SharePoint'
+    } finally {
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+    }
 }
 
 

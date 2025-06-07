@@ -13,16 +13,36 @@ function Invoke-ScriptFile {
         [string]$Name,
         [Parameter(ValueFromRemainingArguments=$true)]
         [object[]]$Args,
+        [object]$Logger,
+        [object]$TelemetryClient,
+        [object]$Config,
         [string]$TranscriptPath,
         [switch]$Simulate,
         [switch]$Explain
     )
+    Assert-ParameterNotNull $Name 'Name'
     # Retrieve the SupportTools module version for log metadata
     $manifest = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'SupportTools.psd1'
     $moduleVersion = try {
         (Import-PowerShellDataFile $manifest).ModuleVersion
     } catch {
         'unknown'
+    }
+
+    if ($Logger) {
+        Import-Module $Logger -ErrorAction SilentlyContinue
+    } elseif ($loggingModule) {
+        Import-Module $loggingModule -ErrorAction SilentlyContinue
+    }
+
+    if ($TelemetryClient) {
+        Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+    } elseif ($telemetryModule) {
+        Import-Module $telemetryModule -ErrorAction SilentlyContinue
+    }
+
+    if ($Config) {
+        Import-Module $Config -ErrorAction SilentlyContinue
     }
     $Path = Join-Path $PSScriptRoot '..' |
             Join-Path -ChildPath '..' |

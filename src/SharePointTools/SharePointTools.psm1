@@ -2,6 +2,8 @@
 
 # Load configuration values if available
 $repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
+$coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
+Import-Module $coreModule -ErrorAction SilentlyContinue
 $settingsFile = Join-Path $repoRoot 'config/SharePointToolsSettings.psd1'
 $SharePointToolsSettings = @{ ClientId=''; TenantId=''; CertPath=''; Sites=@{} }
 if (Test-Path $settingsFile) {

@@ -1,4 +1,6 @@
 $repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
+$coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
+Import-Module $coreModule -ErrorAction SilentlyContinue
 $configFile = Join-Path $repoRoot 'config/supporttools.json'
 $SupportToolsConfig = @{ maintenanceMode = $false }
 if (Test-Path $configFile) {
@@ -43,6 +45,7 @@ function Write-STLog {
         $logDir = Join-Path $userProfile 'SupportToolsLogs'
         $logFile = Join-Path $logDir 'supporttools.log'
     }
+    Write-STDebug "Logging to $logFile"
     $dir = Split-Path -Path $logFile -Parent
     if (-not (Test-Path $dir)) {
         New-Item -Path $dir -ItemType Directory -Force | Out-Null

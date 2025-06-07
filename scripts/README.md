@@ -23,6 +23,7 @@ The following table provides a brief description of each script.
 | **Set-TimeZoneEasternStandardTime.ps1** | Sets the system time zone to Eastern Standard Time. |
 | **SimpleCountdown.ps1** | Outputs a simple countdown from 10 to 1. |
 | **Update-Sysmon.ps1** | Reinstalls Sysmon from a removable drive and verifies it is running. |
+| **Invoke-IncidentResponse.ps1** | Collects forensic data for immediate incident response and submits a ticket when threats are detected. |
 | **Submit-SystemInfoTicket.ps1** | Collects system info, uploads it to SharePoint and opens a Service Desk ticket. |
 | **SS_DEPLOYMENT_TEMPLATE.ps1** | Template for sneaker net deployments that installs agents and configures a system. |
 | **Configure-SharePointTools.ps1** | Prompts for SharePoint application values and saves them to a settings file. |

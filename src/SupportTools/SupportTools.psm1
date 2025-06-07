@@ -1,7 +1,9 @@
 $PublicDir = Join-Path $PSScriptRoot 'Public'
 $PrivateDir = Join-Path $PSScriptRoot 'Private'
+$coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
 $loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
 $telemetryModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Telemetry/Telemetry.psd1'
+Import-Module $coreModule -ErrorAction SilentlyContinue
 Import-Module $loggingModule -ErrorAction SilentlyContinue
 Import-Module $telemetryModule -ErrorAction SilentlyContinue
 
@@ -38,6 +40,8 @@ Export-ModuleMember -Function @(
     'Invoke-GroupMembershipCleanup',
     'Invoke-JobBundle',
     'Invoke-PostInstall',
+    'Invoke-PerformanceAudit',
+    'Invoke-FullSystemAudit',
     'Restore-ArchiveFolder',
     'Search-ReadMe',
     'Set-ComputerIPAddress',
@@ -45,6 +49,7 @@ Export-ModuleMember -Function @(
     'Set-SharedMailboxAutoReply',
     'Set-TimeZoneEasternStandardTime',
     'Start-Countdown',
+    'Invoke-IncidentResponse',
     'Submit-SystemInfoTicket',
     'Sync-SupportTools',
     'Update-Sysmon',
