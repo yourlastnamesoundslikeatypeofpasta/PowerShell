@@ -15,12 +15,13 @@ function Invoke-GroupMembershipCleanup {
         [string]$CsvPath,
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [string]$GroupName,
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
+        [switch]$Explain
     )
     process {
         $arguments = @()
         if ($PSBoundParameters.ContainsKey('CsvPath')) { $arguments += '-CsvPath'; $arguments += $CsvPath }
         if ($PSBoundParameters.ContainsKey('GroupName')) { $arguments += '-GroupName'; $arguments += $GroupName }
-        Invoke-ScriptFile -Name 'CleanupGroupMembership.ps1' -Args $arguments -TranscriptPath $TranscriptPath
+        Invoke-ScriptFile -Name 'CleanupGroupMembership.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Explain:$Explain
     }
 }

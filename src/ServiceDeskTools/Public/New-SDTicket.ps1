@@ -14,8 +14,14 @@ function New-SDTicket {
         [Parameter(Mandatory)][string]$Subject,
         [Parameter(Mandatory)][string]$Description,
         [Parameter(Mandatory)][string]$RequesterEmail,
-        [switch]$ChaosMode
+        [switch]$ChaosMode,
+        [switch]$Explain
     )
+
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return
+    }
 
     Write-STLog "New-SDTicket $Subject"
     $body = @{ incident = @{ name = $Subject; description = $Description; requester_email = $RequesterEmail } }

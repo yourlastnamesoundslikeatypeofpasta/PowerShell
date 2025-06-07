@@ -12,8 +12,9 @@ function Install-Font {
         [object[]]$Arguments,
         [string]$TranscriptPath
         [switch]$Simulate
+        [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Install-Fonts.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
+        Invoke-ScriptFile -Name "Install-Fonts.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

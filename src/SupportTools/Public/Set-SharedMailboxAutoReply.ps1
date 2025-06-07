@@ -23,8 +23,14 @@ function Set-SharedMailboxAutoReply {
         [string]$AdminUser,
         [switch]$UseWebLogin,
         [string]$TranscriptPath
-        [switch]$Simulate
+        [switch]$Simulate,
+        [switch]$Explain
     )
+
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return
+    }
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-STStatus 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log

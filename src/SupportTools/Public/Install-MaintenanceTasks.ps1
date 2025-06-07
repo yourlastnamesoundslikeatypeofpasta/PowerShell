@@ -13,10 +13,11 @@ function Install-MaintenanceTasks {
         [switch]$Register,
         [string]$TranscriptPath
         [switch]$Simulate
+        [switch]$Explain
     )
     process {
         $argsList = @()
         if ($Register) { $argsList += '-Register' }
-        Invoke-ScriptFile -Name 'Setup-ScheduledMaintenance.ps1' -Args $argsList -TranscriptPath $TranscriptPath -Simulate:$Simulate
+        Invoke-ScriptFile -Name 'Setup-ScheduledMaintenance.ps1' -Args $argsList -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

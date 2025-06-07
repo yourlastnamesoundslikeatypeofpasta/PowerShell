@@ -13,8 +13,14 @@ function Sync-SupportTools {
     [CmdletBinding()]
     param(
         [string]$RepositoryUrl = 'https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git',
-        [string]$InstallPath = $(if ($env:USERPROFILE) { Join-Path $env:USERPROFILE 'SupportTools' } else { Join-Path $env:HOME 'SupportTools' })
+        [string]$InstallPath = $(if ($env:USERPROFILE) { Join-Path $env:USERPROFILE 'SupportTools' } else { Join-Path $env:HOME 'SupportTools' }),
+        [switch]$Explain
     )
+
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return
+    }
 
     if (Test-Path (Join-Path $InstallPath '.git')) {
         git -C $InstallPath pull

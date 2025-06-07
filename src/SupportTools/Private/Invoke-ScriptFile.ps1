@@ -14,13 +14,19 @@ function Invoke-ScriptFile {
         [Parameter(ValueFromRemainingArguments=$true)]
         [object[]]$Args,
         [string]$TranscriptPath,
-        [switch]$Simulate
+        [switch]$Simulate,
+        [switch]$Explain
     )
     $Path = Join-Path $PSScriptRoot '..' |
             Join-Path -ChildPath '..' |
             Join-Path -ChildPath '..' |
             Join-Path -ChildPath "scripts/$Name"
     if (-not (Test-Path $Path)) { throw "Script '$Name' not found." }
+
+    if ($Explain) {
+        Get-Help $Path -Full
+        return
+    }
 
     Write-STStatus "EXECUTING $Name" -Level SUCCESS -Log
     if ($Args) {

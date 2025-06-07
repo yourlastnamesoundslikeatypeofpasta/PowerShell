@@ -11,8 +11,9 @@ function Clear-TempFile {
         [object[]]$Arguments,
         [string]$TranscriptPath
         [switch]$Simulate
+        [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "CleanupTempFiles.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
+        Invoke-ScriptFile -Name "CleanupTempFiles.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

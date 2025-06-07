@@ -11,8 +11,14 @@ function Set-SDTicketBulk {
     param(
         [Parameter(Mandatory)][int[]]$Id,
         [Parameter(Mandatory)][hashtable]$Fields,
-        [switch]$ChaosMode
+        [switch]$ChaosMode,
+        [switch]$Explain
     )
+
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return
+    }
 
     foreach ($ticketId in $Id) {
         Write-STLog "Set-SDTicketBulk $ticketId"

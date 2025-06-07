@@ -12,8 +12,9 @@ function Start-Countdown {
         [object[]]$Arguments,
         [string]$TranscriptPath
         [switch]$Simulate
+        [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
+        Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

@@ -12,8 +12,9 @@ function Get-NetworkShare {
         [object[]]$Arguments,
         [string]$TranscriptPath
         [switch]$Simulate
+        [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Get-NetworkShares.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
+        Invoke-ScriptFile -Name "Get-NetworkShares.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

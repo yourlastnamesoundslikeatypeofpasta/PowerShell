@@ -8,8 +8,14 @@ function Get-SDTicket {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][int]$Id,
-        [switch]$ChaosMode
+        [switch]$ChaosMode,
+        [switch]$Explain
     )
+
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return
+    }
 
     Write-STLog "Get-SDTicket $Id"
     Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id.json" -ChaosMode:$ChaosMode

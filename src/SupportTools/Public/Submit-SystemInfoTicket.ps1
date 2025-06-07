@@ -15,6 +15,7 @@ function Submit-SystemInfoTicket {
         [string]$FolderPath,
         [string]$TranscriptPath
         [switch]$Simulate
+        [switch]$Explain
     )
     process {
         $arguments = @('-SiteName', $SiteName, '-RequesterEmail', $RequesterEmail)
@@ -22,6 +23,6 @@ function Submit-SystemInfoTicket {
         if ($PSBoundParameters.ContainsKey('Description')) { $arguments += @('-Description', $Description) }
         if ($PSBoundParameters.ContainsKey('LibraryName')) { $arguments += @('-LibraryName', $LibraryName) }
         if ($PSBoundParameters.ContainsKey('FolderPath'))  { $arguments += @('-FolderPath', $FolderPath) }
-        Invoke-ScriptFile -Name 'Submit-SystemInfoTicket.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
+        Invoke-ScriptFile -Name 'Submit-SystemInfoTicket.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

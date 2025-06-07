@@ -29,8 +29,14 @@ function Invoke-CompanyPlaceManagement {
         [string]$CountryOrRegion,
         [switch]$AutoAddFloor,
         [string]$TranscriptPath
-        [switch]$Simulate
+        [switch]$Simulate,
+        [switch]$Explain
     )
+
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return
+    }
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log

@@ -10,10 +10,12 @@ function Clear-ArchiveFolder {
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments,
-        [string]$TranscriptPath
-        [switch]$Simulate
+        [string]$TranscriptPath,
+        [switch]$Simulate,
+        [switch]$Explain
+        [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "CleanupArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
+        Invoke-ScriptFile -Name "CleanupArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain -Explain:$Explain
     }
 }
