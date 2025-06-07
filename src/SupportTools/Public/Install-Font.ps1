@@ -15,6 +15,8 @@ function Install-Font {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Install-Fonts.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Install-Font' -ScriptBlock {
+            Invoke-ScriptFile -Name "Install-Fonts.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

@@ -15,6 +15,8 @@ function Clear-ArchiveFolder {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "CleanupArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Clear-ArchiveFolder' -ScriptBlock {
+            Invoke-ScriptFile -Name "CleanupArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

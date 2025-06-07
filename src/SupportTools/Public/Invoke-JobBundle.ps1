@@ -19,25 +19,27 @@ function Invoke-JobBundle {
     )
 
     process {
-        if (-not $LogArchivePath) {
-            $LogArchivePath = $Path -replace '\\.zip$','-logs.zip'
+        Invoke-STSafe -OperationName 'Invoke-JobBundle' -ScriptBlock {
+            if (-not $LogArchivePath) {
+                $LogArchivePath = $Path -replace '\\.zip$','-logs.zip'
+            }
+
+            $transcript = [IO.Path]::GetTempFileName()
+            $args = @('-BundlePath', $Path)
+            Invoke-ScriptFile -Name 'Run-JobBundle.ps1' -Args $args -TranscriptPath $transcript
+
+            $logFile = if ($env:ST_LOG_PATH) {
+                $env:ST_LOG_PATH
+            } else {
+                $profile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
+                Join-Path (Join-Path $profile 'SupportToolsLogs') 'supporttools.log'
+            }
+
+            $files = @($transcript)
+            if (Test-Path $logFile) { $files += $logFile }
+            Compress-Archive -Path $files -DestinationPath $LogArchivePath -Force
+            Remove-Item $transcript -Force
+            Write-STStatus "Logs archived to $LogArchivePath" -Level SUCCESS
         }
-
-        $transcript = [IO.Path]::GetTempFileName()
-        $args = @('-BundlePath', $Path)
-        Invoke-ScriptFile -Name 'Run-JobBundle.ps1' -Args $args -TranscriptPath $transcript
-
-        $logFile = if ($env:ST_LOG_PATH) {
-            $env:ST_LOG_PATH
-        } else {
-            $profile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
-            Join-Path (Join-Path $profile 'SupportToolsLogs') 'supporttools.log'
-        }
-
-        $files = @($transcript)
-        if (Test-Path $logFile) { $files += $logFile }
-        Compress-Archive -Path $files -DestinationPath $LogArchivePath -Force
-        Remove-Item $transcript -Force
-        Write-STStatus "Logs archived to $LogArchivePath" -Level SUCCESS
     }
 }

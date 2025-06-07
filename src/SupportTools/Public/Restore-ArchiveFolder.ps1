@@ -15,6 +15,8 @@ function Restore-ArchiveFolder {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "RollbackArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Restore-ArchiveFolder' -ScriptBlock {
+            Invoke-ScriptFile -Name "RollbackArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

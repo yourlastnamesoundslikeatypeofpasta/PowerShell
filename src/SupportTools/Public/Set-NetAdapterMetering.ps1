@@ -15,6 +15,8 @@ function Set-NetAdapterMetering {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Set-NetAdapterMetering.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Set-NetAdapterMetering' -ScriptBlock {
+            Invoke-ScriptFile -Name "Set-NetAdapterMetering.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

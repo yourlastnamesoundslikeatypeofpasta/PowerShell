@@ -15,6 +15,8 @@ function Invoke-DeploymentTemplate {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "SS_DEPLOYMENT_TEMPLATE.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Invoke-DeploymentTemplate' -ScriptBlock {
+            Invoke-ScriptFile -Name "SS_DEPLOYMENT_TEMPLATE.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

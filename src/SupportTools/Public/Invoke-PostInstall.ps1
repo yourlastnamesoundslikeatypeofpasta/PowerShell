@@ -15,6 +15,8 @@ function Invoke-PostInstall {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "PostInstallScript.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Invoke-PostInstall' -ScriptBlock {
+            Invoke-ScriptFile -Name "PostInstallScript.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

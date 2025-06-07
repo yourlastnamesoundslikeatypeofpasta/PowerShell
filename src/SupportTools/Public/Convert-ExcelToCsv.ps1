@@ -15,6 +15,8 @@ function Convert-ExcelToCsv {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Convert-ExcelToCsv.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Convert-ExcelToCsv' -ScriptBlock {
+            Invoke-ScriptFile -Name "Convert-ExcelToCsv.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

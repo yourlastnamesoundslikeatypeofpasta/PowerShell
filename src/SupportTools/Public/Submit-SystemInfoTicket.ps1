@@ -18,11 +18,13 @@ function Submit-SystemInfoTicket {
         [switch]$Explain
     )
     process {
-        $arguments = @('-SiteName', $SiteName, '-RequesterEmail', $RequesterEmail)
-        if ($PSBoundParameters.ContainsKey('Subject'))     { $arguments += @('-Subject', $Subject) }
-        if ($PSBoundParameters.ContainsKey('Description')) { $arguments += @('-Description', $Description) }
-        if ($PSBoundParameters.ContainsKey('LibraryName')) { $arguments += @('-LibraryName', $LibraryName) }
-        if ($PSBoundParameters.ContainsKey('FolderPath'))  { $arguments += @('-FolderPath', $FolderPath) }
-        Invoke-ScriptFile -Name 'Submit-SystemInfoTicket.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Submit-SystemInfoTicket' -ScriptBlock {
+            $arguments = @('-SiteName', $SiteName, '-RequesterEmail', $RequesterEmail)
+            if ($PSBoundParameters.ContainsKey('Subject'))     { $arguments += @('-Subject', $Subject) }
+            if ($PSBoundParameters.ContainsKey('Description')) { $arguments += @('-Description', $Description) }
+            if ($PSBoundParameters.ContainsKey('LibraryName')) { $arguments += @('-LibraryName', $LibraryName) }
+            if ($PSBoundParameters.ContainsKey('FolderPath'))  { $arguments += @('-FolderPath', $FolderPath) }
+            Invoke-ScriptFile -Name 'Submit-SystemInfoTicket.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

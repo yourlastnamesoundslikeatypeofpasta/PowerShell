@@ -15,6 +15,8 @@ function Start-Countdown {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Start-Countdown' -ScriptBlock {
+            Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

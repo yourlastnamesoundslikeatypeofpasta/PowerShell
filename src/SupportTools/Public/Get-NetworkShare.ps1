@@ -15,6 +15,8 @@ function Get-NetworkShare {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Get-NetworkShares.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Get-NetworkShare' -ScriptBlock {
+            Invoke-ScriptFile -Name "Get-NetworkShares.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

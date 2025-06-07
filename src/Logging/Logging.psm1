@@ -165,13 +165,42 @@ function Write-STBlock {
     }
 }
 
+function Invoke-STSafe {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [scriptblock]$ScriptBlock,
+        [Parameter(Mandatory)]
+        [string]$OperationName,
+        [switch]$ThrowOnError
+    )
+
+    $oldPref = $ErrorActionPreference
+    $ErrorActionPreference = 'Stop'
+    try {
+        Write-STStatus "$OperationName starting" -Level INFO -Log
+        $result = & $ScriptBlock
+        Write-STStatus "$OperationName completed" -Level SUCCESS -Log
+        return $result
+    } catch {
+        $errMsg = "$OperationName failed: $($_.Exception.Message)"
+        Write-STStatus $errMsg -Level ERROR -Log
+        Write-STLog -Message $errMsg -Level 'ERROR'
+        if ($ThrowOnError) { throw }
+        else { return [pscustomobject]@{ Operation = $OperationName; Error = $_ } }
+    } finally {
+        $ErrorActionPreference = $oldPref
+        Write-STLog -Message "$OperationName finished" -Level INFO
+    }
+}
+
 function Write-STClosing {
     [CmdletBinding()]
     param([string]$Message = 'Task Complete')
     Write-Host "┌──[ $Message ]──────────────" -ForegroundColor DarkGray
 }
 
-Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing'
+Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing','Invoke-STSafe'
 
 function Show-LoggingBanner {
     Write-STDivider 'LOGGING MODULE LOADED' -Style heavy

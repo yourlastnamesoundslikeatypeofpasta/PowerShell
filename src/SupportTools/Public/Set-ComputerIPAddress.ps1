@@ -14,6 +14,8 @@ function Set-ComputerIPAddress {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Set-ComputerIPAddress.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'Set-ComputerIPAddress' -ScriptBlock {
+            Invoke-ScriptFile -Name "Set-ComputerIPAddress.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

@@ -14,6 +14,8 @@ function New-SPUsageReport {
         [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name 'Generate-SPUsageReport.ps1' -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-STSafe -OperationName 'New-SPUsageReport' -ScriptBlock {
+            Invoke-ScriptFile -Name 'Generate-SPUsageReport.ps1' -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }
