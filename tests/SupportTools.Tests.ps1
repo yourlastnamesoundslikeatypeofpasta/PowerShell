@@ -131,10 +131,6 @@ Describe 'SupportTools Module' {
                 function Get-InstalledModule {}
                 function Find-Module {}
                 function Import-Module {}
-                function global:Set-MailboxAutoReplyConfiguration {}
-                function global:Get-MailboxAutoReplyConfiguration {}
-                function global:Set-MailboxAutoReplyConfiguration {}
-                function global:Get-MailboxAutoReplyConfiguration { 'result' }
                 function Set-MailboxAutoReplyConfiguration {}
                 function Get-MailboxAutoReplyConfiguration { 'result' }
 
