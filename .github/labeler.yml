@@ -1,6 +1,9 @@
 documentation:
-  - docs/**
+  - changed-files:
+      - any-glob-to-any-file: docs/**
 enhancement:
-  - src/**
+  - changed-files:
+      - any-glob-to-any-file: src/**
 tests:
-  - tests/**
+  - changed-files:
+      - any-glob-to-any-file: tests/**
