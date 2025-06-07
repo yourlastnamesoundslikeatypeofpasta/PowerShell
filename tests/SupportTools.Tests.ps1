@@ -177,6 +177,8 @@ Describe 'SupportTools Module' {
                 function Get-InstalledModule {}
                 function Find-Module {}
                 function Import-Module {}
+                function Set-MailboxAutoReplyConfiguration {}
+                function Get-MailboxAutoReplyConfiguration {}
 
                 Mock Connect-ExchangeOnline {} -ModuleName SupportTools
                 Mock Disconnect-ExchangeOnline {} -ModuleName SupportTools
