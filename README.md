@@ -9,6 +9,7 @@ This repository packages a collection of scripts into reusable modules.
 * **ServiceDeskTools** – interact with the Service Desk ticketing system.
 * **PerformanceTools** – measure script runtime and resource usage.
 * **GraphTools** – query Microsoft Graph for common account information.
+* **ChaosTools** – inject random delays and failures to test error handling.
 
 ### Module Maturity
 
@@ -19,6 +20,7 @@ This repository packages a collection of scripts into reusable modules.
 | ServiceDeskTools | Experimental |
 | PerformanceTools | Experimental |
 | GraphTools | Experimental |
+| ChaosTools | Experimental |
 
 ## Requirements 📋
 
@@ -80,7 +82,13 @@ Invoke-YFArchiveCleanup -Verbose
 Get-SPToolsAllLibraryReports | Format-Table
 ```
 
-See [docs/SupportTools.md](docs/SupportTools.md), [docs/SharePointTools.md](docs/SharePointTools.md), [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md), [docs/PerformanceTools.md](docs/PerformanceTools.md) and [docs/GraphTools.md](docs/GraphTools.md) for a full list of commands. For a short introduction refer to [docs/Quickstart.md](docs/Quickstart.md). For detailed deployment guidance see [docs/UserGuide.md](docs/UserGuide.md).
+### ChaosTools example
+
+```powershell
+Invoke-ChaosTest -ScriptBlock { Get-Service } -FailureRate 0.2
+```
+
+See [docs/SupportTools.md](docs/SupportTools.md), [docs/SharePointTools.md](docs/SharePointTools.md), [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md), [docs/PerformanceTools.md](docs/PerformanceTools.md), [docs/GraphTools.md](docs/GraphTools.md) and [docs/ChaosTools.md](docs/ChaosTools.md) for a full list of commands. For a short introduction refer to [docs/Quickstart.md](docs/Quickstart.md). For detailed deployment guidance see [docs/UserGuide.md](docs/UserGuide.md).
 
 The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.
