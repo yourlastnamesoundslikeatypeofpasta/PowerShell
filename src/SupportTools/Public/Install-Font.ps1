@@ -10,7 +10,7 @@ function Install-Font {
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments,
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
         [switch]$Simulate
     )
     process {

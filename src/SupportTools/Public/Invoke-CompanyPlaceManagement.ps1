@@ -28,7 +28,7 @@ function Invoke-CompanyPlaceManagement {
         [string]$PostalCode,
         [string]$CountryOrRegion,
         [switch]$AutoAddFloor,
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
         [switch]$Simulate
     )
 

@@ -11,7 +11,7 @@ function Install-MaintenanceTasks {
     [CmdletBinding()]
     param(
         [switch]$Register,
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
         [switch]$Simulate
     )
     process {

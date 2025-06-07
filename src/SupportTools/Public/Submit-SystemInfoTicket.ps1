@@ -7,13 +7,13 @@ function Submit-SystemInfoTicket {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$SiteName,
-        [Parameter(Mandatory)][string]$RequesterEmail,
+        [string]$SiteName,
+        [string]$RequesterEmail,
         [string]$Subject,
         [string]$Description,
         [string]$LibraryName,
         [string]$FolderPath,
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
         [switch]$Simulate
     )
     process {

@@ -16,7 +16,7 @@ function Add-UserToGroup {
         [string]$CsvPath,
         [Parameter(ValueFromPipelineByPropertyName=$true)]
         [string]$GroupName,
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
         [switch]$Simulate
     )
 
