@@ -42,7 +42,8 @@ Import-Module ./src/SharePointTools/SharePointTools.psd1
 Run the configuration script once to store your SharePoint application details and configure the SharePoint site URLs to target:
 
 ```powershell
-./scripts/Configure-SharePointTools.ps1
+./scripts/Test-SPToolsPrereqs.ps1 -Install
+./scripts/Configure-SharePointTools.ps1 -ClientId <appId> -TenantId <tenantId> -CertPath <path>
 ```
 
 You can place these commands in your profile or deployment scripts so the functions are available in each session.

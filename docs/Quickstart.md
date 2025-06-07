@@ -27,14 +27,18 @@ This short guide shows the basic steps to start using the modules in this reposi
    Import-Module ./src/SharePointTools/SharePointTools.psd1
    Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
    ```
-6. **Run configuration** (for SharePoint functions)
+6. **Validate SharePoint prerequisites**
+   ```powershell
+   ./scripts/Test-SPToolsPrereqs.ps1 -Install
+   ```
+7. **Run configuration** (for SharePoint functions)
    ```powershell
    ./scripts/Configure-SharePointTools.ps1
    ```
-7. **Load credentials** (optional)
+8. **Load credentials** (optional)
    Refer to [CredentialStorage.md](CredentialStorage.md) for a step‑by‑step
    walkthrough of using SecretManagement to load environment variables.
-8. **Try a few common commands**
+9. **Try a few common commands**
    ```powershell
    # System information
    Get-CommonSystemInfo | Format-Table
