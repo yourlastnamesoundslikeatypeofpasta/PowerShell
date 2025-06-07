@@ -24,6 +24,6 @@
         'Start-Countdown',
         'Update-Sysmon',
         'Set-SharedMailboxAutoReply',
-        'Invoke-ExchangeCalendarManager','Invoke-CompanyPlaceManagement','Submit-SystemInfoTicket','Generate-SPUsageReport','Install-MaintenanceTasks','Invoke-GroupMembershipCleanup'
+        'Invoke-ExchangeCalendarManager','Invoke-CompanyPlaceManagement','Submit-SystemInfoTicket','Generate-SPUsageReport','Install-MaintenanceTasks','Invoke-GroupMembershipCleanup','Sync-SupportTools'
     )
 }

@@ -8,7 +8,7 @@ Import-Module $telemetryModule -ErrorAction SilentlyContinue
 Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 
-Export-ModuleMember -Function 'Add-UserToGroup','Clear-ArchiveFolder','Restore-ArchiveFolder','Clear-TempFile','Convert-ExcelToCsv','Get-CommonSystemInfo','Get-FailedLogin','Get-NetworkShare','Get-UniquePermission','Install-Font','Invoke-PostInstall','Export-ProductKey','Invoke-DeploymentTemplate','Search-ReadMe','Set-ComputerIPAddress','Set-NetAdapterMetering','Set-TimeZoneEasternStandardTime','Start-Countdown','Update-Sysmon','Set-SharedMailboxAutoReply','Invoke-ExchangeCalendarManager','Invoke-CompanyPlaceManagement','Submit-SystemInfoTicket','Generate-SPUsageReport'
+Export-ModuleMember -Function 'Add-UserToGroup','Clear-ArchiveFolder','Restore-ArchiveFolder','Clear-TempFile','Convert-ExcelToCsv','Get-CommonSystemInfo','Get-FailedLogin','Get-NetworkShare','Get-UniquePermission','Install-Font','Invoke-PostInstall','Export-ProductKey','Invoke-DeploymentTemplate','Search-ReadMe','Set-ComputerIPAddress','Set-NetAdapterMetering','Set-TimeZoneEasternStandardTime','Start-Countdown','Update-Sysmon','Set-SharedMailboxAutoReply','Invoke-ExchangeCalendarManager','Invoke-CompanyPlaceManagement','Submit-SystemInfoTicket','Generate-SPUsageReport','Install-MaintenanceTasks','Invoke-GroupMembershipCleanup','Sync-SupportTools'
 
 
 function Show-SupportToolsBanner {
