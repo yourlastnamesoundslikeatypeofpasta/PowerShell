@@ -30,9 +30,11 @@ Describe 'SupportTools Module' {
             'Submit-SystemInfoTicket',
             'New-SPUsageReport'
             'Install-MaintenanceTasks'
-            'Invoke-GroupMembershipCleanup'
-            'Sync-SupportTools'
-            'Invoke-JobBundle'
+            'Invoke-GroupMembershipCleanup',
+            'Sync-SupportTools',
+            'Invoke-JobBundle',
+            'Invoke-PerformanceAudit',
+            'Invoke-FullSystemAudit'
         )
 
         $exported = (Get-Command -Module SupportTools).Name
@@ -68,6 +70,7 @@ Describe 'SupportTools Module' {
             Install_MaintenanceTasks = 'Setup-ScheduledMaintenance.ps1'
             Invoke_GroupMembershipCleanup = 'CleanupGroupMembership.ps1'
             Invoke_JobBundle = 'Run-JobBundle.ps1'
+            Invoke_PerformanceAudit = 'Invoke-PerformanceAudit.ps1'
         }
 
         $cases = foreach ($entry in $map.GetEnumerator()) {

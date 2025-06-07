@@ -24,6 +24,8 @@
         'Invoke-GroupMembershipCleanup',
         'Invoke-JobBundle',
         'Invoke-PostInstall',
+        'Invoke-PerformanceAudit',
+        'Invoke-FullSystemAudit',
         'Restore-ArchiveFolder',
         'Search-ReadMe',
         'Set-ComputerIPAddress',
