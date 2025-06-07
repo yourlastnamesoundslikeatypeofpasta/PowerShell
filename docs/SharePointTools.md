@@ -47,3 +47,34 @@ All functions emit short, high contrast messages following the style in [ModuleS
 | `List-OneDriveUsage` | Report OneDrive storage use across the tenant. | `AdminUrl`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `List-OneDriveUsage -AdminUrl https://contoso-admin.sharepoint.com` |
 
 
+## Example Scenarios
+
+The following walkthroughs demonstrate how the commands can be combined.
+
+### 1. Configure a site and generate a library report
+
+```powershell
+# Configure authentication and add your first site
+./scripts/Configure-SharePointTools.ps1
+Add-SPToolsSite -Name HR -Url https://contoso.sharepoint.com/sites/hr
+
+# Run a library usage report
+Get-SPToolsLibraryReport -SiteName HR -Verbose
+```
+
+### 2. Clean up archived folders
+
+```powershell
+Invoke-ArchiveCleanup -SiteName HR -LibraryName "Shared Documents" -Verbose
+```
+
+Archived folders matching `zzz_Archive_Production` will be removed and actions are written to a transcript file.
+
+### 3. Trim old versions and sharing links
+
+```powershell
+Invoke-FileVersionCleanup -SiteName HR -ReportPath versions.csv
+Invoke-SharingLinkCleanup -SiteName HR -FolderName Marketing
+```
+
+The cleanup commands output a CSV of files with excess versions and remove outdated sharing links from the Marketing folder.
