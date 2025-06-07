@@ -5,10 +5,15 @@ $telemetryModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Telemetr
 Import-Module $loggingModule -ErrorAction SilentlyContinue
 Import-Module $telemetryModule -ErrorAction SilentlyContinue
 
-Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
-Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
+Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue |
+    ForEach-Object { . $_.FullName }
+Get-ChildItem -Path "$PublicDir" -Filter *.ps1 -ErrorAction SilentlyContinue |
+    ForEach-Object { . $_.FullName }
 
-Export-ModuleMember -Function 'Add-UserToGroup','Clear-ArchiveFolder','Restore-ArchiveFolder','Clear-TempFile','Convert-ExcelToCsv','Get-CommonSystemInfo','Get-FailedLogin','Get-NetworkShare','Get-UniquePermission','Install-Font','Invoke-PostInstall','Export-ProductKey','Invoke-DeploymentTemplate','Search-ReadMe','Set-ComputerIPAddress','Set-NetAdapterMetering','Set-TimeZoneEasternStandardTime','Start-Countdown','Update-Sysmon','Set-SharedMailboxAutoReply','Invoke-ExchangeCalendarManager','Invoke-CompanyPlaceManagement','Submit-SystemInfoTicket','Generate-SPUsageReport','Install-MaintenanceTasks','Invoke-GroupMembershipCleanup','Sync-SupportTools'
+
+Export-ModuleMember -Function (
+    Get-ChildItem "$PublicDir/*.ps1" -ErrorAction SilentlyContinue
+).BaseName
 
 
 function Show-SupportToolsBanner {

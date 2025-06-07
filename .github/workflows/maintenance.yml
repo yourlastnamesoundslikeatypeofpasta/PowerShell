@@ -11,10 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install PSScriptAnalyzer
-        shell: pwsh
-        run: |
-          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+      - name: Cache PowerShell modules
+        uses: potatoqualitee/psmodulecache@v6.2.1
+        with:
+          modules-to-cache: PSScriptAnalyzer
 
       - name: Run cleanup script
         shell: pwsh

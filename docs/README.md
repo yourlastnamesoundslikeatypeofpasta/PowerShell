@@ -12,6 +12,8 @@ The key guides are:
 - [Telemetry Metrics](./Telemetry/Get-STTelemetryMetrics.md) – summarize execution statistics and output to CSV or SQLite.
 - [Get-FunctionDependencyGraph](./Get-FunctionDependencyGraph.md) – generate a visual map of function calls in a script.
 - [Local Mock API](./LocalMockApi.md) – run a lightweight HTTP server for offline tests.
+- [Stewardship](./Stewardship.md) – how to maintain and hand off the project.
+- [Roadmap](./Roadmap.md) – upcoming features and goals.
 
 
 Command specific help topics live in the `SupportTools`, `SharePointTools` and `ServiceDeskTools` subfolders.
