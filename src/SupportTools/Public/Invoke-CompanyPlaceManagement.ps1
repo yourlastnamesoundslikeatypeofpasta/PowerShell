@@ -38,6 +38,10 @@ function Invoke-CompanyPlaceManagement {
         return
     }
 
+    Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+    $operationId = [guid]::NewGuid().Guid
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
     if ($Simulate) {
@@ -62,8 +66,9 @@ function Invoke-CompanyPlaceManagement {
     } else {
         Connect-MicrosoftPlaces -ErrorAction SilentlyContinue | Out-Null
     }
-    switch ($Action) {
-        'Get' {
+    try {
+        switch ($Action) {
+            'Get' {
             if (-not $Type) {
                 Write-Error "For 'Get', the -Type parameter is required."
                 return
@@ -106,10 +111,14 @@ function Invoke-CompanyPlaceManagement {
             Set-PlaceV3 @updateParams
             Write-STStatus "✏️ Updated '$DisplayName' successfully." -Level SUCCESS -Log
         }
-    }
+        }
 
-    Write-STStatus 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
-    if ($TranscriptPath) { Stop-Transcript | Out-Null }
+        Write-STStatus 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
+    } finally {
+        $sw.Stop()
+        Send-STMetric -MetricName 'Invoke-CompanyPlaceManagement' -Category 'Deployment' -Value $sw.Elapsed.TotalSeconds -OperationId $operationId
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+    }
 }
 
 

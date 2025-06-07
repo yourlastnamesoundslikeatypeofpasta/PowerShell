@@ -18,6 +18,10 @@ function Invoke-ExchangeCalendarManager {
         return
     }
 
+    Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+    $operationId = [guid]::NewGuid().Guid
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-STStatus 'ExchangeCalendarManager launched' -Level SUCCESS -Log
     if ($Simulate) {
@@ -55,7 +59,8 @@ function Invoke-ExchangeCalendarManager {
         return
     }
 
-    while ($true) {
+    try {
+        while ($true) {
         Write-STStatus ('-' * 88) -Level INFO
         Write-STStatus '1 - Grant calendar access' -Level INFO
         Write-STStatus '2 - Revoke calendar access' -Level INFO
@@ -96,5 +101,9 @@ function Invoke-ExchangeCalendarManager {
     Disconnect-ExchangeOnline -Confirm:$false
 
     Write-STStatus 'ExchangeCalendarManager finished' -Level FINAL -Log
-    if ($TranscriptPath) { Stop-Transcript | Out-Null }
+    } finally {
+        $sw.Stop()
+        Send-STMetric -MetricName 'Invoke-ExchangeCalendarManager' -Category 'Remediation' -Value $sw.Elapsed.TotalSeconds -OperationId $operationId
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+    }
 }

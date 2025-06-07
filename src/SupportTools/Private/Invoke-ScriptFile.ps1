@@ -56,6 +56,7 @@ function Invoke-ScriptFile {
         Start-Transcript -Path $TranscriptPath -Append | Out-Null
     }
 
+    $operationId = [guid]::NewGuid().Guid
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = 'Success'
     $oldPref = $ErrorActionPreference
@@ -73,7 +74,8 @@ function Invoke-ScriptFile {
         $sw.Stop()
         $duration = $sw.Elapsed
         Write-STLog -Metric 'Duration' -Value $duration.TotalSeconds
-        Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $duration
+        Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $duration -OperationId $operationId
+        Send-STMetric -MetricName 'Duration' -Category 'Execution' -Value $duration.TotalSeconds -Details @{ Script = $Name; Result = $result } -OperationId $operationId
     }
     Write-STStatus "COMPLETED $Name" -Level FINAL -Log
 }

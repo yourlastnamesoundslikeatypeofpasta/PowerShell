@@ -22,6 +22,12 @@ function Sync-SupportTools {
         return
     }
 
+    Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+    $operationId = [guid]::NewGuid().Guid
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+
+    try {
+
     if (Test-Path (Join-Path $InstallPath '.git')) {
         git -C $InstallPath pull
     }
@@ -36,4 +42,8 @@ function Sync-SupportTools {
     if (Test-Path $sd) { Import-Module $sd -ErrorAction SilentlyContinue }
 
     Write-STStatus 'SupportTools synchronized' -Level FINAL
+    } finally {
+        $sw.Stop()
+        Send-STMetric -MetricName 'Sync-SupportTools' -Category 'Deployment' -Value $sw.Elapsed.TotalSeconds -OperationId $operationId
+    }
 }

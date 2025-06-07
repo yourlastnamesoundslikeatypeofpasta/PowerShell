@@ -32,6 +32,10 @@ function Set-SharedMailboxAutoReply {
         return
     }
 
+    Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+    $operationId = [guid]::NewGuid().Guid
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-STStatus 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
     if ($Simulate) {
@@ -45,6 +49,7 @@ function Set-SharedMailboxAutoReply {
         return $mock
     }
 
+    try {
     if ([string]::IsNullOrWhiteSpace($ExternalMessage)) {
         $ExternalMessage = $InternalMessage
     }
@@ -86,7 +91,12 @@ function Set-SharedMailboxAutoReply {
     Disconnect-ExchangeOnline -Confirm:$false
 
     Write-STStatus 'Auto-reply configuration complete' -Level FINAL -Log
-    if ($TranscriptPath) { Stop-Transcript | Out-Null }
+    }
+    finally {
+        $sw.Stop()
+        Send-STMetric -MetricName 'Set-SharedMailboxAutoReply' -Category 'Remediation' -Value $sw.Elapsed.TotalSeconds -OperationId $operationId
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+    }
 
     return $result
 }

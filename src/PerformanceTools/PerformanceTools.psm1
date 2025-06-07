@@ -1,5 +1,6 @@
 $loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
 Import-Module $loggingModule -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
 
 function Measure-STCommand {
     <#
@@ -22,6 +23,7 @@ function Measure-STCommand {
     $cpuStart = $before.TotalProcessorTime
     $memStart = $before.WorkingSet64
 
+    $operationId = [guid]::NewGuid().Guid
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     & $ScriptBlock
     $sw.Stop()
@@ -35,6 +37,8 @@ function Measure-STCommand {
         CpuSeconds      = [math]::Round(($cpuEnd - $cpuStart).TotalSeconds, 2)
         MemoryDeltaMB   = [math]::Round(($memEnd - $memStart) / 1MB, 2)
     }
+
+    Send-STMetric -MetricName 'Measure-STCommand' -Category 'Performance' -Value $result.DurationSeconds -Details @{ Cpu=$result.CpuSeconds; MemoryMB=$result.MemoryDeltaMB } -OperationId $operationId
 
     if (-not $Quiet) {
         Write-STStatus "Duration: $($result.DurationSeconds)s" -Level INFO
