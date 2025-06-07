@@ -99,6 +99,7 @@ Accept wildcard characters: False
 
 ### -ExternalMessage
 External auto-reply message.
+If omitted or blank, the internal message will also be used externally.
 
 ```yaml
 Type: String
