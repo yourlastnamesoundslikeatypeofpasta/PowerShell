@@ -10,7 +10,7 @@ Describe 'PerformanceTools Module' {
     It 'measures a script block' {
         $result = Measure-STCommand { Start-Sleep -Milliseconds 50 }
         $result.DurationSeconds | Should -BeGreaterThan 0
-        $result | Should -HaveProperty 'CpuSeconds'
-        $result | Should -HaveProperty 'MemoryDeltaMB'
+        $result.PSObject.Properties.Name | Should -Contain 'CpuSeconds'
+        $result.PSObject.Properties.Name | Should -Contain 'MemoryDeltaMB'
     }
 }
