@@ -47,7 +47,7 @@ Parameter Sets: (All)
 ```
 
 ## INPUTS
-None
+### None
 
 ## OUTPUTS
 ```
@@ -57,7 +57,5 @@ System.Object
 Object with the properties `DurationSeconds`, `CpuSeconds` and `MemoryDeltaMB`.
 
 ## NOTES
-None
-
 ## RELATED LINKS
-None
+
