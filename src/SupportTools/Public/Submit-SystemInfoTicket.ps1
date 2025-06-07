@@ -13,8 +13,8 @@ function Submit-SystemInfoTicket {
         [string]$Description,
         [string]$LibraryName,
         [string]$FolderPath,
-        [string]$TranscriptPath
-        [switch]$Simulate
+        [string]$TranscriptPath,
+        [switch]$Simulate,
         [switch]$Explain
     )
     process {

@@ -8,7 +8,7 @@ function Invoke-ExchangeCalendarManager {
     #>
     [CmdletBinding()]
     param(
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
         [switch]$Simulate,
         [switch]$Explain
     )

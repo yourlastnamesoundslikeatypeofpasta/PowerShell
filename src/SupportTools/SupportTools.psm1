@@ -19,9 +19,36 @@ Get-ChildItem -Path "$PublicDir" -Filter *.ps1 -ErrorAction SilentlyContinue |
     ForEach-Object { . $_.FullName }
 
 
-Export-ModuleMember -Function (
-    Get-ChildItem "$PublicDir/*.ps1" -ErrorAction SilentlyContinue
-).BaseName
+Export-ModuleMember -Function @(
+    'Add-UserToGroup',
+    'Clear-ArchiveFolder',
+    'Clear-TempFile',
+    'Convert-ExcelToCsv',
+    'Export-ProductKey',
+    'Generate-SPUsageReport',
+    'Get-CommonSystemInfo',
+    'Get-FailedLogin',
+    'Get-NetworkShare',
+    'Get-UniquePermission',
+    'Install-Font',
+    'Install-MaintenanceTasks',
+    'Invoke-CompanyPlaceManagement',
+    'Invoke-DeploymentTemplate',
+    'Invoke-ExchangeCalendarManager',
+    'Invoke-GroupMembershipCleanup',
+    'Invoke-JobBundle',
+    'Invoke-PostInstall',
+    'Restore-ArchiveFolder',
+    'Search-ReadMe',
+    'Set-ComputerIPAddress',
+    'Set-NetAdapterMetering',
+    'Set-SharedMailboxAutoReply',
+    'Set-TimeZoneEasternStandardTime',
+    'Start-Countdown',
+    'Submit-SystemInfoTicket',
+    'Sync-SupportTools',
+    'Update-Sysmon'
+)
 
 
 function Show-SupportToolsBanner {

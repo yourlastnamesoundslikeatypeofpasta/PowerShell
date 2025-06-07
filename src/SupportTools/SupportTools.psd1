@@ -5,5 +5,34 @@
     Author = 'Contoso'
     Description = 'Collection of helper functions wrapping existing scripts.'
 
-    FunctionsToExport = '*'
+    FunctionsToExport = @(
+        'Add-UserToGroup',
+        'Clear-ArchiveFolder',
+        'Clear-TempFile',
+        'Convert-ExcelToCsv',
+        'Export-ProductKey',
+        'Generate-SPUsageReport',
+        'Get-CommonSystemInfo',
+        'Get-FailedLogin',
+        'Get-NetworkShare',
+        'Get-UniquePermission',
+        'Install-Font',
+        'Install-MaintenanceTasks',
+        'Invoke-CompanyPlaceManagement',
+        'Invoke-DeploymentTemplate',
+        'Invoke-ExchangeCalendarManager',
+        'Invoke-GroupMembershipCleanup',
+        'Invoke-JobBundle',
+        'Invoke-PostInstall',
+        'Restore-ArchiveFolder',
+        'Search-ReadMe',
+        'Set-ComputerIPAddress',
+        'Set-NetAdapterMetering',
+        'Set-SharedMailboxAutoReply',
+        'Set-TimeZoneEasternStandardTime',
+        'Start-Countdown',
+        'Submit-SystemInfoTicket',
+        'Sync-SupportTools',
+        'Update-Sysmon'
+    )
 }

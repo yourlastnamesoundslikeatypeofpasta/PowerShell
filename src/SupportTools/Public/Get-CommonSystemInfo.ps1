@@ -13,9 +13,8 @@ function Get-CommonSystemInfo {
         [string]$TranscriptPath,
         [switch]$Simulate,
         [switch]$Explain
-        [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Get-CommonSystemInfo.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain -Explain:$Explain
+        Invoke-ScriptFile -Name "Get-CommonSystemInfo.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }
