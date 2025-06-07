@@ -106,6 +106,7 @@ Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
+Set the `ST_LOG_STRUCTURED` environment variable to `1` to enable structured output by default.
 
 ### -ProgressAction
 {{ Fill ProgressAction Description }}

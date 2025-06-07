@@ -79,6 +79,20 @@ Describe 'Logging Module' {
         }
     }
 
+    It 'writes structured log entries when ST_LOG_STRUCTURED is set' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            $env:ST_LOG_STRUCTURED = '1'
+            Write-STLog -Message 'env json test' -Path $temp
+            $json = Get-Content $temp | ConvertFrom-Json
+            $json.message | Should -Be 'env json test'
+            $json.level | Should -Be 'INFO'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+            Remove-Item env:ST_LOG_STRUCTURED -ErrorAction SilentlyContinue
+        }
+    }
+
     It 'throws on invalid log level' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {

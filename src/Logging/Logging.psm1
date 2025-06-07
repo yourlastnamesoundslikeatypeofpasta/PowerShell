@@ -20,6 +20,9 @@ function Write-STLog {
         [hashtable]$Metadata,
         [switch]$Structured
     )
+    if (-not $Structured -and $env:ST_LOG_STRUCTURED -eq '1') {
+        $Structured = $true
+    }
     $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
     if ($Path) {
         $logFile = $Path
