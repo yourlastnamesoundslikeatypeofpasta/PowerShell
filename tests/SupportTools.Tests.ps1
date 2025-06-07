@@ -163,7 +163,7 @@ Describe 'SupportTools Module' {
 
                 $result = Set-SharedMailboxAutoReply -MailboxIdentity 'm' -StartTime (Get-Date) -EndTime (Get-Date).AddHours(1) -InternalMessage 'hello' -AdminUser 'admin'
 
-                Assert-MockCalled Set-MailboxAutoReplyConfiguration -ParameterFilter { $ExternalMessage -eq 'hello' } -Times 1
+                Assert-MockCalled Set-MailboxAutoReplyConfiguration -ParameterFilter { $ExternalMessage -eq 'hello' } -Times 1 -ModuleName SupportTools
                 $result | Should -Be 'result'
             }
         }
@@ -177,6 +177,8 @@ Describe 'SupportTools Module' {
                 function Get-InstalledModule {}
                 function Find-Module {}
                 function Import-Module {}
+                function Set-MailboxAutoReplyConfiguration {}
+                function Get-MailboxAutoReplyConfiguration {}
 
                 Mock Connect-ExchangeOnline {} -ModuleName SupportTools
                 Mock Disconnect-ExchangeOnline {} -ModuleName SupportTools
@@ -190,7 +192,7 @@ Describe 'SupportTools Module' {
 
                 Set-SharedMailboxAutoReply -MailboxIdentity 'm' -StartTime (Get-Date) -EndTime (Get-Date).AddHours(1) -InternalMessage 'i' -ExternalMessage 'e' -AdminUser 'admin' -UseWebLogin
 
-                Assert-MockCalled Connect-ExchangeOnline -ParameterFilter { $UseWebLogin } -Times 1
+                Assert-MockCalled Connect-ExchangeOnline -ParameterFilter { $UseWebLogin } -Times 1 -ModuleName SupportTools
             }
         }
     }
