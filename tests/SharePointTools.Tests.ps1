@@ -108,6 +108,7 @@ Describe 'SharePointTools Module' {
             InModuleScope SharePointTools {
                 $SharePointToolsSettings = @{ ClientId=''; TenantId=''; CertPath=''; Sites=@{} }
                 $script:settingsFile = $tempCfg
+                Mock Write-SPToolsHacker {}
             }
         }
         AfterEach {
