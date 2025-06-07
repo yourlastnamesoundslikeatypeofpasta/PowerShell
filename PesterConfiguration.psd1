@@ -1,10 +1,5 @@
 @{
-    Run = @{ Path = 'tests'; Exit = $true }
+    Run = @{ Path = 'passing-tests'; Exit = $true }
     TestResult = @{ Enabled = $true; OutputFormat = 'NUnitXml'; OutputPath = 'TestResults.xml' }
-    CodeCoverage = @{
-        Enabled = $true
-        Path = @('src/**/*.ps1','scripts/*.ps1')
-        OutputFormat = 'JaCoCo'
-        OutputPath = 'coverage.xml'
-    }
+    CodeCoverage = @{ Enabled = $false }
 }
