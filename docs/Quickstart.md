@@ -4,7 +4,7 @@ This short guide shows the basic steps to start using the modules in this reposi
 
 1. **Clone the repository**
    ```powershell
- git clone <repository-url>
+ git clone https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell
  cd PowerShell
   ```
 2. **Install required dependencies**
