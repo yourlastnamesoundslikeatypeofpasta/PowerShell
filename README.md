@@ -40,7 +40,7 @@ This repository packages a collection of scripts into reusable modules.
    ```powershell
    ./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
    # or pin a specific build
-   Install-Module -Name SupportTools -RequiredVersion 1.0.4
+   Install-Module -Name SupportTools -RequiredVersion 1.3.0
    ```
    The script attempts to download each module from the gallery and falls back
    to importing the versions under `src` if the gallery cannot be reached.
