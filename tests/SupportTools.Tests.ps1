@@ -39,6 +39,7 @@ Describe 'SupportTools Module' {
             'Sync-SupportTools',
             'Invoke-JobBundle',
             'Invoke-PerformanceAudit',
+            'Invoke-RemoteAudit',
             'Invoke-FullSystemAudit'
         )
 
@@ -177,6 +178,22 @@ Describe 'SupportTools Module' {
                 $result.Processor    | Should -Be 'CPU'
                 $result.Memory       | Should -Be (1048576 / 1MB)
                 $result.DiskSpace    | Should -Not -BeNullOrEmpty
+            }
+        }
+    }
+
+    Context 'Invoke-RemoteAudit behavior' {
+        It 'runs Get-CommonSystemInfo on the remote computer' {
+            InModuleScope SupportTools {
+                function Invoke-Command { param($ComputerName) }
+                Mock Invoke-Command { [pscustomobject]@{ Test='ok' } } -ModuleName SupportTools
+
+                $result = Invoke-RemoteAudit -ComputerName 'PC1'
+
+                Assert-MockCalled Invoke-Command -ModuleName SupportTools -Times 1 -ParameterFilter { $ComputerName -eq 'PC1' }
+                $result.ComputerName | Should -Be 'PC1'
+                $result.Success | Should -Be $true
+                $result.Info.Test | Should -Be 'ok'
             }
         }
     }

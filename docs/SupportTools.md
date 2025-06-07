@@ -58,6 +58,7 @@ listed are forwarded to the underlying script unchanged.
 | `New-SPUsageReport` | `Generate-SPUsageReport.ps1` | `[ItemThreshold]`, `[RequesterEmail]`, `[CsvPath]`, `[TranscriptPath]` | `New-SPUsageReport -RequesterEmail 'user@contoso.com'` |
 | `Install-MaintenanceTasks` | `Setup-ScheduledMaintenance.ps1` | `[Register]` | `Install-MaintenanceTasks -Register` |
 | `Sync-SupportTools` | *git* | `[RepositoryUrl]`, `[InstallPath]` | `Sync-SupportTools` |
+| `Invoke-RemoteAudit` | *built-in* | `ComputerName` | `Invoke-RemoteAudit -ComputerName PC1` |
 
 For details on what each script does see [scripts/README.md](../scripts/README.md).
 
