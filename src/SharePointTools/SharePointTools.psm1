@@ -903,9 +903,7 @@ function Register-SPToolsCompleters {
 }
 
 function Show-SharePointToolsBanner {
-    Write-STStatus '════════════════════════════════════════════' -Level INFO
-    Write-STStatus 'SHAREPOINTTOOLS MODULE ACTIVATED' -Level SUCCESS
-    Write-STStatus '════════════════════════════════════════════' -Level INFO
+    Write-STDivider 'SHAREPOINTTOOLS MODULE LOADED' -Style heavy
     Write-STStatus "Run 'Get-Command -Module SharePointTools' to view available tools." -Level SUB
     Write-STLog -Message 'SharePointTools module loaded'
 }

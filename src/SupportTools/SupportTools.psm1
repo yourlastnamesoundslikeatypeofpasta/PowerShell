@@ -52,9 +52,7 @@ Export-ModuleMember -Function @(
 
 
 function Show-SupportToolsBanner {
-    Write-STStatus '════════════════════════════════════════════' -Level INFO
-    Write-STStatus 'SUPPORTTOOLS MODULE ACTIVATED' -Level SUCCESS
-    Write-STStatus '════════════════════════════════════════════' -Level INFO
+    Write-STDivider 'SUPPORTTOOLS MODULE LOADED' -Style heavy
     Write-STStatus "Run 'Get-Command -Module SupportTools' to view available tools." -Level SUB
     Write-STLog -Message 'SupportTools module loaded'
 }
