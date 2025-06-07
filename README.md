@@ -42,6 +42,8 @@ This repository packages a collection of scripts into reusable modules.
    # or pin a specific build
    Install-Module -Name SupportTools -RequiredVersion 1.0.4
    ```
+   The script attempts to download each module from the gallery and falls back
+   to importing the versions under `src` if the gallery cannot be reached.
 
 3. Import the module manifest files from the `src` folder:
 
