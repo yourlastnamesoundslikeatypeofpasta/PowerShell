@@ -12,8 +12,9 @@ function Get-FailedLogin {
         [object[]]$Arguments,
         [string]$TranscriptPath
         [switch]$Simulate
+        [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Get-FailedLogins.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate
+        Invoke-ScriptFile -Name "Get-FailedLogins.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

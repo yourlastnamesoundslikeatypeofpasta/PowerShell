@@ -8,8 +8,14 @@ function Search-SDTicket {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$Query,
-        [switch]$ChaosMode
+        [switch]$ChaosMode,
+        [switch]$Explain
     )
+
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return
+    }
 
     Write-STLog "Search-SDTicket $Query"
     $encoded = [uri]::EscapeDataString($Query)

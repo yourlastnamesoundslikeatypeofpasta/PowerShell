@@ -14,8 +14,14 @@ function Link-SDTicketToSPTask {
         [Parameter(Mandatory)][int]$TicketId,
         [Parameter(Mandatory)][string]$TaskUrl,
         [string]$FieldName = 'sharepoint_task_url',
-        [switch]$ChaosMode
+        [switch]$ChaosMode,
+        [switch]$Explain
     )
+
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return
+    }
 
     Write-STLog "Link-SDTicketToSPTask $TicketId $TaskUrl"
     $fields = @{ $FieldName = $TaskUrl }

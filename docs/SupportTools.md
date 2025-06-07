@@ -17,6 +17,12 @@ All commands now accept a `-Simulate` switch. When used, the command logs each
 step and returns randomized mock data without making changes. This is useful for
 testing in lab environments.
 
+### Learning Mode
+
+Use the `-Explain` switch with any command to view the underlying script's
+full help content instead of executing it. This is useful when training new
+administrators on what each task does.
+
 ## Available Commands
 
 The table below lists each command and the script it invokes. Arguments not

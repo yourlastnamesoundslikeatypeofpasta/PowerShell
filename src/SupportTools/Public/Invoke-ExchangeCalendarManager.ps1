@@ -9,8 +9,14 @@ function Invoke-ExchangeCalendarManager {
     [CmdletBinding()]
     param(
         [string]$TranscriptPath
-        [switch]$Simulate
+        [switch]$Simulate,
+        [switch]$Explain
     )
+
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return
+    }
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     Write-STStatus 'ExchangeCalendarManager launched' -Level SUCCESS -Log

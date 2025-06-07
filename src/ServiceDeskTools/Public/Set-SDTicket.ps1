@@ -11,8 +11,14 @@ function Set-SDTicket {
     param(
         [Parameter(Mandatory)][int]$Id,
         [Parameter(Mandatory)][hashtable]$Fields,
-        [switch]$ChaosMode
+        [switch]$ChaosMode,
+        [switch]$Explain
     )
+
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return
+    }
 
     Write-STLog "Set-SDTicket $Id"
     $body = @{ incident = $Fields }

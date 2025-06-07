@@ -14,7 +14,8 @@ function Invoke-ScriptFile {
         [Parameter(ValueFromRemainingArguments=$true)]
         [object[]]$Args,
         [string]$TranscriptPath,
-        [switch]$Simulate
+        [switch]$Simulate,
+        [switch]$Explain
     )
     # Retrieve the SupportTools module version for log metadata
     $manifest = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'SupportTools.psd1'
@@ -28,6 +29,11 @@ function Invoke-ScriptFile {
             Join-Path -ChildPath '..' |
             Join-Path -ChildPath "scripts/$Name"
     if (-not (Test-Path $Path)) { throw "Script '$Name' not found." }
+
+    if ($Explain) {
+        Get-Help $Path -Full
+        return
+    }
 
     Write-STStatus "EXECUTING $Name" -Level SUCCESS -Log
     if ($Args) {
