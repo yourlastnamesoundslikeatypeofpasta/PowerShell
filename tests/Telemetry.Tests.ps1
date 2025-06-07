@@ -34,10 +34,13 @@ Describe 'Telemetry Opt-In' {
             InModuleScope SupportTools {
                 Invoke-ScriptFile -Name 'TelemetryTest.ps1'
             }
-            (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
-            $json = Get-Content $log | ConvertFrom-Json
-            $json.Script | Should -Be 'TelemetryTest.ps1'
-            $json.Result | Should -Be 'Success'
+            (Get-Content $log | Measure-Object -Line).Lines | Should -Be 2
+            $entries = Get-Content $log | ForEach-Object { $_ | ConvertFrom-Json }
+            $telemetry = $entries | Where-Object Script
+            $metric = $entries | Where-Object MetricName
+            $telemetry.Script | Should -Be 'TelemetryTest.ps1'
+            $telemetry.Result | Should -Be 'Success'
+            $metric.MetricName | Should -Be 'ExecutionSeconds'
         } finally {
             Remove-Item $scriptFile -ErrorAction SilentlyContinue
             Remove-Item $log -ErrorAction SilentlyContinue
