@@ -237,7 +237,7 @@ Describe 'SupportTools Module' {
                 function Get-Command {}
                 function Connect-MicrosoftPlaces {}
                 function Get-PlaceV3 { @() }
-                function New-Place {}
+                function New-Place { param($Type, $Name, $ParentId) }
                 function Write-Host {}
 
                 Mock Get-Command { @{ Name = 'Get-PlaceV3' } } -ModuleName SupportTools
@@ -245,7 +245,7 @@ Describe 'SupportTools Module' {
                 Mock Get-PlaceV3 { @() } -ModuleName SupportTools
                 Mock New-Place {
                     if ($Type -eq 'Building') { return @{ PlaceId = '1' } }
-                }
+                } -ModuleName SupportTools
                 Mock Write-Host {} -ModuleName SupportTools
 
                 Invoke-CompanyPlaceManagement -Action Create -DisplayName 'B1' -Type Building -AutoAddFloor
