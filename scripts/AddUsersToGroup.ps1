@@ -29,17 +29,16 @@ This script requires Microsoft Graph API permissions and assumes the user has th
 This example runs the script with explicit parameters to process the provided CSV file and add the listed users to the specified Microsoft 365 group.
 #>
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
-
 param(
     [Parameter()]
-    [ValidateScript({ Test-Path $_ -PathType Leaf })]
     [string]$CsvPath,
 
     [Parameter()]
     [ValidateNotNullOrEmpty()]
     [string]$GroupName
 )
+
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
 
 # Import necessary .NET assemblies
 Add-Type -AssemblyName PresentationFramework, System.Windows.Forms
@@ -233,4 +232,6 @@ function Start-Main {
     }
 }
 
-Start-Main -CsvPath $CsvPath -GroupName $GroupName
+if ($MyInvocation.InvocationName -ne '.') {
+    Start-Main -CsvPath $CsvPath -GroupName $GroupName
+}
