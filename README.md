@@ -8,6 +8,14 @@ This repository packages a collection of scripts into reusable modules.
 * **SharePointTools** – commands for SharePoint cleanup tasks such as removing archives or sharing links.
 * **ServiceDeskTools** – interact with the Service Desk ticketing system.
 
+### Module Maturity
+
+| Module | Status |
+| ------ | ------ |
+| SupportTools | Stable |
+| SharePointTools | Beta |
+| ServiceDeskTools | Experimental |
+
 ## Requirements 📋
 
 * **PowerShell 7 or later** must be installed to import these modules.
