@@ -26,6 +26,16 @@ try {
 }
 
 function Write-SPToolsHacker {
+    <#
+    .SYNOPSIS
+        Writes a formatted status message to the log.
+    .PARAMETER Message
+        Text to log.
+    .PARAMETER Level
+        Severity level for the message.
+    .EXAMPLE
+        Write-SPToolsHacker -Message 'Done' -Level SUCCESS
+    #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
@@ -44,6 +54,8 @@ function Save-SPToolsSettings {
     <#
     .SYNOPSIS
         Persists SharePoint Tools configuration to disk.
+    .EXAMPLE
+        Save-SPToolsSettings
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param()
@@ -60,6 +72,8 @@ function Get-SPToolsSettings {
     <#
     .SYNOPSIS
         Retrieves the current SharePoint Tools settings.
+    .EXAMPLE
+        Get-SPToolsSettings
     #>
     [CmdletBinding()]
     param()
@@ -75,6 +89,8 @@ function Get-SPToolsSiteUrl {
         Gets the site URL mapped to a given name.
     .PARAMETER SiteName
         Friendly name of the site.
+    .EXAMPLE
+        Get-SPToolsSiteUrl -SiteName 'MySite'
     #>
     [CmdletBinding()]
     param(
@@ -100,6 +116,8 @@ function Add-SPToolsSite {
         Key used to reference the site.
     .PARAMETER Url
         Full URL of the SharePoint site.
+    .EXAMPLE
+        Add-SPToolsSite -Name 'Contoso' -Url 'https://contoso.sharepoint.com'
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
@@ -128,6 +146,8 @@ function Set-SPToolsSite {
         Key used to reference the site.
     .PARAMETER Url
         New URL to set for the site.
+    .EXAMPLE
+        Set-SPToolsSite -Name 'Contoso' -Url 'https://contoso.sharepoint.com'
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
@@ -154,6 +174,8 @@ function Remove-SPToolsSite {
         Removes a SharePoint site entry from the settings file.
     .PARAMETER Name
         Key of the site to remove.
+    .EXAMPLE
+        Remove-SPToolsSite -Name 'Contoso'
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
@@ -176,6 +198,8 @@ function Invoke-YFArchiveCleanup {
     <#
     .SYNOPSIS
         Removes archive items from the YF site.
+    .EXAMPLE
+        Invoke-YFArchiveCleanup
     #>
     [CmdletBinding()]
     param()
@@ -187,6 +211,8 @@ function Invoke-IBCCentralFilesArchiveCleanup {
     <#
     .SYNOPSIS
         Removes archive items from the IBCCentralFiles site.
+    .EXAMPLE
+        Invoke-IBCCentralFilesArchiveCleanup
     #>
     [CmdletBinding()]
     param()
@@ -198,6 +224,8 @@ function Invoke-MexCentralFilesArchiveCleanup {
     <#
     .SYNOPSIS
         Removes archive items from the MexCentralFiles site.
+    .EXAMPLE
+        Invoke-MexCentralFilesArchiveCleanup
     #>
     [CmdletBinding()]
     param()
@@ -210,13 +238,18 @@ function Invoke-MexCentralFilesArchiveCleanup {
   Removes archive folders and files from a SharePoint library.
 .DESCRIPTION
   Connects using PnP.PowerShell and deletes items matching zzz_Archive.
+.EXAMPLE
+    Invoke-ArchiveCleanup -SiteName 'Finance'
 #>
 function Invoke-ArchiveCleanup {
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$SiteName,
+        [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
+        [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Shared Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -303,6 +336,8 @@ function Invoke-YFFileVersionCleanup {
     <#
     .SYNOPSIS
         Removes old file versions from the YF site.
+    .EXAMPLE
+        Invoke-YFFileVersionCleanup
     #>
     [CmdletBinding()]
     param()
@@ -314,6 +349,8 @@ function Invoke-IBCCentralFilesFileVersionCleanup {
     <#
     .SYNOPSIS
         Removes old file versions from the IBCCentralFiles site.
+    .EXAMPLE
+        Invoke-IBCCentralFilesFileVersionCleanup
     #>
     [CmdletBinding()]
     param()
@@ -325,6 +362,8 @@ function Invoke-MexCentralFilesFileVersionCleanup {
     <#
     .SYNOPSIS
         Removes old file versions from the MexCentralFiles site.
+    .EXAMPLE
+        Invoke-MexCentralFilesFileVersionCleanup
     #>
     [CmdletBinding()]
     param()
@@ -337,12 +376,17 @@ function Invoke-MexCentralFilesFileVersionCleanup {
   Reports files with multiple versions.
 .DESCRIPTION
   Generates a CSV of files with more than one version.
+.EXAMPLE
+    Invoke-FileVersionCleanup -SiteName 'Finance'
 #>
 function Invoke-FileVersionCleanup {
     [CmdletBinding()]
     param(
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$SiteName,
+        [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
+        [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Shared Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -386,13 +430,18 @@ function Invoke-FileVersionCleanup {
   Removes sharing links from a SharePoint library.
 .DESCRIPTION
   Recursively scans a folder and deletes all file and folder sharing links.
+.EXAMPLE
+    Invoke-SharingLinkCleanup -SiteName 'Finance'
 #>
 function Invoke-SharingLinkCleanup {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$SiteName,
+        [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
+        [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Shared Documents',
         [string]$FolderName,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
@@ -459,6 +508,8 @@ function Invoke-YFSharingLinkCleanup {
     <#
     .SYNOPSIS
         Removes sharing links from the YF site.
+    .EXAMPLE
+        Invoke-YFSharingLinkCleanup
     #>
     [CmdletBinding()]
     param()
@@ -470,6 +521,8 @@ function Invoke-IBCCentralFilesSharingLinkCleanup {
     <#
     .SYNOPSIS
         Removes sharing links from the IBCCentralFiles site.
+    .EXAMPLE
+        Invoke-IBCCentralFilesSharingLinkCleanup
     #>
     [CmdletBinding()]
     param()
@@ -481,6 +534,8 @@ function Invoke-MexCentralFilesSharingLinkCleanup {
     <#
     .SYNOPSIS
         Removes sharing links from the MexCentralFiles site.
+    .EXAMPLE
+        Invoke-MexCentralFilesSharingLinkCleanup
     #>
     [CmdletBinding()]
     param()
@@ -490,10 +545,22 @@ function Invoke-MexCentralFilesSharingLinkCleanup {
 
 
 function Get-SPToolsLibraryReport {
+    <#
+    .SYNOPSIS
+        Generates a report of document libraries for a site.
+    .PARAMETER SiteName
+        Friendly site name configured in settings.
+    .PARAMETER SiteUrl
+        Full URL of the site. If omitted the URL from settings is used.
+    .EXAMPLE
+        Get-SPToolsLibraryReport -SiteName 'Finance'
+    #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$SiteName,
+        [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -521,6 +588,12 @@ function Get-SPToolsLibraryReport {
 }
 
 function Get-SPToolsAllLibraryReports {
+    <#
+    .SYNOPSIS
+        Generates library reports for all configured sites.
+    .EXAMPLE
+        Get-SPToolsAllLibraryReports
+    #>
     [CmdletBinding()]
     param()
 
@@ -533,9 +606,20 @@ function Get-SPToolsAllLibraryReports {
 }
 
 function Get-SPToolsRecycleBinReport {
+    <#
+    .SYNOPSIS
+        Creates a recycle bin usage report for a site.
+    .PARAMETER SiteName
+        Friendly site name.
+    .EXAMPLE
+        Get-SPToolsRecycleBinReport -SiteName 'Finance'
+    #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)][string]$SiteName,
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
+        [string]$SiteName,
+        [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -561,9 +645,20 @@ function Get-SPToolsRecycleBinReport {
 }
 
 function Clear-SPToolsRecycleBin {
+    <#
+    .SYNOPSIS
+        Clears items from the SharePoint recycle bin.
+    .PARAMETER SiteName
+        Friendly site name.
+    .EXAMPLE
+        Clear-SPToolsRecycleBin -SiteName 'Finance' -SecondStage
+    #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory = $true)][string]$SiteName,
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
+        [string]$SiteName,
+        [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [switch]$SecondStage,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
@@ -589,6 +684,12 @@ function Clear-SPToolsRecycleBin {
 }
 
 function Get-SPToolsAllRecycleBinReports {
+    <#
+    .SYNOPSIS
+        Generates recycle bin reports for all configured sites.
+    .EXAMPLE
+        Get-SPToolsAllRecycleBinReports
+    #>
     [CmdletBinding()]
     param()
     Write-SPToolsHacker 'Generating all recycle bin reports'
@@ -604,10 +705,15 @@ function Get-SPToolsPreservationHoldReport {
         Reports the size of the Preservation Hold Library.
     .NOTES
         Uses PnP.PowerShell commands. See https://pnp.github.io/powershell/ for details.
+    .EXAMPLE
+        Get-SPToolsPreservationHoldReport -SiteName 'Finance'
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)][string]$SiteName,
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
+        [string]$SiteName,
+        [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -634,6 +740,12 @@ function Get-SPToolsPreservationHoldReport {
 }
 
 function Get-SPToolsAllPreservationHoldReports {
+    <#
+    .SYNOPSIS
+        Generates Preservation Hold Library reports for all sites.
+    .EXAMPLE
+        Get-SPToolsAllPreservationHoldReports
+    #>
     [CmdletBinding()]
     param()
     Write-SPToolsHacker 'Generating all hold reports'
@@ -643,9 +755,21 @@ function Get-SPToolsAllPreservationHoldReports {
     Write-SPToolsHacker 'Reports complete'
 }
 function Get-SPPermissionsReport {
+    <#
+    .SYNOPSIS
+        Retrieves permission assignments for a site or folder.
+    .PARAMETER SiteUrl
+        Full site URL.
+    .PARAMETER FolderUrl
+        Optional folder URL to limit the report.
+    .EXAMPLE
+        Get-SPPermissionsReport -SiteUrl 'https://contoso.sharepoint.com'
+    #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)][string]$SiteUrl,
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ -match '^https?://' })]
+        [string]$SiteUrl,
         [string]$FolderUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -678,10 +802,20 @@ function Get-SPPermissionsReport {
 }
 
 function Clean-SPVersionHistory {
+    <#
+    .SYNOPSIS
+        Deletes old document versions from a library.
+    .EXAMPLE
+        Clean-SPVersionHistory -SiteUrl 'https://contoso.sharepoint.com'
+    #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory = $true)][string]$SiteUrl,
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ -match '^https?://' })]
+        [string]$SiteUrl,
+        [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Shared Documents',
+        [ValidateRange(1, [int]::MaxValue)]
         [int]$KeepVersions = 5,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -707,10 +841,20 @@ function Clean-SPVersionHistory {
 }
 
 function Find-OrphanedSPFiles {
+    <#
+    .SYNOPSIS
+        Finds files not modified within a given number of days.
+    .EXAMPLE
+        Find-OrphanedSPFiles -SiteUrl 'https://contoso.sharepoint.com' -Days 30
+    #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)][string]$SiteUrl,
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ -match '^https?://' })]
+        [string]$SiteUrl,
+        [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Shared Documents',
+        [ValidateRange(1, [int]::MaxValue)]
         [int]$Days = 90,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -744,11 +888,16 @@ function Select-SPToolsFolder {
     .DESCRIPTION
         Recursively enumerates folders and prompts for a selection. A filter
         string can be provided to narrow results.
+    .EXAMPLE
+        Select-SPToolsFolder -SiteName 'Finance'
     #>
     [CmdletBinding()]
     param(
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$SiteName,
+        [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
+        [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Shared Documents',
         [string]$Filter,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
@@ -794,15 +943,28 @@ function Select-SPToolsFolder {
 }
 
 function Get-SPToolsFileReport {
+    <#
+    .SYNOPSIS
+        Generates a detailed file inventory for a site.
+    .PARAMETER SiteName
+        Friendly site name.
+    .EXAMPLE
+        Get-SPToolsFileReport -SiteName 'Finance'
+    #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)][string]$SiteName,
+        [Parameter(Mandatory = $true)]
+        [ValidatePattern('^[A-Za-z0-9_-]+$')]
+        [string]$SiteName,
+        [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
+        [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
         [string]$ReportPath,
+        [ValidateRange(1, 10000)]
         [int]$PageSize = 5000
     )
 
@@ -867,9 +1029,17 @@ function Get-SPToolsFileReport {
     $report
 }
 function List-OneDriveUsage {
+    <#
+    .SYNOPSIS
+        Lists usage information for all OneDrive sites.
+    .EXAMPLE
+        List-OneDriveUsage -AdminUrl 'https://contoso-admin.sharepoint.com'
+    #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)][string]$AdminUrl,
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ -match '^https?://' })]
+        [string]$AdminUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
@@ -896,6 +1066,12 @@ function List-OneDriveUsage {
 Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','Select-SPToolsFolder','List-OneDriveUsage' -Variable 'SharePointToolsSettings'
 
 function Register-SPToolsCompleters {
+    <#
+    .SYNOPSIS
+        Registers tab completion for site names.
+    .EXAMPLE
+        Register-SPToolsCompleters
+    #>
     $siteCmds = 'Get-SPToolsSiteUrl','Get-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsPreservationHoldReport','Get-SPToolsAllLibraryReports','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Select-SPToolsFolder'
     Register-ArgumentCompleter -CommandName $siteCmds -ParameterName SiteName -ScriptBlock {
         param($commandName,$parameterName,$wordToComplete)
@@ -905,6 +1081,12 @@ function Register-SPToolsCompleters {
 }
 
 function Show-SharePointToolsBanner {
+    <#
+    .SYNOPSIS
+        Displays a module loaded message.
+    .EXAMPLE
+        Show-SharePointToolsBanner
+    #>
     Write-STDivider 'SHAREPOINTTOOLS MODULE LOADED' -Style heavy
     Write-STStatus "Run 'Get-Command -Module SharePointTools' to view available tools." -Level SUB
     Write-STLog -Message 'SharePointTools module loaded'
