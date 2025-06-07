@@ -28,7 +28,7 @@ try {
 function Write-SPToolsHacker {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$Message,
         [ValidateSet('INFO','SUCCESS','ERROR','WARN','SUB','FINAL','FATAL')]
@@ -78,7 +78,7 @@ function Get-SPToolsSiteUrl {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [ValidateScript({ $SharePointToolsSettings.Sites.ContainsKey($_) })]
         [string]$SiteName
@@ -103,10 +103,10 @@ function Add-SPToolsSite {
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$Name,
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [ValidateScript({ $_ -match '^https?://' })]
         [string]$Url
     )
@@ -131,10 +131,10 @@ function Set-SPToolsSite {
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$Name,
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [ValidateScript({ $_ -match '^https?://' })]
         [string]$Url
     )
@@ -157,7 +157,7 @@ function Remove-SPToolsSite {
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$Name
     )
@@ -214,7 +214,7 @@ function Invoke-MexCentralFilesArchiveCleanup {
 function Invoke-ArchiveCleanup {
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string]$SiteName,
         [string]$SiteUrl,
         [string]$LibraryName = 'Shared Documents',
@@ -390,7 +390,7 @@ function Invoke-FileVersionCleanup {
 function Invoke-SharingLinkCleanup {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string]$SiteName,
         [string]$SiteUrl,
         [string]$LibraryName = 'Shared Documents',
@@ -492,7 +492,7 @@ function Invoke-MexCentralFilesSharingLinkCleanup {
 function Get-SPToolsLibraryReport {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [string]$SiteName,
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
@@ -535,7 +535,7 @@ function Get-SPToolsAllLibraryReports {
 function Get-SPToolsRecycleBinReport {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$SiteName,
+        [Parameter(Mandatory = $true)][string]$SiteName,
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -563,7 +563,7 @@ function Get-SPToolsRecycleBinReport {
 function Clear-SPToolsRecycleBin {
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)][string]$SiteName,
+        [Parameter(Mandatory = $true)][string]$SiteName,
         [string]$SiteUrl,
         [switch]$SecondStage,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
@@ -607,7 +607,7 @@ function Get-SPToolsPreservationHoldReport {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$SiteName,
+        [Parameter(Mandatory = $true)][string]$SiteName,
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -645,7 +645,7 @@ function Get-SPToolsAllPreservationHoldReports {
 function Get-SPPermissionsReport {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$SiteUrl,
+        [Parameter(Mandatory = $true)][string]$SiteUrl,
         [string]$FolderUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
@@ -680,7 +680,7 @@ function Get-SPPermissionsReport {
 function Clean-SPVersionHistory {
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)][string]$SiteUrl,
+        [Parameter(Mandatory = $true)][string]$SiteUrl,
         [string]$LibraryName = 'Shared Documents',
         [int]$KeepVersions = 5,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
@@ -709,7 +709,7 @@ function Clean-SPVersionHistory {
 function Find-OrphanedSPFiles {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$SiteUrl,
+        [Parameter(Mandatory = $true)][string]$SiteUrl,
         [string]$LibraryName = 'Shared Documents',
         [int]$Days = 90,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
@@ -796,7 +796,7 @@ function Select-SPToolsFolder {
 function Get-SPToolsFileReport {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$SiteName,
+        [Parameter(Mandatory = $true)][string]$SiteName,
         [string]$SiteUrl,
         [string]$LibraryName = 'Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
@@ -869,7 +869,7 @@ function Get-SPToolsFileReport {
 function List-OneDriveUsage {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$AdminUrl,
+        [Parameter(Mandatory = $true)][string]$AdminUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath

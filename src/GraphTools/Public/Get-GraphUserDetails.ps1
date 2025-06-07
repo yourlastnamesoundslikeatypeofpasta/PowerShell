@@ -9,11 +9,23 @@ function Get-GraphUserDetails {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$UserPrincipalName,
-        [Parameter(Mandatory)][string]$TenantId,
-        [Parameter(Mandatory)][string]$ClientId,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$UserPrincipalName,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TenantId,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$ClientId,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$ClientSecret,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$CsvPath,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$HtmlPath
     )
 

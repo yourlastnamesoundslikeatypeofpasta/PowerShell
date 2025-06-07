@@ -13,8 +13,11 @@ function Invoke-JobBundle {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory,ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$Path,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$LogArchivePath
     )
 

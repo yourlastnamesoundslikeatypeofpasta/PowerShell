@@ -7,13 +7,20 @@ function New-SPUsageReport {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
+        [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$TranscriptPath,
+        [Parameter(Mandatory = $false)]
         [switch]$Simulate,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain,
+        [Parameter(Mandatory = $false)]
         [object]$Logger,
+        [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
+        [Parameter(Mandatory = $false)]
         [object]$Config
     )
     process {

@@ -1,8 +1,12 @@
 function Assert-ParameterNotNull {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][object]$Value,
-        [Parameter(Mandatory)][string]$Name
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [object]$Value,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Name
     )
     if ($null -eq $Value -or ($Value -is [string] -and $Value.Trim() -eq '')) {
         throw "Parameter '$Name' cannot be null or empty."
@@ -12,7 +16,11 @@ function Assert-ParameterNotNull {
 function New-STErrorObject {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$Message,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Message,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$Category = 'General'
     )
     [pscustomobject]@{
@@ -24,7 +32,11 @@ function New-STErrorObject {
 
 function Write-STDebug {
     [CmdletBinding()]
-    param([Parameter(Mandatory)][string]$Message)
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Message
+    )
     if ($env:ST_DEBUG -eq '1') {
         Write-Host "[DEBUG] $Message" -ForegroundColor DarkGray
     }

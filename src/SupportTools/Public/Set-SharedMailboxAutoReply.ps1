@@ -8,25 +8,42 @@ function Set-SharedMailboxAutoReply {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$MailboxIdentity,
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [datetime]$StartTime,
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [datetime]$EndTime,
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$InternalMessage,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$ExternalMessage,
+        [Parameter(Mandatory = $false)]
         [ValidateSet('None','Known','All')]
+        [ValidateNotNullOrEmpty()]
         [string]$ExternalAudience = 'All',
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$AdminUser,
+        [Parameter(Mandatory = $false)]
         [switch]$UseWebLogin,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$TranscriptPath,
+        [Parameter(Mandatory = $false)]
         [switch]$Simulate,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain,
+        [Parameter(Mandatory = $false)]
         [object]$Logger,
+        [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
+        [Parameter(Mandatory = $false)]
         [object]$Config
     )
 

@@ -15,24 +15,46 @@ function Invoke-CompanyPlaceManagement {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Get','Create','Edit')]
+        [ValidateNotNullOrEmpty()]
         [string]$Action,
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$DisplayName,
+        [Parameter(Mandatory = $false)]
         [ValidateSet('Building','Floor','Section','Desk')]
+        [ValidateNotNullOrEmpty()]
         [string]$Type = 'Building',
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$Street,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$City,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$State,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$PostalCode,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$CountryOrRegion,
+        [Parameter(Mandatory = $false)]
         [switch]$AutoAddFloor,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$TranscriptPath,
+        [Parameter(Mandatory = $false)]
         [switch]$Simulate,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain,
+        [Parameter(Mandatory = $false)]
         [object]$Logger,
+        [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
+        [Parameter(Mandatory = $false)]
         [object]$Config
     )
 

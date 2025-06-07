@@ -7,8 +7,12 @@ function Search-SDTicket {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$Query,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Query,
+        [Parameter(Mandatory = $false)]
         [switch]$ChaosMode,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain
     )
 

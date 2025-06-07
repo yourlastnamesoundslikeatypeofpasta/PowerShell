@@ -14,16 +14,25 @@ if ($SupportToolsConfig.maintenanceMode) {
 function Write-STLog {
     [CmdletBinding(DefaultParameterSetName='Message')]
     param(
-        [Parameter(Mandatory, Position=0, ParameterSetName='Message')]
+        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Message')]
+        [ValidateNotNullOrEmpty()]
         [string]$Message,
+        [Parameter(Mandatory = $false)]
         [ValidateSet('INFO','WARN','ERROR')]
+        [ValidateNotNullOrEmpty()]
         [string]$Level = 'INFO',
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$Path,
+        [Parameter(Mandatory = $false)]
         [hashtable]$Metadata,
+        [Parameter(Mandatory = $false)]
         [switch]$Structured,
-        [Parameter(Mandatory, ParameterSetName='Metric')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Metric')]
+        [ValidateNotNullOrEmpty()]
         [string]$Metric,
-        [Parameter(Mandatory, ParameterSetName='Metric')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Metric')]
+        [ValidateNotNullOrEmpty()]
         [double]$Value
     )
     if ($PSCmdlet.ParameterSetName -eq 'Metric') {
@@ -72,11 +81,22 @@ function Write-STLog {
 function Write-STRichLog {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$Tool,
-        [Parameter(Mandatory)][string]$Status,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Tool,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Status,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$User,
+        [Parameter(Mandatory = $false)]
         [timespan]$Duration,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string[]]$Details,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$Path
     )
 
@@ -109,10 +129,14 @@ function Write-STRichLog {
 function Write-STStatus {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$Message,
+        [Parameter(Mandatory = $false)]
         [ValidateSet('INFO','SUCCESS','ERROR','WARN','SUB','FINAL','FATAL')]
+        [ValidateNotNullOrEmpty()]
         [string]$Level = 'INFO',
+        [Parameter(Mandatory = $false)]
         [switch]$Log
     )
 
@@ -133,8 +157,11 @@ function Write-STStatus {
 function Show-STPrompt {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$Command,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$Path = (Get-Location).Path
     )
     $user = if ($env:USERNAME) { $env:USERNAME } else { $env:USER }
@@ -146,8 +173,13 @@ function Show-STPrompt {
 function Write-STDivider {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$Title,
-        [ValidateSet('light','heavy')][string]$Style = 'light'
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Title,
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('light','heavy')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Style = 'light'
     )
     $char = if ($Style -eq 'heavy') { '═' } else { '─' }
     $total = 65
@@ -160,7 +192,11 @@ function Write-STDivider {
 
 function Write-STBlock {
     [CmdletBinding()]
-    param([Parameter(Mandatory)][hashtable]$Data)
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [hashtable]$Data
+    )
     $max = ($Data.Keys | Measure-Object -Property Length -Maximum).Maximum
     foreach ($k in $Data.Keys) {
         $label = ($k + ':').PadRight($max + 1)
@@ -170,7 +206,11 @@ function Write-STBlock {
 
 function Write-STClosing {
     [CmdletBinding()]
-    param([string]$Message = 'Task Complete')
+    param(
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Message = 'Task Complete'
+    )
     Write-Host "┌──[ $Message ]──────────────" -ForegroundColor DarkGray
 }
 

@@ -96,6 +96,12 @@ Describe 'SupportTools Module' {
                     $now = Get-Date
                     & $Fn -MailboxIdentity 'box' -StartTime $now -EndTime $now.AddDays(1) -InternalMessage 'hi' -AdminUser 'admin@example.com'
                 }
+                'Add-UserToGroup' {
+                    & $Fn -CsvPath 'users.csv' -GroupName 'Group'
+                }
+                'Invoke-GroupMembershipCleanup' {
+                    & $Fn -CsvPath 'users.csv' -GroupName 'Group'
+                }
                 'Invoke-CompanyPlaceManagement' {
                     & $Fn -Action 'Get' -DisplayName 'Place'
                 }
