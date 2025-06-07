@@ -44,12 +44,12 @@ function Invoke-RemoteAudit {
                     try {
                         $session = New-PSSession -ComputerName $name -Credential $cred -ErrorAction Stop
                     } catch {
-                        Write-STStatus "Unable to connect to $name: $_" -Level ERROR -Log
+                        Write-STStatus "Unable to connect to ${name}: $_" -Level ERROR -Log
                         $results += [pscustomobject]@{ ComputerName = $name; Error = $_.Exception.Message }
                         continue
                     }
                 } else {
-                    Write-STStatus "Unable to connect to $name: $_" -Level ERROR -Log
+                    Write-STStatus "Unable to connect to ${name}: $_" -Level ERROR -Log
                     $results += [pscustomobject]@{ ComputerName = $name; Error = $_.Exception.Message }
                     continue
                 }
@@ -74,7 +74,7 @@ function Invoke-RemoteAudit {
                 $results += [pscustomobject]@{ ComputerName = $name; Result = $data }
                 Write-STStatus "Collected audit data from $name." -Level SUCCESS -Log
             } catch {
-                Write-STStatus "Failed to run audit on $name: $_" -Level ERROR -Log
+                Write-STStatus "Failed to run audit on ${name}: $_" -Level ERROR -Log
                 $results += [pscustomobject]@{ ComputerName = $name; Error = $_.Exception.Message }
             } finally {
                 if ($session) { Remove-PSSession $session }
