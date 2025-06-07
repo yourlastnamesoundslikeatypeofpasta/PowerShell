@@ -54,7 +54,7 @@ listed are forwarded to the underlying script unchanged.
 | `Update-Sysmon` | `Update-Sysmon.ps1` | *passthrough* | `Update-Sysmon -SourcePath D:\Tools` |
 | `Invoke-CompanyPlaceManagement` | `Invoke-CompanyPlaceManagement.ps1` | `Action`, `DisplayName`, `[Type]`, `Street`, `City`, `State`, `PostalCode`, `CountryOrRegion`, `[AutoAddFloor]` | `Invoke-CompanyPlaceManagement -Action Create -DisplayName 'HQ' -Type Building -City Seattle` |
 | `Submit-SystemInfoTicket` | `Submit-SystemInfoTicket.ps1` | `SiteName`, `RequesterEmail`, `[Subject]`, `[Description]`, `[LibraryName]`, `[FolderPath]` | `Submit-SystemInfoTicket -SiteName IT -RequesterEmail 'user@contoso.com'` |
-| `Generate-SPUsageReport` | `Generate-SPUsageReport.ps1` | `[ItemThreshold]`, `[RequesterEmail]`, `[CsvPath]`, `[TranscriptPath]` | `Generate-SPUsageReport -RequesterEmail 'user@contoso.com'` |
+| `New-SPUsageReport` | `Generate-SPUsageReport.ps1` | `[ItemThreshold]`, `[RequesterEmail]`, `[CsvPath]`, `[TranscriptPath]` | `New-SPUsageReport -RequesterEmail 'user@contoso.com'` |
 | `Install-MaintenanceTasks` | `Setup-ScheduledMaintenance.ps1` | `[Register]` | `Install-MaintenanceTasks -Register` |
 | `Sync-SupportTools` | *git* | `[RepositoryUrl]`, `[InstallPath]` | `Sync-SupportTools` |
 
