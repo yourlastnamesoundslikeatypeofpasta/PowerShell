@@ -97,7 +97,7 @@ These values override settings from `config/SharePointToolsSettings.psd1` so cre
 
 ## Updating
 
-If the repository is updated, pull the latest changes and re-import the modules. Incremented module versions are defined in the manifest files.
+Run `Sync-SupportTools` to pull the latest changes from git and automatically re-import the modules. Incremented module versions are defined in the manifest files.
 
 ## Support
 

@@ -10,6 +10,7 @@ Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue |
 Get-ChildItem -Path "$PublicDir" -Filter *.ps1 -ErrorAction SilentlyContinue |
     ForEach-Object { . $_.FullName }
 
+
 Export-ModuleMember -Function (
     Get-ChildItem "$PublicDir/*.ps1" -ErrorAction SilentlyContinue
 ).BaseName

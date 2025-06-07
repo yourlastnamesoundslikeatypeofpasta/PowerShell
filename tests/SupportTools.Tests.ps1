@@ -31,6 +31,7 @@ Describe 'SupportTools Module' {
             'Generate-SPUsageReport'
             'Install-MaintenanceTasks'
             'Invoke-GroupMembershipCleanup'
+            'Sync-SupportTools'
         )
 
         $exported = (Get-Command -Module SupportTools).Name
@@ -78,6 +79,33 @@ Describe 'SupportTools Module' {
             Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1
         }
 
+    }
+
+    Context 'Sync-SupportTools behavior' {
+        It 'clones when repository is missing' {
+            InModuleScope SupportTools {
+                function git {}
+                function Import-Module {}
+                Mock git {} -ModuleName SupportTools
+                Mock Import-Module {} -ModuleName SupportTools
+                $path = Join-Path $env:TEMP ([guid]::NewGuid())
+                Sync-SupportTools -RepositoryUrl 'url' -InstallPath $path
+                Assert-MockCalled git -ModuleName SupportTools -Times 1 -ParameterFilter { $args[0] -eq 'clone' }
+            }
+        }
+
+        It 'pulls when repository exists' {
+            InModuleScope SupportTools {
+                function git {}
+                function Import-Module {}
+                Mock git {} -ModuleName SupportTools
+                Mock Import-Module {} -ModuleName SupportTools
+                $path = Join-Path $env:TEMP ([guid]::NewGuid())
+                New-Item -ItemType Directory -Path (Join-Path $path '.git') -Force | Out-Null
+                Sync-SupportTools -RepositoryUrl 'url' -InstallPath $path
+                Assert-MockCalled git -ModuleName SupportTools -Times 1 -ParameterFilter { $args[0] -eq '-C' -and $args[2] -eq 'pull' }
+            }
+        }
     }
 
     Context 'Add-UserToGroup output passthrough' {
