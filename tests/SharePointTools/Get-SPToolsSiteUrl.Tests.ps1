@@ -11,11 +11,12 @@ Describe 'Get-SPToolsSiteUrl function' {
         }
     }
 
-    It 'does not accept pipeline input' {
+    It 'parameter does not accept pipeline input' {
         InModuleScope SharePointTools {
-            $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ B='https://b' } })
-            Mock Write-SPToolsHacker {}
-            { [pscustomobject]@{ SiteName='B' } | Get-SPToolsSiteUrl } | Should -Throw
+            $meta = Get-Command Get-SPToolsSiteUrl
+            $paramAttr = $meta.Parameters['SiteName'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] }
+            $paramAttr.ValueFromPipeline | Should -BeFalse
+            $paramAttr.ValueFromPipelineByPropertyName | Should -BeFalse
         }
     }
 
