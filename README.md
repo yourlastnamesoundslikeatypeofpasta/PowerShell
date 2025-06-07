@@ -53,6 +53,7 @@ This repository packages a collection of scripts into reusable modules.
    Import-Module ./src/SupportTools/SupportTools.psd1
    Import-Module ./src/SharePointTools/SharePointTools.psd1
    Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
+   Import-Module ./src/AuditTools/AuditTools.psd1
    ```
 
 4. Run the SharePoint configuration script once to store tenant information:
