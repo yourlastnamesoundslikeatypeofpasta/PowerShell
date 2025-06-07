@@ -21,7 +21,7 @@ function Set-SDTicketBulk {
     }
 
     foreach ($ticketId in $Id) {
-        Write-STLog "Set-SDTicketBulk $ticketId"
+        Write-STLog -Message "Set-SDTicketBulk $ticketId"
         Set-SDTicket -Id $ticketId -Fields $Fields -ChaosMode:$ChaosMode
     }
 }

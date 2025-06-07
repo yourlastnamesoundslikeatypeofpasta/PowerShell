@@ -20,7 +20,7 @@ function Set-SDTicket {
         return
     }
 
-    Write-STLog "Set-SDTicket $Id"
+    Write-STLog -Message "Set-SDTicket $Id"
     $body = @{ incident = $Fields }
     Invoke-SDRequest -Method 'PUT' -Path "/incidents/$Id.json" -Body $body -ChaosMode:$ChaosMode
 }

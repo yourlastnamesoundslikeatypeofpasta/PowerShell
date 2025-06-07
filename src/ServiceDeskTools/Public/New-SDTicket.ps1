@@ -23,7 +23,7 @@ function New-SDTicket {
         return
     }
 
-    Write-STLog "New-SDTicket $Subject"
+    Write-STLog -Message "New-SDTicket $Subject"
     $body = @{ incident = @{ name = $Subject; description = $Description; requester_email = $RequesterEmail } }
     Invoke-SDRequest -Method 'POST' -Path '/incidents.json' -Body $body -ChaosMode:$ChaosMode
 }

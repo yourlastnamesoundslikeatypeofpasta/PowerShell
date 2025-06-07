@@ -64,7 +64,7 @@ function Invoke-ScriptFile {
         & $Path @Args
     } catch {
         Write-Error "Execution of '$Name' failed: $_"
-        Write-STLog "Execution of '$Name' failed: $_" -Level 'ERROR' -Structured -Metadata @{ version = $moduleVersion; script = $Name }
+        Write-STLog -Message "Execution of '$Name' failed: $_" -Level 'ERROR' -Structured -Metadata @{ version = $moduleVersion; script = $Name }
         $result = 'Failure'
         throw
     } finally {

@@ -23,7 +23,7 @@ function Link-SDTicketToSPTask {
         return
     }
 
-    Write-STLog "Link-SDTicketToSPTask $TicketId $TaskUrl"
+    Write-STLog -Message "Link-SDTicketToSPTask $TicketId $TaskUrl"
     $fields = @{ $FieldName = $TaskUrl }
     Set-SDTicket -Id $TicketId -Fields $fields -ChaosMode:$ChaosMode
 }

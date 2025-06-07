@@ -17,6 +17,6 @@ function Get-SDTicket {
         return
     }
 
-    Write-STLog "Get-SDTicket $Id"
+    Write-STLog -Message "Get-SDTicket $Id"
     Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id.json" -ChaosMode:$ChaosMode
 }

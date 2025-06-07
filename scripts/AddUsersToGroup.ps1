@@ -87,14 +87,7 @@ function Connect-MicrosoftGraph {
     $scopes = 'User.Read.All','Group.ReadWrite.All','Directory.ReadWrite.All'
     try {
         Connect-MgGraph -Scopes $scopes -NoWelcome
-        try {
-            Confirm-MgGraphScopes -Scopes $scopes
-        } catch {
-            Write-Warning 'Microsoft Graph scopes not granted. Exiting.'
-            throw
-        }
-    }
-    catch {
+    } catch {
         Write-Error -Message "Error: $_.Exception.Message"
         throw "Error: Cannot connect to Microsoft Graph"
     }
