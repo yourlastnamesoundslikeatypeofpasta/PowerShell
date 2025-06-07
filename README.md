@@ -8,6 +8,7 @@ This repository packages a collection of scripts into reusable modules.
 * **SharePointTools** – commands for SharePoint cleanup tasks such as removing archives or sharing links.
 * **ServiceDeskTools** – interact with the Service Desk ticketing system.
 * **PerformanceTools** – measure script runtime and resource usage.
+* **GraphTools** – query Microsoft Graph for common account information.
 * **ChaosTools** – inject random failures to validate error handling.
 
 ### Module Maturity
@@ -18,6 +19,7 @@ This repository packages a collection of scripts into reusable modules.
 | SharePointTools | Beta |
 | ServiceDeskTools | Experimental |
 | PerformanceTools | Experimental |
+| GraphTools | Experimental |
 | ChaosTools | Experimental |
 
 ## Requirements 📋
@@ -53,6 +55,7 @@ This repository packages a collection of scripts into reusable modules.
    Import-Module ./src/SupportTools/SupportTools.psd1
    Import-Module ./src/SharePointTools/SharePointTools.psd1
    Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
+   Import-Module ./src/GraphTools/GraphTools.psd1
    Import-Module ./src/ChaosTools/ChaosTools.psd1
    ```
 
@@ -80,7 +83,8 @@ Invoke-YFArchiveCleanup -Verbose
 Get-SPToolsAllLibraryReports | Format-Table
 ```
 
-See [docs/SupportTools.md](docs/SupportTools.md), [docs/SharePointTools.md](docs/SharePointTools.md), [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md), [docs/PerformanceTools.md](docs/PerformanceTools.md) and [docs/ChaosTools.md](docs/ChaosTools.md) for a full list of commands. For a short introduction refer to [docs/Quickstart.md](docs/Quickstart.md). For detailed deployment guidance see [docs/UserGuide.md](docs/UserGuide.md).
+See [docs/SupportTools.md](docs/SupportTools.md), [docs/SharePointTools.md](docs/SharePointTools.md), [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md), [docs/PerformanceTools.md](docs/PerformanceTools.md), [docs/GraphTools.md](docs/GraphTools.md) and [docs/ChaosTools.md](docs/ChaosTools.md) for a full list of commands. For a short introduction refer to [docs/Quickstart.md](docs/Quickstart.md). For detailed deployment guidance see [docs/UserGuide.md](docs/UserGuide.md).
+
 
 The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.

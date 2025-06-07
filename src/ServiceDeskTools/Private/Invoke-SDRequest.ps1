@@ -6,6 +6,8 @@ function Invoke-SDRequest {
         [hashtable]$Body,
         [switch]$ChaosMode
     )
+    Assert-ParameterNotNull $Method 'Method'
+    Assert-ParameterNotNull $Path 'Path'
 
     $baseUri = $env:SD_BASE_URI
     if (-not $baseUri) { $baseUri = 'https://api.samanage.com' }

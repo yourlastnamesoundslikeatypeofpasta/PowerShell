@@ -8,11 +8,14 @@
     <owners>Contoso</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Collection of PowerShell automation modules used by the IT support team.</description>
-    <tags>PowerShell SupportTools SharePointTools ServiceDeskTools</tags>
+    <tags>PowerShell SupportTools SharePointTools ServiceDeskTools Logging GraphTools Telemetry PerformanceTools</tags>
     <dependencies>
       <dependency id="SharePointTools" version="[1.1.0]" />
       <dependency id="ServiceDeskTools" version="[1.0.0]" />
       <dependency id="Logging" version="[1.3.0]" />
+      <dependency id="Telemetry" version="[1.0.0]" />
+      <dependency id="GraphTools" version="[1.0.0]" />
+      <dependency id="PerformanceTools" version="[1.0.0]" />
     </dependencies>
   </metadata>
   <files>
@@ -20,5 +23,9 @@
     <file src="src\SharePointTools\**\*" target="tools\SharePointTools" />
     <file src="src\ServiceDeskTools\**\*" target="tools\ServiceDeskTools" />
     <file src="src\Logging\**\*" target="tools\Logging" />
+    <file src="src\Telemetry\**\*" target="tools\Telemetry" />
+    <file src="src\GraphTools\**\*" target="tools\GraphTools" />
+    <file src="src\PerformanceTools\**\*" target="tools\PerformanceTools" />
+    <file src="tests\**\*" target="tests" />
   </files>
 </package>

@@ -12,9 +12,12 @@ function Start-Countdown {
         [object[]]$Arguments,
         [string]$TranscriptPath,
         [switch]$Simulate,
-        [switch]$Explain
+        [switch]$Explain,
+        [object]$Logger,
+        [object]$TelemetryClient,
+        [object]$Config
     )
     process {
-        Invoke-ScriptFile -Name "SimpleCountdown.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "SimpleCountdown.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

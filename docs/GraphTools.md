@@ -1,0 +1,15 @@
+# GraphTools Module
+
+Commands that query Microsoft Graph for tenant data. Import the module:
+
+```powershell
+Import-Module ./src/GraphTools/GraphTools.psd1
+```
+
+## Available Commands
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `Get-GraphUserDetails` | Retrieve metadata for a user | `Get-GraphUserDetails -UserPrincipalName user@contoso.com -TenantId <tenant> -ClientId <app>` |
+
+The command requires an Entra ID application registration. Provide the tenant ID, client ID and optional client secret for authentication.

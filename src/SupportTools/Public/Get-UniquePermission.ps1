@@ -12,9 +12,12 @@ function Get-UniquePermission {
         [object[]]$Arguments,
         [string]$TranscriptPath,
         [switch]$Simulate,
-        [switch]$Explain
+        [switch]$Explain,
+        [object]$Logger,
+        [object]$TelemetryClient,
+        [object]$Config
     )
     process {
-        Invoke-ScriptFile -Name "Get-UniquePermissions.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "Get-UniquePermissions.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

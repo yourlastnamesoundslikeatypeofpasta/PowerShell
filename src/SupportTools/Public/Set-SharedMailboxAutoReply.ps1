@@ -24,26 +24,43 @@ function Set-SharedMailboxAutoReply {
         [switch]$UseWebLogin,
         [string]$TranscriptPath,
         [switch]$Simulate,
-        [switch]$Explain
+        [switch]$Explain,
+        [object]$Logger,
+        [object]$TelemetryClient,
+        [object]$Config
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
-
-    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-    Write-STStatus 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
-    if ($Simulate) {
-        Write-STStatus 'Simulation mode active - auto-reply settings will not be changed.' -Level WARN -Log
-        $mock = [pscustomobject]@{
-            MailboxIdentity = $MailboxIdentity
-            Simulated       = $true
-            Timestamp       = Get-Date
+    try {
+        if ($Logger) {
+            Import-Module $Logger -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
         }
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
-        return $mock
-    }
+        if ($TelemetryClient) {
+            Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+        }
+        if ($Config) {
+            Import-Module $Config -ErrorAction SilentlyContinue
+        }
+
+        if ($Explain) {
+            Get-Help $MyInvocation.PSCommandPath -Full
+            return
+        }
+
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        Write-STStatus 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
+        if ($Simulate) {
+            Write-STStatus 'Simulation mode active - auto-reply settings will not be changed.' -Level WARN -Log
+            $mock = [pscustomobject]@{
+                MailboxIdentity = $MailboxIdentity
+                Simulated       = $true
+                Timestamp       = Get-Date
+            }
+            return $mock
+        }
 
     if ([string]::IsNullOrWhiteSpace($ExternalMessage)) {
         $ExternalMessage = $InternalMessage
@@ -83,10 +100,16 @@ function Set-SharedMailboxAutoReply {
 
     $result = Get-MailboxAutoReplyConfiguration -Identity $MailboxIdentity
 
-    Disconnect-ExchangeOnline -Confirm:$false
+        Disconnect-ExchangeOnline -Confirm:$false
 
-    Write-STStatus 'Auto-reply configuration complete' -Level FINAL -Log
-    if ($TranscriptPath) { Stop-Transcript | Out-Null }
-
-    return $result
+        Write-STStatus 'Auto-reply configuration complete' -Level FINAL -Log
+        return $result
+    } catch {
+        Write-STStatus "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Log
+        Write-STLog -Message "Set-SharedMailboxAutoReply failed: $_" -Level ERROR
+        return New-STErrorObject -Message $_.Exception.Message -Category 'Exchange'
+    } finally {
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+        Disconnect-ExchangeOnline -Confirm:$false | Out-Null
+    }
 }
