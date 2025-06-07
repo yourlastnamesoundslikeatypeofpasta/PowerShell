@@ -3,18 +3,34 @@ function Get-CommonSystemInfo {
     .SYNOPSIS
         Returns common system information such as OS and hardware details.
     .DESCRIPTION
-        Wraps the Get-CommonSystemInfo.ps1 script in the scripts folder and
-        forwards any provided arguments.
+        Collects operating system, processor, disk and memory information using
+        CIM classes and returns it as a custom object.
     #>
     [CmdletBinding()]
-    param(
-        [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
-        [object[]]$Arguments,
-        [string]$TranscriptPath,
-        [switch]$Simulate,
-        [switch]$Explain
-    )
+    param()
+
     process {
-        Invoke-ScriptFile -Name "Get-CommonSystemInfo.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
+
+        Write-STStatus 'Collecting system information...' -Level INFO
+
+        $operatingSystemInfo = Get-CimInstance -ClassName Win32_OperatingSystem
+        $processorInfo       = Get-CimInstance -ClassName Win32_Processor
+        $diskInfo            = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType = 3"
+        $memoryInfo          = Get-CimInstance -ClassName Win32_PhysicalMemory
+
+        $commonSystemInfoObj = [pscustomobject]@{
+            ComputerName = $operatingSystemInfo.CSName
+            OSVersion    = $operatingSystemInfo.Caption
+            OSBuild      = $operatingSystemInfo.BuildNumber
+            Processor    = $processorInfo.Name
+            Memory       = $operatingSystemInfo.TotalVisibleMemorySize / 1MB
+            DiskSpace    = $diskInfo | Select-Object -Property DeviceID,
+                            @{Name = 'Size'; Expression = { "{0:N2}" -f ($_.Size / 1GB) }},
+                            @{Name = 'FreeSpace'; Expression = { "{0:N2}" -f ($_.FreeSpace / 1GB) }}
+        }
+        Write-STStatus 'System information collected.' -Level SUCCESS
+
+        return $commonSystemInfoObj
     }
 }
