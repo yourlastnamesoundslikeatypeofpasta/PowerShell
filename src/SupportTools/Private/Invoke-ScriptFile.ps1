@@ -17,6 +17,7 @@ function Invoke-ScriptFile {
         [switch]$Simulate,
         [switch]$Explain
     )
+    Assert-ParameterNotNull $Name 'Name'
     # Retrieve the SupportTools module version for log metadata
     $manifest = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'SupportTools.psd1'
     $moduleVersion = try {
