@@ -50,10 +50,8 @@ Parameter Sets: (All)
 ### None
 
 ## OUTPUTS
-```
-System.Object
-```
 
+### System.Object
 Object with the properties `DurationSeconds`, `CpuSeconds` and `MemoryDeltaMB`.
 
 ## NOTES
