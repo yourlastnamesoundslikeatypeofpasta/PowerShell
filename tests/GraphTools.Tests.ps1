@@ -14,10 +14,10 @@ Describe 'GraphTools Module' {
             Mock Get-GraphAccessToken { 't' } -ModuleName GraphTools
             Mock Invoke-RestMethod { @{ id='1'; displayName='User'; userPrincipalName='u' } } -ModuleName GraphTools -ParameterFilter { $Method -eq 'GET' }
             Mock Write-STLog {} -ModuleName GraphTools
-            Mock Write-STTelemetryEvent {} -ModuleName GraphTools
+            Mock Send-STMetric {} -ModuleName GraphTools
             Get-GraphUserDetails -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid'
             Assert-MockCalled Write-STLog -ModuleName GraphTools -Times 1
-            Assert-MockCalled Write-STTelemetryEvent -ModuleName GraphTools -Times 1
+            Assert-MockCalled Send-STMetric -ModuleName GraphTools -Times 1
         }
     }
 }

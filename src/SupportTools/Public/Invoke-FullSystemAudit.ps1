@@ -42,8 +42,8 @@ function Invoke-FullSystemAudit {
                 $errors += [pscustomobject]@{ Stage = $Name; Error = $_.ToString() }
                 $result = 'Failure'
             } finally {
-                $sw.Stop()
-                Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $sw.Elapsed
+            $sw.Stop()
+            Send-STMetric -MetricName $Name -Category 'Audit' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
             }
             return $out
         }

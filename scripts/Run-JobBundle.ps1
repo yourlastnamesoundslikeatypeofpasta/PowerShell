@@ -60,7 +60,8 @@ try {
     throw
 } finally {
     $duration = (Get-Date) - $start
-    Write-STTelemetryEvent -ScriptName (Split-Path $scriptPath -Leaf) -Result $result -Duration $duration
+    $name = (Split-Path $scriptPath -Leaf)
+    Send-STMetric -MetricName $name -Category 'Deployment' -Value $duration.TotalSeconds -Details @{ Result = $result }
     Pop-Location
     Remove-Item $tempDir -Recurse -Force
 }

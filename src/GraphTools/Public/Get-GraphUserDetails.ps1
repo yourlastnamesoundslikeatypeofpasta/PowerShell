@@ -54,6 +54,6 @@ function Get-GraphUserDetails {
         throw
     } finally {
         $sw.Stop()
-        Write-STTelemetryEvent -ScriptName 'Get-GraphUserDetails' -Result $result -Duration $sw.Elapsed
+        Send-STMetric -MetricName 'Get-GraphUserDetails' -Category 'Audit' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
     }
 }

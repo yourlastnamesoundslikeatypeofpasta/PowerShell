@@ -115,7 +115,7 @@ try {
     throw
 } finally {
     $stopwatch.Stop()
-    Write-STTelemetryEvent -ScriptName $scriptName -Result $result -Duration $stopwatch.Elapsed
+    Send-STMetric -MetricName $scriptName -Category 'Audit' -Value $stopwatch.Elapsed.TotalSeconds -Details @{ Result = $result }
     if ($TranscriptPath) { Stop-Transcript | Out-Null }
     Write-STClosing
 }

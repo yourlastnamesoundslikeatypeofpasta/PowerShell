@@ -18,7 +18,8 @@ function Invoke-ScriptFile {
         [object]$Config,
         [string]$TranscriptPath,
         [switch]$Simulate,
-        [switch]$Explain
+        [switch]$Explain,
+        [string]$Category = 'General'
     )
     Assert-ParameterNotNull $Name 'Name'
     # Retrieve the SupportTools module version for log metadata
@@ -93,7 +94,7 @@ function Invoke-ScriptFile {
         $sw.Stop()
         $duration = $sw.Elapsed
         Write-STLog -Metric 'Duration' -Value $duration.TotalSeconds
-        Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $duration
+        Send-STMetric -MetricName $Name -Category $Category -Value $duration.TotalSeconds -Details @{ Result = $result }
     }
     Write-STStatus "COMPLETED $Name" -Level FINAL -Log
 }

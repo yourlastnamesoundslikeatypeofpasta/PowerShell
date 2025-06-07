@@ -8,7 +8,9 @@ function Write-STTelemetryEvent {
     param(
         [Parameter(Mandatory)][string]$ScriptName,
         [Parameter(Mandatory)][string]$Result,
-        [Parameter(Mandatory)][timespan]$Duration
+        [Parameter(Mandatory)][timespan]$Duration,
+        [string]$Category,
+        [string]$OperationId
     )
     Assert-ParameterNotNull $ScriptName 'ScriptName'
     Assert-ParameterNotNull $Result 'Result'
@@ -26,14 +28,45 @@ function Write-STTelemetryEvent {
     if (-not (Test-Path $dir)) {
         New-Item -Path $dir -ItemType Directory -Force | Out-Null
     }
+    if (-not $OperationId) { $OperationId = [guid]::NewGuid().ToString() }
     $event = [pscustomobject]@{
-        Timestamp = (Get-Date).ToString('o')
-        Script    = $ScriptName
-        Result    = $Result
-        Duration  = [math]::Round($Duration.TotalSeconds, 2)
-    } | ConvertTo-Json -Compress
+        Timestamp   = (Get-Date).ToString('o')
+        Script      = $ScriptName
+        Result      = $Result
+        Duration    = [math]::Round($Duration.TotalSeconds, 2)
+        OperationId = $OperationId
+    }
+    if ($Category) { $event | Add-Member -NotePropertyName Category -NotePropertyValue $Category }
+    $event = $event | ConvertTo-Json -Compress
 
     $event | Out-File -FilePath $logFile -Encoding utf8 -Append
+}
+
+function Send-STMetric {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$MetricName,
+        [Parameter(Mandatory)][string]$Category,
+        [Parameter(Mandatory)][double]$Value,
+        [hashtable]$Details
+    )
+    if ($env:ST_ENABLE_TELEMETRY -ne '1') { Write-STDebug 'Telemetry disabled'; return }
+    $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
+    if ($env:ST_TELEMETRY_PATH) { $logFile = $env:ST_TELEMETRY_PATH } else {
+        $dir = Join-Path $userProfile 'SupportToolsTelemetry'
+        $logFile = Join-Path $dir 'telemetry.jsonl'
+    }
+    $dir = Split-Path -Path $logFile -Parent
+    if (-not (Test-Path $dir)) { New-Item -Path $dir -ItemType Directory -Force | Out-Null }
+    $event = [ordered]@{
+        Timestamp   = (Get-Date).ToString('o')
+        Metric      = $MetricName
+        Category    = $Category
+        Value       = $Value
+        OperationId = [guid]::NewGuid().ToString()
+    }
+    if ($Details) { foreach ($k in $Details.Keys) { $event[$k] = $Details[$k] } }
+    ($event | ConvertTo-Json -Compress) | Out-File -FilePath $logFile -Encoding utf8 -Append
 }
 
 function Get-STTelemetryMetrics {
@@ -59,10 +92,11 @@ function Get-STTelemetryMetrics {
     $events = Get-Content $logFile | ForEach-Object { $_ | ConvertFrom-Json }
     if (-not $events) { return @() }
 
-    $metrics = foreach ($group in ($events | Group-Object -Property Script)) {
+    $metrics = foreach ($group in ($events | Where-Object Script | Group-Object -Property Script)) {
         $avg = ($group.Group.Duration | Measure-Object -Average).Average
         [pscustomobject]@{
             Script         = $group.Name
+            Category       = ($group.Group | Select-Object -First 1).Category
             Executions     = $group.Count
             Successes      = ($group.Group | Where-Object Result -eq 'Success').Count
             Failures       = ($group.Group | Where-Object Result -eq 'Failure').Count
@@ -90,7 +124,7 @@ function Get-STTelemetryMetrics {
     return $metrics
 }
 
-Export-ModuleMember -Function 'Write-STTelemetryEvent','Get-STTelemetryMetrics'
+Export-ModuleMember -Function 'Write-STTelemetryEvent','Get-STTelemetryMetrics','Send-STMetric'
 
 function Show-TelemetryBanner {
     Write-STDivider 'TELEMETRY MODULE LOADED' -Style heavy
