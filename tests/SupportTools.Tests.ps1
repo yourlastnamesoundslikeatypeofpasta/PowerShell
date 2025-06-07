@@ -30,6 +30,7 @@ Describe 'SupportTools Module' {
             'Submit-SystemInfoTicket',
             'Generate-SPUsageReport'
             'Install-MaintenanceTasks'
+            'Sync-SupportTools'
         )
 
         $exported = (Get-Command -Module SupportTools).Name
