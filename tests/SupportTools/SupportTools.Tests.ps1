@@ -1,6 +1,6 @@
 Describe 'SupportTools Module' {
     BeforeAll {
-        Import-Module $PSScriptRoot/../src/SupportTools/SupportTools.psd1 -Force
+        Import-Module $PSScriptRoot/../../src/SupportTools/SupportTools.psd1 -Force
     }
 
     Context 'Exported commands' {

@@ -1,6 +1,6 @@
 Describe 'Invoke-ArchiveCleanup' {
     BeforeAll {
-        Import-Module $PSScriptRoot/../src/SharePointTools/SharePointTools.psd1 -Force
+        Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force
     }
     BeforeEach {
         function Connect-PnPOnline {}

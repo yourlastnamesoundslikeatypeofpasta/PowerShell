@@ -1,6 +1,6 @@
 Describe 'ServiceDeskTools Module' {
     BeforeAll {
-        Import-Module $PSScriptRoot/../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force
+        Import-Module $PSScriptRoot/../../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force
     }
 
     Context 'Exported commands' {
