@@ -12,11 +12,19 @@ function Sync-SupportTools {
     #>
     [CmdletBinding()]
     param(
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$RepositoryUrl = 'https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git',
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$InstallPath = $(if ($env:USERPROFILE) { Join-Path $env:USERPROFILE 'SupportTools' } else { Join-Path $env:HOME 'SupportTools' }),
+        [Parameter(Mandatory = $false)]
         [switch]$Explain,
+        [Parameter(Mandatory = $false)]
         [object]$Logger,
+        [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
+        [Parameter(Mandatory = $false)]
         [object]$Config
     )
 

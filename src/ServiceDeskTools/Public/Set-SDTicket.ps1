@@ -9,9 +9,15 @@ function Set-SDTicket {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][int]$Id,
-        [Parameter(Mandatory)][hashtable]$Fields,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [int]$Id,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [hashtable]$Fields,
+        [Parameter(Mandatory = $false)]
         [switch]$ChaosMode,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain
     )
 

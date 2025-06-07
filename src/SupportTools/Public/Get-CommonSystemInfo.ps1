@@ -8,8 +8,11 @@ function Get-CommonSystemInfo {
     #>
     [CmdletBinding()]
     param(
+        [Parameter(Mandatory = $false)]
         [object]$Logger,
+        [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
+        [Parameter(Mandatory = $false)]
         [object]$Config
     )
 

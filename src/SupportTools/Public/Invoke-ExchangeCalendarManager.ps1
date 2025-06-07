@@ -8,11 +8,18 @@ function Invoke-ExchangeCalendarManager {
     #>
     [CmdletBinding()]
     param(
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$TranscriptPath,
+        [Parameter(Mandatory = $false)]
         [switch]$Simulate,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain,
+        [Parameter(Mandatory = $false)]
         [object]$Logger,
+        [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
+        [Parameter(Mandatory = $false)]
         [object]$Config
     )
 

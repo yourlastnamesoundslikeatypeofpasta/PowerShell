@@ -7,10 +7,18 @@ function Submit-Ticket {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$Subject,
-        [Parameter(Mandatory)][string]$Description,
-        [Parameter(Mandatory)][string]$RequesterEmail,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Subject,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Description,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$RequesterEmail,
+        [Parameter(Mandatory = $false)]
         [switch]$ChaosMode,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain
     )
 

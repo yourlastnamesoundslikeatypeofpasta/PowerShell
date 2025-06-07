@@ -7,8 +7,12 @@ function Get-SDTicket {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][int]$Id,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [int]$Id,
+        [Parameter(Mandatory = $false)]
         [switch]$ChaosMode,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain
     )
 

@@ -11,10 +11,18 @@ function Link-SDTicketToSPTask {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][int]$TicketId,
-        [Parameter(Mandatory)][string]$TaskUrl,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [int]$TicketId,
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TaskUrl,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$FieldName = 'sharepoint_task_url',
+        [Parameter(Mandatory = $false)]
         [switch]$ChaosMode,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain
     )
 

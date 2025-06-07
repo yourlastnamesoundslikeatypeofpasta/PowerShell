@@ -12,15 +12,24 @@ function Add-UserToGroup {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$CsvPath,
-        [Parameter(ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$GroupName,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$TranscriptPath,
+        [Parameter(Mandatory = $false)]
         [switch]$Simulate,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain,
+        [Parameter(Mandatory = $false)]
         [object]$Logger,
+        [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
+        [Parameter(Mandatory = $false)]
         [object]$Config
     )
 
