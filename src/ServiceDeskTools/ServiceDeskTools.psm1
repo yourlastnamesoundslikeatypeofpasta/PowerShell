@@ -11,3 +11,11 @@ Get-ChildItem -Path "$PublicDir" -Filter *.ps1 -ErrorAction SilentlyContinue |
 Export-ModuleMember -Function (
     Get-ChildItem "$PublicDir/*.ps1" -ErrorAction SilentlyContinue
 ).BaseName
+
+function Show-ServiceDeskToolsBanner {
+    Write-STDivider 'SERVICEDESKTOOLS MODULE LOADED' -Style heavy
+    Write-STStatus "Run 'Get-Command -Module ServiceDeskTools' to view available tools." -Level SUB
+    Write-STLog -Message 'ServiceDeskTools module loaded'
+}
+
+Show-ServiceDeskToolsBanner

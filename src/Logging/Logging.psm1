@@ -172,3 +172,11 @@ function Write-STClosing {
 }
 
 Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing'
+
+function Show-LoggingBanner {
+    Write-STDivider 'LOGGING MODULE LOADED' -Style heavy
+    Write-STStatus "Run 'Get-Command -Module Logging' to view available tools." -Level SUB
+    Write-STLog -Message 'Logging module loaded'
+}
+
+Show-LoggingBanner

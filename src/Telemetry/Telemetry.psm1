@@ -1,4 +1,7 @@
 
+$loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
+Import-Module $loggingModule -ErrorAction SilentlyContinue
+
 function Write-STTelemetryEvent {
     [CmdletBinding()]
     param(
@@ -84,3 +87,11 @@ function Get-STTelemetryMetrics {
 }
 
 Export-ModuleMember -Function 'Write-STTelemetryEvent','Get-STTelemetryMetrics'
+
+function Show-TelemetryBanner {
+    Write-STDivider 'TELEMETRY MODULE LOADED' -Style heavy
+    Write-STStatus "Run 'Get-Command -Module Telemetry' to view available tools." -Level SUB
+    Write-STLog -Message 'Telemetry module loaded'
+}
+
+Show-TelemetryBanner

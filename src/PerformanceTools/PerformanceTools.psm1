@@ -46,3 +46,11 @@ function Measure-STCommand {
 }
 
 Export-ModuleMember -Function 'Measure-STCommand'
+
+function Show-PerformanceToolsBanner {
+    Write-STDivider 'PERFORMANCETOOLS MODULE LOADED' -Style heavy
+    Write-STStatus "Run 'Get-Command -Module PerformanceTools' to view available tools." -Level SUB
+    Write-STLog -Message 'PerformanceTools module loaded'
+}
+
+Show-PerformanceToolsBanner
