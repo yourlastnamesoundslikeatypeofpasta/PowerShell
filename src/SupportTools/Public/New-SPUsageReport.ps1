@@ -1,4 +1,4 @@
-function Generate-SPUsageReport {
+function New-SPUsageReport {
     <#
     .SYNOPSIS
         Generate library usage CSV reports and create Service Desk tickets when limits are exceeded.

@@ -28,7 +28,7 @@ Describe 'SupportTools Module' {
             'Invoke-ExchangeCalendarManager',
             'Invoke-CompanyPlaceManagement',
             'Submit-SystemInfoTicket',
-            'Generate-SPUsageReport'
+            'New-SPUsageReport'
             'Install-MaintenanceTasks'
             'Invoke-GroupMembershipCleanup'
             'Sync-SupportTools'
@@ -64,7 +64,7 @@ Describe 'SupportTools Module' {
             Start_Countdown              = 'SimpleCountdown.ps1'
             Update_Sysmon                = 'Update-Sysmon.ps1'
             Submit_SystemInfoTicket      = 'Submit-SystemInfoTicket.ps1'
-            Generate_SPUsageReport       = 'Generate-SPUsageReport.ps1'
+            New_SPUsageReport            = 'Generate-SPUsageReport.ps1'
             Install_MaintenanceTasks = 'Setup-ScheduledMaintenance.ps1'
             Invoke_GroupMembershipCleanup = 'CleanupGroupMembership.ps1'
             Invoke_JobBundle = 'Run-JobBundle.ps1'

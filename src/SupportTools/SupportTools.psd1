@@ -11,7 +11,7 @@
         'Clear-TempFile',
         'Convert-ExcelToCsv',
         'Export-ProductKey',
-        'Generate-SPUsageReport',
+        'New-SPUsageReport',
         'Get-CommonSystemInfo',
         'Get-FailedLogin',
         'Get-NetworkShare',
