@@ -25,7 +25,7 @@ jobs:
         shell: pwsh
         run: |
           $cfg = Import-PowerShellDataFile ./PesterConfiguration.psd1
-          Invoke-Pester -Configuration $cfg -CI
+          Invoke-Pester -Configuration $cfg
       - uses: actions/upload-artifact@v4
         with:
           name: coverage
