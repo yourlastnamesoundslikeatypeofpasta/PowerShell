@@ -20,10 +20,22 @@ function Invoke-FullSystemAudit {
         [switch]$Simulate,
         [Parameter(Mandatory = $false)]
         [switch]$Explain
+        ,[Parameter(Mandatory = $false)]
+        [object]$Logger
+        ,[Parameter(Mandatory = $false)]
+        [object]$TelemetryClient
+        ,[Parameter(Mandatory = $false)]
+        [object]$Config
     )
 
     process {
-        Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+        if ($Logger) { Import-Module $Logger -ErrorAction SilentlyContinue }
+        if ($TelemetryClient) {
+            Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+        }
+        if ($Config) { Import-Module $Config -ErrorAction SilentlyContinue }
         if (-not $OutputPath) {
             $ext = if ($Html) { 'html' } else { 'json' }
             $OutputPath = Join-Path (Get-Location) "SystemAudit_$((Get-Date).ToString('yyyyMMdd_HHmmss')).$ext"
@@ -58,9 +70,13 @@ function Invoke-FullSystemAudit {
         }
 
         $summary.CommonSystemInfo = Run-Step 'Get-CommonSystemInfo' { Get-CommonSystemInfo }
-        $summary.SPUsageReport    = Run-Step 'Generate-SPUsageReport' { Invoke-ScriptFile -Name 'Generate-SPUsageReport.ps1' -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain }
+        $summary.SPUsageReport    = Run-Step 'Generate-SPUsageReport' {
+            Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Generate-SPUsageReport.ps1' -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
         $summary.FailedLogin      = Run-Step 'Get-FailedLogin' { Get-FailedLogin }
-        $summary.PerformanceAudit = Run-Step 'Invoke-PerformanceAudit' { Invoke-ScriptFile -Name 'Invoke-PerformanceAudit.ps1' -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain }
+        $summary.PerformanceAudit = Run-Step 'Invoke-PerformanceAudit' {
+            Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Invoke-PerformanceAudit.ps1' -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
 
         $summary.Errors = $errors
 

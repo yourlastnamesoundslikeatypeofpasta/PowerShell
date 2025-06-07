@@ -22,7 +22,9 @@ param(
     [string]$TranscriptPath
 )
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+if (-not (Get-Module -Name 'Logging')) {
+    Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+}
 Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -ErrorAction SilentlyContinue
 
 if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
