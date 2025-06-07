@@ -1,6 +1,6 @@
 Describe 'Logging Module' {
     BeforeAll {
-        Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
+        Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
     }
 
     It 'writes to the path parameter' {
