@@ -1,4 +1,5 @@
-
+$coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
+Import-Module $coreModule -ErrorAction SilentlyContinue
 $loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
 Import-Module $loggingModule -ErrorAction SilentlyContinue
 
@@ -9,7 +10,10 @@ function Write-STTelemetryEvent {
         [Parameter(Mandatory)][string]$Result,
         [Parameter(Mandatory)][timespan]$Duration
     )
-    if ($env:ST_ENABLE_TELEMETRY -ne '1') { return }
+    Assert-ParameterNotNull $ScriptName 'ScriptName'
+    Assert-ParameterNotNull $Result 'Result'
+    Assert-ParameterNotNull $Duration 'Duration'
+    if ($env:ST_ENABLE_TELEMETRY -ne '1') { Write-STDebug 'Telemetry disabled'; return }
 
     $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
     if ($env:ST_TELEMETRY_PATH) {
