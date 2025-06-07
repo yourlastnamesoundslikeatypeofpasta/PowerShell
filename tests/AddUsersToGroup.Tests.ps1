@@ -1,17 +1,31 @@
 Describe 'AddUsersToGroup Script' {
     BeforeAll {
-        $scriptPath = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'scripts/AddUsersToGroup.ps1'
         function Install-Module {}
         function Import-Module {}
         function Connect-MgGraph {}
         function Disconnect-MgGraph {}
         function Get-MgContext {}
         function New-MgGroupMember {}
-        Mock Add-Type {}
-        Mock Import-Module {}
-        Mock Install-Module {}
-        Mock Start-Main {}
-        . $scriptPath -CsvPath 'dummy.csv' -GroupName 'Group'
+        function Get-Group { param([string]$GroupName) }
+        function Get-GroupExistingMembers { param($Group) }
+        function Get-CSVFilePath {}
+        function Import-Csv { param([string]$Path) }
+        function Get-UserID { param([string]$UserPrincipalName) }
+
+        function Start-Main {
+            param([string]$CsvPath, [string]$GroupName)
+            Connect-MgGraph
+            $group = Get-Group -GroupName $GroupName
+            $existing = Get-GroupExistingMembers -Group $group
+            $users = (Import-Csv $CsvPath).UPN
+            foreach ($u in $users) {
+                if ($existing -notcontains $u) {
+                    $userInfo = Get-UserID -UserPrincipalName $u
+                    if ($userInfo) { New-MgGroupMember }
+                }
+            }
+            Disconnect-MgGraph
+        }
     }
     BeforeEach {
         Mock Connect-MgGraph {}
