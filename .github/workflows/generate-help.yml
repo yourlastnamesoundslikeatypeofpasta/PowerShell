@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0
       - id: changed
-        uses: tj-actions/changed-files@v41
+        uses: tj-actions/changed-files@v46
       - name: Determine if only markdown files changed
         id: docs_only
         run: |
