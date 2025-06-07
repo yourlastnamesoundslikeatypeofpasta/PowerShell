@@ -8,7 +8,8 @@
     ./CleanupGroupMembership.ps1 -CsvPath users.csv -GroupName "Team"
 #>
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+. $PSScriptRoot/Common.ps1
+Import-SupportToolsLogging
 
 param(
     [Parameter(Mandatory)][string]$CsvPath,
