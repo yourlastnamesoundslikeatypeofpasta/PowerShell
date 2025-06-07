@@ -117,4 +117,16 @@ Describe 'Logging Module' {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
+
+    It 'logs metric entries' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            Write-STLog -Metric 'Duration' -Value 2.5 -Path $temp
+            $json = Get-Content $temp | ConvertFrom-Json
+            $json.metric | Should -Be 'Duration'
+            $json.value  | Should -Be 2.5
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
 }
