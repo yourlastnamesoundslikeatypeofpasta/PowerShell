@@ -43,7 +43,7 @@ function Invoke-ScriptFile {
         Start-Transcript -Path $TranscriptPath -Append | Out-Null
     }
 
-    $start = Get-Date
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = 'Success'
     $oldPref = $ErrorActionPreference
     $ErrorActionPreference = 'Stop'
@@ -57,7 +57,9 @@ function Invoke-ScriptFile {
     } finally {
         $ErrorActionPreference = $oldPref
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
-        $duration = (Get-Date) - $start
+        $sw.Stop()
+        $duration = $sw.Elapsed
+        Write-STLog -Metric 'Duration' -Value $duration.TotalSeconds
         Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $duration
     }
     Write-STStatus "COMPLETED $Name" -Level FINAL -Log

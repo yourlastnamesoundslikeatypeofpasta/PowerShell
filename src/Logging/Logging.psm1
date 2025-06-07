@@ -10,16 +10,27 @@ if ($SupportToolsConfig.maintenanceMode) {
 }
 
 function Write-STLog {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName='Message')]
     param(
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory, ParameterSetName='Message')]
         [string]$Message,
         [ValidateSet('INFO','WARN','ERROR')]
         [string]$Level = 'INFO',
         [string]$Path,
         [hashtable]$Metadata,
-        [switch]$Structured
+        [switch]$Structured,
+        [Parameter(Mandatory, ParameterSetName='Metric')]
+        [string]$Metric,
+        [Parameter(Mandatory, ParameterSetName='Metric')]
+        [double]$Value
     )
+    if ($PSCmdlet.ParameterSetName -eq 'Metric') {
+        if (-not $Metadata) { $Metadata = @{} }
+        $Metadata.metric = $Metric
+        $Metadata.value  = $Value
+        $Message = $Metric
+        if (-not $Structured) { $Structured = $true }
+    }
     if (-not $Structured -and $env:ST_LOG_STRUCTURED -eq '1') {
         $Structured = $true
     }

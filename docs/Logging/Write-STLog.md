@@ -15,6 +15,7 @@ schema: 2.0.0
 ```
 Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-ProgressAction <ActionPreference>]
 [[-Metadata] <Hashtable>] [-Structured]
+[[-Metric] <String>] [[-Value] <Double>]
 [<CommonParameters>]
 ```
 
@@ -25,10 +26,12 @@ Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-Progres
 
 ### Example 1
 ```powershell
-PS C:\> {{ Add example code here }}
+PS C:\> $sw = [System.Diagnostics.Stopwatch]::StartNew()
+PS C:\> # ... task runs ...
+PS C:\> $sw.Stop()
+PS C:\> Write-STLog -Metric 'Duration' -Value $sw.Elapsed.TotalSeconds
 ```
-
-{{ Add example description here }}
+Records how long the task took in seconds using a structured log entry.
 
 ## PARAMETERS
 
@@ -107,6 +110,34 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 Set the `ST_LOG_STRUCTURED` environment variable to `1` to enable structured output by default.
+
+### -Metric
+Name of a metric to record. Automatically enables structured output.
+```yaml
+Type: String
+Parameter Sets: Metric
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Value
+Numeric value associated with `-Metric`.
+```yaml
+Type: Double
+Parameter Sets: Metric
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -ProgressAction
 {{ Fill ProgressAction Description }}
