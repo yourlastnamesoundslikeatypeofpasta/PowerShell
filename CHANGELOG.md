@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Option to persist structured logs via environment variable
 - `Invoke-CompanyPlaceManagement` command for Microsoft Places
 - GitHub Actions workflows for caching modules and labeling PRs
+- SupportTools cmdlets can inject custom logging and telemetry modules
 
 ### Changed
 - Updated Pester invocation to align with v5 parameter requirements

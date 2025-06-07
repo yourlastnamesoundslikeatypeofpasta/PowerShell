@@ -34,8 +34,12 @@ param(
 
 $moduleRoot = Join-Path $PSScriptRoot '..'
 Import-Module (Join-Path $moduleRoot 'STCore/STCore.psd1') -ErrorAction SilentlyContinue
-Import-Module (Join-Path $moduleRoot 'Logging/Logging.psd1') -ErrorAction SilentlyContinue
-Import-Module (Join-Path $moduleRoot 'Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+if (-not (Get-Module -Name 'Logging')) {
+    Import-Module (Join-Path $moduleRoot 'Logging/Logging.psd1') -ErrorAction SilentlyContinue
+}
+if (-not (Get-Module -Name 'Telemetry')) {
+    Import-Module (Join-Path $moduleRoot 'Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+}
 if ($CreateTicket) {
     Import-Module (Join-Path $moduleRoot 'ServiceDeskTools/ServiceDeskTools.psd1') -ErrorAction SilentlyContinue
 }
