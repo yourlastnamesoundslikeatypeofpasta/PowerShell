@@ -140,6 +140,9 @@ Describe 'SupportTools Module' {
     Context 'Get-CommonSystemInfo collection' {
         It 'returns system information object' {
             InModuleScope SupportTools {
+                function Get-CimInstance {
+                    param($ClassName)
+                }
                 Mock Get-CimInstance {
                     switch ($ClassName) {
                         'Win32_OperatingSystem' { [pscustomobject]@{ CSName='PC'; Caption='OS'; BuildNumber='1'; TotalVisibleMemorySize=1048576 } }

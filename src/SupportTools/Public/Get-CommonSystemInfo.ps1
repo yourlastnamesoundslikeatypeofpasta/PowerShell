@@ -14,10 +14,19 @@ function Get-CommonSystemInfo {
 
         Write-STStatus 'Collecting system information...' -Level INFO
 
-        $operatingSystemInfo = Get-CimInstance -ClassName Win32_OperatingSystem
-        $processorInfo       = Get-CimInstance -ClassName Win32_Processor
-        $diskInfo            = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType = 3"
-        $memoryInfo          = Get-CimInstance -ClassName Win32_PhysicalMemory
+        if (Get-Command -Name Get-CimInstance -ErrorAction SilentlyContinue) {
+            $operatingSystemInfo = Get-CimInstance -ClassName Win32_OperatingSystem
+            $processorInfo       = Get-CimInstance -ClassName Win32_Processor
+            $diskInfo            = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType = 3"
+            $memoryInfo          = Get-CimInstance -ClassName Win32_PhysicalMemory
+        } elseif (Get-Command -Name Get-WmiObject -ErrorAction SilentlyContinue) {
+            $operatingSystemInfo = Get-WmiObject -Class Win32_OperatingSystem
+            $processorInfo       = Get-WmiObject -Class Win32_Processor
+            $diskInfo            = Get-WmiObject -Class Win32_LogicalDisk -Filter "DriveType = 3"
+            $memoryInfo          = Get-WmiObject -Class Win32_PhysicalMemory
+        } else {
+            throw "CIM or WMI cmdlets are not available"
+        }
 
         $commonSystemInfoObj = [pscustomobject]@{
             ComputerName = $operatingSystemInfo.CSName
