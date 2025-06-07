@@ -11,21 +11,10 @@ Describe 'AddUsersToGroup Script' {
         function Get-CSVFilePath {}
         function Import-Csv { param([string]$Path) }
         function Get-UserID { param([string]$UserPrincipalName) }
-
-        function Start-Main {
-            param([string]$CsvPath, [string]$GroupName)
-            Connect-MgGraph
-            $group = Get-Group -GroupName $GroupName
-            $existing = Get-GroupExistingMembers -Group $group
-            $users = (Import-Csv $CsvPath).UPN
-            foreach ($u in $users) {
-                if ($existing -notcontains $u) {
-                    $userInfo = Get-UserID -UserPrincipalName $u
-                    if ($userInfo) { New-MgGroupMember }
-                }
-            }
-            Disconnect-MgGraph
-        }
+        # Stub Add-Type so the script can be dot-sourced without loading GUI assemblies
+        function Add-Type {}
+        . $PSScriptRoot/../scripts/AddUsersToGroup.ps1
+        Remove-Item function:Add-Type -ErrorAction SilentlyContinue
     }
     BeforeEach {
         Mock Connect-MgGraph {}
