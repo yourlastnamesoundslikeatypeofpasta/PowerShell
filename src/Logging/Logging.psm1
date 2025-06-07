@@ -183,7 +183,22 @@ function Invoke-STSafe {
         Write-STStatus "$OperationName completed" -Level SUCCESS -Log
         return $result
     } catch {
-        $errMsg = "$OperationName failed: $($_.Exception.Message)"
+        $ex = $_.Exception
+        switch ($ex) {
+            { $_ -is [System.UnauthorizedAccessException] } {
+                $errMsg = "$OperationName permission error: $($ex.Message)"
+            }
+            { $_ -is [System.Net.WebException] } {
+                $errMsg = "$OperationName network error: $($ex.Message)"
+            }
+            { $_ -is [System.Management.ManagementException] } {
+                $errMsg = "$OperationName WMI error: $($ex.Message)"
+            }
+            default {
+                $errMsg = "$OperationName failed: $($ex.Message)"
+            }
+        }
+
         Write-STStatus $errMsg -Level ERROR -Log
         Write-STLog -Message $errMsg -Level 'ERROR'
         if ($ThrowOnError) { throw }
