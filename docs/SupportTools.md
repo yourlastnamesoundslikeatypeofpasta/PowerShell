@@ -57,6 +57,8 @@ listed are forwarded to the underlying script unchanged.
 | `New-SPUsageReport` | `Generate-SPUsageReport.ps1` | `[ItemThreshold]`, `[RequesterEmail]`, `[CsvPath]`, `[TranscriptPath]` | `New-SPUsageReport -RequesterEmail 'user@contoso.com'` |
 | `Install-MaintenanceTasks` | `Setup-ScheduledMaintenance.ps1` | `[Register]` | `Install-MaintenanceTasks -Register` |
 | `Sync-SupportTools` | *git* | `[RepositoryUrl]`, `[InstallPath]` | `Sync-SupportTools` |
+| `New-STProfile` | *built-in* | `TaskCategory`, `Name`, `Command`, `[Parameters]` | `New-STProfile -TaskCategory Audit -Name Weekly -Command Invoke-Audit` |
+| `Invoke-STProfile` | *built-in* | `TaskCategory`, `Name`, `[PassThru]` | `Invoke-STProfile -TaskCategory Audit -Name Weekly` |
 
 For details on what each script does see [scripts/README.md](../scripts/README.md).
 
