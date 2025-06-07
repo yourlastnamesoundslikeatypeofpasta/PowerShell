@@ -124,7 +124,7 @@ Describe 'SupportTools Module' {
     Context 'Set-SharedMailboxAutoReply behavior' {
         It 'defaults ExternalMessage to InternalMessage' {
             InModuleScope SupportTools {
-                function Connect-ExchangeOnline {}
+                function Connect-ExchangeOnline { param([string]$UserPrincipalName, [switch]$UseWebLogin) }
                 function Disconnect-ExchangeOnline {}
                 function Install-Module {}
                 function Update-Module {}
@@ -135,8 +135,8 @@ Describe 'SupportTools Module' {
                 function global:Get-MailboxAutoReplyConfiguration {}
                 function global:Set-MailboxAutoReplyConfiguration {}
                 function global:Get-MailboxAutoReplyConfiguration { 'result' }
-                function Set-MailboxAutoReplyConfiguration {}
-                function Get-MailboxAutoReplyConfiguration { 'result' }
+                function Set-MailboxAutoReplyConfiguration { param($Identity, $AutoReplyState, $StartTime, $EndTime, $InternalMessage, $ExternalMessage, $ExternalAudience) }
+                function Get-MailboxAutoReplyConfiguration { param($Identity); 'result' }
 
                 Mock Connect-ExchangeOnline {} -ModuleName SupportTools
                 Mock Disconnect-ExchangeOnline {} -ModuleName SupportTools
@@ -164,6 +164,8 @@ Describe 'SupportTools Module' {
                 function Get-InstalledModule {}
                 function Find-Module {}
                 function Import-Module {}
+                function Set-MailboxAutoReplyConfiguration {}
+                function Get-MailboxAutoReplyConfiguration {}
 
                 Mock Connect-ExchangeOnline {} -ModuleName SupportTools
                 Mock Disconnect-ExchangeOnline {} -ModuleName SupportTools
@@ -177,7 +179,7 @@ Describe 'SupportTools Module' {
 
                 Set-SharedMailboxAutoReply -MailboxIdentity 'm' -StartTime (Get-Date) -EndTime (Get-Date).AddHours(1) -InternalMessage 'i' -ExternalMessage 'e' -AdminUser 'admin' -UseWebLogin
 
-                Assert-MockCalled Connect-ExchangeOnline -ParameterFilter { $UseWebLogin } -Times 1
+                Assert-MockCalled Connect-ExchangeOnline -Times 1
             }
         }
     }
