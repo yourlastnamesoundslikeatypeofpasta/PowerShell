@@ -1,5 +1,7 @@
 Describe 'GraphTools Module' {
     BeforeAll {
+        Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
+        Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
         Import-Module $PSScriptRoot/../src/GraphTools/GraphTools.psd1 -Force
     }
 

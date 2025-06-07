@@ -1,5 +1,6 @@
 Describe 'SharePointTools Module' {
     BeforeAll {
+        Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/SharePointTools/SharePointTools.psd1 -Force
     }
 

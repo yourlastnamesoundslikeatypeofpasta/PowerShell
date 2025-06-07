@@ -1,5 +1,6 @@
 Describe 'PerformanceTools Module' {
     BeforeAll {
+        Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/PerformanceTools/PerformanceTools.psd1 -Force
     }
 
