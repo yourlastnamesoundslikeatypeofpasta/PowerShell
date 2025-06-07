@@ -1,4 +1,5 @@
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+. $PSScriptRoot/Common.ps1
+Import-SupportToolsLogging
 
 function Set-NetAdapterMetric {
     <#
