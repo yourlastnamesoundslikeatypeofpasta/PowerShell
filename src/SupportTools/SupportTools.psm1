@@ -47,7 +47,9 @@ Export-ModuleMember -Function @(
     'Start-Countdown',
     'Submit-SystemInfoTicket',
     'Sync-SupportTools',
-    'Update-Sysmon'
+    'Update-Sysmon',
+    'New-STProfile',
+    'Invoke-STProfile'
 )
 
 

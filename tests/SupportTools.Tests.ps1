@@ -33,6 +33,8 @@ Describe 'SupportTools Module' {
             'Invoke-GroupMembershipCleanup'
             'Sync-SupportTools'
             'Invoke-JobBundle'
+            'New-STProfile'
+            'Invoke-STProfile'
         )
 
         $exported = (Get-Command -Module SupportTools).Name
@@ -296,6 +298,45 @@ Describe 'SupportTools Module' {
                 Invoke-CompanyPlaceManagement -Action Create -DisplayName 'B1' -Type Building -AutoAddFloor
 
                 Assert-MockCalled New-Place -ParameterFilter { $Type -eq 'Floor' -and $Name -eq '1' } -Times 1
+            }
+        }
+    }
+
+    Context 'STProfile functionality' {
+        It 'saves profile json' {
+            InModuleScope SupportTools {
+                $dir = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid())
+                try {
+                    $env:ST_PROFILE_PATH = $dir
+                    New-STProfile -TaskCategory 'Audit' -Name 'Test' -Command 'Invoke-Audit' -Parameters @{A=1;B=2}
+                    $path = Join-Path (Join-Path $dir 'Audit') 'Test.json'
+                    (Test-Path $path) | Should -Be $true
+                    $obj = Get-Content $path | ConvertFrom-Json
+                    $obj.Command | Should -Be 'Invoke-Audit'
+                    $obj.Parameters.A | Should -Be 1
+                } finally {
+                    Remove-Item $dir -Recurse -Force -ErrorAction SilentlyContinue
+                    Remove-Item env:ST_PROFILE_PATH -ErrorAction SilentlyContinue
+                }
+            }
+        }
+
+        It 'invokes saved profile' {
+            InModuleScope SupportTools {
+                $dir = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid())
+                try {
+                    $env:ST_PROFILE_PATH = $dir
+                    $profileDir = Join-Path $dir 'Perf'
+                    New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
+                    @{ Command='Test-Cmd'; Parameters=@{X=5} } | ConvertTo-Json | Set-Content -Path (Join-Path $profileDir 'P1.json')
+                    function Test-Cmd { param($X) "ok $X" }
+                    Mock Write-STLog {} -ModuleName SupportTools
+                    $result = Invoke-STProfile -TaskCategory 'Perf' -Name 'P1' -PassThru
+                    $result | Should -Be 'ok 5'
+                } finally {
+                    Remove-Item $dir -Recurse -Force -ErrorAction SilentlyContinue
+                    Remove-Item env:ST_PROFILE_PATH -ErrorAction SilentlyContinue
+                }
             }
         }
     }
