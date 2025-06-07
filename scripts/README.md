@@ -28,5 +28,6 @@ The following table provides a brief description of each script.
 | **Configure-SharePointTools.ps1** | Prompts for SharePoint application values and saves them to a settings file. |
 | **CleanupTempFiles.ps1** | Removes .tmp files and empty logs from the repository. |
 | **SupportToolsMenu.ps1** | Interactive menu for common SupportTools tasks. |
+| **ScriptLauncher.ps1** | Menu to browse and run any script in this folder. |
 | **Get-FunctionDependencyGraph.ps1** | Generates a Graphviz or Mermaid map of function calls inside a script. |
 

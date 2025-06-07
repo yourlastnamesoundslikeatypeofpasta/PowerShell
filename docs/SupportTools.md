@@ -9,7 +9,8 @@ Import-Module ./src/SupportTools/SupportTools.psd1
 
 For a guided experience, run `./scripts/SupportToolsMenu.ps1` with the optional
 `-UserRole` parameter to select common tasks from an interactive menu tailored
-for `Helpdesk` or `Site Admin` roles.
+for `Helpdesk` or `Site Admin` roles. To browse and execute any script in the
+repository, use `./scripts/ScriptLauncher.ps1` for a general menu of options.
 
 ### Simulation Mode
 
