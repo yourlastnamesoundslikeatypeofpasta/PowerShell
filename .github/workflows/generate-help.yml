@@ -16,19 +16,36 @@ permissions:
 
 jobs:
   build-docs:
+    if: github.event_name != 'pull_request' || !contains(github.event.pull_request.labels.*.name, 'documentation')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - id: changed
+        uses: tj-actions/changed-files@v41
+      - name: Determine if only markdown files changed
+        id: docs_only
+        run: |
+          docsOnly=true
+          for file in ${{ steps.changed.outputs.all_changed_files }}; do
+            if [[ ! $file =~ \.md$ ]]; then
+              docsOnly=false
+              break
+            fi
+          done
+          echo "docs_only=$docsOnly" >> $GITHUB_OUTPUT
       - name: Sync branch with remote
+        if: steps.docs_only.outputs.docs_only == 'false'
         run: |
           git pull --rebase origin ${{ github.head_ref || github.ref_name }}
       - name: Cache PowerShell modules
+        if: steps.docs_only.outputs.docs_only == 'false'
         uses: potatoqualitee/psmodulecache@v6.2.1
         with:
           modules-to-cache: platyPS
       - name: Generate Markdown help
+        if: steps.docs_only.outputs.docs_only == 'false'
         shell: pwsh
         run: |
           $modules = Get-ChildItem -Path ./src -Directory
@@ -44,6 +61,7 @@ jobs:
             Remove-Module $imported.Name
           }
       - uses: stefanzweifel/git-auto-commit-action@v5
+        if: steps.docs_only.outputs.docs_only == 'false'
         with:
           commit_message: Update markdown help
           branch: ${{ github.head_ref || github.ref_name }}
