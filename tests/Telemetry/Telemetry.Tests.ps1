@@ -1,11 +1,11 @@
 Describe 'Telemetry Opt-In' {
     BeforeAll {
-        Import-Module $PSScriptRoot/../src/SupportTools/SupportTools.psd1 -Force
+        Import-Module $PSScriptRoot/../../src/SupportTools/SupportTools.psd1 -Force
     }
 
     It 'does not log telemetry when not opted in' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
-        $scriptFile = Join-Path $PSScriptRoot/.. 'scripts/TelemetryTest.ps1'
+        $scriptFile = Join-Path $PSScriptRoot/../.. 'scripts/TelemetryTest.ps1'
         Set-Content $scriptFile "Write-Host 'test'"
         try {
             Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
@@ -22,7 +22,7 @@ Describe 'Telemetry Opt-In' {
 
     It 'logs telemetry when opt-in variable is set' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
-        $scriptFile = Join-Path $PSScriptRoot/.. 'scripts/TelemetryTest.ps1'
+        $scriptFile = Join-Path $PSScriptRoot/../.. 'scripts/TelemetryTest.ps1'
         Set-Content $scriptFile "Write-Host 'test'"
         try {
             $env:ST_ENABLE_TELEMETRY = '1'
@@ -45,7 +45,7 @@ Describe 'Telemetry Opt-In' {
 
 Describe 'Telemetry Metrics Summary' {
     BeforeAll {
-        Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
+        Import-Module $PSScriptRoot/../../src/Telemetry/Telemetry.psd1 -Force
     }
 
     It 'aggregates telemetry data' {

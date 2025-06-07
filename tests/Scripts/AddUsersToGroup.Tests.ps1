@@ -1,6 +1,6 @@
 Describe 'AddUsersToGroup Script' {
     BeforeAll {
-        $scriptPath = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'scripts/AddUsersToGroup.ps1'
+        $scriptPath = Join-Path $PSScriptRoot '../..' | Join-Path -ChildPath 'scripts/AddUsersToGroup.ps1'
         function Install-Module {}
         function Import-Module {}
         function Connect-MgGraph {}
