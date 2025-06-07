@@ -77,7 +77,24 @@ Describe 'SupportTools Module' {
 
         It 'calls Invoke-ScriptFile for <Fn>' -ForEach $cases {
             Mock Invoke-ScriptFile {} -ModuleName SupportTools
-            & $Fn
+            switch ($Fn) {
+                'Invoke-JobBundle' {
+                    & $Fn -Path 'bundle.job.zip' -LogArchivePath 'out.zip'
+                }
+                'Submit-SystemInfoTicket' {
+                    & $Fn -SiteName 'SiteA' -RequesterEmail 'user@example.com'
+                }
+                'Set-SharedMailboxAutoReply' {
+                    $now = Get-Date
+                    & $Fn -MailboxIdentity 'box' -StartTime $now -EndTime $now.AddDays(1) -InternalMessage 'hi' -AdminUser 'admin@example.com'
+                }
+                'Invoke-CompanyPlaceManagement' {
+                    & $Fn -Action 'Get' -DisplayName 'Place'
+                }
+                Default {
+                    & $Fn
+                }
+            }
             Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1
         }
 
@@ -90,7 +107,7 @@ Describe 'SupportTools Module' {
                 function Import-Module {}
                 Mock git {} -ModuleName SupportTools
                 Mock Import-Module {} -ModuleName SupportTools
-                $path = Join-Path $env:TEMP ([guid]::NewGuid())
+                $path = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid())
                 Sync-SupportTools -RepositoryUrl 'url' -InstallPath $path
                 Assert-MockCalled git -ModuleName SupportTools -Times 1 -ParameterFilter { $args[0] -eq 'clone' }
             }
@@ -102,7 +119,7 @@ Describe 'SupportTools Module' {
                 function Import-Module {}
                 Mock git {} -ModuleName SupportTools
                 Mock Import-Module {} -ModuleName SupportTools
-                $path = Join-Path $env:TEMP ([guid]::NewGuid())
+                $path = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid())
                 New-Item -ItemType Directory -Path (Join-Path $path '.git') -Force | Out-Null
                 Sync-SupportTools -RepositoryUrl 'url' -InstallPath $path
                 Assert-MockCalled git -ModuleName SupportTools -Times 1 -ParameterFilter { $args[0] -eq '-C' -and $args[2] -eq 'pull' }
