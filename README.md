@@ -174,3 +174,10 @@ workflow added ([docs/CredentialStorage.md](docs/CredentialStorage.md)).
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Contributing
+
+Contributions are welcome! If you have a bug fix or new feature, feel free to open
+an issue or submit a pull request. Please ensure any new PowerShell code follows
+the style outlined in [docs/ModuleStyleGuide.md](docs/ModuleStyleGuide.md). Test
+coverage for new functionality is greatly appreciated.
