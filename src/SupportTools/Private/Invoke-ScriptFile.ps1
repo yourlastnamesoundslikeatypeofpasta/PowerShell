@@ -16,6 +16,13 @@ function Invoke-ScriptFile {
         [string]$TranscriptPath,
         [switch]$Simulate
     )
+    # Retrieve the SupportTools module version for log metadata
+    $manifest = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'SupportTools.psd1'
+    $moduleVersion = try {
+        (Import-PowerShellDataFile $manifest).ModuleVersion
+    } catch {
+        'unknown'
+    }
     $Path = Join-Path $PSScriptRoot '..' |
             Join-Path -ChildPath '..' |
             Join-Path -ChildPath '..' |
@@ -51,7 +58,7 @@ function Invoke-ScriptFile {
         & $Path @Args
     } catch {
         Write-Error "Execution of '$Name' failed: $_"
-        Write-STLog "Execution of '$Name' failed: $_" -Level 'ERROR'
+        Write-STLog "Execution of '$Name' failed: $_" -Level 'ERROR' -Structured -Metadata @{ version = $moduleVersion; script = $Name }
         $result = 'Failure'
         throw
     } finally {
