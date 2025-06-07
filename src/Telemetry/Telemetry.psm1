@@ -3,12 +3,52 @@ Import-Module $coreModule -ErrorAction SilentlyContinue
 $loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
 Import-Module $loggingModule -ErrorAction SilentlyContinue
 
+function Send-STMetric {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$MetricName,
+        [Parameter(Mandatory)][string]$Category,
+        [Parameter(Mandatory)][double]$Value,
+        [hashtable]$Details
+    )
+    Assert-ParameterNotNull $MetricName 'MetricName'
+    Assert-ParameterNotNull $Category 'Category'
+    Assert-ParameterNotNull $Value 'Value'
+    if ($env:ST_ENABLE_TELEMETRY -ne '1') { Write-STDebug 'Telemetry disabled'; return }
+
+    $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
+    if ($env:ST_TELEMETRY_PATH) {
+        $logFile = $env:ST_TELEMETRY_PATH
+    } else {
+        $dir = Join-Path $userProfile 'SupportToolsTelemetry'
+        $logFile = Join-Path $dir 'telemetry.jsonl'
+    }
+    $dir = Split-Path -Path $logFile -Parent
+    if (-not (Test-Path $dir)) {
+        New-Item -Path $dir -ItemType Directory -Force | Out-Null
+    }
+
+    $entry = [ordered]@{
+        Timestamp   = (Get-Date).ToString('o')
+        OperationId = [guid]::NewGuid().ToString()
+        MetricName  = $MetricName
+        Category    = $Category
+        Value       = $Value
+    }
+    if ($Details) { $entry.Details = $Details }
+
+    ($entry | ConvertTo-Json -Depth 5 -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
+    return $entry
+}
+
 function Write-STTelemetryEvent {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$ScriptName,
         [Parameter(Mandatory)][string]$Result,
-        [Parameter(Mandatory)][timespan]$Duration
+        [Parameter(Mandatory)][timespan]$Duration,
+        [string]$Category = 'General',
+        [string]$OperationId
     )
     Assert-ParameterNotNull $ScriptName 'ScriptName'
     Assert-ParameterNotNull $Result 'Result'
@@ -26,11 +66,14 @@ function Write-STTelemetryEvent {
     if (-not (Test-Path $dir)) {
         New-Item -Path $dir -ItemType Directory -Force | Out-Null
     }
-    $event = [pscustomobject]@{
-        Timestamp = (Get-Date).ToString('o')
-        Script    = $ScriptName
-        Result    = $Result
-        Duration  = [math]::Round($Duration.TotalSeconds, 2)
+    if (-not $OperationId) { $OperationId = [guid]::NewGuid().ToString() }
+    $event = [ordered]@{
+        Timestamp   = (Get-Date).ToString('o')
+        OperationId = $OperationId
+        Script      = $ScriptName
+        Result      = $Result
+        Duration    = [math]::Round($Duration.TotalSeconds, 2)
+        Category    = $Category
     } | ConvertTo-Json -Compress
 
     $event | Out-File -FilePath $logFile -Encoding utf8 -Append
@@ -90,7 +133,7 @@ function Get-STTelemetryMetrics {
     return $metrics
 }
 
-Export-ModuleMember -Function 'Write-STTelemetryEvent','Get-STTelemetryMetrics'
+Export-ModuleMember -Function 'Write-STTelemetryEvent','Get-STTelemetryMetrics','Send-STMetric'
 
 function Show-TelemetryBanner {
     Write-STDivider 'TELEMETRY MODULE LOADED' -Style heavy

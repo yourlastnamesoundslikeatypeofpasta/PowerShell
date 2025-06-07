@@ -56,22 +56,26 @@ try {
     $cpuSamples = Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 1 -MaxSamples 3
     $cpuUsage = [math]::Round(($cpuSamples.CounterSamples | Measure-Object -Property CookedValue -Average).Average,2)
     Write-STLog -Metric 'CPUPercent' -Value $cpuUsage -Structured
+    Send-STMetric -MetricName 'CPUPercent' -Category 'Audit' -Value $cpuUsage
 
     # Memory usage
     $os = Get-CimInstance -ClassName Win32_OperatingSystem
     $memUsedPct = [math]::Round((($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / $os.TotalVisibleMemorySize) * 100,2)
     Write-STLog -Metric 'MemoryPercent' -Value $memUsedPct -Structured
+    Send-STMetric -MetricName 'MemoryPercent' -Category 'Audit' -Value $memUsedPct
 
     # Disk utilisation
     $diskSamples = Get-Counter '\PhysicalDisk(_Total)\% Disk Time' -SampleInterval 1 -MaxSamples 3
     $diskUsage = [math]::Round(($diskSamples.CounterSamples | Measure-Object -Property CookedValue -Average).Average,2)
     Write-STLog -Metric 'DiskPercent' -Value $diskUsage -Structured
+    Send-STMetric -MetricName 'DiskPercent' -Category 'Audit' -Value $diskUsage
 
     # Network usage (Mbps)
     $netSamples = Get-Counter '\Network Interface(*)\Bytes Total/sec' -SampleInterval 1 -MaxSamples 3
     $netBytes = ($netSamples.CounterSamples | Measure-Object -Property CookedValue -Sum).Sum / $netSamples.CounterSamples.Count
     $netMbps = [math]::Round(($netBytes * 8) / 1MB,2)
     Write-STLog -Metric 'NetworkMbps' -Value $netMbps -Structured
+    Send-STMetric -MetricName 'NetworkMbps' -Category 'Audit' -Value $netMbps
 
     # Uptime
     $uptime = (Get-Uptime).ToString()
@@ -115,7 +119,9 @@ try {
     throw
 } finally {
     $stopwatch.Stop()
-    Write-STTelemetryEvent -ScriptName $scriptName -Result $result -Duration $stopwatch.Elapsed
+    $opId = [guid]::NewGuid().ToString()
+    Write-STTelemetryEvent -ScriptName $scriptName -Result $result -Duration $stopwatch.Elapsed -Category 'Audit' -OperationId $opId
+    Send-STMetric -MetricName 'PerformanceAuditDuration' -Category 'Audit' -Value $stopwatch.Elapsed.TotalSeconds -Details @{ Result = $result; OperationId = $opId }
     if ($TranscriptPath) { Stop-Transcript | Out-Null }
     Write-STClosing
 }

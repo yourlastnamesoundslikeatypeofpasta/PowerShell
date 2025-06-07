@@ -17,6 +17,8 @@ function Get-CommonSystemInfo {
     )
 
     process {
+        $sw = [System.Diagnostics.Stopwatch]::StartNew()
+        $result = 'Success'
         try {
             if ($Logger) {
                 Import-Module $Logger -ErrorAction SilentlyContinue
@@ -59,12 +61,15 @@ function Get-CommonSystemInfo {
                                 @{Name = 'FreeSpace'; Expression = { "{0:N2}" -f ($_.FreeSpace / 1GB) }}
             }
             Write-STStatus 'System information collected.' -Level SUCCESS
-
             return $commonSystemInfoObj
         } catch {
             Write-STStatus "Get-CommonSystemInfo failed: $_" -Level ERROR -Log
             Write-STLog -Message "Get-CommonSystemInfo failed: $_" -Level ERROR
+            $result = 'Failure'
             return New-STErrorObject -Message $_.Exception.Message -Category 'WMI'
+        } finally {
+            $sw.Stop()
+            Send-STMetric -MetricName 'Get-CommonSystemInfo' -Category 'Audit' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
         }
     }
 }

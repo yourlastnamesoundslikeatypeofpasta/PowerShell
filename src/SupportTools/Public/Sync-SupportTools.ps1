@@ -48,6 +48,8 @@ function Sync-SupportTools {
             return
         }
 
+        $sw = [System.Diagnostics.Stopwatch]::StartNew()
+        $result = 'Success'
         if (Test-Path (Join-Path $InstallPath '.git')) {
             git -C $InstallPath pull
         }
@@ -65,6 +67,10 @@ function Sync-SupportTools {
     } catch {
         Write-STStatus "Sync-SupportTools failed: $_" -Level ERROR -Log
         Write-STLog -Message "Sync-SupportTools failed: $_" -Level ERROR
+        $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'General'
+    } finally {
+        $sw.Stop()
+        Send-STMetric -MetricName 'Sync-SupportTools' -Category 'Deployment' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
     }
 }

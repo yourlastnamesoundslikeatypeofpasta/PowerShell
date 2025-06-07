@@ -58,6 +58,8 @@ function Invoke-CompanyPlaceManagement {
         [object]$Config
     )
 
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    $result = 'Success'
     try {
         if ($Logger) {
             Import-Module $Logger -ErrorAction SilentlyContinue
@@ -151,9 +153,12 @@ function Invoke-CompanyPlaceManagement {
     } catch {
         Write-STStatus "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Log
         Write-STLog -Message "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR
+        $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'SharePoint'
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
+        $sw.Stop()
+        Send-STMetric -MetricName 'Invoke-CompanyPlaceManagement' -Category 'Deployment' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
     }
 }
 

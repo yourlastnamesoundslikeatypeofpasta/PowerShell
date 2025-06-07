@@ -53,7 +53,11 @@ function Measure-STCommand {
         Write-STStatus "Memory Change: $($result.MemoryDeltaMB) MB" -Level INFO
     }
 
-    if ($errorObj) { return $errorObj }
+    if ($errorObj) {
+        Send-STMetric -MetricName 'Measure-STCommand' -Category 'Performance' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = 'Failure'; CpuSeconds = ($cpuEnd - $cpuStart).TotalSeconds; MemoryDeltaMB = [math]::Round(($memEnd - $memStart) / 1MB, 2) }
+        return $errorObj
+    }
+    Send-STMetric -MetricName 'Measure-STCommand' -Category 'Performance' -Value $result.DurationSeconds -Details @{ CpuSeconds = $result.CpuSeconds; MemoryDeltaMB = $result.MemoryDeltaMB }
     return $result
 }
 
