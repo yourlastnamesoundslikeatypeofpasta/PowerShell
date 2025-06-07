@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 ### Added
+- Telemetry events recorded for Connect-SPToolsOnline
 - `Sync-SupportTools` cmdlet to download modules from a feed
 - Automatic registration of public functions in module manifests
 - Option to persist structured logs via environment variable
