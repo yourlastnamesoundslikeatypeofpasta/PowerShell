@@ -34,7 +34,7 @@ function Invoke-ExchangeCalendarManager {
         throw 'This function requires PowerShell 7 or higher.'
     }
 
-    Write-Verbose 'Checking ExchangeOnlineManagement module...'
+    Write-STStatus 'Checking ExchangeOnlineManagement module...' -Level SUB
     $module = Get-InstalledModule ExchangeOnlineManagement -ErrorAction SilentlyContinue
     $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
@@ -51,7 +51,7 @@ function Invoke-ExchangeCalendarManager {
     try {
         Connect-ExchangeOnline -ErrorAction Stop
     } catch {
-        Write-Warning "Failed to connect to Exchange Online: $($_.Exception.Message)"
+        Write-STStatus "Failed to connect to Exchange Online: $($_.Exception.Message)" -Level WARN
         return
     }
 

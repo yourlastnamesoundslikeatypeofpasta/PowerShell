@@ -28,9 +28,9 @@ function Show-Menu {
     Write-STDivider 'Available Scripts' -Style light
     for ($i = 0; $i -lt $scriptFiles.Count; $i++) {
         $num = $i + 1
-        Write-Host "$num. $($scriptFiles[$i].Name) - $($scriptFiles[$i].Synopsis)"
+        Write-STStatus "$num. $($scriptFiles[$i].Name) - $($scriptFiles[$i].Synopsis)" -Level INFO
     }
-    Write-Host 'Q. Quit'
+    Write-STStatus 'Q. Quit' -Level INFO
 }
 
 while ($true) {
@@ -43,7 +43,7 @@ while ($true) {
     } else {
         Write-STStatus 'Invalid choice. Try again.' -Level WARN
     }
-    Write-Host
+    Write-STStatus '' -Level INFO
 }
 
 Write-STClosing

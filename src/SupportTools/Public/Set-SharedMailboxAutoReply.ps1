@@ -47,7 +47,7 @@ function Set-SharedMailboxAutoReply {
 
     if (-not $ExternalMessage) { $ExternalMessage = $InternalMessage }
 
-    Write-Verbose 'Checking ExchangeOnlineManagement module...'
+    Write-STStatus 'Checking ExchangeOnlineManagement module...' -Level SUB
     $module = Get-InstalledModule ExchangeOnlineManagement -ErrorAction SilentlyContinue
     $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 

@@ -73,7 +73,7 @@ function Invoke-CompanyPlaceManagement {
                 $results | Format-Table DisplayName, Type, City, State, CountryOrRegion, PlaceId
                 return $results
             } else {
-                Write-Warning "No matching places found for '$DisplayName' of type '$Type'"
+                Write-STStatus "No matching places found for '$DisplayName' of type '$Type'" -Level WARN
             }
         }
         'Create' {

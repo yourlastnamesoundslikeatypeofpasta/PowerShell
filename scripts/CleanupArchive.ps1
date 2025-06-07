@@ -37,7 +37,7 @@ param(
 if ($Commit) {
     $response = Read-Host 'This will permanently delete items from the archive. Continue? (y/N)'
     if ($response -notmatch '^[Yy]$') {
-        Write-Host 'Operation cancelled.'
+        Write-STStatus 'Operation cancelled.' -Level WARN
         return
     }
 }
@@ -69,25 +69,25 @@ function Test-PathIsArchived {
 
 # Connect to SharePoint Online
 Connect-PnPOnline -Url $SiteUrl -Interactive
-Write-Debug -Message "Connected to SharePoint..."
+Write-STStatus 'Connected to SharePoint...' -Level SUB
 
 # Navigate to the root folder of the document library
 $SharedDocumentsLibrary = Get-PnPFolder -ListRootFolder $Libraries
 $SharePointFolders = $SharedDocumentsLibrary | Get-PnPFolderInFolder
-Write-Debug -Message ($SharedDocumentsLibrary | Format-Table | Out-String)
-Write-Debug -Message ($SharePointFolders | Format-Table | Out-String)
+Write-STStatus ($SharedDocumentsLibrary | Format-Table | Out-String) -Level SUB
+Write-STStatus ($SharePointFolders | Format-Table | Out-String) -Level SUB
 
 # Navigate deeper into the folder structure
 $ProductionSharePointFolders = $SharePointFolders[2]
 $ProductionSharePointSubfolder = $ProductionSharePointFolders | Get-PnPFolderInFolder
-Write-Debug -Message ($ProductionSharePointFolders | Format-Table | Out-String)
-Write-Debug -Message ($ProductionSharePointSubfolder | Format-Table | Out-String)
+Write-STStatus ($ProductionSharePointFolders | Format-Table | Out-String) -Level SUB
+Write-STStatus ($ProductionSharePointSubfolder | Format-Table | Out-String) -Level SUB
 
 # Navigate to the 'zzz_Archive_Production' folder
 $ZzzArchiveProductionSharePointFolder = $ProductionSharePointSubfolder[7]
 $ZzzArchiveProductionSharePointFolderItems = $ZzzArchiveProductionSharePointFolder | Get-PnPFolderItem -Recursive -Verbose
-Write-Debug -Message ($ZzzArchiveProductionSharePointFolder | Format-Table | Out-String)
-Write-Debug -Message ($ZzzArchiveProductionSharePointFolderItems | Format-Table | Out-String)
+Write-STStatus ($ZzzArchiveProductionSharePointFolder | Format-Table | Out-String) -Level SUB
+Write-STStatus ($ZzzArchiveProductionSharePointFolderItems | Format-Table | Out-String) -Level SUB
 
 # Organize items into separate lists for files and folders
 
@@ -106,11 +106,11 @@ foreach ($file in $Files)
     {
         $result = Remove-PnPFile -ServerRelativeUrl $file.ServerRelativeUrl -Force -Recycle
         $record.RecycleBinItemId = $result.RecycleBinItemId
-        Write-Information -MessageData "DeletedFile: $($file.ServerRelativeUrl)"
+        Write-STStatus "DeletedFile: $($file.ServerRelativeUrl)" -Level INFO
     }
     else
     {
-        Write-Information -MessageData "WouldDeleteFile: $($file.ServerRelativeUrl)"
+        Write-STStatus "WouldDeleteFile: $($file.ServerRelativeUrl)" -Level SUB
     }
     $snapshot += $record
 }
@@ -126,11 +126,11 @@ while ($Folders)
         {
             $result = Remove-PnPFolder -Name $folder.Name -Folder $folder.ParentFolder -Force -Recycle
             $record.RecycleBinItemId = $result.RecycleBinItemId
-            Write-Verbose -Message "Deleted: $($folder.Name)"
+            Write-STStatus "Deleted: $($folder.Name)" -Level INFO
         }
         else
         {
-            Write-Verbose -Message "WouldDelete: $($folder.Name)"
+            Write-STStatus "WouldDelete: $($folder.Name)" -Level SUB
         }
         $snapshot += $record
         $Folders.Remove($folder) | Out-Null
@@ -155,11 +155,11 @@ foreach ($folder in $ZzzArchiveProductionSharePointFolder)
         {
             $result = Remove-PnPFile -ServerRelativeUrl $folder.ServerRelativeUrl -Force -Recycle
             $record.RecycleBinItemId = $result.RecycleBinItemId
-            Write-Verbose -Message "RemovedFile: $($folder.ServerRelativeUrl)"
+            Write-STStatus "RemovedFile: $($folder.ServerRelativeUrl)" -Level INFO
         }
         else
         {
-            Write-Verbose -Message "WouldRemoveFile: $($folder.ServerRelativeUrl)"
+            Write-STStatus "WouldRemoveFile: $($folder.ServerRelativeUrl)" -Level SUB
         }
         $snapshot += $record
     }
@@ -170,11 +170,11 @@ foreach ($folder in $ZzzArchiveProductionSharePointFolder)
         {
             $result = Remove-PnPFolder -Name $folder.Name -Folder $folder.ParentFolder -Force -Recycle
             $record.RecycleBinItemId = $result.RecycleBinItemId
-            Write-Verbose -Message "RemovedFile: $($folder.ServerRelativeUrl)"
+            Write-STStatus "RemovedFile: $($folder.ServerRelativeUrl)" -Level INFO
         }
         else
         {
-            Write-Verbose -Message "WouldRemoveFolder: $($folder.ServerRelativeUrl)"
+            Write-STStatus "WouldRemoveFolder: $($folder.ServerRelativeUrl)" -Level SUB
         }
         $snapshot += $record
     }
@@ -184,9 +184,9 @@ foreach ($folder in $ZzzArchiveProductionSharePointFolder)
 $snapshot | ConvertTo-Json -Depth 10 | Out-File -FilePath $SnapshotPath -Encoding utf8
 if (-not $Commit)
 {
-    Write-Information "Dry run complete. Snapshot saved to $SnapshotPath"
+    Write-STStatus "Dry run complete. Snapshot saved to $SnapshotPath" -Level FINAL
 }
 else
 {
-    Write-Information "Deletion complete. Snapshot saved to $SnapshotPath"
+    Write-STStatus "Deletion complete. Snapshot saved to $SnapshotPath" -Level FINAL
 }

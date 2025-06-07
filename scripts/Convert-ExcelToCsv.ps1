@@ -127,7 +127,7 @@ function Export-Json {
     $Json | Add-Content -Path $OutFilePath
     $jsonFile = Get-ChildItem $OutFilePath
     $jsonFileAbsPath = $jsonFile.FullName
-    Write-Information -MessageData "File saved: $jsonFileAbsPath" -InformationAction Continue
+    Write-STStatus "File saved: $jsonFileAbsPath" -Level SUCCESS
 }
  
 function Convert-ExcelCSVToJSON {

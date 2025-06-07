@@ -65,7 +65,7 @@ $salesSharePointFolderLvl42024Sales = $salesSharePointFolderLvl3Private[7] | Get
 $salesSharePointFolderLvl42024SalesALLFOLDERS = $salesSharePointFolderLvl42024Sales | Get-PnPFolderItem -Recursive -ItemType Folder -Verbose
 
 # Initialize a list to hold all items with ListItemAllFields property
-Write-Information -MessageData "Getting PnpProperties..."
+Write-STStatus 'Getting PnpProperties...' -Level INFO
 $itemsWithAllListItemFieldsList = [System.Collections.Generic.List[object]]::new()
 
 # Loop through each folder to get its ListItemAllFields property
@@ -76,7 +76,7 @@ foreach ($salesSharePointFolderLvl42024SalesALLFOLDER in $salesSharePointFolderL
 }
 
 # Initialize a list to hold all items with specific fields
-Write-Information -MessageData "Getting PnpListItems..."
+Write-STStatus 'Getting PnpListItems...' -Level INFO
 $items = [System.Collections.Generic.List[object]]::new()
 
 # Loop through each item to get its ListItemAllFields properties using the retrieved ID
@@ -87,7 +87,7 @@ foreach ($item in $itemsWithAllListItemFieldsList)
         $items.Add($itemWithID)
     }
     catch {
-        Write-Warning "ITEM ID: $($item.Id): MessageTooLarge"
+        Write-STStatus "ITEM ID: $($item.Id): MessageTooLarge" -Level WARN
     }
 }
 
@@ -97,10 +97,10 @@ $uniqueRolesList = [System.Collections.Generic.List[object]]::new()
 # Loop through each item to check for unique role assignments and process them
 foreach ($item in $items)
 {
-    Write-Information -MessageData "Processing $($item.FieldValues.FileRef)"
+    Write-STStatus "Processing $($item.FieldValues.FileRef)" -Level INFO
     if ($item.HasUniqueRoleAssignments)
     {
-        Write-Warning "File has unique role assignments: $($item.FieldValues.FileRef)"
+        Write-STStatus "File has unique role assignments: $($item.FieldValues.FileRef)" -Level WARN
         $customObject = [pscustomobject]@{
             ID = $item.FieldValues.ID
             FileRef = $item.FieldValues.FileRef

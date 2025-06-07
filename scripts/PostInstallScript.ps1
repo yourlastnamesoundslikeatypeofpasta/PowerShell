@@ -26,11 +26,11 @@ function MSStoreAppInstallerUpdate {
     Start-Process ms-windows-store://pdp/?ProductId=9NBLGGH4NNS1
     if (!$LASTEXITCODE)
     {
-        Write-Information -MessageData "Opened Microsoft Store App Installer"
+        Write-STStatus 'Opened Microsoft Store App Installer' -Level SUCCESS
     }
-    else 
+    else
     {
-        Write-Error -MessageData "FAILED opening Microsoft Store"
+        Write-STStatus 'FAILED opening Microsoft Store' -Level ERROR
     }
 }
 
@@ -134,9 +134,9 @@ function Get-ComputerName {
         {
             $Unconfirmed = $false
         }
-        else 
+        else
         {
-            Write-Warning -Message "Computer names do not match up. Try again."
+            Write-STStatus 'Computer names do not match up. Try again.' -Level WARN
         }
     }
     $ComputerNameOne
@@ -245,7 +245,7 @@ function Install-[REDACTED] {
         Get-Content ".\assets\agents\[REDACTED]\key.txt" | Set-Clipboard
     }
 
-    Write-Information -MessageData "Key copied to clipboard..." -InformationAction Continue
+    Write-STStatus 'Key copied to clipboard...' -Level SUCCESS
 
     # open [REDACTED]
     $Path = Get-AgentPath -Agent "[REDACTED]" -USB
@@ -384,7 +384,7 @@ function Main {
         computer to the domain.
     #>
     # install agents
-    Write-Information -MessageData "Executing Agent Installers" -InformationAction Continue
+    Write-STStatus 'Executing Agent Installers' -Level INFO
     Install-[REDACTED] -USB
     Install-[REDACTED] 
     Install-Sysmon 
@@ -392,36 +392,36 @@ function Main {
     Read-Host -Prompt "Press enter to continue..." 
 
     # Install winget applications
-    Write-Information -MessageData "Update App Installer..."
+    Write-STStatus 'Update App Installer...' -Level INFO
     MSStoreAppInstallerUpdate
     Read-Host -Prompt "Press enter to continue..."
     
     # install applications
-    Write-Information -MessageData "Installing Chrome, Excel Mobile, and Adobe Acrobat Reader..." -InformationAction Continue
+    Write-STStatus 'Installing Chrome, Excel Mobile, and Adobe Acrobat Reader...' -Level INFO
     Install-Chrome
     Install-ExcelMobile
     Install-AdobeAcrobatReader
 
     # configure
-    Write-Information -MessageData "Enabling .NET Frame 3.5..." -InformationAction Continue
+    Write-STStatus 'Enabling .NET Frame 3.5...' -Level INFO
     Enable-NetFramework
 
     # copy files
     Copy-Files -USB
 
-    Write-Information -MessageData "Setting Power Plan..." -InformationAction Continue
+    Write-STStatus 'Setting Power Plan...' -Level INFO
     Set-PowerPlan
 
     # name computer
-    Write-Information -MessageData "Renaming Computer..." -InformationAction Continue
+    Write-STStatus 'Renaming Computer...' -Level INFO
     $NewComputerName = Get-ComputerName
     Rename-Computer -NewName $NewComputerName -Force
 
     # add computer to domain
-    Write-Warning "Adding Computer to domain...Press [CTRL] + [C] to abort..."
+    Write-STStatus 'Adding Computer to domain...Press [CTRL] + [C] to abort...' -Level WARN
     Add-Computer -NewName $NewComputerName -DomainName "myus.local" -DomainCredential (Get-Credential) -Force
 
-    Write-Information -MessageData "Restart computer to apply changes..."
+    Write-STStatus 'Restart computer to apply changes...' -Level INFO
 
 }
 

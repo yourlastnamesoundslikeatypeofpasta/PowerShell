@@ -20,7 +20,7 @@ if ($env:SPTOOLS_CERT_PATH) { $SharePointToolsSettings.CertPath = $env:SPTOOLS_C
 try {
     Import-Module PnP.PowerShell -ErrorAction Stop
 } catch {
-    Write-Warning 'PnP.PowerShell module not found. SharePoint functions may not work until it is installed.'
+    Write-STStatus 'PnP.PowerShell module not found. SharePoint functions may not work until it is installed.' -Level WARN
 }
 
 function Write-SPToolsHacker {
@@ -231,7 +231,7 @@ function Invoke-ArchiveCleanup {
     }
     Start-Transcript -Path $TranscriptPath -Append
 
-    Write-Verbose "[+] Scanning target: $SiteName"
+    Write-STStatus "[+] Scanning target: $SiteName" -Level INFO
     $items = Get-PnPListItem -List $LibraryName -PageSize 5000
 
     $files   = $items | Where-Object { $_.FileSystemObjectType -eq 'File' }
@@ -243,16 +243,16 @@ function Invoke-ArchiveCleanup {
     $filesDeleted = 0
     $foldersDeleted = 0
 
-    Write-Verbose "[>] Located $($archivedFiles.Count) archived files marked for deletion."
+    Write-STStatus "[>] Located $($archivedFiles.Count) archived files marked for deletion." -Level INFO
     if ($PSCmdlet.ShouldProcess($SiteName, 'Remove archived files and folders')) {
         foreach ($file in $archivedFiles) {
             $filePath = $file.FieldValues.FileRef
             try {
-                Write-Verbose "-- Deleting file: $filePath"
+                Write-STStatus "-- Deleting file: $filePath" -Level SUB
                 Remove-PnPFile -ServerRelativeUrl $filePath -Force -ErrorAction Stop
                 $filesDeleted++
             } catch {
-                Write-Warning "[!] FILE DELETE FAIL: $filePath :: $_"
+                Write-STStatus "[!] FILE DELETE FAIL: $filePath :: $_" -Level WARN
             }
         }
 
@@ -260,7 +260,7 @@ function Invoke-ArchiveCleanup {
         ($_.FieldValues.FileRef -split '/').Count
     } -Descending
 
-    Write-Verbose "[>] Initiating folder cleanup (leaf-first)"
+    Write-STStatus "[>] Initiating folder cleanup (leaf-first)" -Level INFO
     foreach ($folder in $archivedFoldersSorted) {
         $folderPath = $folder.FieldValues.FileDirRef
         $folderName = $folder.FieldValues.FileLeafRef
@@ -274,11 +274,11 @@ function Invoke-ArchiveCleanup {
         }
 
         try {
-            Write-Verbose "-- Deleting folder: $fullPath"
+            Write-STStatus "-- Deleting folder: $fullPath" -Level SUB
             Remove-PnPFolder -Name $folderName -Folder $folderPath -Force -ErrorAction Stop
             $foldersDeleted++
         } catch {
-            Write-Warning "[!] FOLDER DELETE FAIL: $fullPath :: $_"
+            Write-STStatus "[!] FOLDER DELETE FAIL: $fullPath :: $_" -Level WARN
         }
     }
 
@@ -426,7 +426,7 @@ function Invoke-SharingLinkCleanup {
             if ($link) {
                 Remove-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue
                 $removed.Add($item.ServerRelativeUrl)
-                Write-Warning "Removed file link: $($item.ServerRelativeUrl)"
+                Write-STStatus "Removed file link: $($item.ServerRelativeUrl)" -Level WARN
             }
         } catch {
             try {
@@ -434,7 +434,7 @@ function Invoke-SharingLinkCleanup {
                 if ($folderLink) {
                     Remove-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue
                     $removed.Add($item.ServerRelativeUrl)
-                    Write-Warning "Removed folder link: $($item.ServerRelativeUrl)"
+                    Write-STStatus "Removed folder link: $($item.ServerRelativeUrl)" -Level WARN
                 }
             } catch {
                 # ignore if no links exist
@@ -443,8 +443,8 @@ function Invoke-SharingLinkCleanup {
     }
 
     if ($removed.Count) {
-        Write-Warning "Sharing links removed from the following items:" 
-        $removed | Write-Warning
+        Write-STStatus 'Sharing links removed from the following items:' -Level WARN
+        $removed | ForEach-Object { Write-STStatus $_ -Level WARN }
     } else {
         Write-STStatus 'No sharing links found.' -Level SUCCESS
     }
@@ -850,7 +850,7 @@ function Get-SPToolsFileReport {
             $report.Add($obj)
         }
         catch {
-            Write-Warning "Error processing file: $_"
+            Write-STStatus "Error processing file: $_" -Level WARN
         }
     }
 

@@ -9,6 +9,6 @@ number. Useful for scripts that need a brief pause or countdown.
 
 foreach ($num in 10..1)
 {
-  Write-Information -MessageData $num -InformationAction Continue
+  Write-STStatus $num -Level INFO
   Start-Sleep -Seconds 1
 }

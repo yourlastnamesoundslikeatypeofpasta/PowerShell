@@ -39,9 +39,9 @@ function Show-Menu {
     Write-STDivider 'SupportTools Menu' -Style heavy
     for ($i = 0; $i -lt $Menu.Count; $i++) {
         $num = $i + 1
-        Write-Host "$num. $($Menu[$i].Label)"
+        Write-STStatus "$num. $($Menu[$i].Label)" -Level INFO
     }
-    Write-Host 'Q. Quit'
+    Write-STStatus 'Q. Quit' -Level INFO
 }
 
 while ($true) {
@@ -54,7 +54,7 @@ while ($true) {
     } else {
         Write-STStatus 'Invalid choice. Try again.' -Level WARN
     }
-    Write-Host
+    Write-STStatus '' -Level INFO
 }
 
 Write-STClosing
