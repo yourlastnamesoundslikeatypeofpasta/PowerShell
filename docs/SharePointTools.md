@@ -6,7 +6,13 @@ This module provides SharePoint cleanup and reporting utilities. Import the modu
 Import-Module ./src/SharePointTools/SharePointTools.psd1
 ```
 
-Before running any command ensure the settings file has been configured using `./scripts/Configure-SharePointTools.ps1` or by setting the environment variables `SPTOOLS_CLIENT_ID`, `SPTOOLS_TENANT_ID` and `SPTOOLS_CERT_PATH`.
+Validate prerequisites using `Test-SPToolsPrereqs`:
+
+```powershell
+Test-SPToolsPrereqs -Install
+```
+
+Before running any command ensure the settings file has been configured using `./scripts/Configure-SharePointTools.ps1` (parameters can be passed for unattended use) or by setting the environment variables `SPTOOLS_CLIENT_ID`, `SPTOOLS_TENANT_ID` and `SPTOOLS_CERT_PATH`.
 
 All functions emit short, high contrast messages following the style in [ModuleStyleGuide.md](ModuleStyleGuide.md).
 
@@ -16,6 +22,7 @@ All functions emit short, high contrast messages following the style in [ModuleS
 |---------|-------------|---------------|---------|
 | `Save-SPToolsSettings` | Persist the current configuration to disk. | none | `Save-SPToolsSettings` |
 | `Get-SPToolsSettings` | Return the loaded configuration. | none | `Get-SPToolsSettings` |
+| `Test-SPToolsPrereqs` | Verify PnP.PowerShell dependency. Use `-Install` to install. | `[Install]` | `Test-SPToolsPrereqs -Install` |
 | `Get-SPToolsSiteUrl` | Retrieve a site URL by friendly name. | `SiteName` | `Get-SPToolsSiteUrl -SiteName HR` |
 | `Add-SPToolsSite` | Add a SharePoint site entry. | `Name`, `Url` | `Add-SPToolsSite -Name HR -Url https://contoso.sharepoint.com/sites/hr` |
 | `Set-SPToolsSite` | Update an existing site entry. | `Name`, `Url` | `Set-SPToolsSite -Name HR -Url https://contoso.sharepoint.com/sites/hr2` |

@@ -27,6 +27,7 @@ The following table provides a brief description of each script.
 | **Submit-SystemInfoTicket.ps1** | Collects system info, uploads it to SharePoint and opens a Service Desk ticket. |
 | **SS_DEPLOYMENT_TEMPLATE.ps1** | Template for sneaker net deployments that installs agents and configures a system. |
 | **Configure-SharePointTools.ps1** | Prompts for SharePoint application values and saves them to a settings file. |
+| **Test-SPToolsPrereqs.ps1** | Checks for PnP.PowerShell and installs it if requested. |
 | **CleanupTempFiles.ps1** | Removes .tmp files and empty logs from the repository. |
 | **SupportToolsMenu.ps1** | Interactive menu for common SupportTools tasks. |
 | **ScriptLauncher.ps1** | Menu to browse and run any script in this folder. |

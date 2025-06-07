@@ -58,10 +58,11 @@ This repository packages a collection of scripts into reusable modules.
    Import-Module ./src/GraphTools/GraphTools.psd1
    ```
 
-4. Run the SharePoint configuration script once to store tenant information:
+4. Validate the SharePoint dependency and save tenant information:
 
    ```powershell
-   ./scripts/Configure-SharePointTools.ps1
+   ./scripts/Test-SPToolsPrereqs.ps1 -Install
+   ./scripts/Configure-SharePointTools.ps1 -ClientId <appId> -TenantId <tenantId> -CertPath <path>
    ```
 
 ## Usage 💡

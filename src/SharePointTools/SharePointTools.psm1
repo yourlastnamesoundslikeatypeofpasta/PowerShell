@@ -61,6 +61,39 @@ function Save-SPToolsSettings {
     }
 }
 
+function Test-SPToolsPrereqs {
+    <#
+    .SYNOPSIS
+        Validates required modules for SharePoint tools.
+    .DESCRIPTION
+        Checks that the PnP.PowerShell module is available. Use -Install to
+        automatically install it from the PowerShell Gallery when missing.
+    .PARAMETER Install
+        If specified, missing modules are installed without prompting.
+    #>
+    [CmdletBinding()]
+    param(
+        [switch]$Install
+    )
+    process {
+        if (-not (Get-Module -ListAvailable -Name 'PnP.PowerShell')) {
+            Write-SPToolsHacker 'PnP.PowerShell module not found.' -Level WARN
+            if ($Install) {
+                try {
+                    Install-Module -Name 'PnP.PowerShell' -Scope CurrentUser -Force -ErrorAction Stop
+                    Write-SPToolsHacker 'Installed PnP.PowerShell' -Level SUCCESS
+                } catch {
+                    Write-SPToolsHacker "Failed to install PnP.PowerShell: $($_.Exception.Message)" -Level ERROR
+                }
+            } else {
+                Write-SPToolsHacker "Run 'Test-SPToolsPrereqs -Install' to install." -Level SUB
+            }
+        } else {
+            Write-SPToolsHacker 'PnP.PowerShell module present.' -Level SUCCESS
+        }
+    }
+}
+
 function Get-SPToolsSettings {
     <#
     .SYNOPSIS
@@ -900,7 +933,7 @@ function List-OneDriveUsage {
     Write-SPToolsHacker 'Report complete'
     $report
 }
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','Select-SPToolsFolder','List-OneDriveUsage' -Variable 'SharePointToolsSettings'
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','Select-SPToolsFolder','List-OneDriveUsage','Test-SPToolsPrereqs' -Variable 'SharePointToolsSettings'
 
 function Register-SPToolsCompleters {
     $siteCmds = 'Get-SPToolsSiteUrl','Get-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsPreservationHoldReport','Get-SPToolsAllLibraryReports','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Select-SPToolsFolder'
