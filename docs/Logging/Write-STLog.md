@@ -97,7 +97,7 @@ Accept wildcard characters: False
 ```
 
 ### -Structured
-Outputs the log entry as a JSON object.
+Outputs the log entry as a JSON object. Set the `ST_LOG_STRUCTURED` environment variable to `1` to enable structured output by default.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
@@ -109,7 +109,6 @@ Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
-Set the `ST_LOG_STRUCTURED` environment variable to `1` to enable structured output by default.
 
 ### -Metric
 Name of a metric to record. Automatically enables structured output.
