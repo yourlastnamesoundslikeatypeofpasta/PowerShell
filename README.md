@@ -32,7 +32,7 @@ This repository packages a collection of scripts into reusable modules.
 1. Clone or download this repository:
 
    ```powershell
-   git clone <repository-url>
+   git clone https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git
    ```
 
 2. Install the published modules (optional):
