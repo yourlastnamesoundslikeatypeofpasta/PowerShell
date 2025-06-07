@@ -56,7 +56,7 @@ function Show-SupportToolsBanner {
     Write-STStatus 'SUPPORTTOOLS MODULE ACTIVATED' -Level SUCCESS
     Write-STStatus '════════════════════════════════════════════' -Level INFO
     Write-STStatus "Run 'Get-Command -Module SupportTools' to view available tools." -Level SUB
-    Write-STLog 'SupportTools module loaded'
+    Write-STLog -Message 'SupportTools module loaded'
 }
 
 Show-SupportToolsBanner

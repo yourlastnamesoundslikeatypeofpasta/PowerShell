@@ -17,7 +17,7 @@ function Search-SDTicket {
         return
     }
 
-    Write-STLog "Search-SDTicket $Query"
+    Write-STLog -Message "Search-SDTicket $Query"
     $encoded = [uri]::EscapeDataString($Query)
     Invoke-SDRequest -Method 'GET' -Path "/incidents.json?search=$encoded" -ChaosMode:$ChaosMode
 }

@@ -55,7 +55,7 @@ try {
         & $scriptPath
     }
 } catch {
-    Write-STLog "Job bundle execution failed: $_" -Level 'ERROR'
+    Write-STLog -Message "Job bundle execution failed: $_" -Level 'ERROR'
     $result = 'Failure'
     throw
 } finally {
