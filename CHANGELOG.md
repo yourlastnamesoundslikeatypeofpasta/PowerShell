@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `Invoke-CompanyPlaceManagement` command for Microsoft Places
 - GitHub Actions workflows for caching modules and labeling PRs
 - SupportTools cmdlets can inject custom logging and telemetry modules
+- Detailed scenario documentation for the SharePointTools module
+### Breaking Changes
+- None in this release
 
 ### Changed
 - Updated Pester invocation to align with v5 parameter requirements
