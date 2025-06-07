@@ -32,12 +32,17 @@ function Write-SPToolsHacker {
         [ValidateNotNullOrEmpty()]
         [string]$Message,
         [ValidateSet('INFO','SUCCESS','ERROR','WARN','SUB','FINAL','FATAL')]
-        [string]$Level = 'INFO'
+        [string]$Level = 'INFO',
+        [hashtable]$Metadata
     )
     process {
         Write-STStatus -Message $Message -Level $Level -Log
+        if ($Level -in @('SUCCESS','ERROR','WARN','FATAL')) {
+            $meta = @{ tool = 'SharePointTools'; level = $Level }
+            if ($Metadata) { foreach ($k in $Metadata.Keys) { $meta[$k] = $Metadata[$k] } }
+            Write-STLog -Message $Message -Level $Level -Structured -Metadata $meta
+        }
     }
-
 }
 
 function Save-SPToolsSettings {
@@ -51,7 +56,7 @@ function Save-SPToolsSettings {
         if ($PSCmdlet.ShouldProcess($settingsFile, 'Save configuration')) {
             Write-SPToolsHacker 'Saving configuration'
             $SharePointToolsSettings | Out-File -FilePath $settingsFile -Encoding utf8
-            Write-SPToolsHacker 'Configuration saved'
+            Write-SPToolsHacker 'Configuration saved' -Level SUCCESS -Metadata @{ Path = $settingsFile }
         }
     }
 }
@@ -112,10 +117,10 @@ function Add-SPToolsSite {
     )
     process {
         if ($PSCmdlet.ShouldProcess($Name, 'Add site')) {
-            Write-SPToolsHacker "Adding site $Name"
+            Write-SPToolsHacker "Adding site $Name" -Metadata @{ Site = $Name; Url = $Url }
             $SharePointToolsSettings.Sites[$Name] = $Url
             Save-SPToolsSettings
-            Write-SPToolsHacker 'Site added'
+            Write-SPToolsHacker 'Site added' -Level SUCCESS -Metadata @{ Site = $Name; Url = $Url }
         }
     }
 }
@@ -140,10 +145,10 @@ function Set-SPToolsSite {
     )
     process {
         if ($PSCmdlet.ShouldProcess($Name, 'Update site')) {
-            Write-SPToolsHacker "Updating site $Name"
+            Write-SPToolsHacker "Updating site $Name" -Metadata @{ Site = $Name; Url = $Url }
             $SharePointToolsSettings.Sites[$Name] = $Url
             Save-SPToolsSettings
-            Write-SPToolsHacker 'Site updated'
+            Write-SPToolsHacker 'Site updated' -Level SUCCESS -Metadata @{ Site = $Name; Url = $Url }
         }
     }
 }
@@ -163,10 +168,10 @@ function Remove-SPToolsSite {
     )
     process {
         if ($PSCmdlet.ShouldProcess($Name, 'Remove site')) {
-            Write-SPToolsHacker "Removing site $Name"
+            Write-SPToolsHacker "Removing site $Name" -Metadata @{ Site = $Name }
             [void]$SharePointToolsSettings.Sites.Remove($Name)
             Save-SPToolsSettings
-            Write-SPToolsHacker 'Site removed'
+            Write-SPToolsHacker 'Site removed' -Level SUCCESS -Metadata @{ Site = $Name }
         }
     }
 }
