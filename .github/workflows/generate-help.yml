@@ -24,10 +24,10 @@ jobs:
       - name: Sync branch with remote
         run: |
           git pull --rebase origin ${{ github.head_ref || github.ref_name }}
-      - name: Install platyPS
-        shell: pwsh
-        run: |
-          Install-Module platyPS -Force -Scope CurrentUser
+      - name: Cache PowerShell modules
+        uses: potatoqualitee/psmodulecache@v6.2.1
+        with:
+          modules-to-cache: platyPS
       - name: Generate Markdown help
         shell: pwsh
         run: |

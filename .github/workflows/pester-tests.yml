@@ -17,10 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install Pester
-        shell: pwsh
-        run: |
-          Install-Module Pester -Force -Scope CurrentUser -MaximumVersion 5.9999
+      - name: Cache PowerShell modules
+        uses: potatoqualitee/psmodulecache@v6.2.1
+        with:
+          modules-to-cache: Pester
       - name: Run Pester tests
         shell: pwsh
         run: |
