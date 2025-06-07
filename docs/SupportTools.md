@@ -37,7 +37,7 @@ listed are forwarded to the underlying script unchanged.
 | `Restore-ArchiveFolder` | `RollbackArchive.ps1` | `SnapshotPath`, `SiteUrl` | `Restore-ArchiveFolder -SiteUrl https://contoso.sharepoint.com/sites/Files -SnapshotPath preDeleteLog.json` |
 | `Convert-ExcelToCsv` | `Convert-ExcelToCsv.ps1` | *passthrough* | `Convert-ExcelToCsv -Path workbook.xlsx` |
 | `Export-ProductKey` | `ProductKey.ps1` | *passthrough* | `Export-ProductKey` |
-| `Get-CommonSystemInfo` | `Get-CommonSystemInfo.ps1` | *passthrough* | `Get-CommonSystemInfo` |
+| `Get-CommonSystemInfo` | *built-in* | - | `Get-CommonSystemInfo` |
 | `Get-FailedLogin` | `Get-FailedLogins.ps1` | *passthrough* | `Get-FailedLogin -ComputerName PC1` |
 | `Get-NetworkShare` | `Get-NetworkShares.ps1` | *passthrough* | `Get-NetworkShare -ComputerName FS01` |
 | `Get-UniquePermission` | `Get-UniquePermissions.ps1` | *passthrough* | `Get-UniquePermission -SiteUrl https://contoso.sharepoint.com/sites/HR` |

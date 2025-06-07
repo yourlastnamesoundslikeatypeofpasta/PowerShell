@@ -50,7 +50,6 @@ Describe 'SupportTools Module' {
             Restore_ArchiveFolder        = 'RollbackArchive.ps1'
             Clear_TempFile              = 'CleanupTempFiles.ps1'
             Convert_ExcelToCsv           = 'Convert-ExcelToCsv.ps1'
-            Get_CommonSystemInfo         = 'Get-CommonSystemInfo.ps1'
             Get_FailedLogin             = 'Get-FailedLogins.ps1'
             Get_NetworkShare            = 'Get-NetworkShares.ps1'
             Get_UniquePermission        = 'Get-UniquePermissions.ps1'
@@ -134,6 +133,32 @@ Describe 'SupportTools Module' {
                 Mock Invoke-ScriptFile { $expected } -ModuleName SupportTools
                 $result = Add-UserToGroup -CsvPath 'users.csv' -GroupName 'MyGroup'
                 $result | Should -Be $expected
+            }
+        }
+    }
+
+    Context 'Get-CommonSystemInfo collection' {
+        It 'returns system information object' {
+            InModuleScope SupportTools {
+                Mock Get-CimInstance {
+                    switch ($ClassName) {
+                        'Win32_OperatingSystem' { [pscustomobject]@{ CSName='PC'; Caption='OS'; BuildNumber='1'; TotalVisibleMemorySize=1048576 } }
+                        'Win32_Processor'       { [pscustomobject]@{ Name='CPU' } }
+                        'Win32_LogicalDisk'     { [pscustomobject]@{ DeviceID='C:'; Size=1073741824; FreeSpace=536870912 } }
+                        'Win32_PhysicalMemory'  { $null }
+                    }
+                } -ModuleName SupportTools
+                Mock Import-Module {} -ModuleName SupportTools
+                Mock Write-STStatus {} -ModuleName SupportTools
+
+                $result = Get-CommonSystemInfo
+
+                $result.ComputerName | Should -Be 'PC'
+                $result.OSVersion    | Should -Be 'OS'
+                $result.OSBuild      | Should -Be '1'
+                $result.Processor    | Should -Be 'CPU'
+                $result.Memory       | Should -Be (1048576 / 1MB)
+                $result.DiskSpace    | Should -Not -BeNullOrEmpty
             }
         }
     }
