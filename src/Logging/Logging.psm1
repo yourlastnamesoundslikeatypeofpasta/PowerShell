@@ -12,7 +12,7 @@ if ($SupportToolsConfig.maintenanceMode) {
 function Write-STLog {
     [CmdletBinding(DefaultParameterSetName='Message')]
     param(
-        [Parameter(Mandatory, ParameterSetName='Message')]
+        [Parameter(Mandatory, Position=0, ParameterSetName='Message')]
         [string]$Message,
         [ValidateSet('INFO','WARN','ERROR')]
         [string]$Level = 'INFO',
