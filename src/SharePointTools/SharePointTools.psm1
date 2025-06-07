@@ -903,14 +903,11 @@ function Register-SPToolsCompleters {
 }
 
 function Show-SharePointToolsBanner {
-    $lines = @(
-        '=======================================',
-        '=   SHAREPOINTTOOLS MODULE ENGAGED    =',
-        '=======================================')
-    foreach ($line in $lines) {
-        Write-STStatus $line -Level INFO
-    }
+    Write-STStatus '════════════════════════════════════════════' -Level INFO
+    Write-STStatus 'SHAREPOINTTOOLS MODULE ACTIVATED' -Level SUCCESS
+    Write-STStatus '════════════════════════════════════════════' -Level INFO
     Write-STStatus "Run 'Get-Command -Module SharePointTools' to view available tools." -Level SUB
+    Write-STLog -Message 'SharePointTools module loaded'
 }
 
 Register-SPToolsCompleters
