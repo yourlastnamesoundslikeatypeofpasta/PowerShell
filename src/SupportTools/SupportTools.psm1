@@ -41,6 +41,7 @@ Export-ModuleMember -Function @(
     'Invoke-JobBundle',
     'Invoke-PostInstall',
     'Invoke-PerformanceAudit',
+    'Invoke-RemoteAudit',
     'Invoke-FullSystemAudit',
     'Restore-ArchiveFolder',
     'Search-ReadMe',
