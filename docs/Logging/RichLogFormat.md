@@ -13,4 +13,4 @@ All SupportTools commands should log structured events in a single JSON format. 
 }
 ```
 
-Use `Write-STRichLog` to emit entries in this format. Logs default to `~/SupportToolsLogs/supporttools.log` unless a custom path is provided or `ST_LOG_PATH` is set.
+Use `Write-STRichLog` to emit entries in this format. Logs default to `~/SupportToolsLogs/supporttools.log` unless a custom path is provided or `ST_LOG_PATH` is set. You can also set `ST_LOG_STRUCTURED=1` to automatically write structured entries when calling `Write-STLog` without the `-Structured` switch.
