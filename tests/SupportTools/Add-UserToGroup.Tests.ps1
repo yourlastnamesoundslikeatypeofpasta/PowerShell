@@ -1,5 +1,6 @@
 Describe 'Add-UserToGroup function' {
     BeforeAll {
+        Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SupportTools/SupportTools.psd1 -Force
     }
 
@@ -26,7 +27,7 @@ Describe 'Add-UserToGroup function' {
     It 'forwards transcript and switches' {
         InModuleScope SupportTools {
             Mock Invoke-ScriptFile {} -ModuleName SupportTools
-            Add-UserToGroup -TranscriptPath 't.log' -Simulate -Explain
+            Add-UserToGroup -CsvPath 'users.csv' -GroupName 'G1' -TranscriptPath 't.log' -Simulate -Explain
             Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1 -ParameterFilter {
                 $TranscriptPath -eq 't.log' -and $Simulate -and $Explain
             }
