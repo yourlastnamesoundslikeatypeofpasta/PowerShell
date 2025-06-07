@@ -24,8 +24,25 @@ function Set-SharedMailboxAutoReply {
         [switch]$UseWebLogin,
         [string]$TranscriptPath,
         [switch]$Simulate,
-        [switch]$Explain
+        [switch]$Explain,
+        [object]$Logger,
+        [object]$TelemetryClient,
+        [object]$Config
     )
+
+    if ($Logger) {
+        Import-Module $Logger -ErrorAction SilentlyContinue
+    } else {
+        Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
+    }
+    if ($TelemetryClient) {
+        Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+    } else {
+        Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+    }
+    if ($Config) {
+        Import-Module $Config -ErrorAction SilentlyContinue
+    }
 
     if ($Explain) {
         Get-Help $MyInvocation.PSCommandPath -Full
