@@ -6,7 +6,7 @@ The key guides are:
 
 - [Quickstart](./Quickstart.md) – short steps to install the modules and run common commands.
 - [User Guide](./UserGuide.md) – detailed deployment information and security notes.
-- [SupportTools](./SupportTools.md), [SharePointTools](./SharePointTools.md), [ServiceDeskTools](./ServiceDeskTools.md) – high level summaries of each module and the commands they expose.
+- [SupportTools](./SupportTools.md), [SharePointTools](./SharePointTools.md), [ServiceDeskTools](./ServiceDeskTools.md), [AuditTools](./AuditTools.md) – high level summaries of each module and the commands they expose.
 - [Credential Storage](./CredentialStorage.md) – recommended approach to store secrets securely.
 - [Module Style Guide](./ModuleStyleGuide.md) – how scripts display progress messages and log output.
 - [PerformanceTools](./PerformanceTools.md) – measure execution time and resource usage.
@@ -17,4 +17,4 @@ The key guides are:
 - [Roadmap](./Roadmap.md) – upcoming features and goals.
 
 
-Command specific help topics live in the `SupportTools`, `SharePointTools` and `ServiceDeskTools` subfolders.
+Command specific help topics live in the `SupportTools`, `SharePointTools`, `ServiceDeskTools` and `AuditTools` subfolders.
