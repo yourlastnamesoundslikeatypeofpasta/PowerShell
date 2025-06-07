@@ -177,7 +177,7 @@ function Invoke-YFArchiveCleanup {
     .SYNOPSIS
         Removes archive items from the YF site.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param()
 
     Invoke-ArchiveCleanup -SiteName 'YF'
@@ -188,7 +188,7 @@ function Invoke-IBCCentralFilesArchiveCleanup {
     .SYNOPSIS
         Removes archive items from the IBCCentralFiles site.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param()
 
     Invoke-ArchiveCleanup -SiteName 'IBCCentralFiles'
@@ -199,7 +199,7 @@ function Invoke-MexCentralFilesArchiveCleanup {
     .SYNOPSIS
         Removes archive items from the MexCentralFiles site.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param()
 
     Invoke-ArchiveCleanup -SiteName 'MexCentralFiles'
@@ -388,7 +388,7 @@ function Invoke-FileVersionCleanup {
   Recursively scans a folder and deletes all file and folder sharing links.
 #>
 function Invoke-SharingLinkCleanup {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [string]$SiteName,
@@ -422,24 +422,26 @@ function Invoke-SharingLinkCleanup {
     $items = $targetFolder | Get-PnPFolderItem -Recursive
     $removed = [System.Collections.Generic.List[string]]::new()
 
-    foreach ($item in $items) {
-        try {
-            $link = (Get-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -ErrorAction Stop).Link.WebUrl
-            if ($link) {
-                Remove-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue
-                $removed.Add($item.ServerRelativeUrl)
-                Write-STStatus "Removed file link: $($item.ServerRelativeUrl)" -Level WARN
-            }
-        } catch {
+    if ($PSCmdlet.ShouldProcess($SiteName, 'Remove sharing links')) {
+        foreach ($item in $items) {
             try {
-                $folderLink = (Get-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -ErrorAction Stop).Link.WebUrl
-                if ($folderLink) {
-                    Remove-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue
+                $link = (Get-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -ErrorAction Stop).Link.WebUrl
+                if ($link) {
+                    Remove-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue
                     $removed.Add($item.ServerRelativeUrl)
-                    Write-STStatus "Removed folder link: $($item.ServerRelativeUrl)" -Level WARN
+                    Write-STStatus "Removed file link: $($item.ServerRelativeUrl)" -Level WARN
                 }
             } catch {
-                # ignore if no links exist
+                try {
+                    $folderLink = (Get-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -ErrorAction Stop).Link.WebUrl
+                    if ($folderLink) {
+                        Remove-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue
+                        $removed.Add($item.ServerRelativeUrl)
+                        Write-STStatus "Removed folder link: $($item.ServerRelativeUrl)" -Level WARN
+                    }
+                } catch {
+                    # ignore if no links exist
+                }
             }
         }
     }
@@ -460,7 +462,7 @@ function Invoke-YFSharingLinkCleanup {
     .SYNOPSIS
         Removes sharing links from the YF site.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param()
 
     Invoke-SharingLinkCleanup -SiteName 'YF'
@@ -471,7 +473,7 @@ function Invoke-IBCCentralFilesSharingLinkCleanup {
     .SYNOPSIS
         Removes sharing links from the IBCCentralFiles site.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param()
 
     Invoke-SharingLinkCleanup -SiteName 'IBCCentralFiles'
@@ -482,7 +484,7 @@ function Invoke-MexCentralFilesSharingLinkCleanup {
     .SYNOPSIS
         Removes sharing links from the MexCentralFiles site.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param()
 
     Invoke-SharingLinkCleanup -SiteName 'MexCentralFiles'
