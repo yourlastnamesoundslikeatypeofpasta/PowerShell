@@ -12,6 +12,8 @@ if (Test-Path $settingsFile) {
 
 $loggingModule = Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -ChildPath 'Logging/Logging.psd1'
 Import-Module $loggingModule -ErrorAction SilentlyContinue
+$telemetryModule = Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -ChildPath 'Telemetry/Telemetry.psd1'
+Import-Module $telemetryModule -ErrorAction SilentlyContinue
 
 # Override configuration with environment variables when provided
 if ($env:SPTOOLS_CLIENT_ID) { $SharePointToolsSettings.ClientId = $env:SPTOOLS_CLIENT_ID }
@@ -55,6 +57,18 @@ function Write-SPToolsHacker {
 
     }
 }
+function Send-SPToolsTelemetryEvent {
+    [CmdletBinding()]
+    param(
+        [string]$Command,
+        [string]$Result,
+        [timespan]$Duration
+    )
+    try {
+        Write-STTelemetryEvent -ScriptName $Command -Result $Result -Duration $Duration -Category "SharePointTools"
+    } catch {}
+}
+
 
 function Connect-SPToolsOnline {
     <#
@@ -82,6 +96,8 @@ function Connect-SPToolsOnline {
         [Parameter(Mandatory)][string]$CertPath,
         [int]$RetryCount = 3
     )
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    $result = "Success"
     $attempt = 1
     while ($true) {
         try {
@@ -91,6 +107,7 @@ function Connect-SPToolsOnline {
             break
         } catch {
             Write-STStatus "Connection failed: $($_.Exception.Message)" -Level WARN
+                $result = "Failure"
             if ($attempt -ge $RetryCount) {
                 Write-STStatus 'All connection attempts failed.' -Level ERROR
                 throw
@@ -98,6 +115,8 @@ function Connect-SPToolsOnline {
             Start-Sleep -Seconds 5
             $attempt++
         }
+    $sw.Stop()
+    Send-SPToolsTelemetryEvent -Command "Connect-SPToolsOnline" -Result $result -Duration $sw.Elapsed
     }
 }
 
@@ -118,7 +137,7 @@ function Invoke-SPPnPCommand {
     try {
         & $ScriptBlock
     } catch {
-        Write-STStatus "$ErrorMessage: $($_.Exception.Message)" -Level ERROR
+        Write-STStatus "${ErrorMessage}: $($_.Exception.Message)" -Level ERROR
         throw
     }
 }

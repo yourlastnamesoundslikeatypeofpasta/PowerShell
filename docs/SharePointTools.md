@@ -85,3 +85,13 @@ Invoke-SharingLinkCleanup -SiteName HR -FolderName Marketing
 ```
 
 The cleanup commands output a CSV of files with excess versions and remove outdated sharing links from the Marketing folder.
+
+### 4. Capture telemetry events
+
+```powershell
+$env:ST_ENABLE_TELEMETRY = '1'
+Connect-SPToolsOnline -Url https://contoso.sharepoint.com -ClientId $cid -TenantId $tid -CertPath cert.pfx
+$env:ST_ENABLE_TELEMETRY = ''
+```
+
+Telemetry records command usage under the user's profile in `SupportToolsTelemetry/telemetry.jsonl`.
