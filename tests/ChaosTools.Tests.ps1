@@ -9,9 +9,9 @@ Describe 'ChaosTools Module' {
     }
 
     It 'executes a script block when failure rate is zero' {
-        $ran = $false
+        $script:ran = $false
         Invoke-ChaosTest -ScriptBlock { $script:ran = $true } -FailureRate 0 -MaxDelaySeconds 0
-        $ran | Should -BeTrue
+        $script:ran | Should -BeTrue
     }
 
     It 'throws when failure rate is one' {
