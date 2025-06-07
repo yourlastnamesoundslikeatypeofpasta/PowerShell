@@ -25,7 +25,7 @@ function Invoke-JobBundle {
 
         $transcript = [IO.Path]::GetTempFileName()
         $args = @('-BundlePath', $Path)
-        Invoke-ScriptFile -Name 'Run-JobBundle.ps1' -Args $args -TranscriptPath $transcript
+        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Run-JobBundle.ps1' -Args $args -TranscriptPath $transcript
 
         $logFile = if ($env:ST_LOG_PATH) {
             $env:ST_LOG_PATH

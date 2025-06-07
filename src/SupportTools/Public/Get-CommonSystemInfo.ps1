@@ -7,10 +7,26 @@ function Get-CommonSystemInfo {
         CIM classes and returns it as a custom object.
     #>
     [CmdletBinding()]
-    param()
+    param(
+        [object]$Logger,
+        [object]$TelemetryClient,
+        [object]$Config
+    )
 
     process {
-        Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
+        if ($Logger) {
+            Import-Module $Logger -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
+        }
+        if ($TelemetryClient) {
+            Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+        }
+        if ($Config) {
+            Import-Module $Config -ErrorAction SilentlyContinue
+        }
 
         Write-STStatus 'Collecting system information...' -Level INFO
 
