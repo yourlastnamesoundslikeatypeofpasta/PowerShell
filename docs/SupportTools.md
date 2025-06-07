@@ -44,6 +44,7 @@ listed are forwarded to the underlying script unchanged.
 | `Install-Font` | `Install-Fonts.ps1` | *passthrough* | `Install-Font -Source C:\Fonts` |
 | `Invoke-DeploymentTemplate` | `SS_DEPLOYMENT_TEMPLATE.ps1` | *passthrough* | `Invoke-DeploymentTemplate -Verbose` |
 | `Invoke-ExchangeCalendarManager` | `ExchangeCalendarManager.ps1` | *interactive* | `Invoke-ExchangeCalendarManager` |
+| `Invoke-RemoteAudit` | *built-in* | `ComputerName`, `[AuditCommands]`, `[Credential]` | `Invoke-RemoteAudit -ComputerName PC1` |
 | `Invoke-PostInstall` | `PostInstallScript.ps1` | *passthrough* | `Invoke-PostInstall -Domain contoso.com` |
 | `Search-ReadMe` | `Search-ReadMe.ps1` | *passthrough* | `Search-ReadMe -Pattern 'setup'` |
 | `Set-ComputerIPAddress` | `Set-ComputerIPAddress.ps1` | *passthrough* | `Set-ComputerIPAddress -CsvPath ip.csv` |

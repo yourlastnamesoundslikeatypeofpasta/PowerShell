@@ -22,6 +22,7 @@
         'Invoke-DeploymentTemplate',
         'Invoke-ExchangeCalendarManager',
         'Invoke-GroupMembershipCleanup',
+        'Invoke-RemoteAudit',
         'Invoke-JobBundle',
         'Invoke-PostInstall',
         'Restore-ArchiveFolder',
