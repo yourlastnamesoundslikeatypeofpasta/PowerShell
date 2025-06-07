@@ -1,3 +1,6 @@
-docs/**: documentation
-src/**: enhancement
-tests/**: tests
+documentation:
+  - docs/**
+enhancement:
+  - src/**
+tests:
+  - tests/**
