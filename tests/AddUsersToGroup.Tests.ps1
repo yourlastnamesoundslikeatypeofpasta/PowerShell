@@ -11,6 +11,7 @@ Describe 'AddUsersToGroup Script' {
         function Get-CSVFilePath {}
         function Import-Csv { param([string]$Path) }
         function Get-UserID { param([string]$UserPrincipalName) }
+        function Write-STStatus { param([string]$Message, [string]$Level) }
         # Stub Add-Type so the script can be dot-sourced without loading GUI assemblies
         function Add-Type {}
         . $PSScriptRoot/../scripts/AddUsersToGroup.ps1
