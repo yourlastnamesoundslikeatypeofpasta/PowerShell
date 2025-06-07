@@ -42,6 +42,74 @@ function Write-SPToolsHacker {
             if ($Metadata) { foreach ($k in $Metadata.Keys) { $meta[$k] = $Metadata[$k] } }
             Write-STLog -Message $Message -Level $Level -Structured -Metadata $meta
         }
+
+    }
+}
+
+function Connect-SPToolsOnline {
+    <#
+    .SYNOPSIS
+        Establishes a PnP connection with retry logic.
+    .DESCRIPTION
+        Wraps Connect-PnPOnline to provide standardized logging and
+        basic retry support for transient authentication issues.
+    .PARAMETER Url
+        The SharePoint site URL to connect to.
+    .PARAMETER ClientId
+        Azure AD application client ID.
+    .PARAMETER TenantId
+        Azure AD tenant ID.
+    .PARAMETER CertPath
+        Path to the authentication certificate file.
+    .PARAMETER RetryCount
+        Number of connection attempts before failing.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Url,
+        [Parameter(Mandatory)][string]$ClientId,
+        [Parameter(Mandatory)][string]$TenantId,
+        [Parameter(Mandatory)][string]$CertPath,
+        [int]$RetryCount = 3
+    )
+    $attempt = 1
+    while ($true) {
+        try {
+            Write-STStatus "Connecting to $Url (attempt $attempt)" -Level INFO
+            Connect-PnPOnline -Url $Url -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath -ErrorAction Stop
+            Write-STStatus 'PnP connection established' -Level SUCCESS
+            break
+        } catch {
+            Write-STStatus "Connection failed: $($_.Exception.Message)" -Level WARN
+            if ($attempt -ge $RetryCount) {
+                Write-STStatus 'All connection attempts failed.' -Level ERROR
+                throw
+            }
+            Start-Sleep -Seconds 5
+            $attempt++
+        }
+    }
+}
+
+function Invoke-SPPnPCommand {
+    <#
+    .SYNOPSIS
+        Executes a PnP.PowerShell command with standardized error handling.
+    .PARAMETER ScriptBlock
+        The command to execute.
+    .PARAMETER ErrorMessage
+        Message logged when the command fails.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][scriptblock]$ScriptBlock,
+        [string]$ErrorMessage = 'PnP command failed'
+    )
+    try {
+        & $ScriptBlock
+    } catch {
+        Write-STStatus "$ErrorMessage: $($_.Exception.Message)" -Level ERROR
+        throw
     }
 }
 
@@ -264,7 +332,7 @@ function Invoke-ArchiveCleanup {
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
     if (-not $TranscriptPath) {
         $TranscriptPath = "$env:USERPROFILE/SHAREPOINT_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
@@ -272,7 +340,7 @@ function Invoke-ArchiveCleanup {
     Start-Transcript -Path $TranscriptPath -Append
 
     Write-STStatus "[+] Scanning target: $SiteName" -Level INFO
-    $items = Get-PnPListItem -List $LibraryName -PageSize 5000
+    $items = Invoke-SPPnPCommand { Get-PnPListItem -List $LibraryName -PageSize 5000 } 'Failed to retrieve list items'
 
     $files   = $items | Where-Object { $_.FileSystemObjectType -eq 'File' }
     $folders = $items | Where-Object { $_.FileSystemObjectType -eq 'Folder' }
@@ -390,20 +458,20 @@ function Invoke-FileVersionCleanup {
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
-    $rootFolder = Get-PnPFolder -ListRootFolder $LibraryName
-    $subFolders = $rootFolder | Get-PnPFolderInFolder
+    $rootFolder = Invoke-SPPnPCommand { Get-PnPFolder -ListRootFolder $LibraryName } 'Failed to get root folder'
+    $subFolders = Invoke-SPPnPCommand { $rootFolder | Get-PnPFolderInFolder } 'Failed to enumerate folders'
     $targetFolder = $subFolders | Where-Object { $_.Name -eq 'Marketing' }
 
     Write-STStatus "Scanning target: $SiteName" -Level INFO
-    $items = $targetFolder | Get-PnPFolderItem -Recursive -Verbose
+    $items = Invoke-SPPnPCommand { $targetFolder | Get-PnPFolderItem -Recursive -Verbose } 'Failed to list folder items'
     Write-STStatus "Located $($items.Count) files within $SiteUrl" -Level SUB
 
     $files = $items | Where-Object { $_.GetType().Name -eq 'File' }
 
     $report = foreach ($file in $files) {
-        $versions = Get-PnPProperty -ClientObject $file -Property Versions
+        $versions = Invoke-SPPnPCommand { Get-PnPProperty -ClientObject $file -Property Versions } 'Failed to get versions'
         if ($versions.Count -gt 1) {
             [pscustomobject]@{
                 Name              = $file.Name
@@ -441,7 +509,7 @@ function Invoke-SharingLinkCleanup {
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
     if (-not $TranscriptPath) {
         $TranscriptPath = "$env:USERPROFILE/SHAREPOINT_LINK_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
@@ -451,13 +519,13 @@ function Invoke-SharingLinkCleanup {
     if (-not $FolderName) {
         $targetFolder = Select-SPToolsFolder -SiteUrl $SiteUrl -LibraryName $LibraryName
     } else {
-        $allFolders = Get-PnPFolderItem -List $LibraryName -ItemType Folder -Recursive
+        $allFolders = Invoke-SPPnPCommand { Get-PnPFolderItem -List $LibraryName -ItemType Folder -Recursive } 'Failed to list folders'
         $targetFolder = $allFolders | Where-Object Name -eq $FolderName | Select-Object -First 1
         if (-not $targetFolder) { throw "Folder '$FolderName' not found." }
     }
 
     Write-STStatus "Scanning $($targetFolder.Name) for sharing links..." -Level INFO
-    $items = $targetFolder | Get-PnPFolderItem -Recursive
+    $items = Invoke-SPPnPCommand { $targetFolder | Get-PnPFolderItem -Recursive } 'Failed to list folder items'
     $removed = [System.Collections.Generic.List[string]]::new()
 
     if ($PSCmdlet.ShouldProcess($SiteName, 'Remove sharing links')) {
@@ -493,6 +561,7 @@ function Invoke-SharingLinkCleanup {
 
     Stop-Transcript
     Disconnect-PnPOnline
+    Write-SPToolsHacker 'Recycle bin cleared'
 }
 
 function Invoke-YFSharingLinkCleanup {
@@ -543,9 +612,9 @@ function Get-SPToolsLibraryReport {
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
     Write-SPToolsHacker "Library report: $SiteName"
 
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
-    $lists = Get-PnPList | Where-Object { $_.BaseTemplate -eq 101 }
+    $lists = Invoke-SPPnPCommand { Get-PnPList } 'Failed to retrieve lists' | Where-Object { $_.BaseTemplate -eq 101 }
     $report = foreach ($list in $lists) {
         [pscustomobject]@{
             SiteName     = $SiteName
@@ -585,9 +654,9 @@ function Get-SPToolsRecycleBinReport {
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
     Write-SPToolsHacker "Recycle bin report: $SiteName"
 
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
-    $items = Get-PnPRecycleBinItem
+    $items = Invoke-SPPnPCommand { Get-PnPRecycleBinItem } 'Failed to retrieve recycle bin items'
     $totalSize = ($items | Measure-Object -Property Size -Sum).Sum
     $report = [pscustomobject]@{
         SiteName    = $SiteName
@@ -614,18 +683,22 @@ function Clear-SPToolsRecycleBin {
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
     Write-SPToolsHacker "Clearing recycle bin: $SiteName"
 
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
     if ($PSCmdlet.ShouldProcess($SiteName, 'Clear recycle bin')) {
-        if ($SecondStage) {
-            Clear-PnPRecycleBinItem -SecondStage -Force
-        } else {
-            Clear-PnPRecycleBinItem -FirstStage -Force
+        try {
+            if ($SecondStage) {
+                Clear-PnPRecycleBinItem -SecondStage -Force
+            } else {
+                Clear-PnPRecycleBinItem -FirstStage -Force
+            }
+            Write-STStatus 'Recycle bin cleared' -Level SUCCESS
+        } catch {
+            Write-STStatus "Failed to clear recycle bin: $($_.Exception.Message)" -Level ERROR
         }
     }
 
     Disconnect-PnPOnline
-    Write-SPToolsHacker 'Recycle bin cleared'
 }
 
 function Get-SPToolsAllRecycleBinReports {
@@ -657,10 +730,10 @@ function Get-SPToolsPreservationHoldReport {
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
     Write-SPToolsHacker "Hold report: $SiteName"
 
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
-    $items = Get-PnPListItem -List 'Preservation Hold Library' -PageSize 2000
-    $files = foreach ($item in $items) { Get-PnPProperty -ClientObject $item -Property File }
+    $items = Invoke-SPPnPCommand { Get-PnPListItem -List 'Preservation Hold Library' -PageSize 2000 } 'Failed to retrieve hold items'
+    $files = foreach ($item in $items) { Invoke-SPPnPCommand { Get-PnPProperty -ClientObject $item -Property File } 'Failed to get file info' }
     $totalSize = ($files | Measure-Object -Property Length -Sum).Sum
     $report = [pscustomobject]@{
         SiteName    = $SiteName
@@ -693,18 +766,18 @@ function Get-SPPermissionsReport {
     )
 
     Write-SPToolsHacker "Permissions report: $SiteUrl"
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
     if ($FolderUrl) {
-        $target = Get-PnPFolder -Url $FolderUrl
+        $target = Invoke-SPPnPCommand { Get-PnPFolder -Url $FolderUrl } 'Failed to get folder'
     } else {
-        $target = Get-PnPSite
+        $target = Invoke-SPPnPCommand { Get-PnPSite } 'Failed to get site'
     }
 
-    $assignments = Get-PnPProperty -ClientObject $target -Property RoleAssignments
+    $assignments = Invoke-SPPnPCommand { Get-PnPProperty -ClientObject $target -Property RoleAssignments } 'Failed to get role assignments'
     $report = foreach ($assignment in $assignments) {
-        $member = Get-PnPProperty -ClientObject $assignment -Property Member
-        $roles = Get-PnPProperty -ClientObject $assignment -Property RoleDefinitionBindings | ForEach-Object { $_.Name } -join ','
+        $member = Invoke-SPPnPCommand { Get-PnPProperty -ClientObject $assignment -Property Member } 'Failed to get member'
+        $roles = Invoke-SPPnPCommand { Get-PnPProperty -ClientObject $assignment -Property RoleDefinitionBindings } 'Failed to get roles' | ForEach-Object { $_.Name } -join ','
         [pscustomobject]@{
             Member = $member.Title
             Type   = $member.PrincipalType
@@ -729,16 +802,16 @@ function Clean-SPVersionHistory {
     )
 
     Write-SPToolsHacker "Cleaning versions on $SiteUrl"
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
-    $items = Get-PnPListItem -List $LibraryName -PageSize 2000
+    $items = Invoke-SPPnPCommand { Get-PnPListItem -List $LibraryName -PageSize 2000 } 'Failed to retrieve list items'
     if ($PSCmdlet.ShouldProcess($SiteUrl, 'Clean version history')) {
         foreach ($item in $items) {
-            $versions = Get-PnPProperty -ClientObject $item -Property Versions
+            $versions = Invoke-SPPnPCommand { Get-PnPProperty -ClientObject $item -Property Versions } 'Failed to get versions'
             if ($versions.Count -gt $KeepVersions) {
                 $excess = $versions | Sort-Object -Property Created -Descending | Select-Object -Skip $KeepVersions
                 foreach ($v in $excess) { $v.DeleteObject() | Out-Null }
-                Invoke-PnPQuery
+                Invoke-SPPnPCommand { Invoke-PnPQuery } 'Failed to execute query'
             }
         }
     }
@@ -758,12 +831,12 @@ function Find-OrphanedSPFiles {
     )
 
     Write-SPToolsHacker "Searching orphaned files on $SiteUrl"
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
     $cutoff = (Get-Date).AddDays(-$Days)
-    $items = Get-PnPListItem -List $LibraryName -PageSize 2000
+    $items = Invoke-SPPnPCommand { Get-PnPListItem -List $LibraryName -PageSize 2000 } 'Failed to retrieve list items'
     $report = foreach ($item in $items) {
-        $file = Get-PnPProperty -ClientObject $item -Property File
+        $file = Invoke-SPPnPCommand { Get-PnPProperty -ClientObject $item -Property File } 'Failed to get file properties'
         if ($file.TimeLastModified -lt $cutoff) {
             [pscustomobject]@{
                 Name         = $file.Name
@@ -800,12 +873,12 @@ function Select-SPToolsFolder {
 
     $conn = Get-PnPConnection -ErrorAction SilentlyContinue
     if (-not $conn) {
-        Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+        Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
         $needsDisconnect = $true
     }
 
-    $list = Get-PnPList -Identity $LibraryName -ErrorAction Stop
-    $items = Get-PnPFolderItem -List $list -ItemType Folder -Recursive
+    $list  = Invoke-SPPnPCommand { Get-PnPList -Identity $LibraryName -ErrorAction Stop } 'Failed to retrieve list'
+    $items = Invoke-SPPnPCommand { Get-PnPFolderItem -List $list -ItemType Folder -Recursive } 'Failed to list folders'
     $rootPath = $list.RootFolder.ServerRelativeUrl
 
     $folders = foreach ($item in $items) {
@@ -849,9 +922,9 @@ function Get-SPToolsFileReport {
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
     Write-SPToolsHacker "File report: $SiteName"
 
-    Connect-PnPOnline -Url $SiteUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
-    $items = Get-PnPListItem -List $LibraryName -PageSize $PageSize
+    $items = Invoke-SPPnPCommand { Get-PnPListItem -List $LibraryName -PageSize $PageSize } 'Failed to retrieve list items'
     $files = $items | Where-Object { $_.FileSystemObjectType -eq 'File' }
     $report = [System.Collections.Generic.List[object]]::new()
 
@@ -916,9 +989,9 @@ function List-OneDriveUsage {
     )
 
     Write-SPToolsHacker 'Gathering OneDrive usage'
-    Connect-PnPOnline -Url $AdminUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+    Connect-SPToolsOnline -Url $AdminUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
-    $sites = Get-PnPTenantSite -IncludeOneDriveSites
+    $sites = Invoke-SPPnPCommand { Get-PnPTenantSite -IncludeOneDriveSites } 'Failed to retrieve tenant sites'
     $report = foreach ($s in $sites) {
         if ($s.Template -eq 'SPSPERS') {
             [pscustomobject]@{
