@@ -9,8 +9,8 @@ function Generate-SPUsageReport {
     param(
         [Parameter(ValueFromRemainingArguments=$true, ValueFromPipeline=$true)]
         [object[]]$Arguments,
-        [string]$TranscriptPath
-        [switch]$Simulate
+        [string]$TranscriptPath,
+        [switch]$Simulate,
         [switch]$Explain
     )
     process {

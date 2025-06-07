@@ -22,7 +22,7 @@ function Set-SharedMailboxAutoReply {
         [Parameter(Mandatory)]
         [string]$AdminUser,
         [switch]$UseWebLogin,
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
         [switch]$Simulate,
         [switch]$Explain
     )

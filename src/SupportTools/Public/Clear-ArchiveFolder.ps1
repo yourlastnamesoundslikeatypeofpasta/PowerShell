@@ -13,7 +13,6 @@ function Clear-ArchiveFolder {
         [string]$TranscriptPath,
         [switch]$Simulate,
         [switch]$Explain
-        [switch]$Explain
     )
     process {
         Invoke-ScriptFile -Name "CleanupArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain -Explain:$Explain

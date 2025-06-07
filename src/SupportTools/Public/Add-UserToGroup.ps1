@@ -32,6 +32,6 @@ function Add-UserToGroup {
             $arguments += $GroupName
         }
 
-        Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain -Explain:$Explain
+        Invoke-ScriptFile -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

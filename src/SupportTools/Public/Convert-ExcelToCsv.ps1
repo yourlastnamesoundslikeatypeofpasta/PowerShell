@@ -13,9 +13,8 @@ function Convert-ExcelToCsv {
         [string]$TranscriptPath,
         [switch]$Simulate,
         [switch]$Explain
-        [switch]$Explain
     )
     process {
-        Invoke-ScriptFile -Name "Convert-ExcelToCsv.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain -Explain:$Explain
+        Invoke-ScriptFile -Name "Convert-ExcelToCsv.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }
