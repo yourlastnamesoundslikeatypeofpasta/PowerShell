@@ -72,12 +72,12 @@ function Set-ComputerIPAddress {
 
             return
         }
-        Write-Warning -Message "No matching computer name found in CSV file." -InformationAction Continue
+        Write-STStatus 'No matching computer name found in CSV file.' -Level WARN
         
     }
     else
     {
-        Write-Information  -MessageData "CSV file not found." -InformationAction Continue
+        Write-STStatus 'CSV file not found.' -Level ERROR
     }
 
 }

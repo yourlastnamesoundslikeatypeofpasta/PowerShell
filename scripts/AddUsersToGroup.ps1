@@ -71,7 +71,7 @@ function Get-CSVFilePath {
         return $filePath
     }
     else {
-        Write-Debug "No file selected"
+        Write-STStatus 'No file selected' -Level SUB
         return $null
     }
 }
@@ -94,8 +94,8 @@ function Connect-MicrosoftGraph {
 
     $mgGraphAccount = (Get-MgContext).Account
     $messageData = "Microsoft Graph Account: $mgGraphAccount"
-    Write-Information -MessageData $messageData
-    Write-Information -MessageData ('-' * $messageData.Length)
+    Write-STStatus $messageData -Level INFO
+    Write-STStatus ('-' * $messageData.Length) -Level INFO
 }
 
 function Get-Group {
@@ -113,7 +113,7 @@ function Get-Group {
     $allGroupNames = Get-GroupNames | Sort-Object -Property DisplayName
     $index = 0
     foreach ($group in $allGroupNames) {
-        Write-Information -MessageData "[$($index)] - $($group.DisplayName)"
+        Write-STStatus "[$($index)] - $($group.DisplayName)" -Level INFO
         $index++
     }
 
@@ -157,7 +157,7 @@ function Get-UserID {
         return Get-MgUser -UserId $UserPrincipalName -ErrorAction Stop
     }
     catch {
-        Write-Warning "User not found: $UserPrincipalName"
+        Write-STStatus "User not found: $UserPrincipalName" -Level WARN
         return $null
     }
 }
@@ -197,7 +197,7 @@ function Start-Main {
 
         if (-not $userInfo) {
             $skippedUsers += $user
-            Write-Warning "User not found: $user"
+            Write-STStatus "User not found: $user" -Level WARN
             continue
         }
 

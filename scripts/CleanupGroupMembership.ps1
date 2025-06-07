@@ -24,12 +24,12 @@ if (-not $group) { throw "Group '$GroupName' not found." }
 $users = Import-Csv $CsvPath
 foreach ($user in $users.UPN) {
     $obj = Get-MgUser -UserId $user -ErrorAction SilentlyContinue
-    if (-not $obj) { Write-Warning "User not found: $user"; continue }
+    if (-not $obj) { Write-STStatus "User not found: $user" -Level WARN; continue }
     try {
         Remove-MgGroupMemberByRef -GroupId $group.Id -DirectoryObjectId $obj.Id -ErrorAction Stop
         Write-STStatus "Removed $($obj.UserPrincipalName)" -Level SUCCESS
     } catch {
-        Write-Warning "Failed to remove $user: $_"
+        Write-STStatus "Failed to remove $user: $_" -Level ERROR
     }
 }
 

@@ -83,10 +83,10 @@ function Confirm-ServiceRunning {
     
         # confirm sentinal is running
         if ($isCurrentServiceRunning) {
-            Write-Information -MessageData "$($currentServiceDisplayName) - Running" -InformationAction Continue
+            Write-STStatus "$($currentServiceDisplayName) - Running" -Level INFO
         }
         else {
-            Write-Warning -Message "$($currentServiceDisplayName) - NOT RUNNING!!!"
+            Write-STStatus "$($currentServiceDisplayName) - NOT RUNNING!!!" -Level WARN
         }
     }
 }
@@ -134,7 +134,7 @@ function Export-Client {
     # add the results of each scriptblock within scriptBlockArray to clientObjectProperties
     foreach ($ScriptBlock in $ScriptBlockArray) {
         $commandPropertyName = $ScriptBlock.ToString().Split('-') -join ''
-        Write-Information -MessageData "Capturing Command Data - $commandPropertyName" -InformationAction Continue
+        Write-STStatus "Capturing Command Data - $commandPropertyName" -Level INFO
         $commandResults = Invoke-Command $ScriptBlock
         $clientObjectProperties.Add($commandPropertyName, $commandResults)
     }
@@ -169,7 +169,7 @@ function Get-WHVersions {
         [switch]
         $Login
     )
-    Write-Information -MessageData 'Getting production file versions...' -InformationAction Continue
+    Write-STStatus 'Getting production file versions...' -Level INFO
     $loginFileHashDict = @{
         whLogProductionHash = '39B316E7C273F032999EFCD14A382B649F155039B843784EC6CA99BB553F5BEE'
         rmLogProductionHash = 'D2E331FD7ACF00836A1DE19BA73FD0C3ACFAD9EF1EFE7CEEDA1DBFB8C87E9860'

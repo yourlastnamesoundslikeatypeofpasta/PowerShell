@@ -28,10 +28,10 @@ function Get-ProductKey {
 
 $key = Get-ProductKey
 if (-not $key) {
-    Write-Warning 'Product key not found.'
+    Write-STStatus 'Product key not found.' -Level WARN
     return
 }
 
 Set-Content -Path $OutputPath -Value $key
-Write-Information -MessageData "Product key exported to $OutputPath" -InformationAction Continue
+Write-STStatus "Product key exported to $OutputPath" -Level SUCCESS
 

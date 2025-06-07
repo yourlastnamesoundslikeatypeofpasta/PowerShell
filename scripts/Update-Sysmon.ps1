@@ -48,11 +48,11 @@ function Main {
     $isSysmonRunning = (Get-Service SysMain | select Status).Status
     if ($isSysmonRunning -eq "Running")
     {
-        Write-Information -MessageData "Sysmon64 is running..." -InformationAction Continue
+        Write-STStatus 'Sysmon64 is running...' -Level INFO
     }
     else 
     {
-        Write-Warning -Message "Sysmon64 is NOT running..." -WarningAction Continue
+        Write-STStatus 'Sysmon64 is NOT running...' -Level WARN
     }
 
     # export computer name to log dir
