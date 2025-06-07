@@ -31,3 +31,4 @@ The following table provides a brief description of each script.
 | **ScriptLauncher.ps1** | Menu to browse and run any script in this folder. |
 | **Get-FunctionDependencyGraph.ps1** | Generates a Graphviz or Mermaid map of function calls inside a script. |
 
+| **Invoke-DailyAuditWorkflow.ps1** | Audits SharePoint permissions, logs results and opens a Service Desk ticket. |
