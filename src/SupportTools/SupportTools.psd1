@@ -31,6 +31,7 @@
         'Set-SharedMailboxAutoReply',
         'Set-TimeZoneEasternStandardTime',
         'Start-Countdown',
+        'Invoke-IncidentResponse',
         'Submit-SystemInfoTicket',
         'Sync-SupportTools',
         'Update-Sysmon'
