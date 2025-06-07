@@ -1,15 +1,16 @@
 @{
     RootModule = 'SupportTools.psm1'
-    ModuleVersion = '1.4.0'
+    ModuleVersion = '1.4.1'
     GUID = 'b6b7e080-4ad4-4d58-8b8c-000000000001'
     Author = 'Contoso'
     Description = 'Collection of helper functions wrapping existing scripts.'
     RequiredModules = @('Logging','SharePointTools','ServiceDeskTools','Telemetry')
-    PrivateData = @{ 
-        PSData = @{ 
+    PrivateData = @{
+        PSData = @{
             Tags = @('PowerShell','SupportTools','SharePoint','ServiceDesk','Internal')
             ProjectUri = 'https://contoso.com/supporttools'
             LicenseUri = 'https://contoso.com/license'
+            ExternalInterfaces = @('Logging','Telemetry','Config')
         }
     }
 
