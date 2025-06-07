@@ -2,9 +2,6 @@ Describe 'Get-SPToolsSiteUrl function' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force
     }
-
-    BeforeEach {}
-
     It 'returns the matching URL' {
         InModuleScope SharePointTools {
             $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A='https://a'; B='https://b' } })
@@ -13,11 +10,11 @@ Describe 'Get-SPToolsSiteUrl function' {
         }
     }
 
-    It 'supports pipeline input' {
+    It 'does not accept pipeline input' {
         InModuleScope SharePointTools {
-            $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A='https://a'; B='https://b' } })
+            $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ B='https://b' } })
             Mock Write-SPToolsHacker {}
-            [pscustomobject]@{ SiteName='B' } | Get-SPToolsSiteUrl | Should -Be 'https://b'
+            { [pscustomobject]@{ SiteName='B' } | Get-SPToolsSiteUrl } | Should -Throw
         }
     }
 
