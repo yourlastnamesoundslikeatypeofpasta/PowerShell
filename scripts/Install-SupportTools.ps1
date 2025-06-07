@@ -10,7 +10,7 @@
 .PARAMETER Scope
     Scope to install the modules. Defaults to CurrentUser.
 .EXAMPLE
-    ./Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
+    ./Install-SupportTools.ps1 -SupportToolsVersion 1.4.0
 #>
 param(
     [string]$SupportToolsVersion,

@@ -5,7 +5,7 @@ The `SupportTools.nuspec` file defines a package that bundles the four modules i
 To build the package run:
 
 ```powershell
-nuget pack SupportTools.nuspec -Version 1.3.0
+nuget pack SupportTools.nuspec -Version 1.4.0
 ```
 
 Publish the resulting `.nupkg` to your Chocolatey or PowerShell Gallery repository.
@@ -14,7 +14,7 @@ Once published, install the entire suite on a fresh system using the helper scri
 
 ```powershell
 # Pin SupportTools to a specific version
-./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
+./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.4.0
 ```
 
 The script downloads `Logging`, `SharePointTools`, `ServiceDeskTools` and the specified version of `SupportTools` from the gallery. If the gallery can't be reached it imports the local copies from `src` instead.

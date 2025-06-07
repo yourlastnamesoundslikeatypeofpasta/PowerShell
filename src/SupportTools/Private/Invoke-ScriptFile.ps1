@@ -6,6 +6,12 @@ function Invoke-ScriptFile {
         Name of the script file to execute.
     .PARAMETER Args
         Additional arguments to pass to the script.
+    .PARAMETER Logger
+        Optional path to a logging module. Defaults to the internal Logging module.
+    .PARAMETER TelemetryClient
+        Optional path to a telemetry module. Defaults to the internal Telemetry module.
+    .PARAMETER Config
+        Optional path to a configuration module for retrieving settings.
     #>
     [CmdletBinding()]
     param(
@@ -13,6 +19,9 @@ function Invoke-ScriptFile {
         [string]$Name,
         [Parameter(ValueFromRemainingArguments=$true)]
         [object[]]$Args,
+        [object]$Logger,
+        [object]$TelemetryClient,
+        [object]$Config,
         [string]$TranscriptPath,
         [switch]$Simulate,
         [switch]$Explain
@@ -23,6 +32,22 @@ function Invoke-ScriptFile {
         (Import-PowerShellDataFile $manifest).ModuleVersion
     } catch {
         'unknown'
+    }
+
+    if ($Logger) {
+        Import-Module $Logger -ErrorAction SilentlyContinue
+    } elseif ($loggingModule) {
+        Import-Module $loggingModule -ErrorAction SilentlyContinue
+    }
+
+    if ($TelemetryClient) {
+        Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+    } elseif ($telemetryModule) {
+        Import-Module $telemetryModule -ErrorAction SilentlyContinue
+    }
+
+    if ($Config) {
+        Import-Module $Config -ErrorAction SilentlyContinue
     }
     $Path = Join-Path $PSScriptRoot '..' |
             Join-Path -ChildPath '..' |

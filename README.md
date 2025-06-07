@@ -38,9 +38,9 @@ This repository packages a collection of scripts into reusable modules.
 2. Install the published modules (optional):
 
    ```powershell
-   ./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
+   ./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.4.0
    # or pin a specific build
-   Install-Module -Name SupportTools -RequiredVersion 1.3.0
+   Install-Module -Name SupportTools -RequiredVersion 1.4.0
    ```
    The script attempts to download each module from the gallery and falls back
    to importing the versions under `src` if the gallery cannot be reached.
@@ -62,6 +62,8 @@ This repository packages a collection of scripts into reusable modules.
 ## Usage 💡
 
 Once installed, the modules expose a variety of helper commands. The most common examples are shown below.
+
+Public cmdlets support dependency injection via the `-Logger`, `-TelemetryClient` and `-Config` parameters. When omitted, the built‑in logging, telemetry and configuration modules are loaded automatically, but custom implementations can be supplied for testing or orchestration purposes.
 
 ### SupportTools example
 
