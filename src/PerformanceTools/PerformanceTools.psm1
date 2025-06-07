@@ -25,10 +25,17 @@ function Measure-STCommand {
     $before = Get-Process -Id $PID
     $cpuStart = $before.TotalProcessorTime
     $memStart = $before.WorkingSet64
-
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
-    & $ScriptBlock
-    $sw.Stop()
+    $errorObj = $null
+    try {
+        & $ScriptBlock
+    } catch {
+        Write-STStatus "Measure-STCommand failed: $_" -Level ERROR -Log
+        Write-STLog -Message "Measure-STCommand failed: $_" -Level ERROR
+        $errorObj = New-STErrorObject -Message $_.Exception.Message -Category 'Performance'
+    } finally {
+        $sw.Stop()
+    }
 
     $after = Get-Process -Id $PID
     $cpuEnd = $after.TotalProcessorTime
@@ -46,6 +53,7 @@ function Measure-STCommand {
         Write-STStatus "Memory Change: $($result.MemoryDeltaMB) MB" -Level INFO
     }
 
+    if ($errorObj) { return $errorObj }
     return $result
 }
 

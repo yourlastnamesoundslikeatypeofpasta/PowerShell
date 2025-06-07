@@ -20,37 +20,43 @@ function Sync-SupportTools {
         [object]$Config
     )
 
-    if ($Logger) {
-        Import-Module $Logger -ErrorAction SilentlyContinue
-    } else {
-        Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
-    }
-    if ($TelemetryClient) {
-        Import-Module $TelemetryClient -ErrorAction SilentlyContinue
-    } else {
-        Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
-    }
-    if ($Config) {
-        Import-Module $Config -ErrorAction SilentlyContinue
-    }
+    try {
+        if ($Logger) {
+            Import-Module $Logger -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
+        }
+        if ($TelemetryClient) {
+            Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+        } else {
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+        }
+        if ($Config) {
+            Import-Module $Config -ErrorAction SilentlyContinue
+        }
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
+        if ($Explain) {
+            Get-Help $MyInvocation.PSCommandPath -Full
+            return
+        }
 
-    if (Test-Path (Join-Path $InstallPath '.git')) {
-        git -C $InstallPath pull
-    }
-    else {
-        git clone $RepositoryUrl $InstallPath
-    }
+        if (Test-Path (Join-Path $InstallPath '.git')) {
+            git -C $InstallPath pull
+        }
+        else {
+            git clone $RepositoryUrl $InstallPath
+        }
 
-    Import-Module (Join-Path $InstallPath 'src/SupportTools/SupportTools.psd1') -Force
-    $sp = Join-Path $InstallPath 'src/SharePointTools/SharePointTools.psd1'
-    if (Test-Path $sp) { Import-Module $sp -ErrorAction SilentlyContinue }
-    $sd = Join-Path $InstallPath 'src/ServiceDeskTools/ServiceDeskTools.psd1'
-    if (Test-Path $sd) { Import-Module $sd -ErrorAction SilentlyContinue }
+        Import-Module (Join-Path $InstallPath 'src/SupportTools/SupportTools.psd1') -Force
+        $sp = Join-Path $InstallPath 'src/SharePointTools/SharePointTools.psd1'
+        if (Test-Path $sp) { Import-Module $sp -ErrorAction SilentlyContinue }
+        $sd = Join-Path $InstallPath 'src/ServiceDeskTools/ServiceDeskTools.psd1'
+        if (Test-Path $sd) { Import-Module $sd -ErrorAction SilentlyContinue }
 
-    Write-STStatus 'SupportTools synchronized' -Level FINAL
+        Write-STStatus 'SupportTools synchronized' -Level FINAL
+    } catch {
+        Write-STStatus "Sync-SupportTools failed: $_" -Level ERROR -Log
+        Write-STLog -Message "Sync-SupportTools failed: $_" -Level ERROR
+        return New-STErrorObject -Message $_.Exception.Message -Category 'General'
+    }
 }
