@@ -71,4 +71,22 @@ Describe 'Telemetry Metrics Summary' {
             Remove-Item $log -ErrorAction SilentlyContinue
         }
     }
+
+    It 'records metrics using Send-STMetric' {
+        $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+        try {
+            $env:ST_ENABLE_TELEMETRY = '1'
+            $env:ST_TELEMETRY_PATH = $log
+            Send-STMetric -MetricName 'TestMetric' -Category 'Audit' -Value 1.5
+            (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
+            $json = Get-Content $log | ConvertFrom-Json
+            $json.MetricName | Should -Be 'TestMetric'
+            $json.Category | Should -Be 'Audit'
+            $json.Value | Should -Be 1.5
+        } finally {
+            Remove-Item $log -ErrorAction SilentlyContinue
+            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
+            Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
+        }
+    }
 }

@@ -6,5 +6,5 @@
     Description = 'Telemetry utilities.'
     RequiredModules = @('Logging')
     PrivateData = @{ PSData = @{ Tags = @('PowerShell','Telemetry','Internal') } }
-    FunctionsToExport = @('Write-STTelemetryEvent','Get-STTelemetryMetrics')
+    FunctionsToExport = @('Write-STTelemetryEvent','Get-STTelemetryMetrics','Send-STMetric')
 }

@@ -43,7 +43,9 @@ function Invoke-FullSystemAudit {
                 $result = 'Failure'
             } finally {
                 $sw.Stop()
-                Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $sw.Elapsed
+                $opId = [guid]::NewGuid().ToString()
+                Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $sw.Elapsed -Category 'Audit' -OperationId $opId
+                Send-STMetric -MetricName $Name -Category 'Audit' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result; OperationId = $opId }
             }
             return $out
         }

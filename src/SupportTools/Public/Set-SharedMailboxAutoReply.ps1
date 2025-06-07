@@ -51,6 +51,8 @@ function Set-SharedMailboxAutoReply {
         }
 
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        $sw = [System.Diagnostics.Stopwatch]::StartNew()
+        $result = 'Success'
         Write-STStatus 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
         if ($Simulate) {
             Write-STStatus 'Simulation mode active - auto-reply settings will not be changed.' -Level WARN -Log
@@ -107,9 +109,12 @@ function Set-SharedMailboxAutoReply {
     } catch {
         Write-STStatus "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Log
         Write-STLog -Message "Set-SharedMailboxAutoReply failed: $_" -Level ERROR
+        $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'Exchange'
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
         Disconnect-ExchangeOnline -Confirm:$false | Out-Null
+        $sw.Stop()
+        Send-STMetric -MetricName 'Set-SharedMailboxAutoReply' -Category 'Remediation' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
     }
 }

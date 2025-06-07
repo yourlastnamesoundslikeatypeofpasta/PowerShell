@@ -93,7 +93,9 @@ function Invoke-ScriptFile {
         $sw.Stop()
         $duration = $sw.Elapsed
         Write-STLog -Metric 'Duration' -Value $duration.TotalSeconds
-        Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $duration
+        $opId = [guid]::NewGuid().ToString()
+        Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $duration -Category 'General' -OperationId $opId
+        Send-STMetric -MetricName 'ExecutionSeconds' -Category 'General' -Value $duration.TotalSeconds -Details @{ Script = $Name; Result = $result; OperationId = $opId }
     }
     Write-STStatus "COMPLETED $Name" -Level FINAL -Log
 }

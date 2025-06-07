@@ -16,6 +16,8 @@ function Invoke-ExchangeCalendarManager {
         [object]$Config
     )
 
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    $result = 'Success'
     try {
         if ($Logger) {
             Import-Module $Logger -ErrorAction SilentlyContinue
@@ -114,9 +116,12 @@ function Invoke-ExchangeCalendarManager {
     } catch {
         Write-STStatus "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR -Log
         Write-STLog -Message "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR
+        $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'Exchange'
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
         Disconnect-ExchangeOnline -Confirm:$false | Out-Null
+        $sw.Stop()
+        Send-STMetric -MetricName 'Invoke-ExchangeCalendarManager' -Category 'Remediation' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
     }
 }
