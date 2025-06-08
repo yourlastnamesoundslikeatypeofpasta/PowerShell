@@ -24,8 +24,12 @@ jobs:
         run: |
           Import-Module PSScriptAnalyzer
           Import-Module ConvertToSARIF
-          Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error |
-            ConvertTo-SARIF -FilePath PSScriptAnalyzerResults.sarif
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error
+          $results | ConvertTo-SARIF -FilePath PSScriptAnalyzerResults.sarif
+          if ($results.Count -gt 0) {
+            Write-Error 'PSScriptAnalyzer found issues.'
+            exit 1
+          }
       - name: Upload lint results
         uses: actions/upload-artifact@v4
         with:
