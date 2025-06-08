@@ -7,7 +7,7 @@ if (-not $SupportToolsConfig.ContainsKey('maintenanceMode')) {
     $SupportToolsConfig.maintenanceMode = $false
 }
 if ($SupportToolsConfig.maintenanceMode) {
-    Write-Host 'SupportTools is currently in maintenance mode. Exiting.' -ForegroundColor Yellow
+    Write-STStatus 'SupportTools is currently in maintenance mode. Exiting.' -Level WARN -Log
     exit 1
 }
 
@@ -60,20 +60,27 @@ function Write-STLog {
         New-Item -Path $dir -ItemType Directory -Force | Out-Null
     }
     $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+    $user = if ($env:USERNAME) { $env:USERNAME } else { $env:USER }
+    $stack  = Get-PSCallStack
+    $caller = $stack | Where-Object { $_.InvocationInfo.MyCommand.Name -notin 'Write-STLog','Write-STStatus' } | Select-Object -First 1
+    $module = $null
+    if ($caller) {
+        $module = $caller.InvocationInfo.MyCommand.ModuleName
+        if (-not $module) { $module = Split-Path -Leaf $caller.InvocationInfo.PSCommandPath }
+    }
+    if (-not $module) { $module = 'Unknown' }
     if ($Structured) {
-        $user = if ($env:USERNAME) { $env:USERNAME } else { $env:USER }
-        $script = $MyInvocation.PSCommandPath
         $entry = [ordered]@{
             timestamp = $timestamp
+            module    = $module
             user      = $user
-            script    = $script
             level     = $Level
             message   = $Message
         }
         if ($Metadata) { foreach ($k in $Metadata.Keys) { $entry[$k] = $Metadata[$k] } }
         ($entry | ConvertTo-Json -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
     } else {
-        "$timestamp [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
+        "$timestamp [$module] [$user] [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
     }
 }
 
