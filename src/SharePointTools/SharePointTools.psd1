@@ -29,11 +29,14 @@
         'Get-SPToolsRecycleBinReport',
         'Clear-SPToolsRecycleBin',
         'Get-SPToolsAllRecycleBinReports',
+        'Get-SPToolsFileReport',
         'Get-SPToolsPreservationHoldReport',
         'Get-SPToolsAllPreservationHoldReports',
         'Get-SPPermissionsReport',
         'Clean-SPVersionHistory',
-        'Find-OrphanedSPFiles','Get-SPToolsFileReport',
-        'List-OneDriveUsage'
+        'Find-OrphanedSPFiles',
+        'Select-SPToolsFolder',
+        'List-OneDriveUsage',
+        'Test-SPToolsPrereqs'
     )
 }
