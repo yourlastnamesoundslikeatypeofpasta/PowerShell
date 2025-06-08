@@ -103,6 +103,15 @@ Describe 'ServiceDeskTools Module' {
             Link-SDTicketToSPTask -TicketId 9 -TaskUrl 'https://contoso/tasks/9'
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Link-SDTicketToSPTask 9 https://contoso/tasks/9' } -Times 1
         }
+        It 'Submit-Ticket calls New-SDTicket and logs the action' {
+            Mock New-SDTicket {} -ModuleName ServiceDeskTools
+            Mock Write-STLog {} -ModuleName ServiceDeskTools
+            Submit-Ticket -Subject 'S' -Description 'D' -RequesterEmail 'a@b.com'
+            Assert-MockCalled New-SDTicket -ModuleName ServiceDeskTools -ParameterFilter {
+                $Subject -eq 'S' -and $Description -eq 'D' -and $RequesterEmail -eq 'a@b.com'
+            } -Times 1
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Submit-Ticket S' } -Times 1
+        }
     }
 
     Context 'Invoke-SDRequest behavior' {
