@@ -34,6 +34,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
+### TicketObject[]
+Array of matching incidents.
+
 ## NOTES
 
 ## RELATED LINKS

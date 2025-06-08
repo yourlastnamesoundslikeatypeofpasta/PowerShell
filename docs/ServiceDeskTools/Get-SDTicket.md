@@ -72,6 +72,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
+### TicketObject
+Structured representation of the incident.
+
 ## NOTES
 
 ## RELATED LINKS
