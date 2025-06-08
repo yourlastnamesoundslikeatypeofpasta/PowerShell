@@ -7,10 +7,20 @@ function Start-Countdown {
         each number. Useful for short pauses in scripts.
     #>
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TranscriptPath
+    )
 
-    foreach ($num in 10..1) {
-        Write-STStatus $num -Level INFO
-        Start-Sleep -Seconds 1
+    try {
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+
+        foreach ($num in 10..1) {
+            Write-STStatus $num -Level INFO
+            Start-Sleep -Seconds 1
+        }
+    } finally {
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
 }

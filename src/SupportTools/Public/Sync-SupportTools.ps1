@@ -28,10 +28,14 @@ function Sync-SupportTools {
         [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
         [Parameter(Mandatory = $false)]
-        [object]$Config
+        [object]$Config,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TranscriptPath
     )
 
     try {
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
         if ($Logger) {
             Import-Module $Logger -ErrorAction SilentlyContinue
         } else {
