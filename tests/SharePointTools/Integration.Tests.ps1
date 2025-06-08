@@ -1,5 +1,8 @@
 Describe 'SharePointTools Integration Functions' {
     BeforeAll {
+        $env:SPTOOLS_CLIENT_ID = 'id'
+        $env:SPTOOLS_TENANT_ID = 'tid'
+        $env:SPTOOLS_CERT_PATH = 'c'
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force
     }
