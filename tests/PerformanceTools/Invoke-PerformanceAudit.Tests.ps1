@@ -1,9 +1,9 @@
-Describe 'Invoke-PerformanceAudit.ps1 script' {
+Describe 'Invoke-PerformanceAudit function' {
     BeforeAll {
-        $ScriptPath = Join-Path $PSScriptRoot/../.. 'src/PerformanceTools/Invoke-PerformanceAudit.ps1'
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/Telemetry/Telemetry.psd1 -Force
         Import-Module $PSScriptRoot/../../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force
+        Import-Module $PSScriptRoot/../../src/PerformanceTools/PerformanceTools.psd1 -Force
     }
     BeforeEach {
         function Get-Counter { param([string]$CounterPath,[int]$SampleInterval,[int]$MaxSamples)
@@ -20,7 +20,9 @@ Describe 'Invoke-PerformanceAudit.ps1 script' {
     }
 
     It 'logs performance metrics' {
-        & $ScriptPath -CpuThreshold 100 -MemoryThreshold 100 -DiskThreshold 100 -NetworkThreshold 100 -RequesterEmail 'user@example.com' | Out-Null
+        InModuleScope PerformanceTools {
+            Invoke-PerformanceAudit -CpuThreshold 100 -MemoryThreshold 100 -DiskThreshold 100 -NetworkThreshold 100 -RequesterEmail 'user@example.com' | Out-Null
+        }
         Assert-MockCalled Write-STLog -ParameterFilter { $Metric -eq 'CPUPercent' } -Times 1
         Assert-MockCalled Write-STLog -ParameterFilter { $Metric -eq 'MemoryPercent' } -Times 1
         Assert-MockCalled Write-STLog -ParameterFilter { $Metric -eq 'DiskPercent' } -Times 1
@@ -29,7 +31,9 @@ Describe 'Invoke-PerformanceAudit.ps1 script' {
     }
 
     It 'creates a ticket when thresholds exceeded' {
-        & $ScriptPath -CpuThreshold 0 -MemoryThreshold 0 -DiskThreshold 0 -NetworkThreshold 0 -CreateTicket -RequesterEmail 'user@example.com' | Out-Null
+        InModuleScope PerformanceTools {
+            Invoke-PerformanceAudit -CpuThreshold 0 -MemoryThreshold 0 -DiskThreshold 0 -NetworkThreshold 0 -CreateTicket -RequesterEmail 'user@example.com' | Out-Null
+        }
         Assert-MockCalled Write-STStatus -ParameterFilter { $Message -eq 'Performance thresholds exceeded:' } -Times 1
         Assert-MockCalled New-SDTicket -Times 1
     }
