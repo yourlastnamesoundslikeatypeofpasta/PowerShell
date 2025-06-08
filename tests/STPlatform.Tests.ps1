@@ -8,4 +8,19 @@ Describe 'STPlatform Module' {
     It 'exports Connect-STPlatform' {
         (Get-Command -Module STPlatform).Name | Should -Contain 'Connect-STPlatform'
     }
+
+    It 'includes Vault parameter' {
+        (Get-Command Connect-STPlatform).Parameters.Keys | Should -Contain 'Vault'
+    }
+
+    It 'loads secrets when variables missing' {
+        InModuleScope STPlatform {
+            Remove-Item env:SPTOOLS_CLIENT_ID -ErrorAction SilentlyContinue
+            Mock Get-Secret { 'fromvault' }
+            Connect-STPlatform -Mode Cloud -Vault 'Test'
+            Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq 'SPTOOLS_CLIENT_ID' -and $Vault -eq 'Test' } -Times 1
+            $env:SPTOOLS_CLIENT_ID | Should -Be 'fromvault'
+            Remove-Item env:SPTOOLS_CLIENT_ID -ErrorAction SilentlyContinue
+        }
+    }
 }

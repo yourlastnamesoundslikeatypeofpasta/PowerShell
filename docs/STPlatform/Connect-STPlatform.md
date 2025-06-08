@@ -12,14 +12,15 @@ Initializes modules and service connections for the specified environment.
 
 ## SYNTAX
 ```
-Connect-STPlatform [-Mode] <String> [-InstallMissing] [<CommonParameters>]
+Connect-STPlatform [-Mode] <String> [-InstallMissing] [-Vault <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 Loads the necessary PowerShell modules and connects to Microsoft Graph,
 Active Directory and Exchange depending on the chosen Mode. Use
 `-InstallMissing` to automatically install any modules that are not
-present.
+present. Required environment variables are loaded from SecretManagement
+if missing; specify `-Vault` to override the default vault.
 
 ## EXAMPLES
 ### Example 1
@@ -40,6 +41,10 @@ Specifies the environment type. Valid values are `Cloud`, `Hybrid` and `OnPrem`.
 
 ### -InstallMissing
 Automatically install missing modules when this switch is specified.
+
+### -Vault
+Secret vault name used to retrieve environment variables when they are
+not already set.
 
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable,
