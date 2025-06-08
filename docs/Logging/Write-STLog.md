@@ -8,7 +8,7 @@ schema: 2.0.0
 # Write-STLog
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Writes a message or metric to the SupportTools log.
 
 ## SYNTAX
 
@@ -20,7 +20,7 @@ Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-Progres
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Used by scripts and modules to record log messages in a consistent format.
 
 ## EXAMPLES
 
@@ -36,7 +36,7 @@ Records how long the task took in seconds using a structured log entry.
 ## PARAMETERS
 
 ### -Level
-{{ Fill Level Description }}
+Specifies the log level such as INFO, WARN, or ERROR.
 
 ```yaml
 Type: String
@@ -52,7 +52,7 @@ Accept wildcard characters: False
 ```
 
 ### -Message
-{{ Fill Message Description }}
+The content of the log entry to record.
 
 ```yaml
 Type: String
@@ -139,7 +139,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how this cmdlet responds to progress updates.
 
 ```yaml
 Type: ActionPreference
