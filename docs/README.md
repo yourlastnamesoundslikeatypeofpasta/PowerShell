@@ -10,6 +10,7 @@ The key guides are:
 - [Credential Storage](./CredentialStorage.md) – recommended approach to store secrets securely.
 - [Module Style Guide](./ModuleStyleGuide.md) – how scripts display progress messages and log output.
 - [PerformanceTools](./PerformanceTools.md) – measure execution time and resource usage.
+- [Invoke-PerformanceAudit](./PerformanceTools/Invoke-PerformanceAudit.md) – collect system metrics and optionally create a Service Desk ticket.
 - [Telemetry Metrics](./Telemetry/Get-STTelemetryMetrics.md) – summarize execution statistics and output to CSV or SQLite.
 - [Get-FunctionDependencyGraph](./Get-FunctionDependencyGraph.md) – generate a visual map of function calls in a script.
 - [Local Mock API](./LocalMockApi.md) – run a lightweight HTTP server for offline tests.
