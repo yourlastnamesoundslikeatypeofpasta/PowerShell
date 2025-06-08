@@ -7,7 +7,7 @@ function Set-SDTicketBulk {
     .PARAMETER Fields
         Hashtable of fields to modify on each incident.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -28,6 +28,8 @@ function Set-SDTicketBulk {
 
     foreach ($ticketId in $Id) {
         Write-STLog -Message "Set-SDTicketBulk $ticketId"
-        Set-SDTicket -Id $ticketId -Fields $Fields -ChaosMode:$ChaosMode
+        if ($PSCmdlet.ShouldProcess("ticket $ticketId", 'Update')) {
+            Set-SDTicket -Id $ticketId -Fields $Fields -ChaosMode:$ChaosMode
+        }
     }
 }

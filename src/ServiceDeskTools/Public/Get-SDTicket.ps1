@@ -5,7 +5,7 @@ function Get-SDTicket {
     .PARAMETER Id
         Incident ID to retrieve.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -22,5 +22,7 @@ function Get-SDTicket {
     }
 
     Write-STLog -Message "Get-SDTicket $Id"
-    Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id.json" -ChaosMode:$ChaosMode
+    if ($PSCmdlet.ShouldProcess("ticket $Id", 'Get')) {
+        Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id.json" -ChaosMode:$ChaosMode
+    }
 }

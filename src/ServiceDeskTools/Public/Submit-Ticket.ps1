@@ -5,7 +5,7 @@ function Submit-Ticket {
     .DESCRIPTION
         Wrapper around New-SDTicket providing a simpler command name.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -28,5 +28,7 @@ function Submit-Ticket {
     }
 
     Write-STLog -Message "Submit-Ticket $Subject"
-    New-SDTicket -Subject $Subject -Description $Description -RequesterEmail $RequesterEmail -ChaosMode:$ChaosMode
+    if ($PSCmdlet.ShouldProcess("ticket $Subject", 'Create')) {
+        New-SDTicket -Subject $Subject -Description $Description -RequesterEmail $RequesterEmail -ChaosMode:$ChaosMode
+    }
 }

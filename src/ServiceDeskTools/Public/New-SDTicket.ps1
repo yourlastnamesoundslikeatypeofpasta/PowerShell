@@ -9,7 +9,7 @@ function New-SDTicket {
     .PARAMETER RequesterEmail
         Email address of the requester.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -33,5 +33,7 @@ function New-SDTicket {
 
     Write-STLog -Message "New-SDTicket $Subject"
     $body = @{ incident = @{ name = $Subject; description = $Description; requester_email = $RequesterEmail } }
-    Invoke-SDRequest -Method 'POST' -Path '/incidents.json' -Body $body -ChaosMode:$ChaosMode
+    if ($PSCmdlet.ShouldProcess("ticket $Subject", 'Create')) {
+        Invoke-SDRequest -Method 'POST' -Path '/incidents.json' -Body $body -ChaosMode:$ChaosMode
+    }
 }
