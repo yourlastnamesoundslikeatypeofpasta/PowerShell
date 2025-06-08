@@ -1,49 +1,65 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: ConfigManagementTools
 online version:
 schema: 2.0.0
 ---
 
-# Set-TimeZoneEasternStandardTime
+# Add-UserToGroup
 
 ## SYNOPSIS
-Sets the system time zone to Eastern Standard Time.
+Adds users from a CSV file to a Microsoft 365 group.
 
 ## SYNTAX
 
 ```
-Set-TimeZoneEasternStandardTime [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
+Add-UserToGroup [[-CsvPath] <String>] [[-GroupName] <String>] [[-TranscriptPath] <String>]
  [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Runs the Set-TimeZoneEasternStandardTime.ps1 script with any supplied
-arguments.
+Wraps the AddUsersToGroup.ps1 script located in the repository's scripts
+folder.
+Parameters are passed directly through to the script file.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Set-TimeZoneEasternStandardTime
+PS C:\> Add-UserToGroup -CsvPath './users.csv' -GroupName 'MyGroup'
 ```
 
-Demonstrates typical usage of Set-TimeZoneEasternStandardTime.
+Demonstrates typical usage of Add-UserToGroup.
 
 ## PARAMETERS
 
-### -Arguments
-Arguments passed directly to the underlying script.
+### -CsvPath
+Path to the CSV file containing user principal names.
 
 ```yaml
-Type: Object[]
+Type: String
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: 1
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -GroupName
+Name of the Microsoft 365 group to modify.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 2
+Default value: None
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
@@ -56,7 +72,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 2
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -1,52 +1,36 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: ConfigManagementTools
 online version:
 schema: 2.0.0
 ---
 
-# Install-Font
+# Invoke-ExchangeCalendarManager
 
 ## SYNOPSIS
-Installs font files for all users.
+Manages Exchange Online calendar permissions.
 
 ## SYNTAX
 
 ```
-Install-Font [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+Invoke-ExchangeCalendarManager [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Simple wrapper for the Install-Fonts.ps1 script which performs the
-installation work.
-Arguments are passed directly through.
+Wrapper around the ExchangeCalendarManager script which ensures the
+ExchangeOnlineManagement module is installed before running.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Install-Font -Path './Fonts'
+PS C:\> Invoke-ExchangeCalendarManager
 ```
 
-Demonstrates typical usage of Install-Font.
+Demonstrates typical usage of Invoke-ExchangeCalendarManager.
 
 ## PARAMETERS
-
-### -Arguments
-Arguments passed directly to the underlying script.
-
-```yaml
-Type: Object[]
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 1
-Default value: None
-Accept pipeline input: True (ByValue)
-Accept wildcard characters: False
-```
 
 ### -TranscriptPath
 File path used to capture a transcript of this command's output and actions.
@@ -57,7 +41,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 2
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -1,33 +1,34 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: ConfigManagementTools
 online version:
 schema: 2.0.0
 ---
 
-# Update-Sysmon
+# Set-TimeZoneEasternStandardTime
 
 ## SYNOPSIS
-Updates the Sysmon installation on a computer.
+Sets the system time zone to Eastern Standard Time.
 
 ## SYNTAX
 
 ```
-Update-Sysmon [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+Set-TimeZoneEasternStandardTime [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Calls the Update-Sysmon.ps1 script with the supplied arguments.
+Runs the Set-TimeZoneEasternStandardTime.ps1 script with any supplied
+arguments.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Update-Sysmon -SourcePath 'E:/Sysmon'
+PS C:\> Set-TimeZoneEasternStandardTime
 ```
 
-Demonstrates typical usage of Update-Sysmon.
+Demonstrates typical usage of Set-TimeZoneEasternStandardTime.
 
 ## PARAMETERS
 

@@ -1,34 +1,34 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: ConfigManagementTools
 online version:
 schema: 2.0.0
 ---
 
-# Set-NetAdapterMetering
+# Invoke-PostInstall
 
 ## SYNOPSIS
-Toggles the metered connection flag on a network adapter.
+Executes the automated post installation script.
 
 ## SYNTAX
 
 ```
-Set-NetAdapterMetering [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Invoke-PostInstall [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Invokes the Set-NetAdapterMetering.ps1 script with any supplied
-arguments.
+Runs PostInstallScript.ps1 from the scripts folder, forwarding any
+arguments provided.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Set-NetAdapterMetering -InterfaceName 'Ethernet0'
+PS C:\> Invoke-PostInstall -ConfigPath './install.json'
 ```
 
-Demonstrates typical usage of Set-NetAdapterMetering.
+Demonstrates typical usage of Invoke-PostInstall.
 
 ## PARAMETERS
 

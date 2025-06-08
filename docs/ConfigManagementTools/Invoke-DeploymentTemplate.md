@@ -1,33 +1,34 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: ConfigManagementTools
 online version:
 schema: 2.0.0
 ---
 
-# Set-ComputerIPAddress
+# Invoke-DeploymentTemplate
 
 ## SYNOPSIS
-Configures the IP address of a local or remote computer.
+Runs the sample deployment template script.
 
 ## SYNTAX
 
 ```
-Set-ComputerIPAddress [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
+Invoke-DeploymentTemplate [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
  [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Wraps the Set-ComputerIPAddress.ps1 script, forwarding all arguments.
+This cmdlet executes SS_DEPLOYMENT_TEMPLATE.ps1 from the repository's
+scripts folder with any additional arguments supplied.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Set-ComputerIPAddress -CSVPath './ComputerIPAddress.csv'
+PS C:\> Invoke-DeploymentTemplate -Config './deployment.json'
 ```
 
-Demonstrates typical usage of Set-ComputerIPAddress.
+Demonstrates typical usage of Invoke-DeploymentTemplate.
 
 ## PARAMETERS
 

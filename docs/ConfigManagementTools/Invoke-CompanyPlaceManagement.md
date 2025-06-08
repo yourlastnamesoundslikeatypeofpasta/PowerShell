@@ -1,44 +1,47 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: ConfigManagementTools
 online version:
 schema: 2.0.0
 ---
 
-# Set-SharedMailboxAutoReply
+# Invoke-CompanyPlaceManagement
 
 ## SYNOPSIS
-Configures automatic replies for a shared mailbox.
+Manages Microsoft Places entries for your organization.
 
 ## SYNTAX
 
 ```
-Set-SharedMailboxAutoReply [-MailboxIdentity] <String> [-StartTime] <DateTime> [-EndTime] <DateTime>
- [-InternalMessage] <String> [[-ExternalMessage] <String>] [[-ExternalAudience] <String>] [-AdminUser] <String>
- [-UseWebLogin] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Invoke-CompanyPlaceManagement [-Action] <String> [-DisplayName] <String> [[-Type] <String>]
+ [[-Street] <String>] [[-City] <String>] [[-State] <String>] [[-PostalCode] <String>]
+ [[-CountryOrRegion] <String>] [-AutoAddFloor] [[-TranscriptPath] <String>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Wraps a script that manages Exchange Online auto-reply settings for a
-shared mailbox.
-All specified parameters are forwarded to the script.
+Supports creation, editing, and retrieval of Place records using the MicrosoftPlaces module.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> $start = Get-Date '2025-06-02T00:00:00'
-$end   = Get-Date '2025-06-09T23:59:59'
+PS C:\> # Get building information
+Invoke-CompanyPlaceManagement -Action Get -Type Building -DisplayName "HQ*"
 
-Set-SharedMailboxAutoReply -MailboxIdentity 'parts@yellowfin.com'     -StartTime $start -EndTime $end     -InternalMessage 'Apologies, but I'm out of the office from 6/2 - 6/9 and will return on 6/10. I will be responding to all emails and phone calls upon my return. If you need immediate assistance, please reach out to Jay Wagner at ext 312.'     -ExternalMessage 'Apologies, but I'm out of the office from 6/2 - 6/9 and will return on 6/10. I will be responding to all emails and phone calls upon my return. If you need immediate assistance, please reach out to Jay Wagner at ext 312.'     -AdminUser 'youradmin@yourdomain.com'
+# Create a new building with a default floor
+Invoke-CompanyPlaceManagement -Action Create -DisplayName "HQ North" -Street "1 Company Way" -City "Metropolis" -State "NY" -PostalCode "10001" -CountryOrRegion "USA" -AutoAddFloor
+
+# Update an existing building's address
+Invoke-CompanyPlaceManagement -Action Edit -DisplayName "HQ North" -Type Building -Street "2 Company Way"
 ```
 
-Demonstrates typical usage of Set-SharedMailboxAutoReply.
+Demonstrates typical usage of Invoke-CompanyPlaceManagement.
 
 ## PARAMETERS
 
-### -MailboxIdentity
-Mailbox identity to configure.
+### -Action
+The action to perform: Get, Create, or Edit.
 
 ```yaml
 Type: String
@@ -52,11 +55,11 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -StartTime
-Start time for the automatic reply.
+### -DisplayName
+The visible name of the place.
 
 ```yaml
-Type: DateTime
+Type: String
 Parameter Sets: (All)
 Aliases:
 
@@ -67,39 +70,39 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -EndTime
-End time for the automatic reply.
-
-```yaml
-Type: DateTime
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 3
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -InternalMessage
-Internal auto-reply message.
+### -Type
+Required for Get.
+Building, Floor, Section, or Desk.
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
+Position: 3
+Default value: Building
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Street
+Street address for the location.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
 Position: 4
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ExternalMessage
-External auto-reply message.
-If omitted or blank, the internal message will also be used externally.
+### -City
+City where the location resides.
 
 ```yaml
 Type: String
@@ -113,8 +116,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ExternalAudience
-Audience for the external message.
+### -State
+State or province for the location.
 
 ```yaml
 Type: String
@@ -123,28 +126,43 @@ Aliases:
 
 Required: False
 Position: 6
-Default value: All
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -AdminUser
-Administrative account used to connect.
+### -PostalCode
+Postal code for the location.
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: 7
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -UseWebLogin
-Use web login for authentication.
+### -CountryOrRegion
+Country or region for the location.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 8
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -AutoAddFloor
+When creating a building, adds a default floor 1.
 
 ```yaml
 Type: SwitchParameter
@@ -167,7 +185,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 8
+Position: 9
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
