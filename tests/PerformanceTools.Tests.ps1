@@ -8,10 +8,21 @@ Describe 'PerformanceTools Module' {
         (Get-Command -Module PerformanceTools).Name | Should -Contain 'Measure-STCommand'
     }
 
+    It 'exports Invoke-PerformanceAudit' {
+        (Get-Command -Module PerformanceTools).Name | Should -Contain 'Invoke-PerformanceAudit'
+    }
+
     It 'measures a script block' {
         $result = Measure-STCommand { Start-Sleep -Milliseconds 50 }
         $result.DurationSeconds | Should -BeGreaterThan 0
         $result.PSObject.Properties.Name | Should -Contain 'CpuSeconds'
         $result.PSObject.Properties.Name | Should -Contain 'MemoryDeltaMB'
+    }
+
+    It 'references bundled script path' {
+        InModuleScope PerformanceTools {
+            $definition = (Get-Command Invoke-PerformanceAudit).ScriptBlock.ToString()
+            $definition | Should -Match 'Invoke-PerformanceAudit.ps1'
+        }
     }
 }

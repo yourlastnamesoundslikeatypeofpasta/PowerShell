@@ -6,5 +6,5 @@
     Description = 'Commands for measuring script performance.'
     RequiredModules = @('Logging')
     PrivateData = @{ PSData = @{ Tags = @('PowerShell','Performance','Internal') } }
-    FunctionsToExport = @('Measure-STCommand')
+    FunctionsToExport = @('Measure-STCommand','Invoke-PerformanceAudit')
 }

@@ -6,5 +6,5 @@
     Description = 'Microsoft Graph helper functions.'
     RequiredModules = @('Logging','Telemetry')
     PrivateData = @{ PSData = @{ Tags = @('PowerShell','Graph','Internal') } }
-    FunctionsToExport = @('Get-GraphUserDetails')
+    FunctionsToExport = @('Get-GraphUserDetails','Get-GraphGroupDetails')
 }

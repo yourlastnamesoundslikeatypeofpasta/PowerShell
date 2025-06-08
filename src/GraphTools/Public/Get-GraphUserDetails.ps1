@@ -2,10 +2,46 @@ function Get-GraphUserDetails {
     <#
     .SYNOPSIS
         Retrieves a user's details from Microsoft Graph.
+
     .DESCRIPTION
         Authenticates using MSAL and queries Graph for the user's basic info,
         assigned licenses, group membership and last sign-in time.
         Activity is logged and telemetry is recorded.
+
+    .PARAMETER UserPrincipalName
+        User principal name (UPN) of the account to retrieve.
+
+    .PARAMETER TenantId
+        GUID identifier for the Entra ID/Azure AD tenant containing the user.
+
+    .PARAMETER ClientId
+        Application (client) ID used for Microsoft Graph authentication.
+
+    .PARAMETER ClientSecret
+        Optional client secret for the application when using app-only
+        authentication.
+
+    .PARAMETER CsvPath
+        Optional file path to save the returned details as a CSV file.
+
+    .PARAMETER HtmlPath
+        Optional file path to save the returned details as an HTML report.
+
+    .EXAMPLE
+        Get-GraphUserDetails -UserPrincipalName user@contoso.com -TenantId
+        00000000-0000-0000-0000-000000000000 -ClientId
+        11111111-1111-1111-1111-111111111111
+
+        Retrieves user information and writes the details to the console.
+
+    .EXAMPLE
+        Get-GraphUserDetails -UserPrincipalName user@contoso.com -TenantId
+        00000000-0000-0000-0000-000000000000 -ClientId
+        11111111-1111-1111-1111-111111111111 -CsvPath ./user.csv -HtmlPath
+        ./user.html
+
+        Retrieves the user information and exports the results to both CSV and
+        HTML files.
     #>
     [CmdletBinding()]
     param(

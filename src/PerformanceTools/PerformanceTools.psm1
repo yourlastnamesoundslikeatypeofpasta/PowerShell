@@ -61,7 +61,30 @@ function Measure-STCommand {
     return $result
 }
 
-Export-ModuleMember -Function 'Measure-STCommand'
+function Invoke-PerformanceAudit {
+    <#
+    .SYNOPSIS
+        Collects CPU, memory, disk and network metrics.
+    .DESCRIPTION
+        This wrapper runs Invoke-PerformanceAudit.ps1 located in the module
+        folder and forwards any provided parameters to that script.
+    #>
+    [CmdletBinding()]
+    param(
+        [int]$CpuThreshold = 80,
+        [int]$MemoryThreshold = 80,
+        [int]$DiskThreshold = 80,
+        [int]$NetworkThreshold = 100,
+        [switch]$CreateTicket,
+        [string]$RequesterEmail,
+        [string]$TranscriptPath
+    )
+
+    $scriptPath = Join-Path $PSScriptRoot 'Invoke-PerformanceAudit.ps1'
+    & $scriptPath @PSBoundParameters
+}
+
+Export-ModuleMember -Function 'Measure-STCommand','Invoke-PerformanceAudit'
 
 function Show-PerformanceToolsBanner {
     Write-STDivider 'PERFORMANCETOOLS MODULE LOADED' -Style heavy
