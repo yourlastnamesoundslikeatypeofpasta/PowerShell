@@ -54,7 +54,28 @@ function Test-IsElevated {
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','Write-STDebug','Test-IsElevated'
+function Get-STConfig {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Path
+    )
+
+    if (-not (Test-Path $Path)) { return @{} }
+
+    try {
+        $ext = [IO.Path]::GetExtension($Path).ToLower()
+        switch ($ext) {
+            '.json' { return Get-Content $Path | ConvertFrom-Json }
+            '.psd1' { return Import-PowerShellDataFile $Path }
+            default { throw "Unsupported config type: $ext" }
+        }
+    } catch {
+        Write-STDebug "Failed to read config $Path: $_"
+        return @{}
+    }
+}
+
+Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','Write-STDebug','Test-IsElevated','Get-STConfig'
 
 function Show-STCoreBanner {
     <#

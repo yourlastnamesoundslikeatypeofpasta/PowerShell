@@ -6,19 +6,17 @@ param(
 )
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/STCore/STCore.psd1') -ErrorAction SilentlyContinue
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $settingsPath = Join-Path $repoRoot 'config/SharePointToolsSettings.psd1'
 
-if (Test-Path $settingsPath) {
-    try {
-        $settings = Import-PowerShellDataFile $settingsPath
-    } catch {
-        $settings = @{ ClientId=''; TenantId=''; CertPath=''; Sites=@{} }
-    }
-} else {
-    $settings = @{ ClientId=''; TenantId=''; CertPath=''; Sites=@{} }
-}
+$settings = Get-STConfig -Path $settingsPath
+if (-not $settings) { $settings = @{} }
+if (-not $settings.ContainsKey('ClientId')) { $settings.ClientId = '' }
+if (-not $settings.ContainsKey('TenantId')) { $settings.TenantId = '' }
+if (-not $settings.ContainsKey('CertPath')) { $settings.CertPath = '' }
+if (-not $settings.ContainsKey('Sites')) { $settings.Sites = @{} }
 
 if (-not $settings.ContainsKey('Sites')) { $settings.Sites = @{} }
 

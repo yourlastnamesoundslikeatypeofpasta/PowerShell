@@ -2,9 +2,9 @@ $repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
 $coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
 Import-Module $coreModule -ErrorAction SilentlyContinue
 $configFile = Join-Path $repoRoot 'config/supporttools.json'
-$SupportToolsConfig = @{ maintenanceMode = $false }
-if (Test-Path $configFile) {
-    try { $SupportToolsConfig = Get-Content $configFile | ConvertFrom-Json } catch {}
+$SupportToolsConfig = Get-STConfig -Path $configFile
+if (-not $SupportToolsConfig.ContainsKey('maintenanceMode')) {
+    $SupportToolsConfig.maintenanceMode = $false
 }
 if ($SupportToolsConfig.maintenanceMode) {
     Write-Host 'SupportTools is currently in maintenance mode. Exiting.' -ForegroundColor Yellow

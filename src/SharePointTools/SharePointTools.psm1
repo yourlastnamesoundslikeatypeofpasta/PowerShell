@@ -5,10 +5,12 @@ $repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
 $coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
 Import-Module $coreModule -ErrorAction SilentlyContinue
 $settingsFile = Join-Path $repoRoot 'config/SharePointToolsSettings.psd1'
-$SharePointToolsSettings = @{ ClientId=''; TenantId=''; CertPath=''; Sites=@{} }
-if (Test-Path $settingsFile) {
-    try { $SharePointToolsSettings = Import-PowerShellDataFile $settingsFile } catch {}
-}
+$SharePointToolsSettings = Get-STConfig -Path $settingsFile
+if (-not $SharePointToolsSettings) { $SharePointToolsSettings = @{} }
+if (-not $SharePointToolsSettings.ContainsKey('ClientId')) { $SharePointToolsSettings.ClientId = '' }
+if (-not $SharePointToolsSettings.ContainsKey('TenantId')) { $SharePointToolsSettings.TenantId = '' }
+if (-not $SharePointToolsSettings.ContainsKey('CertPath')) { $SharePointToolsSettings.CertPath = '' }
+if (-not $SharePointToolsSettings.ContainsKey('Sites')) { $SharePointToolsSettings.Sites = @{} }
 
 $loggingModule = Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -ChildPath 'Logging/Logging.psd1'
 Import-Module $loggingModule -ErrorAction SilentlyContinue
