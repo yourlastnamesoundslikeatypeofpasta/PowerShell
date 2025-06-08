@@ -14,24 +14,10 @@ Path to the file where the product key should be written.
 ProductKey -OutputPath 'C:\\temp\\key.txt'
 
 #>
-[CmdletBinding()]
 param(
     [Parameter(Mandatory)]
     [string]$OutputPath
 )
-
-function Get-ProductKey {
-    $key = (Get-CimInstance -ClassName SoftwareLicensingService |
-        Select-Object -ExpandProperty OA3xOriginalProductKey)
-    return $key
-}
-
-$key = Get-ProductKey
-if (-not $key) {
-    Write-STStatus 'Product key not found.' -Level WARN
-    return
-}
-
-Set-Content -Path $OutputPath -Value $key
-Write-STStatus "Product key exported to $OutputPath" -Level SUCCESS
+Import-Module (Join-Path $PSScriptRoot '..' 'src/SupportTools/SupportTools.psd1') -Force
+Export-ProductKey -OutputPath $OutputPath
 

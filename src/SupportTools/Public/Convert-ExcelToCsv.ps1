@@ -3,28 +3,37 @@ function Convert-ExcelToCsv {
     .SYNOPSIS
         Converts an Excel workbook to CSV.
     .DESCRIPTION
-        Wrapper for the Convert-ExcelToCsv.ps1 script contained in the scripts
-        directory. Any arguments provided are passed to the script.
+        Uses Excel COM automation to save the provided workbook as a CSV file and
+        returns the resulting CSV object.
+    .PARAMETER XlsxFilePath
+        Path to the Excel workbook to convert.
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
-        [object[]]$Arguments,
-        [Parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
-        [string]$TranscriptPath,
-        [Parameter(Mandatory = $false)]
-        [switch]$Simulate,
-        [Parameter(Mandatory = $false)]
-        [switch]$Explain,
-        [Parameter(Mandatory = $false)]
-        [object]$Logger,
-        [Parameter(Mandatory = $false)]
-        [object]$TelemetryClient,
-        [Parameter(Mandatory = $false)]
-        [object]$Config
+        [Parameter(Mandatory)]
+        [string]$XlsxFilePath
     )
-    process {
-        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "Convert-ExcelToCsv.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+
+    Write-STStatus "Converting $XlsxFilePath to CSV..." -Level INFO
+    $excel = New-Object -ComObject Excel.Application
+    $workbook = $excel.Workbooks.Open($XlsxFilePath)
+
+    $xlsxFile = Get-ChildItem $XlsxFilePath
+    $directory = $xlsxFile.DirectoryName
+    $basename = $xlsxFile.BaseName
+    $csvFilePath = Join-Path $directory "$basename.csv"
+
+    $xlCSV = 6
+    foreach ($worksheet in $workbook.Worksheets) {
+        $worksheet.SaveAs($csvFilePath, $xlCSV)
     }
+    $workbook.Close($false)
+    $excel.Quit()
+    [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($workbook)
+    [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel)
+    [GC]::Collect()
+    [GC]::WaitForPendingFinalizers()
+
+    Write-STStatus "CSV saved to $csvFilePath" -Level SUCCESS
+    return (Import-Csv $csvFilePath)
 }

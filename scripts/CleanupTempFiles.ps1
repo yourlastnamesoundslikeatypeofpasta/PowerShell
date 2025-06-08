@@ -7,10 +7,6 @@
     ./CleanupTempFiles.ps1
 #>
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
-
-Write-STStatus 'Cleaning temporary files...' -Level INFO
-$repoRoot = Join-Path $PSScriptRoot '..'
-Get-ChildItem -Path $repoRoot -Recurse -Include '*.tmp' -File -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
-Get-ChildItem -Path $repoRoot -Recurse -Include '*.log' -File -ErrorAction SilentlyContinue | Where-Object { $_.Length -eq 0 } | Remove-Item -Force -ErrorAction SilentlyContinue
-Write-STStatus 'Cleanup complete.' -Level SUCCESS
+param()
+Import-Module (Join-Path $PSScriptRoot '..' 'src/SupportTools/SupportTools.psd1') -Force
+Clear-TempFile
