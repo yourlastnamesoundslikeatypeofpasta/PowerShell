@@ -13,10 +13,14 @@ function Get-CommonSystemInfo {
         [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
         [Parameter(Mandatory = $false)]
-        [object]$Config
+        [object]$Config,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TranscriptPath
     )
 
     process {
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
         $result = 'Success'
         try {
@@ -68,6 +72,7 @@ function Get-CommonSystemInfo {
             $result = 'Failure'
             return New-STErrorObject -Message $_.Exception.Message -Category 'WMI'
         } finally {
+            if ($TranscriptPath) { Stop-Transcript | Out-Null }
             $sw.Stop()
             Send-STMetric -MetricName 'Get-CommonSystemInfo' -Category 'Audit' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
         }

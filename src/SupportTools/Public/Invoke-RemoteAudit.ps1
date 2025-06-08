@@ -25,8 +25,14 @@ function Invoke-RemoteAudit {
         [Parameter()]
         [System.Management.Automation.PSCredential]$Credential,
         [switch]$UseSSL,
-        [int]$Port = 5985
+        [int]$Port = 5985,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TranscriptPath
     )
+    begin {
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+    }
     process {
         foreach ($comp in $ComputerName) {
             $invokeParams = @{ ComputerName = $comp }
@@ -48,5 +54,8 @@ function Invoke-RemoteAudit {
                 }
             }
         }
+    }
+    end {
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
 }
