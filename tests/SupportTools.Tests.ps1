@@ -17,6 +17,7 @@ Describe 'SupportTools Module' {
             'Export-ProductKey',
             'Search-ReadMe',
             'Start-Countdown',
+            'Export-ITReport',
             'New-SPUsageReport'
             'Sync-SupportTools',
             'Invoke-JobBundle',

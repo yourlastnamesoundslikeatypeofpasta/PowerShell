@@ -33,6 +33,7 @@ Export-ModuleMember -Function @(
     'Restore-ArchiveFolder',
     'Search-ReadMe',
     'Start-Countdown',
+    'Export-ITReport',
     'Sync-SupportTools'
 )
 
