@@ -22,3 +22,4 @@ Import-Module ./src/ConfigManagementTools/ConfigManagementTools.psd1
 | `Set-NetAdapterMetering` | Configure network adapter metering mode. | `Set-NetAdapterMetering -AdapterName Ethernet0` |
 | `Set-SharedMailboxAutoReply` | Configure automatic replies on a mailbox. | `Set-SharedMailboxAutoReply -MailboxIdentity help@contoso.com -StartTime (Get-Date) -EndTime (Get-Date).AddDays(7) -InternalMessage 'OOO' -AdminUser admin@contoso.com` |
 | `Set-TimeZoneEasternStandardTime` | Set the system time zone to Eastern Standard Time. | `Set-TimeZoneEasternStandardTime` |
+| `Test-Drift` | Compare system configuration against a baseline file. | `Test-Drift -BaselinePath baseline.json` |
