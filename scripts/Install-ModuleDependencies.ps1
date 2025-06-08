@@ -12,7 +12,7 @@ $requiredModules = @{
     'PnP.PowerShell' = 'SharePoint cleanup functions';
     'ExchangeOnlineManagement' = 'mailbox automation commands';
     'MicrosoftPlaces' = 'Invoke-CompanyPlaceManagement';
-    'MSAL.PS' = 'GraphTools authentication';
+    'MSAL.PS' = 'EntraIDTools authentication';
 }
 
 foreach ($name in $requiredModules.Keys) {

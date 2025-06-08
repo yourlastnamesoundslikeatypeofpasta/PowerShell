@@ -10,16 +10,16 @@ Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-O
 
 Export-ModuleMember -Function 'Get-GraphUserDetails','Get-GraphGroupDetails'
 
-function Show-GraphToolsBanner {
+function Show-EntraIDToolsBanner {
     <#
     .SYNOPSIS
-        Displays the GraphTools module banner.
+        Displays the EntraIDTools module banner.
     #>
     [CmdletBinding()]
     param()
-    Write-STDivider 'GRAPHTOOLS MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module GraphTools' to view available tools." -Level SUB
-    Write-STLog -Message 'GraphTools module loaded'
+    Write-STDivider 'ENTRAIDTOOLS MODULE LOADED' -Style heavy
+    Write-STStatus "Run 'Get-Command -Module EntraIDTools' to view available tools." -Level SUB
+    Write-STLog -Message 'EntraIDTools module loaded'
 }
 
-Show-GraphToolsBanner
+Show-EntraIDToolsBanner

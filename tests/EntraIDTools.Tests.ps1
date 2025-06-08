@@ -1,6 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 
-Describe 'GraphTools Module' {
+Describe 'EntraIDTools Module' {
     BeforeAll {
         if (-not (Get-Module -ListAvailable -Name 'MSAL.PS')) {
             try { Install-Module -Name 'MSAL.PS' -Scope CurrentUser -Force } catch {}
@@ -8,38 +8,38 @@ Describe 'GraphTools Module' {
         Import-Module MSAL.PS -ErrorAction SilentlyContinue
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
-        Import-Module $PSScriptRoot/../src/GraphTools/GraphTools.psd1 -Force
-        . $PSScriptRoot/../src/GraphTools/Private/Get-GraphAccessToken.ps1
+        Import-Module $PSScriptRoot/../src/EntraIDTools/EntraIDTools.psd1 -Force
+        . $PSScriptRoot/../src/EntraIDTools/Private/Get-GraphAccessToken.ps1
     }
 
     Context 'Exported commands' {
         It 'Exports Get-GraphUserDetails' {
-            (Get-Command -Module GraphTools).Name | Should -Contain 'Get-GraphUserDetails'
+            (Get-Command -Module EntraIDTools).Name | Should -Contain 'Get-GraphUserDetails'
         }
         It 'Exports Get-GraphGroupDetails' {
-            (Get-Command -Module GraphTools).Name | Should -Contain 'Get-GraphGroupDetails'
+            (Get-Command -Module EntraIDTools).Name | Should -Contain 'Get-GraphGroupDetails'
         }
     }
 
     Context 'Logging and telemetry' {
         It 'Logs requests and writes telemetry' {
-            Mock Get-GraphAccessToken { 't' } -ModuleName GraphTools
-            Mock Invoke-RestMethod { @{ id='1'; displayName='User'; userPrincipalName='u' } } -ModuleName GraphTools -ParameterFilter { $Method -eq 'GET' }
-            Mock Write-STLog {} -ModuleName GraphTools
-            Mock Write-STTelemetryEvent {} -ModuleName GraphTools
+            Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
+            Mock Invoke-RestMethod { @{ id='1'; displayName='User'; userPrincipalName='u' } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Write-STLog {} -ModuleName EntraIDTools
+            Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             Get-GraphUserDetails -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid'
-            Assert-MockCalled Write-STLog -ModuleName GraphTools -Times 1
-            Assert-MockCalled Write-STTelemetryEvent -ModuleName GraphTools -Times 1
+            Assert-MockCalled Write-STLog -ModuleName EntraIDTools -Times 1
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1
         }
 
         It 'Logs group requests and writes telemetry' {
-            Mock Get-GraphAccessToken { 't' } -ModuleName GraphTools
-            Mock Invoke-RestMethod { @{ displayName='G'; description='D'; value=@(@{displayName='U'}) } } -ModuleName GraphTools -ParameterFilter { $Method -eq 'GET' }
-            Mock Write-STLog {} -ModuleName GraphTools
-            Mock Write-STTelemetryEvent {} -ModuleName GraphTools
+            Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
+            Mock Invoke-RestMethod { @{ displayName='G'; description='D'; value=@(@{displayName='U'}) } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Write-STLog {} -ModuleName EntraIDTools
+            Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid'
-            Assert-MockCalled Write-STLog -ModuleName GraphTools -Times 1
-            Assert-MockCalled Write-STTelemetryEvent -ModuleName GraphTools -Times 1
+            Assert-MockCalled Write-STLog -ModuleName EntraIDTools -Times 1
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1
         }
     }
 
@@ -96,19 +96,19 @@ Describe 'GraphTools Module' {
 
     Context 'Failure telemetry' {
         It 'logs user detail failures' {
-            Mock Get-GraphAccessToken { 't' } -ModuleName GraphTools
-            Mock Invoke-RestMethod { throw 'bad' } -ModuleName GraphTools -ParameterFilter { $Method -eq 'GET' }
-            Mock Write-STTelemetryEvent {} -ModuleName GraphTools
+            Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
+            Mock Invoke-RestMethod { throw 'bad' } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             { Get-GraphUserDetails -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid' } | Should -Throw
-            Assert-MockCalled Write-STTelemetryEvent -ModuleName GraphTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
         }
 
         It 'logs group detail failures' {
-            Mock Get-GraphAccessToken { 't' } -ModuleName GraphTools
-            Mock Invoke-RestMethod { throw 'bad' } -ModuleName GraphTools -ParameterFilter { $Method -eq 'GET' }
-            Mock Write-STTelemetryEvent {} -ModuleName GraphTools
+            Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
+            Mock Invoke-RestMethod { throw 'bad' } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             { Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid' } | Should -Throw
-            Assert-MockCalled Write-STTelemetryEvent -ModuleName GraphTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
         }
     }
 }

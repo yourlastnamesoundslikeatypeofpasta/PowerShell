@@ -1,9 +1,9 @@
-# GraphTools Module
+# EntraIDTools Module
 
 Commands that query Microsoft Graph for tenant data. Import the module:
 
 ```powershell
-Import-Module ./src/GraphTools/GraphTools.psd1
+Import-Module ./src/EntraIDTools/EntraIDTools.psd1
 ```
 
 This module depends on the **MSAL.PS** module which provides the `Get-MsalToken`
