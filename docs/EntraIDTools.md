@@ -20,6 +20,7 @@ Install-Module MSAL.PS
 |---------|-------------|---------|
 | `Get-GraphUserDetails` | Retrieve metadata for a user | `Get-GraphUserDetails -UserPrincipalName user@contoso.com -TenantId <tenant> -ClientId <app>` |
 | `Get-GraphGroupDetails` | Retrieve metadata for a group | `Get-GraphGroupDetails -GroupId <id> -TenantId <tenant> -ClientId <app>` |
+| `Get-GraphSignInLogs` | Retrieve sign-in log entries | `Get-GraphSignInLogs -TenantId <tenant> -ClientId <app>` |
 
 The command requires an Entra ID application registration. Provide the tenant ID, client ID and optional client secret for authentication.
 
