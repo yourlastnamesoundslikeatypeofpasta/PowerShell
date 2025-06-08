@@ -81,11 +81,13 @@ Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','Wri
 function Show-STCoreBanner {
     <#
     .SYNOPSIS
-        Displays the STCore module banner.
+        Returns STCore module metadata for banner display.
     #>
     [CmdletBinding()]
     param()
-    Write-STStatus 'STCore module loaded' -Level SUB -Log
+    $manifestPath = Join-Path $PSScriptRoot 'STCore.psd1'
+    [pscustomobject]@{
+        Module  = 'STCore'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-STCoreBanner

@@ -226,13 +226,13 @@ Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','
 function Show-LoggingBanner {
     <#
     .SYNOPSIS
-        Displays the Logging module banner.
+        Returns Logging module metadata for banner display.
     #>
     [CmdletBinding()]
     param()
-    Write-STDivider 'LOGGING MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module Logging' to view available tools." -Level SUB
-    Write-STLog -Message 'Logging module loaded'
+    $manifestPath = Join-Path $PSScriptRoot 'Logging.psd1'
+    [pscustomobject]@{
+        Module  = 'Logging'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-LoggingBanner

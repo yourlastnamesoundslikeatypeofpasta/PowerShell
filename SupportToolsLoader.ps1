@@ -15,10 +15,12 @@
 if (-not $script:SupportToolsLoaderLoaded) {
     $script:SupportToolsLoaderLoaded = $true
 
+    Import-Module (Join-Path $PSScriptRoot 'src/OutTools/OutTools.psd1') -ErrorAction SilentlyContinue
+
     function Write-LoaderLog {
         param([string]$Message)
-        if (Get-Command Write-STStatus -ErrorAction SilentlyContinue) {
-            Write-STStatus -Message $Message -Level SUB -Log
+        if (Get-Command Out-STStatus -ErrorAction SilentlyContinue) {
+            Out-STStatus -Message $Message -Level SUB -Log
         }
     }
 
@@ -41,6 +43,10 @@ if (-not $script:SupportToolsLoaderLoaded) {
                 Import-Module $moduleFile.FullName -Force -ErrorAction Stop
                 $loadedModules += $name
                 Write-LoaderLog "Loaded module $name"
+                $bannerFunc = "Show-$name`Banner"
+                if (Get-Command $bannerFunc -ErrorAction SilentlyContinue) {
+                    & $bannerFunc | Out-STBanner
+                }
             }
         } catch {
             Write-Warning "Failed to import module from $($moduleFile.FullName): $($_.Exception.Message)"

@@ -66,7 +66,8 @@ The following walkthroughs demonstrate how the commands can be combined.
 Add-SPToolsSite -Name HR -Url https://contoso.sharepoint.com/sites/hr
 
 # Run a library usage report
-Get-SPToolsLibraryReport -SiteName HR -Verbose
+$report = Get-SPToolsLibraryReport -SiteName 'HR'
+$report | Out-SPToolsLibraryReport
 ```
 
 ### 2. Clean up archived folders

@@ -762,6 +762,17 @@ function Get-SPToolsAllLibraryReports {
     Write-SPToolsHacker 'Reports complete'
 }
 
+function Out-SPToolsLibraryReport {
+    [CmdletBinding()]
+    param(
+        [Parameter(ValueFromPipeline)]
+        [pscustomobject]$InputObject
+    )
+    process {
+        $InputObject | Format-Table SiteName,LibraryName,ItemCount,LastModified
+    }
+}
+
 function Get-SPToolsRecycleBinReport {
     <#
     .SYNOPSIS
@@ -1224,7 +1235,7 @@ function List-OneDriveUsage {
     Write-SPToolsHacker 'Report complete'
     $report
 }
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','Select-SPToolsFolder','List-OneDriveUsage','Test-SPToolsPrereqs' -Variable 'SharePointToolsSettings'
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Out-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','Select-SPToolsFolder','List-OneDriveUsage','Test-SPToolsPrereqs' -Variable 'SharePointToolsSettings'
 
 function Register-SPToolsCompleters {
     <#
@@ -1250,16 +1261,17 @@ function Register-SPToolsCompleters {
 function Show-SharePointToolsBanner {
     <#
     .SYNOPSIS
-        Displays a module loaded message.
+        Returns SharePointTools module metadata for banner display.
     .EXAMPLE
         Show-SharePointToolsBanner
     #>
     [CmdletBinding()]
     param()
-    Write-STDivider 'SHAREPOINTTOOLS MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module SharePointTools' to view available tools." -Level SUB
-    Write-STLog -Message 'SharePointTools module loaded'
+    $manifestPath = Join-Path $PSScriptRoot 'SharePointTools.psd1'
+    [pscustomobject]@{
+        Module  = 'SharePointTools'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
 
 Register-SPToolsCompleters
-Show-SharePointToolsBanner

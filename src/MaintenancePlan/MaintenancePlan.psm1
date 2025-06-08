@@ -8,9 +8,11 @@ Get-ChildItem -Path "$PublicDir" -Filter *.ps1 -ErrorAction SilentlyContinue | F
 Export-ModuleMember -Function (Get-ChildItem "$PublicDir/*.ps1" -ErrorAction SilentlyContinue).BaseName
 
 function Show-MaintenancePlanBanner {
-    Write-STDivider 'MAINTENANCEPLAN MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module MaintenancePlan' to view available tools." -Level SUB
-    Write-STLog -Message 'MaintenancePlan module loaded'
+    [CmdletBinding()]
+    param()
+    $manifestPath = Join-Path $PSScriptRoot 'MaintenancePlan.psd1'
+    [pscustomobject]@{
+        Module  = 'MaintenancePlan'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-MaintenancePlanBanner

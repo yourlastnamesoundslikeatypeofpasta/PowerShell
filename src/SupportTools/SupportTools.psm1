@@ -40,13 +40,13 @@ Export-ModuleMember -Function @(
 function Show-SupportToolsBanner {
     <#
     .SYNOPSIS
-        Displays the SupportTools module banner.
+        Returns SupportTools module metadata for banner display.
     #>
     [CmdletBinding()]
     param()
-    Write-STDivider 'SUPPORTTOOLS MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module SupportTools' to view available tools." -Level SUB
-    Write-STLog -Message 'SupportTools module loaded'
+    $manifestPath = Join-Path $PSScriptRoot 'SupportTools.psd1'
+    [pscustomobject]@{
+        Module  = 'SupportTools'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-SupportToolsBanner

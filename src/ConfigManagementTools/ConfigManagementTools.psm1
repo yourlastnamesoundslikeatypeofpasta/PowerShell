@@ -13,9 +13,11 @@ Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-O
 Export-ModuleMember -Function 'Add-UserToGroup','Invoke-GroupMembershipCleanup','Install-Font','Install-MaintenanceTasks','Invoke-CompanyPlaceManagement','Invoke-DeploymentTemplate','Invoke-ExchangeCalendarManager','Invoke-PostInstall','Set-ComputerIPAddress','Set-NetAdapterMetering','Set-SharedMailboxAutoReply','Set-TimeZoneEasternStandardTime','Test-Drift'
 
 function Show-ConfigManagementToolsBanner {
-    Write-STDivider 'CONFIGMANAGEMENTTOOLS MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module ConfigManagementTools' to view available tools." -Level SUB
-    Write-STLog -Message 'ConfigManagementTools module loaded'
+    [CmdletBinding()]
+    param()
+    $manifestPath = Join-Path $PSScriptRoot 'ConfigManagementTools.psd1'
+    [pscustomobject]@{
+        Module  = 'ConfigManagementTools'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-ConfigManagementToolsBanner

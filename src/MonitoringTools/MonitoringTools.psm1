@@ -11,13 +11,13 @@ Export-ModuleMember -Function 'Get-CPUUsage','Get-DiskSpaceInfo','Get-EventLogSu
 function Show-MonitoringToolsBanner {
     <#
     .SYNOPSIS
-        Displays the MonitoringTools module banner.
+        Returns MonitoringTools module metadata for banner display.
     #>
     [CmdletBinding()]
     param()
-    Write-STDivider 'MONITORINGTOOLS MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module MonitoringTools' to view available tools." -Level SUB
-    Write-STLog -Message 'MonitoringTools module loaded'
+    $manifestPath = Join-Path $PSScriptRoot 'MonitoringTools.psd1'
+    [pscustomobject]@{
+        Module  = 'MonitoringTools'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-MonitoringToolsBanner
