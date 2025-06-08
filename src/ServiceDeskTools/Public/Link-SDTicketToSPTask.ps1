@@ -9,7 +9,7 @@ function Link-SDTicketToSPTask {
     .PARAMETER FieldName
         Name of the incident field storing the task URL.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -33,5 +33,7 @@ function Link-SDTicketToSPTask {
 
     Write-STLog -Message "Link-SDTicketToSPTask $TicketId $TaskUrl"
     $fields = @{ $FieldName = $TaskUrl }
-    Set-SDTicket -Id $TicketId -Fields $fields -ChaosMode:$ChaosMode
+    if ($PSCmdlet.ShouldProcess("ticket $TicketId", 'Link to SP task')) {
+        Set-SDTicket -Id $TicketId -Fields $fields -ChaosMode:$ChaosMode
+    }
 }

@@ -5,7 +5,7 @@ function Search-SDTicket {
     .PARAMETER Query
         Text used to search incident subjects and descriptions.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -23,5 +23,7 @@ function Search-SDTicket {
 
     Write-STLog -Message "Search-SDTicket $Query"
     $encoded = [uri]::EscapeDataString($Query)
-    Invoke-SDRequest -Method 'GET' -Path "/incidents.json?search=$encoded" -ChaosMode:$ChaosMode
+    if ($PSCmdlet.ShouldProcess('incidents', "Search for $Query")) {
+        Invoke-SDRequest -Method 'GET' -Path "/incidents.json?search=$encoded" -ChaosMode:$ChaosMode
+    }
 }

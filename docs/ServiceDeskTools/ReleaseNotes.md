@@ -1,0 +1,6 @@
+# ServiceDeskTools Release Notes
+
+## 1.1.0 - 2024-04-29
+- Module graduated to **Stable** status.
+- Added `SupportsShouldProcess` to all ticket management commands.
+- Expanded Pester tests to cover `-WhatIf` behavior.
