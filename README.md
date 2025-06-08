@@ -1,5 +1,7 @@
 # SupportTools PowerShell Modules
 
+[![Pester Tests](https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell/actions/workflows/pester-tests.yml/badge.svg)](https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell/actions/workflows/pester-tests.yml)
+
 This repository packages a collection of scripts into reusable modules.
 
 * **SupportTools** – general helper commands that wrap the scripts in the `/scripts` folder.
