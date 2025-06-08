@@ -59,6 +59,19 @@ function Write-STLog {
     if (-not (Test-Path $dir)) {
         New-Item -Path $dir -ItemType Directory -Force | Out-Null
     }
+    $maxBytes = if ($env:ST_LOG_MAX_BYTES) { [int64]$env:ST_LOG_MAX_BYTES } else { 1048576 }
+    if (Test-Path $logFile) {
+        $currentBytes = (Get-Item $logFile).Length
+        if ($currentBytes -gt $maxBytes) {
+            $archive = "$logFile.1"
+            try {
+                if (Test-Path $archive) { Remove-Item $archive -Force }
+                Rename-Item -Path $logFile -NewName $archive -Force
+            } catch {
+                Write-STDebug "Failed to rotate log: $_"
+            }
+        }
+    }
     $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $user = if ($env:USERNAME) { $env:USERNAME } else { $env:USER }
     $stack  = Get-PSCallStack
