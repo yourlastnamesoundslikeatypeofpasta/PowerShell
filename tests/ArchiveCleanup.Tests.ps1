@@ -9,6 +9,7 @@ Describe 'Invoke-ArchiveCleanup' {
             function Get-PnPListItem { $script:testItems }
             function Remove-PnPFile {}
             function Remove-PnPFolder {}
+            Set-Variable -Scope Script -Name SharePointToolsSettings -Value @{ ClientId='id'; TenantId='tid'; CertPath='path'; Sites=@{} }
             Mock Connect-PnPOnline {}
             Mock Get-PnPListItem { $script:testItems }
             Mock Remove-PnPFile {}

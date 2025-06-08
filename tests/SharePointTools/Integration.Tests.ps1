@@ -4,6 +4,12 @@ Describe 'SharePointTools Integration Functions' {
         Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force
     }
 
+    BeforeEach {
+        InModuleScope SharePointTools {
+            Set-Variable -Scope Script -Name SharePointToolsSettings -Value @{ ClientId='id'; TenantId='tid'; CertPath='path'; Sites=@{} }
+        }
+    }
+
     Context 'Get-SPToolsLibraryReport' {
         It 'returns library information' {
             InModuleScope SharePointTools {
