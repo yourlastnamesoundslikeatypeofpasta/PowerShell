@@ -5,6 +5,8 @@ function Invoke-ChaosTest {
     .DESCRIPTION
         Runs the given commands and randomly throws an error based on FailureRate.
         A random delay up to MaxDelaySeconds is introduced before execution.
+        Set the CHAOSTOOLS_ENABLED environment variable to 0 or False to
+        bypass chaos injection entirely.
     .PARAMETER ScriptBlock
         Commands to invoke.
     .PARAMETER FailureRate
@@ -23,6 +25,11 @@ function Invoke-ChaosTest {
     Assert-ParameterNotNull $ScriptBlock 'ScriptBlock'
     if ($FailureRate -lt 0 -or $FailureRate -gt 1) {
         throw 'FailureRate must be between 0 and 1.'
+    }
+    if ($env:CHAOSTOOLS_ENABLED -match '^(0|false)$') {
+        Write-STDebug 'ChaosTools disabled'
+        & $ScriptBlock
+        return
     }
     if ($MaxDelaySeconds -gt 0) {
         $delay = Get-Random -Minimum 0 -Maximum ($MaxDelaySeconds + 1)

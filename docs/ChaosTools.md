@@ -14,3 +14,5 @@ Import-Module ./src/ChaosTools/ChaosTools.psd1
 | `Invoke-ChaosTest` | Randomly delay or fail execution of a script block | `Invoke-ChaosTest -ScriptBlock { Get-Service } -FailureRate 0.2` |
 
 Use these tools to validate that your automation gracefully handles transient failures.
+Set the `CHAOSTOOLS_ENABLED` environment variable to `0` or `False` to disable
+the random delay and failure behavior.
