@@ -1,9 +1,17 @@
 function Get-GraphAccessToken {
+    <#
+    .SYNOPSIS
+        Retrieves and caches a Microsoft Graph access token.
+    #>
     [CmdletBinding()]
     param(
+        [ValidateNotNullOrEmpty()]
         [string]$TenantId,
+        [ValidateNotNullOrEmpty()]
         [string]$ClientId,
+        [ValidateNotNullOrEmpty()]
         [string]$ClientSecret,
+        [ValidateNotNullOrEmpty()]
         [string]$CachePath = "$env:USERPROFILE/.graphToken.json"
     )
 

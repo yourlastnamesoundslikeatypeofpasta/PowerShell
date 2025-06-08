@@ -57,6 +57,12 @@ function Test-IsElevated {
 Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','Write-STDebug','Test-IsElevated'
 
 function Show-STCoreBanner {
+    <#
+    .SYNOPSIS
+        Displays the STCore module banner.
+    #>
+    [CmdletBinding()]
+    param()
     Write-Host 'STCore module loaded' -ForegroundColor DarkGray
 }
 

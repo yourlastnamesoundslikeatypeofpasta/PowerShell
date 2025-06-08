@@ -16,6 +16,12 @@ Export-ModuleMember -Function (
 ).BaseName
 
 function Show-ServiceDeskToolsBanner {
+    <#
+    .SYNOPSIS
+        Displays the ServiceDeskTools module banner.
+    #>
+    [CmdletBinding()]
+    param()
     Write-STDivider 'SERVICEDESKTOOLS MODULE LOADED' -Style heavy
     Write-STStatus "Run 'Get-Command -Module ServiceDeskTools' to view available tools." -Level SUB
     Write-STLog -Message 'ServiceDeskTools module loaded'
