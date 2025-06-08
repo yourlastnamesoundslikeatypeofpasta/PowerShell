@@ -1,8 +1,11 @@
+. $PSScriptRoot/TestHelpers.ps1
+
 Describe 'GraphTools Module' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
         Import-Module $PSScriptRoot/../src/GraphTools/GraphTools.psd1 -Force
+        . $PSScriptRoot/../src/GraphTools/Private/Get-GraphAccessToken.ps1
     }
 
     Context 'Exported commands' {
@@ -33,6 +36,24 @@ Describe 'GraphTools Module' {
             Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid'
             Assert-MockCalled Write-STLog -ModuleName GraphTools -Times 1
             Assert-MockCalled Write-STTelemetryEvent -ModuleName GraphTools -Times 1
+        }
+    }
+
+    Context 'Environment variables' {
+        It 'uses GRAPH_* variables when parameters missing' {
+            $env:GRAPH_TENANT_ID = 'tidEnv'
+            $env:GRAPH_CLIENT_ID = 'cidEnv'
+            $env:GRAPH_CLIENT_SECRET = 'secEnv'
+            $cache = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+            try {
+                function Get-MsalToken { @{ AccessToken='tok'; ExpiresOn=(Get-Date).AddMinutes(30) } }
+                $token = Get-GraphAccessToken -CachePath $cache
+                $token | Should -Be 'tok'
+            } finally {
+                Remove-Item env:GRAPH_TENANT_ID -ErrorAction SilentlyContinue
+                Remove-Item env:GRAPH_CLIENT_ID -ErrorAction SilentlyContinue
+                Remove-Item env:GRAPH_CLIENT_SECRET -ErrorAction SilentlyContinue
+            }
         }
     }
 }
