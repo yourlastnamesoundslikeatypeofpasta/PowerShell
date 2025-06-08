@@ -129,4 +129,17 @@ Describe 'Logging Module' {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
+
+    It 'rotates the log file when exceeding max size' {
+        $dir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+        $log = Join-Path $dir 'log.txt'
+        New-Item -ItemType Directory -Path $dir | Out-Null
+        try {
+            'a' * 1100000 | Out-File -FilePath $log -Encoding utf8
+            Write-STLog -Message 'rotate' -Path $log -MaxSizeMB 1 -MaxFiles 2
+            Test-Path "$log.1" | Should -Be $true
+        } finally {
+            Remove-Item $dir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
 }

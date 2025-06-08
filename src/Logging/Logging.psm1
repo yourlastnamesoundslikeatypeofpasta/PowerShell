@@ -22,6 +22,12 @@ function Write-STLog {
         [ValidateNotNullOrEmpty()]
         [string]$Level = 'INFO',
         [Parameter(Mandatory = $false)]
+        [ValidateRange(1, [int]::MaxValue)]
+        [int]$MaxSizeMB = 5,
+        [Parameter(Mandatory = $false)]
+        [ValidateRange(1, [int]::MaxValue)]
+        [int]$MaxFiles = 5,
+        [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Path,
         [Parameter(Mandatory = $false)]
@@ -81,6 +87,19 @@ function Write-STLog {
         ($entry | ConvertTo-Json -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
     } else {
         "$timestamp [$module] [$user] [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
+    }
+
+    $maxBytes = $MaxSizeMB * 1MB
+    if ((Get-Item $logFile).Length -gt $maxBytes) {
+        for ($i = $MaxFiles; $i -ge 1; $i--) {
+            $src = if ($i -eq 1) { $logFile } else { "$logFile.$($i - 1)" }
+            $dst = "$logFile.$i"
+            if (Test-Path $src) {
+                if ($i -eq $MaxFiles) { Remove-Item $dst -ErrorAction SilentlyContinue }
+                Rename-Item -Path $src -NewName $dst -Force
+            }
+        }
+        '' | Out-File -FilePath $logFile -Encoding utf8
     }
 }
 

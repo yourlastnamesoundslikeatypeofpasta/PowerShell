@@ -158,6 +158,7 @@ Set the `ST_LOG_PATH` environment variable or use the `-Path` parameter of `Writ
 Use `-Structured` to emit JSON lines that include the current user and script name for ingestion into tools like Azure Log Analytics.
 Set `ST_LOG_STRUCTURED=1` to enable structured output without adding the switch each time.
 Use `-Metric` and `-Value` with `Write-STLog` to capture performance data like durations.
+Logs rotate when they exceed the configured size. Control limits with `-MaxSizeMB` and `-MaxFiles`.
 Review the resulting log file with `Get-Content` when troubleshooting.
 ## Running Tests 🧪
 

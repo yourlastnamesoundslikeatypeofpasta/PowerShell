@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - SupportTools cmdlets can inject custom logging and telemetry modules
 - Detailed scenario documentation for the SharePointTools module
 - SharePointTools module graduated from Beta to Stable with version 1.2.0
+- Log rotation support via `-MaxSizeMB` and `-MaxFiles` parameters for `Write-STLog`
 ### Breaking Changes
 - None in this release
 

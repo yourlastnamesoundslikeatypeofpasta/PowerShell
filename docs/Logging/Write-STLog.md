@@ -13,7 +13,7 @@ Writes a message or metric to the SupportTools log.
 ## SYNTAX
 
 ```
-Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-ProgressAction <ActionPreference>]
+Write-STLog [-Message] <String> [[-Level] <String>] [[-MaxSizeMB] <Int32>] [[-MaxFiles] <Int32>] [[-Path] <String>] [-ProgressAction <ActionPreference>]
 [[-Metadata] <Hashtable>] [-Structured]
 [[-Metric] <String>] [[-Value] <Double>]
 [<CommonParameters>]
@@ -66,6 +66,35 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+
+### -MaxSizeMB
+Maximum size in megabytes of the active log file before rotation occurs.
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 2
+Default value: 5
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxFiles
+Number of rotated log files to keep.
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 3
+Default value: 5
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Path
 Custom path to the log file. Overrides the default location and the `ST_LOG_PATH`
 environment variable.
@@ -76,7 +105,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 2
+Position: 4
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -90,7 +119,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 3
+Position: 5
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
