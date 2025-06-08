@@ -64,7 +64,8 @@ function Get-CommonSystemInfo {
             return $commonSystemInfoObj
         } catch {
             Write-STStatus "Get-CommonSystemInfo failed: $_" -Level ERROR -Log
-            Write-STLog -Message "Get-CommonSystemInfo failed: $_" -Level ERROR
+            $structured = $env:ST_LOG_STRUCTURED -eq '1'
+            Write-STLog -Message "Get-CommonSystemInfo failed: $_" -Level ERROR -Structured:$structured
             $result = 'Failure'
             return New-STErrorObject -Message $_.Exception.Message -Category 'WMI'
         } finally {

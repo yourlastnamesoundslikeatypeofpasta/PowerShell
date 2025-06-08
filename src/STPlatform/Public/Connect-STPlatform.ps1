@@ -61,7 +61,8 @@ function Connect-STPlatform {
     } catch {
         $result = 'Failure'
         Write-STStatus "Connect-STPlatform failed: $_" -Level ERROR -Log
-        Write-STLog -Message "Connect-STPlatform failed: $_" -Level ERROR
+        $structured = $env:ST_LOG_STRUCTURED -eq '1'
+        Write-STLog -Message "Connect-STPlatform failed: $_" -Level ERROR -Structured:$structured
         throw
     } finally {
         $sw.Stop()

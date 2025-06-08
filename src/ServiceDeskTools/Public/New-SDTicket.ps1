@@ -31,7 +31,8 @@ function New-SDTicket {
         return
     }
 
-    Write-STLog -Message "New-SDTicket $Subject"
+    $structured = $env:ST_LOG_STRUCTURED -eq '1'
+    Write-STLog -Message "New-SDTicket $Subject" -Structured:$structured
     $body = @{ incident = @{ name = $Subject; description = $Description; requester_email = $RequesterEmail } }
     if ($PSCmdlet.ShouldProcess("ticket $Subject", 'Create')) {
         Invoke-SDRequest -Method 'POST' -Path '/incidents.json' -Body $body -ChaosMode:$ChaosMode

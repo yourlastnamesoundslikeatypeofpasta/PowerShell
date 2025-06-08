@@ -23,7 +23,8 @@ function Search-SDTicket {
         return
     }
 
-    Write-STLog -Message "Search-SDTicket $Query"
+    $structured = $env:ST_LOG_STRUCTURED -eq '1'
+    Write-STLog -Message "Search-SDTicket $Query" -Structured:$structured
     $encoded = [uri]::EscapeDataString($Query)
     if ($PSCmdlet.ShouldProcess('incidents', "Search for $Query")) {
         $result = Invoke-SDRequest -Method 'GET' -Path "/incidents.json?search=$encoded" -ChaosMode:$ChaosMode

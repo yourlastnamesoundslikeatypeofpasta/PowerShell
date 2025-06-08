@@ -26,7 +26,8 @@ function Set-SDTicket {
         return
     }
 
-    Write-STLog -Message "Set-SDTicket $Id"
+    $structured = $env:ST_LOG_STRUCTURED -eq '1'
+    Write-STLog -Message "Set-SDTicket $Id" -Structured:$structured
     $body = @{ incident = $Fields }
     if ($PSCmdlet.ShouldProcess("ticket $Id", 'Update')) {
         Invoke-SDRequest -Method 'PUT' -Path "/incidents/$Id.json" -Body $body -ChaosMode:$ChaosMode

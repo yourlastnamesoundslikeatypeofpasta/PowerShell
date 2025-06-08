@@ -27,7 +27,8 @@ function Set-SDTicketBulk {
     }
 
     foreach ($ticketId in $Id) {
-        Write-STLog -Message "Set-SDTicketBulk $ticketId"
+        $structured = $env:ST_LOG_STRUCTURED -eq '1'
+        Write-STLog -Message "Set-SDTicketBulk $ticketId" -Structured:$structured
         if ($PSCmdlet.ShouldProcess("ticket $ticketId", 'Update')) {
             Set-SDTicket -Id $ticketId -Fields $Fields -ChaosMode:$ChaosMode
         }

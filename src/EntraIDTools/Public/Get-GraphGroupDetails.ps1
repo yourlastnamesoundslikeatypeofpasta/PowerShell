@@ -57,7 +57,8 @@ function Get-GraphGroupDetails {
         }
     } catch {
         $result = 'Failure'
-        Write-STLog -Message "Get-GraphGroupDetails failed: $_" -Level ERROR
+        $structured = $env:ST_LOG_STRUCTURED -eq '1'
+        Write-STLog -Message "Get-GraphGroupDetails failed: $_" -Level ERROR -Structured:$structured
         throw
     } finally {
         $sw.Stop()

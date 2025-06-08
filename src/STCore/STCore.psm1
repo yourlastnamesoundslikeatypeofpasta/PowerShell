@@ -58,7 +58,8 @@ function Write-STDebug {
     )
     if ($env:ST_DEBUG -eq '1') {
         Write-STStatus "[DEBUG] $Message" -Level SUB
-        Write-STLog "[DEBUG] $Message" -Level INFO
+        $structured = $env:ST_LOG_STRUCTURED -eq '1'
+        Write-STLog "[DEBUG] $Message" -Level INFO -Structured:$structured
     }
 }
 

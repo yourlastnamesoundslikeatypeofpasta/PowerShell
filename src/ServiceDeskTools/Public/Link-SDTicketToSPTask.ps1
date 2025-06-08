@@ -31,7 +31,8 @@ function Link-SDTicketToSPTask {
         return
     }
 
-    Write-STLog -Message "Link-SDTicketToSPTask $TicketId $TaskUrl"
+    $structured = $env:ST_LOG_STRUCTURED -eq '1'
+    Write-STLog -Message "Link-SDTicketToSPTask $TicketId $TaskUrl" -Structured:$structured
     $fields = @{ $FieldName = $TaskUrl }
     if ($PSCmdlet.ShouldProcess("ticket $TicketId", 'Link to SP task')) {
         Set-SDTicket -Id $TicketId -Fields $fields -ChaosMode:$ChaosMode

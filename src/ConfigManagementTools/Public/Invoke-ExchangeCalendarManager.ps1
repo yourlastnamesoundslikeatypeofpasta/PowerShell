@@ -122,7 +122,8 @@ function Invoke-ExchangeCalendarManager {
         Write-STStatus 'ExchangeCalendarManager finished' -Level FINAL -Log
     } catch {
         Write-STStatus "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR -Log
-        Write-STLog -Message "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR
+        $structured = $env:ST_LOG_STRUCTURED -eq '1'
+        Write-STLog -Message "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR -Structured:$structured
         $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'Exchange'
     } finally {

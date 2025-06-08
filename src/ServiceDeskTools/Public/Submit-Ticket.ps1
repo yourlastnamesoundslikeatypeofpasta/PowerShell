@@ -27,7 +27,8 @@ function Submit-Ticket {
         return
     }
 
-    Write-STLog -Message "Submit-Ticket $Subject"
+    $structured = $env:ST_LOG_STRUCTURED -eq '1'
+    Write-STLog -Message "Submit-Ticket $Subject" -Structured:$structured
     if ($PSCmdlet.ShouldProcess("ticket $Subject", 'Create')) {
         New-SDTicket -Subject $Subject -Description $Description -RequesterEmail $RequesterEmail -ChaosMode:$ChaosMode
     }

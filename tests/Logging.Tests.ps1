@@ -129,4 +129,20 @@ Describe 'Logging Module' {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
+
+    It 'sample function respects ST_LOG_STRUCTURED' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            $env:ST_LOG_STRUCTURED = '1'
+            $env:ST_LOG_PATH = $temp
+            Import-Module $PSScriptRoot/../src/OutTools/OutTools.psm1 -Force
+            Out-STBanner -Info ([pscustomobject]@{ Module = 'Demo' })
+            $json = Get-Content $temp | ConvertFrom-Json
+            $json.message | Should -Be 'Demo module loaded'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+            Remove-Item env:ST_LOG_PATH -ErrorAction SilentlyContinue
+            Remove-Item env:ST_LOG_STRUCTURED -ErrorAction SilentlyContinue
+        }
+    }
 }
