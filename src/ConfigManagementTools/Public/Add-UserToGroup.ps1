@@ -10,7 +10,7 @@ function Add-UserToGroup {
     .PARAMETER GroupName
         Name of the Microsoft 365 group to modify.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
@@ -50,6 +50,13 @@ function Add-UserToGroup {
             if ($PSBoundParameters.ContainsKey('Cloud')) {
                 $arguments += '-Cloud'
                 $arguments += $Cloud
+            }
+
+            if ($PSBoundParameters.ContainsKey('WhatIf')) {
+                $arguments += '-WhatIf'
+            }
+            if ($PSBoundParameters.ContainsKey('Confirm')) {
+                $arguments += '-Confirm'
             }
 
             Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain

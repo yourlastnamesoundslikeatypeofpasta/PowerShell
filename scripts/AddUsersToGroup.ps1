@@ -29,6 +29,7 @@ This script requires Microsoft Graph API permissions and assumes the user has th
 This example runs the script with explicit parameters to process the provided CSV file and add the listed users to the specified Microsoft 365 group.
 #>
 
+[CmdletBinding(SupportsShouldProcess=$true)]
 param(
     [Parameter()]
     [string]$CsvPath,
@@ -233,19 +234,23 @@ function Start-Main {
             $skippedUsers.Add($upn)
         }
         else {
-            Write-STStatus "AddingUserToGroup: User: $display - Group: $($group.DisplayName)" -Level INFO
-            try {
-                if ($Cloud -eq 'Entra') {
-                    New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $uid -ErrorAction Stop
-                } else {
-                    Add-ADGroupMember -Identity $group.DistinguishedName -Members $uid -ErrorAction Stop
+            if ($PSCmdlet.ShouldProcess($display, "Add to group $($group.DisplayName)")) {
+                Write-STStatus "AddingUserToGroup: User: $display - Group: $($group.DisplayName)" -Level INFO
+                try {
+                    if ($Cloud -eq 'Entra') {
+                        New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $uid -ErrorAction Stop
+                    } else {
+                        Add-ADGroupMember -Identity $group.DistinguishedName -Members $uid -ErrorAction Stop
+                    }
+                    Write-STStatus "[SUCCESS] AddingUserToGroup: User: $display - Group: $($group.DisplayName)" -Level SUCCESS
+                    $addedUsers.Add($upn)
                 }
-                Write-STStatus "[SUCCESS] AddingUserToGroup: User: $display - Group: $($group.DisplayName)" -Level SUCCESS
-                $addedUsers.Add($upn)
-            }
-            catch {
-                Write-Error "[FAIL] Error adding $($user) to $($group.Id)..."
-                throw "ErrorAddingUserToGroup: $($user): $display"
+                catch {
+                    Write-Error "[FAIL] Error adding $($user) to $($group.Id)..."
+                    throw "ErrorAddingUserToGroup: $($user): $display"
+                }
+            } else {
+                Write-STStatus "WouldAddUserToGroup: User: $display - Group: $($group.DisplayName)" -Level SUB
             }
         }
     }
