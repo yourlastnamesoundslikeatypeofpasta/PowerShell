@@ -19,6 +19,7 @@ Describe 'SupportTools Module' {
             'Start-Countdown',
             'Export-ITReport',
             'New-SPUsageReport',
+            'New-STDashboard',
             'Invoke-NewHireUserAutomation'
             'Sync-SupportTools',
             'Invoke-JobBundle',
