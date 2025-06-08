@@ -85,29 +85,56 @@ function Connect-SPToolsOnline {
         Azure AD tenant ID.
     .PARAMETER CertPath
         Path to the authentication certificate file.
+    .PARAMETER ClientSecret
+        Client secret string for authentication.
+    .PARAMETER DeviceLogin
+        Use device login flow for authentication.
     .PARAMETER RetryCount
         Number of connection attempts before failing.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName='Certificate')]
     param(
         [Parameter(Mandatory)][string]$Url,
-        [Parameter(Mandatory)][string]$ClientId,
-        [Parameter(Mandatory)][string]$TenantId,
-        [Parameter(Mandatory)][string]$CertPath,
+        [Parameter(Mandatory, ParameterSetName='Certificate')]
+        [Parameter(Mandatory, ParameterSetName='Secret')]
+        [string]$ClientId,
+        [Parameter(Mandatory, ParameterSetName='Certificate')]
+        [Parameter(Mandatory, ParameterSetName='Secret')]
+        [string]$TenantId,
+        [Parameter(Mandatory, ParameterSetName='Certificate')]
+        [string]$CertPath,
+        [Parameter(Mandatory, ParameterSetName='Secret')]
+        [string]$ClientSecret,
+        [Parameter(ParameterSetName='Device')][switch]$DeviceLogin,
         [int]$RetryCount = 3
     )
+
+    if (-not $DeviceLogin -and (-not $ClientId -or -not $TenantId)) {
+        throw 'ClientId and TenantId are required unless using -DeviceLogin'
+    }
+
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
-    $result = "Success"
+    $result = 'Success'
     $attempt = 1
     while ($true) {
         try {
             Write-STStatus "Connecting to $Url (attempt $attempt)" -Level INFO
-            Connect-PnPOnline -Url $Url -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath -ErrorAction Stop
+            switch ($PSCmdlet.ParameterSetName) {
+                'Certificate' {
+                    Connect-PnPOnline -Url $Url -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath -ErrorAction Stop
+                }
+                'Secret' {
+                    Connect-PnPOnline -Url $Url -ClientId $ClientId -Tenant $TenantId -ClientSecret $ClientSecret -ErrorAction Stop
+                }
+                'Device' {
+                    Connect-PnPOnline -Url $Url -DeviceLogin -ErrorAction Stop
+                }
+            }
             Write-STStatus 'PnP connection established' -Level SUCCESS
             break
         } catch {
             Write-STStatus "Connection failed: $($_.Exception.Message)" -Level WARN
-                $result = "Failure"
+            $result = 'Failure'
             if ($attempt -ge $RetryCount) {
                 Write-STStatus 'All connection attempts failed.' -Level ERROR
                 throw
@@ -115,9 +142,9 @@ function Connect-SPToolsOnline {
             Start-Sleep -Seconds 5
             $attempt++
         }
-    $sw.Stop()
-    Send-SPToolsTelemetryEvent -Command "Connect-SPToolsOnline" -Result $result -Duration $sw.Elapsed
     }
+    $sw.Stop()
+    Send-SPToolsTelemetryEvent -Command 'Connect-SPToolsOnline' -Result $result -Duration $sw.Elapsed
 }
 
 function Invoke-SPPnPCommand {

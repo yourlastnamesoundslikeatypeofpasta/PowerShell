@@ -2,6 +2,11 @@ Describe 'SharePointTools Integration Functions' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force
+        InModuleScope SharePointTools {
+            $SharePointToolsSettings.ClientId  = 'id'
+            $SharePointToolsSettings.TenantId  = 'tid'
+            $SharePointToolsSettings.CertPath  = 'cert.pfx'
+        }
     }
 
     Context 'Get-SPToolsLibraryReport' {

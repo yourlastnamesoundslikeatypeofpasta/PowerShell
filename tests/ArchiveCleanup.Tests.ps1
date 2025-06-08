@@ -5,6 +5,9 @@ Describe 'Invoke-ArchiveCleanup' {
     }
     BeforeEach {
         InModuleScope SharePointTools {
+            $SharePointToolsSettings.ClientId = 'id'
+            $SharePointToolsSettings.TenantId = 'tid'
+            $SharePointToolsSettings.CertPath = 'cert.pfx'
             function Connect-PnPOnline {}
             function Get-PnPListItem { $script:testItems }
             function Remove-PnPFile {}
