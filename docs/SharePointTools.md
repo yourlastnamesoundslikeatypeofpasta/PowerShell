@@ -90,7 +90,12 @@ The cleanup commands output a CSV of files with excess versions and remove outda
 
 ```powershell
 $env:ST_ENABLE_TELEMETRY = '1'
+# Certificate authentication
 Connect-SPToolsOnline -Url https://contoso.sharepoint.com -ClientId $cid -TenantId $tid -CertPath cert.pfx
+# Client secret authentication
+Connect-SPToolsOnline -Url https://contoso.sharepoint.com -ClientId $cid -TenantId $tid -ClientSecret $secret
+# Interactive device login
+Connect-SPToolsOnline -Url https://contoso.sharepoint.com -DeviceLogin
 $env:ST_ENABLE_TELEMETRY = ''
 ```
 
