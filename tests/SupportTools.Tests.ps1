@@ -90,4 +90,23 @@ Describe 'SupportTools Module' {
             }
         }
     }
+
+    Context 'Error handling' {
+        It 'returns error record when git fails' {
+            InModuleScope SupportTools {
+                function git { throw 'git fail' }
+                $res = Sync-SupportTools -RepositoryUrl 'url' -InstallPath 'path'
+                $res | Should -BeOfType 'System.Management.Automation.ErrorRecord'
+                $res.Exception.Message | Should -Be 'git fail'
+            }
+        }
+
+        It 'returns error record when search fails' {
+            InModuleScope SupportTools {
+                function Get-ChildItem { throw 'bad' }
+                $res = Search-ReadMe
+                $res | Should -BeOfType 'System.Management.Automation.ErrorRecord'
+            }
+        }
+    }
 }

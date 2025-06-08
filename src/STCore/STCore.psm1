@@ -30,6 +30,25 @@ function New-STErrorObject {
     }
 }
 
+function New-STErrorRecord {
+    <#
+    .SYNOPSIS
+        Creates a standardized ErrorRecord.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Message,
+        [Parameter()]
+        [System.Exception]$Exception = ([System.Exception]::new($Message)),
+        [Parameter()]
+        [System.Management.Automation.ErrorCategory]$Category = [System.Management.Automation.ErrorCategory]::NotSpecified
+    )
+    $err = [System.Management.Automation.ErrorRecord]::new($Exception, 'STError', $Category, $null)
+    $err.ErrorDetails = [System.Management.Automation.ErrorDetails]::new($Message)
+    return $err
+}
+
 function Write-STDebug {
     [CmdletBinding()]
     param(
@@ -76,7 +95,7 @@ function Get-STConfig {
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','Write-STDebug','Test-IsElevated','Get-STConfig'
+Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig'
 
 function Show-STCoreBanner {
     <#

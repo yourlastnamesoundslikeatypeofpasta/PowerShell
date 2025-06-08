@@ -28,10 +28,7 @@ function Sync-SupportTools {
         [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
         [Parameter(Mandatory = $false)]
-        [object]$Config,
-        [Parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
-        [string]$TranscriptPath
+        [object]$Config
     )
 
     try {
@@ -55,8 +52,6 @@ function Sync-SupportTools {
             return
         }
 
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
         $result = 'Success'
         if (Test-Path (Join-Path $InstallPath '.git')) {
@@ -77,7 +72,7 @@ function Sync-SupportTools {
         Write-STStatus "Sync-SupportTools failed: $_" -Level ERROR -Log
         Write-STLog -Message "Sync-SupportTools failed: $_" -Level ERROR
         $result = 'Failure'
-        return New-STErrorObject -Message $_.Exception.Message -Category 'General'
+        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
         $sw.Stop()

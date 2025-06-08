@@ -37,20 +37,24 @@ function Add-UserToGroup {
     )
 
     process {
-        $arguments = @()
-        if ($PSBoundParameters.ContainsKey('CsvPath')) {
-            $arguments += '-CsvPath'
-            $arguments += $CsvPath
-        }
-        if ($PSBoundParameters.ContainsKey('GroupName')) {
-            $arguments += '-GroupName'
-            $arguments += $GroupName
-        }
-        if ($PSBoundParameters.ContainsKey('Cloud')) {
-            $arguments += '-Cloud'
-            $arguments += $Cloud
-        }
+        try {
+            $arguments = @()
+            if ($PSBoundParameters.ContainsKey('CsvPath')) {
+                $arguments += '-CsvPath'
+                $arguments += $CsvPath
+            }
+            if ($PSBoundParameters.ContainsKey('GroupName')) {
+                $arguments += '-GroupName'
+                $arguments += $GroupName
+            }
+            if ($PSBoundParameters.ContainsKey('Cloud')) {
+                $arguments += '-Cloud'
+                $arguments += $Cloud
+            }
 
-        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+            Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        } catch {
+            return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
+        }
     }
 }

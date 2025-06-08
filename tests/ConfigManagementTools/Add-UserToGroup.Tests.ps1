@@ -43,4 +43,13 @@ Describe 'Add-UserToGroup function' {
             }
         }
     }
+
+    It 'returns error record on failure' {
+        InModuleScope ConfigManagementTools {
+            function Invoke-ScriptFile { throw 'oops' }
+            $res = Add-UserToGroup -CsvPath 'u.csv' -GroupName 'G1'
+            $res | Should -BeOfType 'System.Management.Automation.ErrorRecord'
+            $res.Exception.Message | Should -Be 'oops'
+        }
+    }
 }
