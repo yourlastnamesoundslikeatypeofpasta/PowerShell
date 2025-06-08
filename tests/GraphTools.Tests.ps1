@@ -1,6 +1,7 @@
 . $PSScriptRoot/TestHelpers.ps1
 
-Describe 'GraphTools Module' {
+$msal = Get-Module MSAL.PS -ListAvailable
+Describe 'GraphTools Module' -Skip:(-not $msal) {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
