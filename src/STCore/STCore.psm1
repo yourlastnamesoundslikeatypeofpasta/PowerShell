@@ -65,12 +65,12 @@ function Get-STConfig {
     try {
         $ext = [IO.Path]::GetExtension($Path).ToLower()
         switch ($ext) {
-            '.json' { return Get-Content $Path | ConvertFrom-Json }
+            '.json' { return Get-Content $Path | ConvertFrom-Json -AsHashtable }
             '.psd1' { return Import-PowerShellDataFile $Path }
             default { throw "Unsupported config type: $ext" }
         }
     } catch {
-        Write-STDebug "Failed to read config $Path: $_"
+        Write-STDebug "Failed to read config $($Path): $_"
         return @{}
     }
 }
