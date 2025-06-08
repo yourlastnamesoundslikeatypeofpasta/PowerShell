@@ -33,7 +33,7 @@ Demonstrates typical usage of Invoke-ExchangeCalendarManager.
 ## PARAMETERS
 
 ### -TranscriptPath
-{{ Fill TranscriptPath Description }}
+File path used to capture a transcript of this command's output and actions.
 
 ```yaml
 Type: String
