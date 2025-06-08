@@ -12,4 +12,8 @@ Describe 'IncidentResponseTools Module' {
     It 'exports Invoke-RemoteAudit' {
         (Get-Command -Module IncidentResponseTools).Name | Should -Contain 'Invoke-RemoteAudit'
     }
+
+    It 'exports Search-Indicators' {
+        (Get-Command -Module IncidentResponseTools).Name | Should -Contain 'Search-Indicators'
+    }
 }

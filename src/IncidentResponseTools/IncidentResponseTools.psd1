@@ -14,6 +14,7 @@
         'Invoke-RemoteAudit',
         'Invoke-FullSystemAudit',
         'Submit-SystemInfoTicket',
-        'Update-Sysmon'
+        'Update-Sysmon',
+        'Search-Indicators'
     )
 }

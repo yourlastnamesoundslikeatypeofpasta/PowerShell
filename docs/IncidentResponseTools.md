@@ -18,3 +18,4 @@ Import-Module ./src/IncidentResponseTools/IncidentResponseTools.psd1
 | `Invoke-FullSystemAudit` | Execute common audit scripts and summarize. | `Invoke-FullSystemAudit` |
 | `Submit-SystemInfoTicket` | Upload system info and create a ticket. | `Submit-SystemInfoTicket -SiteName IT -RequesterEmail user@contoso.com` |
 | `Update-Sysmon` | Update the Sysmon installation. | `Update-Sysmon -SourcePath D:\Tools` |
+| `Search-Indicators` | Find indicators in logs, registry and files. | `Search-Indicators -IndicatorList .\indicators.csv` |
