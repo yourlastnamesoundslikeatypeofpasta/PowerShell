@@ -13,6 +13,10 @@ Describe 'MonitoringTools Module' {
         (Get-Command -Module MonitoringTools).Name | Should -Contain 'Get-SystemHealth'
     }
 
+    It 'exports Start-HealthMonitor' {
+        (Get-Command -Module MonitoringTools).Name | Should -Contain 'Start-HealthMonitor'
+    }
+
     It 'returns system health object' {
         Mock Get-CPUUsage { 10 } -ModuleName MonitoringTools
         Mock Get-DiskSpaceInfo { @() } -ModuleName MonitoringTools
@@ -20,5 +24,12 @@ Describe 'MonitoringTools Module' {
         $result = Get-SystemHealth
         $result.CpuPercent | Should -Be 10
         $result.DiskInfo   | Should -Be @()
+    }
+
+    It 'logs health samples on a loop' {
+        Mock Get-SystemHealth { @{ CpuPercent=1; DiskInfo=@(); EventLogSummary=@() } } -ModuleName MonitoringTools
+        Mock Write-STRichLog {} -ModuleName MonitoringTools
+        Start-HealthMonitor -IntervalSeconds 0 -Count 2
+        Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -Times 2
     }
 }
