@@ -84,6 +84,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
+An object with countdown details.
+
+```
+CountdownFrom : 10
+Completed     : True
+```
 ## NOTES
 
 ## RELATED LINKS

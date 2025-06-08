@@ -68,6 +68,11 @@ function Sync-SupportTools {
         if (Test-Path $sd) { Import-Module $sd -ErrorAction SilentlyContinue }
 
         Write-STStatus 'SupportTools synchronized' -Level FINAL
+        return [pscustomobject]@{
+            RepositoryUrl = $RepositoryUrl
+            InstallPath   = $InstallPath
+            Result        = 'Success'
+        }
     } catch {
         Write-STStatus "Sync-SupportTools failed: $_" -Level ERROR -Log
         Write-STLog -Message "Sync-SupportTools failed: $_" -Level ERROR

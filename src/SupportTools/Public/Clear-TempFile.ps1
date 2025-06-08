@@ -18,11 +18,15 @@ function Clear-TempFile {
 
         $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '../../..')
         Write-STStatus 'Cleaning temporary files...' -Level INFO
-        Get-ChildItem -Path $repoRoot -Recurse -Include '*.tmp' -File -ErrorAction SilentlyContinue |
-            Remove-Item -Force -ErrorAction SilentlyContinue
-        Get-ChildItem -Path $repoRoot -Recurse -Include '*.log' -File -ErrorAction SilentlyContinue |
-            Where-Object { $_.Length -eq 0 } | Remove-Item -Force -ErrorAction SilentlyContinue
+        $tmpFiles  = Get-ChildItem -Path $repoRoot -Recurse -Include '*.tmp' -File -ErrorAction SilentlyContinue
+        $logFiles  = Get-ChildItem -Path $repoRoot -Recurse -Include '*.log' -File -ErrorAction SilentlyContinue | Where-Object { $_.Length -eq 0 }
+        $tmpFiles | Remove-Item -Force -ErrorAction SilentlyContinue
+        $logFiles | Remove-Item -Force -ErrorAction SilentlyContinue
         Write-STStatus 'Cleanup complete.' -Level SUCCESS
+        return [pscustomobject]@{
+            RemovedTmpFileCount = $tmpFiles.Count
+            RemovedLogFileCount = $logFiles.Count
+        }
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }

@@ -84,6 +84,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
+An object containing the wrapped script output.
+
+```
+Script : Get-UniquePermissions.ps1
+Result : <object[]>
+```
 ## NOTES
 
 ## RELATED LINKS
