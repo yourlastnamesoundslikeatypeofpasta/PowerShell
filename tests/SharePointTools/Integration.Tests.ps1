@@ -2,6 +2,12 @@ Describe 'SharePointTools Integration Functions' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force
+        InModuleScope SharePointTools {
+            function Connect-SPToolsOnline {
+                param($Url,$ClientId,$TenantId,$CertPath)
+                Connect-PnPOnline -Url $Url -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath
+            }
+        }
     }
 
     Context 'Get-SPToolsLibraryReport' {
