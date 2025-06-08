@@ -9,6 +9,9 @@ function Connect-STPlatform {
         Environment type: Cloud, Hybrid or OnPrem.
     .PARAMETER InstallMissing
         Install any missing modules automatically when specified.
+    .PARAMETER Vault
+        Secret vault name to pull credentials from when environment
+        variables are missing.
     .EXAMPLE
         Connect-STPlatform -Mode Cloud
     .EXAMPLE
@@ -17,13 +20,29 @@ function Connect-STPlatform {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][ValidateSet('Cloud','Hybrid','OnPrem')][string]$Mode,
-        [switch]$InstallMissing
+        [switch]$InstallMissing,
+        [string]$Vault
     )
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = 'Success'
     try {
         Write-STStatus "Initializing platform for $Mode" -Level INFO -Log
+
+        $requiredVars = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
+        foreach ($name in $requiredVars) {
+            if (-not $env:$name) {
+                $getParams = @{ Name = $name; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
+                if ($PSBoundParameters.ContainsKey('Vault')) { $getParams.Vault = $Vault }
+                $val = Get-Secret @getParams
+                if ($val) {
+                    $env:$name = $val
+                    Write-STStatus "Loaded $name from vault" -Level SUB -Log
+                } else {
+                    Write-STStatus "$name not found in vault" -Level WARN -Log
+                }
+            }
+        }
         $modules = switch ($Mode) {
             'Cloud'  { @('Microsoft.Graph','ExchangeOnlineManagement') }
             'Hybrid' { @('Microsoft.Graph','ExchangeOnlineManagement','ActiveDirectory') }
