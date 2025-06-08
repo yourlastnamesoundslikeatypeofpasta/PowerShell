@@ -27,12 +27,16 @@ function Invoke-GroupMembershipCleanup {
         [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Entra','AD')]
+        [string]$Cloud = 'Entra',
+        [Parameter(Mandatory = $false)]
         [object]$Config
     )
     process {
         $arguments = @()
         if ($PSBoundParameters.ContainsKey('CsvPath')) { $arguments += '-CsvPath'; $arguments += $CsvPath }
         if ($PSBoundParameters.ContainsKey('GroupName')) { $arguments += '-GroupName'; $arguments += $GroupName }
+        if ($PSBoundParameters.ContainsKey('Cloud')) { $arguments += '-Cloud'; $arguments += $Cloud }
         Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'CleanupGroupMembership.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Explain:$Explain
     }
 }

@@ -63,33 +63,50 @@ function Get-GraphUserDetails {
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$HtmlPath
+        ,
+        [Parameter()]
+        [ValidateSet('Entra','AD')]
+        [string]$Cloud = 'Entra'
     )
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     Write-STLog -Message "Get-GraphUserDetails $UserPrincipalName" -Structured -Metadata @{ user = $UserPrincipalName }
     $result = 'Success'
     try {
-        $token = Get-GraphAccessToken -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
-        $headers = @{ Authorization = "Bearer $token" }
+        if ($Cloud -eq 'Entra') {
+            $token = Get-GraphAccessToken -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
+            $headers = @{ Authorization = "Bearer $token" }
 
-        $userUrl = "https://graph.microsoft.com/v1.0/users/$UserPrincipalName?`$select=id,displayName,userPrincipalName"
-        $user = Invoke-RestMethod -Uri $userUrl -Headers $headers -Method Get
+            $userUrl = "https://graph.microsoft.com/v1.0/users/$UserPrincipalName?`$select=id,displayName,userPrincipalName"
+            $user = Invoke-RestMethod -Uri $userUrl -Headers $headers -Method Get
 
-        $licUrl = "https://graph.microsoft.com/v1.0/users/$($user.id)/licenseDetails"
-        $licenses = Invoke-RestMethod -Uri $licUrl -Headers $headers -Method Get
+            $licUrl = "https://graph.microsoft.com/v1.0/users/$($user.id)/licenseDetails"
+            $licenses = Invoke-RestMethod -Uri $licUrl -Headers $headers -Method Get
 
-        $grpUrl = "https://graph.microsoft.com/v1.0/users/$($user.id)/memberOf?`$select=displayName"
-        $groups = Invoke-RestMethod -Uri $grpUrl -Headers $headers -Method Get
+            $grpUrl = "https://graph.microsoft.com/v1.0/users/$($user.id)/memberOf?`$select=displayName"
+            $groups = Invoke-RestMethod -Uri $grpUrl -Headers $headers -Method Get
 
-        $signUrl = "https://graph.microsoft.com/beta/users/$($user.id)?`$select=signInActivity"
-        $sign = Invoke-RestMethod -Uri $signUrl -Headers $headers -Method Get
+            $signUrl = "https://graph.microsoft.com/beta/users/$($user.id)?`$select=signInActivity"
+            $sign = Invoke-RestMethod -Uri $signUrl -Headers $headers -Method Get
 
-        $details = [pscustomobject]@{
-            UserPrincipalName = $user.userPrincipalName
-            DisplayName       = $user.displayName
-            Licenses          = ($licenses.value.skuPartNumber -join ',')
-            Groups            = ($groups.value.displayName -join ',')
-            LastSignIn        = $sign.signInActivity.lastSignInDateTime
+            $details = [pscustomobject]@{
+                UserPrincipalName = $user.userPrincipalName
+                DisplayName       = $user.displayName
+                Licenses          = ($licenses.value.skuPartNumber -join ',')
+                Groups            = ($groups.value.displayName -join ',')
+                LastSignIn        = $sign.signInActivity.lastSignInDateTime
+            }
+        } else {
+            Import-Module ActiveDirectory -ErrorAction Stop
+            $user = Get-ADUser -Filter "UserPrincipalName -eq '$UserPrincipalName'" -Properties MemberOf,LastLogonDate -ErrorAction Stop
+            $groups = $user.MemberOf | Get-ADGroup | Select-Object -ExpandProperty Name
+            $details = [pscustomobject]@{
+                UserPrincipalName = $user.UserPrincipalName
+                DisplayName       = $user.Name
+                Licenses          = ''
+                Groups            = ($groups -join ',')
+                LastSignIn        = $user.LastLogonDate
+            }
         }
 
         if ($CsvPath)  { $details | Export-Csv -Path $CsvPath -NoTypeInformation }

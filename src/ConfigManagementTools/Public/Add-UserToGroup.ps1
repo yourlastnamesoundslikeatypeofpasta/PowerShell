@@ -30,6 +30,9 @@ function Add-UserToGroup {
         [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
         [Parameter(Mandatory = $false)]
+        [ValidateSet('Entra','AD')]
+        [string]$Cloud = 'Entra',
+        [Parameter(Mandatory = $false)]
         [object]$Config
     )
 
@@ -42,6 +45,10 @@ function Add-UserToGroup {
         if ($PSBoundParameters.ContainsKey('GroupName')) {
             $arguments += '-GroupName'
             $arguments += $GroupName
+        }
+        if ($PSBoundParameters.ContainsKey('Cloud')) {
+            $arguments += '-Cloud'
+            $arguments += $Cloud
         }
 
         Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain

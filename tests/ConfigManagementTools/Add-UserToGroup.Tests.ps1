@@ -33,4 +33,14 @@ Describe 'Add-UserToGroup function' {
             }
         }
     }
+
+    It 'passes Cloud parameter' {
+        InModuleScope ConfigManagementTools {
+            Mock Invoke-ScriptFile {} -ModuleName ConfigManagementTools
+            Add-UserToGroup -CsvPath 'users.csv' -GroupName 'G1' -Cloud 'AD'
+            Assert-MockCalled Invoke-ScriptFile -ModuleName ConfigManagementTools -Times 1 -ParameterFilter {
+                $Arguments -contains '-Cloud' -and $Arguments -contains 'AD'
+            }
+        }
+    }
 }
