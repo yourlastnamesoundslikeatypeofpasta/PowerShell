@@ -2,6 +2,10 @@
 
 Describe 'GraphTools Module' {
     BeforeAll {
+        if (-not (Get-Module -ListAvailable -Name 'MSAL.PS')) {
+            try { Install-Module -Name 'MSAL.PS' -Scope CurrentUser -Force } catch {}
+        }
+        Import-Module MSAL.PS -ErrorAction SilentlyContinue
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
         Import-Module $PSScriptRoot/../src/GraphTools/GraphTools.psd1 -Force

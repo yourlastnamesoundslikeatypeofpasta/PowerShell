@@ -1,3 +1,4 @@
+using module "..\TicketObject.psm1"
 function Search-SDTicket {
     <#
     .SYNOPSIS
@@ -6,6 +7,7 @@ function Search-SDTicket {
         Text used to search incident subjects and descriptions.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
+    [OutputType([TicketObject[]])]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -24,6 +26,7 @@ function Search-SDTicket {
     Write-STLog -Message "Search-SDTicket $Query"
     $encoded = [uri]::EscapeDataString($Query)
     if ($PSCmdlet.ShouldProcess('incidents', "Search for $Query")) {
-        Invoke-SDRequest -Method 'GET' -Path "/incidents.json?search=$encoded" -ChaosMode:$ChaosMode
+        $result = Invoke-SDRequest -Method 'GET' -Path "/incidents.json?search=$encoded" -ChaosMode:$ChaosMode
+        return $result | ForEach-Object { [TicketObject]::FromApiResponse($_) }
     }
 }

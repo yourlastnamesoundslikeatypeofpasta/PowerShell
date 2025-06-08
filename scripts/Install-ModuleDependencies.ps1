@@ -12,6 +12,7 @@ $requiredModules = @{
     'PnP.PowerShell' = 'SharePoint cleanup functions';
     'ExchangeOnlineManagement' = 'mailbox automation commands';
     'MicrosoftPlaces' = 'Invoke-CompanyPlaceManagement';
+    'MSAL.PS' = 'GraphTools authentication';
 }
 
 foreach ($name in $requiredModules.Keys) {
@@ -23,7 +24,7 @@ foreach ($name in $requiredModules.Keys) {
                 Install-Module -Name $name -Scope CurrentUser -Force -ErrorAction Stop
                 Write-STStatus "Installed $name" -Level SUCCESS
             } catch {
-                Write-STStatus "Failed to install $name: $($_.Exception.Message)" -Level ERROR
+                Write-STStatus "Failed to install ${name}: $($_.Exception.Message)" -Level ERROR
             }
         } else {
             Write-STStatus "$name was not installed. Some commands may not work." -Level WARN

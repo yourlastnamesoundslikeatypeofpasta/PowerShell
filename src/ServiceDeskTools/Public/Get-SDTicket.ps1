@@ -1,3 +1,4 @@
+using module "..\TicketObject.psm1"
 function Get-SDTicket {
     <#
     .SYNOPSIS
@@ -6,6 +7,7 @@ function Get-SDTicket {
         Incident ID to retrieve.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
+    [OutputType([TicketObject])]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -23,6 +25,7 @@ function Get-SDTicket {
 
     Write-STLog -Message "Get-SDTicket $Id"
     if ($PSCmdlet.ShouldProcess("ticket $Id", 'Get')) {
-        Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id.json" -ChaosMode:$ChaosMode
+        $result = Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id.json" -ChaosMode:$ChaosMode
+        return [TicketObject]::FromApiResponse($result)
     }
 }

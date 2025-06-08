@@ -1,3 +1,4 @@
+using module "./TicketObject.psm1"
 $PublicDir = Join-Path $PSScriptRoot 'Public'
 $PrivateDir = Join-Path $PSScriptRoot 'Private'
 $coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
