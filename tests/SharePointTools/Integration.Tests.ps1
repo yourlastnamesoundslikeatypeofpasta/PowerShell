@@ -2,12 +2,17 @@ Describe 'SharePointTools Integration Functions' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force
+        InModuleScope SharePointTools {
+            $SharePointToolsSettings.ClientId = 'id'
+            $SharePointToolsSettings.TenantId = 'tid'
+            $SharePointToolsSettings.CertPath = 'cert.pfx'
+        }
     }
 
     Context 'Connect-SPToolsOnline authentication' {
         It 'uses certificate credentials when CertPath provided' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 Mock Connect-PnPOnline {}
                 Connect-SPToolsOnline -Url 'https://contoso' -ClientId 'id' -TenantId 'tid' -CertPath 'cert.pfx'
                 Assert-MockCalled Connect-PnPOnline -Times 1 -ParameterFilter { $CertificatePath -eq 'cert.pfx' }
@@ -16,7 +21,7 @@ Describe 'SharePointTools Integration Functions' {
 
         It 'uses client secret when provided' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 Mock Connect-PnPOnline {}
                 Connect-SPToolsOnline -Url 'https://contoso' -ClientId 'id' -TenantId 'tid' -ClientSecret 'secret'
                 Assert-MockCalled Connect-PnPOnline -Times 1 -ParameterFilter { $ClientSecret -eq 'secret' }
@@ -25,7 +30,7 @@ Describe 'SharePointTools Integration Functions' {
 
         It 'uses device login when -DeviceLogin specified' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 Mock Connect-PnPOnline {}
                 Connect-SPToolsOnline -Url 'https://contoso' -DeviceLogin
                 Assert-MockCalled Connect-PnPOnline -Times 1 -ParameterFilter { $DeviceLogin }
@@ -36,7 +41,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'Get-SPToolsLibraryReport' {
         It 'returns library information' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPList {}
                 function Disconnect-PnPOnline {}
                 Mock Connect-PnPOnline {}
@@ -53,7 +58,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'Get-SPToolsRecycleBinReport' {
         It 'summarizes recycle bin usage' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPRecycleBinItem {}
                 function Disconnect-PnPOnline {}
                 Mock Connect-PnPOnline {}
@@ -71,7 +76,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'Invoke-FileVersionCleanup' {
         It 'exports a CSV report' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPFolder {}
                 function Get-PnPFolderInFolder {}
                 function Get-PnPFolderItem {}
@@ -95,7 +100,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'Invoke-SharingLinkCleanup' {
         It 'removes sharing links from specified folder' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPFolderItem {}
                 function Get-PnPFileSharingLink {}
                 function Remove-PnPFileSharingLink {}
@@ -121,7 +126,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'Clear-SPToolsRecycleBin' {
         It 'clears the first stage bin by default' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Clear-PnPRecycleBinItem { param([switch]$FirstStage,[switch]$SecondStage,[switch]$Force) }
                 function Disconnect-PnPOnline {}
                 Mock Connect-PnPOnline {}
@@ -136,7 +141,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'Get-SPToolsPreservationHoldReport' {
         It 'reports total hold size' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPListItem {}
                 function Get-PnPProperty {}
                 function Disconnect-PnPOnline {}
@@ -154,7 +159,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'Get-SPPermissionsReport' {
         It 'returns permission assignments' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPSite {}
                 function Get-PnPProperty {}
                 function Disconnect-PnPOnline {}
@@ -171,7 +176,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'Clean-SPVersionHistory' {
         It 'invokes version cleanup when versions exceed threshold' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPListItem {}
                 function Get-PnPProperty {}
                 function Invoke-PnPQuery {}
@@ -192,7 +197,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'Find-OrphanedSPFiles' {
         It 'returns files older than specified days' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPListItem {}
                 function Get-PnPProperty {}
                 function Disconnect-PnPOnline {}
@@ -212,7 +217,7 @@ Describe 'SharePointTools Integration Functions' {
         It 'returns chosen folder object' {
             InModuleScope SharePointTools {
                 function Get-PnPConnection {}
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPList {}
                 function Get-PnPFolderItem {}
                 function Disconnect-PnPOnline {}
@@ -233,7 +238,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'Get-SPToolsFileReport' {
         It 'returns report entries for files' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPListItem {}
                 function Disconnect-PnPOnline {}
                 Mock Connect-PnPOnline {}
@@ -249,7 +254,7 @@ Describe 'SharePointTools Integration Functions' {
     Context 'List-OneDriveUsage' {
         It 'reports tenant site usage' {
             InModuleScope SharePointTools {
-                function Connect-PnPOnline {}
+                function Connect-PnPOnline { param() }
                 function Get-PnPTenantSite {}
                 function Disconnect-PnPOnline {}
                 Mock Connect-PnPOnline {}

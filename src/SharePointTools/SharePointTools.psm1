@@ -124,7 +124,7 @@ function Connect-SPToolsOnline {
             break
         } catch {
             Write-STStatus "Connection failed: $($_.Exception.Message)" -Level WARN
-                $result = "Failure"
+            $result = "Failure"
             if ($attempt -ge $RetryCount) {
                 Write-STStatus 'All connection attempts failed.' -Level ERROR
                 throw
@@ -132,9 +132,9 @@ function Connect-SPToolsOnline {
             Start-Sleep -Seconds 5
             $attempt++
         }
+    }
     $sw.Stop()
     Send-SPToolsTelemetryEvent -Command "Connect-SPToolsOnline" -Result $result -Duration $sw.Elapsed
-    }
 }
 
 function Invoke-SPPnPCommand {
