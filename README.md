@@ -20,7 +20,7 @@ This repository packages a collection of scripts into reusable modules.
 | ServiceDeskTools | Beta |
 | PerformanceTools | Experimental |
 | GraphTools | Beta |
-| ChaosTools | Experimental |
+| ChaosTools | Beta |
 
 ## Requirements 📋
 
