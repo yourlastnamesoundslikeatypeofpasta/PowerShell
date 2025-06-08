@@ -34,3 +34,4 @@ The following table provides a brief description of each script.
 | **Get-FunctionDependencyGraph.ps1** | Generates a Graphviz or Mermaid map of function calls inside a script. |
 
 | **Invoke-DailyAuditWorkflow.ps1** | Audits SharePoint permissions, logs results and opens a Service Desk ticket. |
+| **Process-TerminationTickets.ps1** | Disables users referenced in new termination tickets using Microsoft Graph. |
