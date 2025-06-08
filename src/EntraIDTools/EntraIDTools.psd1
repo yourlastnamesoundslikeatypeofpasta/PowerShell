@@ -11,5 +11,5 @@
             ReleaseNotes = 'Initial stable release of EntraIDTools.'
         }
     }
-    FunctionsToExport = @('Get-GraphUserDetails','Get-GraphGroupDetails')
+    FunctionsToExport = @('Get-GraphUserDetails','Get-GraphGroupDetails','Get-UserInfoHybrid')
 }
