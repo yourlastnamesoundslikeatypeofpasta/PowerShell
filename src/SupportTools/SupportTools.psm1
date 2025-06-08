@@ -34,7 +34,8 @@ Export-ModuleMember -Function @(
     'Search-ReadMe',
     'Start-Countdown',
     'Export-ITReport',
-    'Sync-SupportTools'
+    'Sync-SupportTools',
+    'Invoke-NewHireUserAutomation'
 )
 
 

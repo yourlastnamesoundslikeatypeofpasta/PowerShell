@@ -18,7 +18,8 @@ Describe 'SupportTools Module' {
             'Search-ReadMe',
             'Start-Countdown',
             'Export-ITReport',
-            'New-SPUsageReport'
+            'New-SPUsageReport',
+            'Invoke-NewHireUserAutomation'
             'Sync-SupportTools',
             'Invoke-JobBundle',
             'Invoke-PerformanceAudit'
