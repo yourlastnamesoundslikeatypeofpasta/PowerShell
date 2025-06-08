@@ -78,16 +78,16 @@ function Get-GraphUserDetails {
             $headers = @{ Authorization = "Bearer $token" }
 
             $userUrl = "https://graph.microsoft.com/v1.0/users/$UserPrincipalName?`$select=id,displayName,userPrincipalName"
-            $user = Invoke-RestMethod -Uri $userUrl -Headers $headers -Method Get
+            $user = Invoke-STRequest -Uri $userUrl -Headers $headers -Method 'GET'
 
             $licUrl = "https://graph.microsoft.com/v1.0/users/$($user.id)/licenseDetails"
-            $licenses = Invoke-RestMethod -Uri $licUrl -Headers $headers -Method Get
+            $licenses = Invoke-STRequest -Uri $licUrl -Headers $headers -Method 'GET'
 
             $grpUrl = "https://graph.microsoft.com/v1.0/users/$($user.id)/memberOf?`$select=displayName"
-            $groups = Invoke-RestMethod -Uri $grpUrl -Headers $headers -Method Get
+            $groups = Invoke-STRequest -Uri $grpUrl -Headers $headers -Method 'GET'
 
             $signUrl = "https://graph.microsoft.com/beta/users/$($user.id)?`$select=signInActivity"
-            $sign = Invoke-RestMethod -Uri $signUrl -Headers $headers -Method Get
+            $sign = Invoke-STRequest -Uri $signUrl -Headers $headers -Method 'GET'
 
             $details = [pscustomobject]@{
                 UserPrincipalName = $user.userPrincipalName

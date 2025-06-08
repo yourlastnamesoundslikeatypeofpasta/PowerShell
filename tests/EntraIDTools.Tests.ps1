@@ -27,7 +27,7 @@ Describe 'EntraIDTools Module' {
     Context 'Logging and telemetry' {
         It 'Logs requests and writes telemetry' {
             Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
-            Mock Invoke-RestMethod { @{ id='1'; displayName='User'; userPrincipalName='u' } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Invoke-STRequest { @{ id='1'; displayName='User'; userPrincipalName='u' } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
             Mock Write-STLog {} -ModuleName EntraIDTools
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             Get-GraphUserDetails -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid'
@@ -37,7 +37,7 @@ Describe 'EntraIDTools Module' {
 
         It 'Logs group requests and writes telemetry' {
             Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
-            Mock Invoke-RestMethod { @{ displayName='G'; description='D'; value=@(@{displayName='U'}) } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Invoke-STRequest { @{ displayName='G'; description='D'; value=@(@{displayName='U'}) } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
             Mock Write-STLog {} -ModuleName EntraIDTools
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid'
@@ -123,7 +123,7 @@ Describe 'EntraIDTools Module' {
     Context 'Failure telemetry' {
         It 'logs user detail failures' {
             Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
-            Mock Invoke-RestMethod { throw 'bad' } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Invoke-STRequest { throw 'bad' } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             { Get-GraphUserDetails -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid' } | Should -Throw
             Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
@@ -131,7 +131,7 @@ Describe 'EntraIDTools Module' {
 
         It 'logs group detail failures' {
             Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
-            Mock Invoke-RestMethod { throw 'bad' } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Invoke-STRequest { throw 'bad' } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             { Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid' } | Should -Throw
             Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
