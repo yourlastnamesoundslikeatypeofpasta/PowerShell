@@ -11,3 +11,4 @@ Import-Module ./src/PerformanceTools/PerformanceTools.psd1
 | Command | Description |
 |---------|-------------|
 | `Measure-STCommand` | Execute a script block and report duration, CPU time and memory delta. |
+| `Invoke-PerformanceAudit` | Run the performance audit script to collect system metrics. |
