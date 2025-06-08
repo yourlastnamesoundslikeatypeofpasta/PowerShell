@@ -40,6 +40,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
+Custom object describing the sync result.
+
+```
+RepositoryUrl : <string>
+InstallPath   : <string>
+Result        : Success
+```
 ## NOTES
 
 ## RELATED LINKS

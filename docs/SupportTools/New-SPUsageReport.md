@@ -7,3 +7,12 @@ New-SPUsageReport [-ItemThreshold <Int>] [-RequesterEmail <String>] [-CsvPath <S
 ```
 
 When `-RequesterEmail` is provided, libraries with an `ItemCount` greater than `-ItemThreshold` trigger a call to `New-SDTicket` for follow-up.
+
+## OUTPUTS
+
+Returns an object describing the wrapped script execution.
+
+```
+Script : Generate-SPUsageReport.ps1
+Result : <object[]>
+```

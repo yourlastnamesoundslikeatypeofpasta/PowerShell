@@ -42,5 +42,8 @@ function Invoke-JobBundle {
         Compress-Archive -Path $files -DestinationPath $LogArchivePath -Force
         Remove-Item $transcript -Force
         Write-STStatus "Logs archived to $LogArchivePath" -Level SUCCESS
+        return [pscustomobject]@{
+            LogArchivePath = $LogArchivePath
+        }
     }
 }

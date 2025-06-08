@@ -83,6 +83,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
+Object with counts of removed files.
+
+```
+RemovedTmpFileCount : <int>
+RemovedLogFileCount : <int>
+```
 ## NOTES
 
 ## RELATED LINKS

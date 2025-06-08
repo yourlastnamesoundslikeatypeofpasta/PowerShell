@@ -20,6 +20,10 @@ function Start-Countdown {
             Write-STStatus $num -Level INFO
             Start-Sleep -Seconds 1
         }
+        return [pscustomobject]@{
+            CountdownFrom = 10
+            Completed     = $true
+        }
     } catch {
         return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     } finally {

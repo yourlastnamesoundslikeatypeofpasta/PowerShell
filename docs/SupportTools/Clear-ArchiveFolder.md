@@ -84,6 +84,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
+An object describing the script execution.
+
+```
+Script  : CleanupArchive.ps1
+Result  : <object[]>
+```
 ## NOTES
 
 ## RELATED LINKS
