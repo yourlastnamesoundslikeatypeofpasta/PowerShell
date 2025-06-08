@@ -17,7 +17,7 @@ Invoke-IBCCentralFilesArchiveCleanup [-ProgressAction <ActionPreference>] [<Comm
 ```
 
 ## DESCRIPTION
-Description forthcoming for Invoke-IBCCentralFilesArchiveCleanup.
+Deletes archive items in the IBCCentralFiles site.
 
 ## EXAMPLES
 

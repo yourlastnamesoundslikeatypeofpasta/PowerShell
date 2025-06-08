@@ -17,7 +17,7 @@ Get-SPToolsAllRecycleBinReports [-ProgressAction <ActionPreference>] [<CommonPar
 ```
 
 ## DESCRIPTION
-Description forthcoming for Get-SPToolsAllRecycleBinReports.
+Creates recycle bin reports for all sites.
 
 ## EXAMPLES
 

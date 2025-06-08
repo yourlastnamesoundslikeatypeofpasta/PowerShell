@@ -18,7 +18,7 @@ List-OneDriveUsage [-AdminUrl] <String> [[-ClientId] <String>] [[-TenantId] <Str
 ```
 
 ## DESCRIPTION
-Description forthcoming for List-OneDriveUsage.
+Lists storage usage details for each OneDrive site.
 
 ## EXAMPLES
 

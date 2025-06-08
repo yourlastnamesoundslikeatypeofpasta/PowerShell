@@ -17,7 +17,7 @@ Invoke-IBCCentralFilesSharingLinkCleanup [-ProgressAction <ActionPreference>] [<
 ```
 
 ## DESCRIPTION
-Description forthcoming for Invoke-IBCCentralFilesSharingLinkCleanup.
+Removes sharing links from the IBCCentralFiles site.
 
 ## EXAMPLES
 

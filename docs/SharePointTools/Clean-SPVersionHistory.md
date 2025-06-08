@@ -19,7 +19,7 @@ Clean-SPVersionHistory [-SiteUrl] <String> [[-LibraryName] <String>] [[-KeepVers
 ```
 
 ## DESCRIPTION
-Description forthcoming for Clean-SPVersionHistory.
+Deletes old document versions from a library.
 
 ## EXAMPLES
 

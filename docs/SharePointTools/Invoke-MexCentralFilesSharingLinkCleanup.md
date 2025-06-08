@@ -17,7 +17,7 @@ Invoke-MexCentralFilesSharingLinkCleanup [-ProgressAction <ActionPreference>] [<
 ```
 
 ## DESCRIPTION
-Description forthcoming for Invoke-MexCentralFilesSharingLinkCleanup.
+Removes sharing links from the MexCentralFiles site.
 
 ## EXAMPLES
 

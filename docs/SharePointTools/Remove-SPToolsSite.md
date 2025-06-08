@@ -18,7 +18,7 @@ Remove-SPToolsSite [-Name] <String> [-ProgressAction <ActionPreference>] [-WhatI
 ```
 
 ## DESCRIPTION
-Description forthcoming for Remove-SPToolsSite.
+Removes a site entry from the settings file.
 
 ## EXAMPLES
 

@@ -17,7 +17,7 @@ Invoke-YFSharingLinkCleanup [-ProgressAction <ActionPreference>] [<CommonParamet
 ```
 
 ## DESCRIPTION
-Description forthcoming for Invoke-YFSharingLinkCleanup.
+Removes sharing links from the YF site.
 
 ## EXAMPLES
 

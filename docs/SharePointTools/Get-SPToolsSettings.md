@@ -17,7 +17,7 @@ Get-SPToolsSettings [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Description forthcoming for Get-SPToolsSettings.
+Returns the persisted SharePoint Tools configuration.
 
 ## EXAMPLES
 
