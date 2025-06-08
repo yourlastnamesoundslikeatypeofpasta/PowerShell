@@ -25,6 +25,7 @@ This repository packages a collection of scripts into reusable modules.
 | PerformanceTools | Beta |
 | EntraIDTools | Stable |
 | ChaosTools | Beta |
+| MaintenancePlan | Beta |
 
 ## Requirements 📋
 
@@ -100,7 +101,7 @@ Get-GraphUserDetails -UserPrincipalName 'user@contoso.com' -TenantId <tenantId> 
 ```
 The command gathers basic profile information, assigned licenses, group membership and last sign-in time. Results can be exported to CSV or HTML for reporting.
 
-See [docs/SupportTools.md](docs/SupportTools.md), [docs/IncidentResponseTools.md](docs/IncidentResponseTools.md), [docs/ConfigManagementTools.md](docs/ConfigManagementTools.md), [docs/SharePointTools.md](docs/SharePointTools.md), [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md), [docs/PerformanceTools.md](docs/PerformanceTools.md), [docs/EntraIDTools.md](docs/EntraIDTools.md) and [docs/ChaosTools.md](docs/ChaosTools.md) for a full list of commands. For a short introduction refer to [docs/Quickstart.md](docs/Quickstart.md). For detailed deployment guidance see [docs/UserGuide.md](docs/UserGuide.md).
+See [docs/SupportTools.md](docs/SupportTools.md), [docs/IncidentResponseTools.md](docs/IncidentResponseTools.md), [docs/ConfigManagementTools.md](docs/ConfigManagementTools.md), [docs/SharePointTools.md](docs/SharePointTools.md), [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md), [docs/PerformanceTools.md](docs/PerformanceTools.md), [docs/EntraIDTools.md](docs/EntraIDTools.md), [docs/ChaosTools.md](docs/ChaosTools.md) and [docs/MaintenancePlan.md](docs/MaintenancePlan.md) for a full list of commands. For a short introduction refer to [docs/Quickstart.md](docs/Quickstart.md). For detailed deployment guidance see [docs/UserGuide.md](docs/UserGuide.md).
 
 The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.
