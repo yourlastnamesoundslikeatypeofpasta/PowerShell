@@ -1,7 +1,8 @@
 function Out-CompanyPlace {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(ValueFromPipeline)]
+        [ValidateNotNull()]
         [pscustomobject]$InputObject
     )
     process {

@@ -6,7 +6,7 @@ function Invoke-FullSystemAudit {
         Executes Get-CommonSystemInfo, Generate-SPUsageReport, Get-FailedLogin and Invoke-PerformanceAudit in sequence.
         Progress and errors are logged, telemetry recorded, and a combined report is saved as JSON or HTML.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]

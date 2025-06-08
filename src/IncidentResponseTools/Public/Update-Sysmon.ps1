@@ -5,7 +5,7 @@ function Update-Sysmon {
     .DESCRIPTION
         Calls the Update-Sysmon.ps1 script with the supplied arguments.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

@@ -10,7 +10,7 @@ function Sync-SupportTools {
     .PARAMETER InstallPath
         Directory to clone or update the repository.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]

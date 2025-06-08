@@ -6,7 +6,7 @@ function Get-FailedLogin {
         Calls the Get-FailedLogins.ps1 script in the scripts folder and returns
         its output.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

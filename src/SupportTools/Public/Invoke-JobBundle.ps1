@@ -11,7 +11,7 @@ function Invoke-JobBundle {
         Optional path to save the resulting log archive. Defaults to
         '<bundle>.logs.zip'.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]

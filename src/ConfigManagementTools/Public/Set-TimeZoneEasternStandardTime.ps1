@@ -6,7 +6,7 @@ function Set-TimeZoneEasternStandardTime {
         Runs the Set-TimeZoneEasternStandardTime.ps1 script with any supplied
         arguments.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

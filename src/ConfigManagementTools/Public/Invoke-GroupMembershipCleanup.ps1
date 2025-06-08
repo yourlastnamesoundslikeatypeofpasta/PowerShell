@@ -9,7 +9,7 @@ function Invoke-GroupMembershipCleanup {
     .PARAMETER GroupName
         Name of the Microsoft 365 group to modify.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]

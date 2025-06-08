@@ -13,7 +13,7 @@ function Invoke-CompanyPlaceManagement {
     .PARAMETER AutoAddFloor
         When creating a building, adds a default floor 1.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateSet('Get','Create','Edit')]

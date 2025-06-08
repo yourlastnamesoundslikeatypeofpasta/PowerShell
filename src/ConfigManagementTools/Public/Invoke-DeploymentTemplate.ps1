@@ -6,7 +6,7 @@ function Invoke-DeploymentTemplate {
         This cmdlet executes SS_DEPLOYMENT_TEMPLATE.ps1 from the repository's
         scripts folder with any additional arguments supplied.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

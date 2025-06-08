@@ -6,7 +6,7 @@ function Install-Font {
         Simple wrapper for the Install-Fonts.ps1 script which performs the
         installation work. Arguments are passed directly through.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

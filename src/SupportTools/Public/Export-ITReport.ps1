@@ -20,7 +20,7 @@ function Export-ITReport {
     .EXAMPLE
         Get-FailedLogin | Export-ITReport -Format CSV -OutputPath report.csv
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory, ValueFromPipeline)]
         [psobject]$Data,

@@ -43,7 +43,7 @@ function Get-GraphUserDetails {
         Retrieves the user information and exports the results to both CSV and
         HTML files.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

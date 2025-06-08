@@ -8,7 +8,7 @@ function Convert-ExcelToCsv {
     .PARAMETER XlsxFilePath
         Path to the Excel workbook to convert.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory)]
         [string]$XlsxFilePath,

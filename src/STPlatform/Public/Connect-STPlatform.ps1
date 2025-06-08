@@ -17,7 +17,7 @@ function Connect-STPlatform {
     .EXAMPLE
         Connect-STPlatform -Mode Hybrid -InstallMissing
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory)][ValidateSet('Cloud','Hybrid','OnPrem')][string]$Mode,
         [switch]$InstallMissing,

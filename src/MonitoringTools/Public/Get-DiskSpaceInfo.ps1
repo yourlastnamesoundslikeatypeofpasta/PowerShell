@@ -5,7 +5,7 @@ function Get-DiskSpaceInfo {
     .DESCRIPTION
         Returns drive size and free space for fixed disks.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]

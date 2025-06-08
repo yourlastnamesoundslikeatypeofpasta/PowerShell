@@ -5,9 +5,11 @@ function Import-MaintenancePlan {
     .PARAMETER Path
         Path to the JSON file.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)][string]$Path
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Path
     )
     Assert-ParameterNotNull $Path 'Path'
     if (-not (Test-Path $Path)) { throw "File not found: $Path" }

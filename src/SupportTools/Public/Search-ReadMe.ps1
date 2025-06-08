@@ -6,7 +6,7 @@ function Search-ReadMe {
         Recursively searches the C drive for files containing 'readme' in
         the name and returns the file objects found.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
