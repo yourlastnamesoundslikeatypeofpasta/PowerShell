@@ -19,9 +19,9 @@ function Connect-SPToolsOnline {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$Url,
-        [Parameter(Mandatory)][string]$ClientId,
-        [Parameter(Mandatory)][string]$TenantId,
-        [Parameter(Mandatory)][string]$CertPath,
+        [string]$ClientId,
+        [string]$TenantId,
+        [string]$CertPath,
         [int]$RetryCount = 3
     )
     $sw = [System.Diagnostics.Stopwatch]::StartNew()

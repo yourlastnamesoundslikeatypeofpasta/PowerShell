@@ -10,5 +10,3 @@ function Show-SharePointToolsBanner {
     Write-STLog -Message 'SharePointTools module loaded'
 }
 
-Register-SPToolsCompleters
-Show-SharePointToolsBanner
