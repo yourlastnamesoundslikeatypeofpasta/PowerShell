@@ -14,7 +14,6 @@ Describe 'SupportTools Module' {
             'Restore-ArchiveFolder',
             'Clear-TempFile',
             'Convert-ExcelToCsv',
-            'Get-CommonSystemInfo',
             'Get-FailedLogin',
             'Get-NetworkShare',
             'Get-UniquePermission',
@@ -153,34 +152,6 @@ Describe 'SupportTools Module' {
         }
     }
 
-    Context 'Get-CommonSystemInfo collection' {
-        It 'returns system information object' {
-            InModuleScope SupportTools {
-                function Get-CimInstance {
-                    param($ClassName)
-                }
-                Mock Get-CimInstance {
-                    switch ($ClassName) {
-                        'Win32_OperatingSystem' { [pscustomobject]@{ CSName='PC'; Caption='OS'; BuildNumber='1'; TotalVisibleMemorySize=1048576 } }
-                        'Win32_Processor'       { [pscustomobject]@{ Name='CPU' } }
-                        'Win32_LogicalDisk'     { [pscustomobject]@{ DeviceID='C:'; Size=1073741824; FreeSpace=536870912 } }
-                        'Win32_PhysicalMemory'  { $null }
-                    }
-                } -ModuleName SupportTools
-                Mock Import-Module {} -ModuleName SupportTools
-                Mock Write-STStatus {} -ModuleName SupportTools
-
-                $result = Get-CommonSystemInfo
-
-                $result.ComputerName | Should -Be 'PC'
-                $result.OSVersion    | Should -Be 'OS'
-                $result.OSBuild      | Should -Be '1'
-                $result.Processor    | Should -Be 'CPU'
-                $result.Memory       | Should -Be (1048576 / 1MB)
-                $result.DiskSpace    | Should -Not -BeNullOrEmpty
-            }
-        }
-    }
 
     Context 'Invoke-RemoteAudit behavior' {
         It 'runs Get-CommonSystemInfo on the remote computer' {

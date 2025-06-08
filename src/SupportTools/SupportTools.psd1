@@ -15,7 +15,8 @@
 
     NestedModules = @(
         '../Logging/Logging.psd1',
-        '../Telemetry/Telemetry.psd1'
+        '../Telemetry/Telemetry.psd1',
+        '../MonitoringTools/MonitoringTools.psd1'
     )
     # The Logging and Telemetry modules provide common interfaces for
     # injecting custom implementations when executing SupportTools commands.
@@ -27,7 +28,6 @@
         'Convert-ExcelToCsv',
         'Export-ProductKey',
         'New-SPUsageReport',
-        'Get-CommonSystemInfo',
         'Get-FailedLogin',
         'Get-NetworkShare',
         'Get-UniquePermission',

@@ -3,9 +3,11 @@ $PrivateDir = Join-Path $PSScriptRoot 'Private'
 $coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
 $loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
 $telemetryModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Telemetry/Telemetry.psd1'
+$monitoringModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'MonitoringTools/MonitoringTools.psd1'
 Import-Module $coreModule -ErrorAction SilentlyContinue
 Import-Module $loggingModule -ErrorAction SilentlyContinue
 Import-Module $telemetryModule -ErrorAction SilentlyContinue
+Import-Module $monitoringModule -ErrorAction SilentlyContinue
 
 # Determine the version of the SupportTools module for logging purposes
 $manifestPath = Join-Path $PSScriptRoot 'SupportTools.psd1'
@@ -28,7 +30,6 @@ Export-ModuleMember -Function @(
     'Convert-ExcelToCsv',
     'Export-ProductKey',
     'New-SPUsageReport',
-    'Get-CommonSystemInfo',
     'Get-FailedLogin',
     'Get-NetworkShare',
     'Get-UniquePermission',
