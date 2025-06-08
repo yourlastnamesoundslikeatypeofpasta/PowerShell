@@ -76,6 +76,20 @@ Describe 'ConfigManagementTools public functions' {
                 $res.Category | Should -Be 'Exchange'
             }
         }
+        It 'returns error object when connection fails without web login' {
+            InModuleScope ConfigManagementTools {
+                Mock Write-STStatus {}
+                Mock Write-STLog {}
+                Mock Send-STMetric {}
+                Mock Get-InstalledModule { @{ Version = [version]'1.0' } }
+                Mock Find-Module { $null }
+                Mock Import-Module {}
+                Mock Connect-ExchangeOnline { throw 'fail' }
+                Mock Disconnect-ExchangeOnline {}
+                $res = Set-SharedMailboxAutoReply @commonParams
+                $res.Category | Should -Be 'Exchange'
+            }
+        }
     }
 
     Context 'Invoke-ExchangeCalendarManager' {
@@ -98,6 +112,21 @@ Describe 'ConfigManagementTools public functions' {
                 Mock Disconnect-ExchangeOnline {}
                 Mock Read-Host { 'Q' }
                 $res = Invoke-ExchangeCalendarManager -Action Get -DisplayName 'n' -Type Building
+                $res.Category | Should -Be 'Exchange'
+            }
+        }
+        It 'returns error object when connect fails without parameters' {
+            InModuleScope ConfigManagementTools {
+                Mock Write-STStatus {}
+                Mock Write-STLog {}
+                Mock Send-STMetric {}
+                Mock Get-InstalledModule { @{ Version = [version]'1.0' } }
+                Mock Find-Module { $null }
+                Mock Import-Module {}
+                Mock Connect-ExchangeOnline { throw 'fail' }
+                Mock Disconnect-ExchangeOnline {}
+                Mock Read-Host { 'Q' }
+                $res = Invoke-ExchangeCalendarManager
                 $res.Category | Should -Be 'Exchange'
             }
         }
