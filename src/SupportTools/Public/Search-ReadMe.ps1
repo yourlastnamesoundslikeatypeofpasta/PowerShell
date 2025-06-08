@@ -19,6 +19,8 @@ function Search-ReadMe {
         $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction SilentlyContinue
         Write-STStatus "Found $($results.Count) file(s)." -Level SUCCESS
         return $results
+    } catch {
+        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }

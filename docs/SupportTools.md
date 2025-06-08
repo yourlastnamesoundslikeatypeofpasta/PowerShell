@@ -16,6 +16,17 @@ All commands now accept a `-Simulate` switch. When used, the command logs each s
 
 Use the `-Explain` switch with any command to view the underlying script's full help content instead of executing it. This is useful when training new administrators on what each task does.
 
+### Transcripts and Error Records
+
+Most commands now accept `-TranscriptPath` to record a transcript. If a command fails, it returns a standard `ErrorRecord` containing the exception details.
+
+```powershell
+$result = Sync-SupportTools -RepositoryUrl 'bad' -InstallPath 'C:\temp'
+if ($result -is [System.Management.Automation.ErrorRecord]) {
+    $result.Exception.Message
+}
+```
+
 ## Available Commands
 
 The table below lists each command and the script it invokes. Arguments not listed are forwarded to the underlying script unchanged.

@@ -42,6 +42,8 @@ function Convert-ExcelToCsv {
 
         Write-STStatus "CSV saved to $csvFilePath" -Level SUCCESS
         return (Import-Csv $csvFilePath)
+    } catch {
+        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }

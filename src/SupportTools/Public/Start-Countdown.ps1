@@ -20,6 +20,8 @@ function Start-Countdown {
             Write-STStatus $num -Level INFO
             Start-Sleep -Seconds 1
         }
+    } catch {
+        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
