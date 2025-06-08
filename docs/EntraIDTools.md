@@ -14,6 +14,25 @@ Gallery first:
 Install-Module MSAL.PS
 ```
 
+## Prerequisites
+
+1. Create an Entra ID application registration with Microsoft Graph permissions.
+2. Install the **MSAL.PS** module.
+3. Set authentication variables so you don't need to supply parameters each time:
+
+   ```powershell
+   $env:GRAPH_TENANT_ID    = '<tenant-id>'
+   $env:GRAPH_CLIENT_ID    = '<client-id>'
+   $env:GRAPH_CLIENT_SECRET = '<client-secret>' # optional
+   ```
+
+   After the variables are set you can run commands like:
+
+   ```powershell
+   Get-GraphUserDetails -UserPrincipalName 'user@contoso.com'
+   Get-GraphGroupDetails -GroupId '00000000-0000-0000-0000-000000000000'
+   ```
+
 ## Available Commands
 
 | Command | Description | Example |
