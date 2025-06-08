@@ -60,7 +60,10 @@ function Export-ITReport {
                 }
             }
             Write-STStatus "Report saved to $OutputPath" -Level SUCCESS
-            return $OutputPath
+            return [pscustomobject]@{
+                OutputPath = $OutputPath
+                Format     = $Format
+            }
         } finally {
             if ($TranscriptPath) { Stop-Transcript | Out-Null }
         }

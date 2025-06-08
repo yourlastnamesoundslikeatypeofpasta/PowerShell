@@ -19,6 +19,7 @@
         'Set-NetAdapterMetering',
         'Set-SharedMailboxAutoReply',
         'Set-TimeZoneEasternStandardTime',
-        'Test-Drift'
+        'Test-Drift',
+        'Out-CompanyPlace'
     )
 }

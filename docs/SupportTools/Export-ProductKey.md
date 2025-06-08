@@ -84,6 +84,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
+### PSCustomObject
+
+Returns an object with `ProductKey` and `OutputPath` properties.
 ## NOTES
 
 ## RELATED LINKS

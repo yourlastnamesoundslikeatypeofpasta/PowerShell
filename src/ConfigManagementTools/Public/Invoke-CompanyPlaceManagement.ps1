@@ -111,7 +111,6 @@ function Invoke-CompanyPlaceManagement {
                 }
                 $results = Get-PlaceV3 -Type $Type | Where-Object { $_.DisplayName -like "$DisplayName" }
                 if ($results) {
-                    $results | Format-Table DisplayName, Type, City, State, CountryOrRegion, PlaceId
                     return $results
                 } else {
                     Write-STStatus "No matching places found for '$DisplayName' of type '$Type'" -Level WARN
