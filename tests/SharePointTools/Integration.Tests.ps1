@@ -102,6 +102,20 @@ Describe 'SharePointTools Integration Functions' {
                 Assert-MockCalled Clear-PnPRecycleBinItem -ParameterFilter { $FirstStage -and -not $SecondStage } -Times 1
             }
         }
+
+        It 'logs an error when recycle bin clear fails' {
+            InModuleScope SharePointTools {
+                function Connect-PnPOnline {}
+                function Clear-PnPRecycleBinItem { throw 'fail' }
+                function Disconnect-PnPOnline {}
+                Mock Connect-PnPOnline {}
+                Mock Disconnect-PnPOnline {}
+                Mock Clear-PnPRecycleBinItem { throw 'fail' } -ModuleName SharePointTools
+                Mock Write-STStatus {} -ModuleName SharePointTools
+                { Clear-SPToolsRecycleBin -SiteName 'A' -SiteUrl 'https://c' -Confirm:$false } | Should -Throw
+                Assert-MockCalled Write-STStatus -ParameterFilter { $Level -eq 'ERROR' -and $Message -match 'Failed to clear recycle bin' } -Times 1
+            }
+        }
     }
 
     Context 'Get-SPToolsPreservationHoldReport' {

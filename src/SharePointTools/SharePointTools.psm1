@@ -409,7 +409,7 @@ function Invoke-ArchiveCleanup {
             $filePath = $file.FieldValues.FileRef
             try {
                 Write-STStatus "-- Deleting file: $filePath" -Level SUB
-                Remove-PnPFile -ServerRelativeUrl $filePath -Force -ErrorAction Stop
+                Invoke-SPPnPCommand { Remove-PnPFile -ServerRelativeUrl $filePath -Force -ErrorAction Stop } 'Failed to delete file'
                 $filesDeleted++
             } catch {
                 Write-STStatus "[!] FILE DELETE FAIL: $filePath :: $_" -Level WARN
@@ -435,7 +435,7 @@ function Invoke-ArchiveCleanup {
 
         try {
             Write-STStatus "-- Deleting folder: $fullPath" -Level SUB
-            Remove-PnPFolder -Name $folderName -Folder $folderPath -Force -ErrorAction Stop
+            Invoke-SPPnPCommand { Remove-PnPFolder -Name $folderName -Folder $folderPath -Force -ErrorAction Stop } 'Failed to delete folder'
             $foldersDeleted++
         } catch {
             Write-STStatus "[!] FOLDER DELETE FAIL: $fullPath :: $_" -Level WARN
@@ -599,17 +599,17 @@ function Invoke-SharingLinkCleanup {
     if ($PSCmdlet.ShouldProcess($SiteName, 'Remove sharing links')) {
         foreach ($item in $items) {
             try {
-                $link = (Get-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -ErrorAction Stop).Link.WebUrl
+                $link = (Invoke-SPPnPCommand { Get-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -ErrorAction Stop } 'Failed to get file link').Link.WebUrl
                 if ($link) {
-                    Remove-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue
+                    Invoke-SPPnPCommand { Remove-PnPFileSharingLink -FileUrl $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue } 'Failed to remove file link'
                     $removed.Add($item.ServerRelativeUrl)
                     Write-STStatus "Removed file link: $($item.ServerRelativeUrl)" -Level WARN
                 }
             } catch {
                 try {
-                    $folderLink = (Get-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -ErrorAction Stop).Link.WebUrl
+                    $folderLink = (Invoke-SPPnPCommand { Get-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -ErrorAction Stop } 'Failed to get folder link').Link.WebUrl
                     if ($folderLink) {
-                        Remove-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue
+                        Invoke-SPPnPCommand { Remove-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -Force -ErrorAction SilentlyContinue } 'Failed to remove folder link'
                         $removed.Add($item.ServerRelativeUrl)
                         Write-STStatus "Removed folder link: $($item.ServerRelativeUrl)" -Level WARN
                     }
@@ -628,7 +628,7 @@ function Invoke-SharingLinkCleanup {
     }
 
     Stop-Transcript
-    Disconnect-PnPOnline
+    try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {}
     Write-SPToolsHacker 'Recycle bin cleared'
 }
 
@@ -710,7 +710,7 @@ function Get-SPToolsLibraryReport {
         }
     }
 
-    Disconnect-PnPOnline
+    try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {}
     Write-SPToolsHacker 'Report complete'
     $report
 }
@@ -767,7 +767,7 @@ function Get-SPToolsRecycleBinReport {
         TotalSizeMB = [math]::Round($totalSize / 1MB, 2)
     }
 
-    Disconnect-PnPOnline
+    try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {}
     Write-SPToolsHacker 'Report complete'
     $report
 }
@@ -802,9 +802,9 @@ function Clear-SPToolsRecycleBin {
     if ($PSCmdlet.ShouldProcess($SiteName, 'Clear recycle bin')) {
         try {
             if ($SecondStage) {
-                Clear-PnPRecycleBinItem -SecondStage -Force
+                Invoke-SPPnPCommand { Clear-PnPRecycleBinItem -SecondStage -Force } 'Failed to clear recycle bin'
             } else {
-                Clear-PnPRecycleBinItem -FirstStage -Force
+                Invoke-SPPnPCommand { Clear-PnPRecycleBinItem -FirstStage -Force } 'Failed to clear recycle bin'
             }
             Write-STStatus 'Recycle bin cleared' -Level SUCCESS
         } catch {
@@ -812,7 +812,7 @@ function Clear-SPToolsRecycleBin {
         }
     }
 
-    Disconnect-PnPOnline
+    try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {}
 }
 
 function Get-SPToolsAllRecycleBinReports {
@@ -866,7 +866,7 @@ function Get-SPToolsPreservationHoldReport {
         TotalSizeMB = [math]::Round($totalSize / 1MB, 2)
     }
 
-    Disconnect-PnPOnline
+    try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {}
     Write-SPToolsHacker 'Report complete'
     $report
 }
@@ -928,7 +928,7 @@ function Get-SPPermissionsReport {
         }
     }
 
-    Disconnect-PnPOnline
+    try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {}
     Write-SPToolsHacker 'Report complete'
     $report
 }
@@ -968,7 +968,7 @@ function Clean-SPVersionHistory {
             }
         }
     }
-    Disconnect-PnPOnline
+    try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {}
     Write-SPToolsHacker 'Cleanup complete'
 }
 
@@ -1008,7 +1008,7 @@ function Find-OrphanedSPFiles {
             }
         }
     }
-    Disconnect-PnPOnline
+    try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {}
     Write-SPToolsHacker 'Search complete'
     $report
 }
@@ -1069,7 +1069,7 @@ function Select-SPToolsFolder {
         $choice = Read-Host -Prompt 'Select folder number'
     } until ($map.ContainsKey([int]$choice))
 
-    if ($needsDisconnect) { Disconnect-PnPOnline }
+    if ($needsDisconnect) { try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {} }
 
     $map[[int]$choice]
 }
@@ -1150,7 +1150,7 @@ function Get-SPToolsFileReport {
         }
     }
 
-    Disconnect-PnPOnline
+    try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {}
 
     if ($ReportPath) {
         $report | Export-Csv $ReportPath -NoTypeInformation
@@ -1191,7 +1191,7 @@ function List-OneDriveUsage {
         }
     }
 
-    Disconnect-PnPOnline
+    try { Invoke-SPPnPCommand { Disconnect-PnPOnline } 'Failed to disconnect' } catch {}
     Write-SPToolsHacker 'Report complete'
     $report
 }
