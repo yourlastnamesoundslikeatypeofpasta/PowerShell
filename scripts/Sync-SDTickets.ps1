@@ -41,7 +41,8 @@ if (-not (Test-Path $CachePath)) {
 
 $cache = Get-Content $CachePath -Raw | ConvertFrom-Json
 $lastFullSync = [datetime]$cache.lastFullSync
-$tickets = $cache.tickets
+$tickets = [System.Collections.Generic.List[object]]::new()
+if ($cache.tickets) { $tickets.AddRange($cache.tickets) }
 
 while ($true) {
     if ((Get-Date) -gt $lastFullSync.AddHours($FullSyncHours)) {
@@ -53,7 +54,7 @@ while ($true) {
         if ($latest) {
             $new = Get-NewTickets -Since ([datetime]$latest)
             if ($new) {
-                $tickets += $new
+                $tickets.AddRange($new)
                 Write-STStatus "Added $($new.Count) new tickets to cache." -Level SUCCESS -Log
             } else {
                 Write-STStatus 'No new tickets found.' -Level SUB -Log
