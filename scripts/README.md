@@ -32,6 +32,6 @@ The following table provides a brief description of each script.
 | **SupportToolsMenu.ps1** | Interactive menu for common SupportTools tasks. |
 | **ScriptLauncher.ps1** | Menu to browse and run any script in this folder. |
 | **Get-FunctionDependencyGraph.ps1** | Generates a Graphviz or Mermaid map of function calls inside a script. |
-
 | **Invoke-DailyAuditWorkflow.ps1** | Audits SharePoint permissions, logs results and opens a Service Desk ticket. |
 | **Process-TerminationTickets.ps1** | Disables users referenced in new termination tickets using Microsoft Graph. |
+| **Create-NewHireUser.ps1** | Creates Entra ID users based on new hire Service Desk tickets. |
