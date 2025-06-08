@@ -30,6 +30,7 @@
     <file src="src\PerformanceTools\**\*" target="tools\PerformanceTools" />
     <file src="src\IncidentResponseTools\**\*" target="tools\IncidentResponseTools" />
     <file src="src\ConfigManagementTools\**\*" target="tools\ConfigManagementTools" />
+    <file src="src\MaintenancePlan\**\*" target="tools\MaintenancePlan" />
     <file src="tests\**\*" target="tests" />
   </files>
 </package>
