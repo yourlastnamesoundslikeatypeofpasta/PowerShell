@@ -31,6 +31,7 @@ Install-Module MSAL.PS
    ```powershell
    Get-GraphUserDetails -UserPrincipalName 'user@contoso.com'
    Get-GraphGroupDetails -GroupId '00000000-0000-0000-0000-000000000000'
+   Get-GraphSignInLogs -UserPrincipalName 'user@contoso.com'
    ```
 
 ## Available Commands
@@ -39,6 +40,7 @@ Install-Module MSAL.PS
 |---------|-------------|---------|
 | `Get-GraphUserDetails` | Retrieve metadata for a user | `Get-GraphUserDetails -UserPrincipalName user@contoso.com -TenantId <tenant> -ClientId <app>` |
 | `Get-GraphGroupDetails` | Retrieve metadata for a group | `Get-GraphGroupDetails -GroupId <id> -TenantId <tenant> -ClientId <app>` |
+| `Get-GraphSignInLogs` | Retrieve user sign-in events | `Get-GraphSignInLogs -UserPrincipalName user@contoso.com -TenantId <tenant> -ClientId <app>` |
 
 The command requires an Entra ID application registration. Provide the tenant ID, client ID and optional client secret for authentication.
 

@@ -22,6 +22,9 @@ Describe 'EntraIDTools Module' {
         It 'Exports Get-UserInfoHybrid' {
             (Get-Command -Module EntraIDTools).Name | Should -Contain 'Get-UserInfoHybrid'
         }
+        It 'Exports Get-GraphSignInLogs' {
+            (Get-Command -Module EntraIDTools).Name | Should -Contain 'Get-GraphSignInLogs'
+        }
     }
 
     Context 'Logging and telemetry' {
@@ -50,6 +53,15 @@ Describe 'EntraIDTools Module' {
             Mock Write-STLog {} -ModuleName EntraIDTools
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             Get-UserInfoHybrid -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid'
+            Assert-MockCalled Write-STLog -ModuleName EntraIDTools -Times 1
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1
+        }
+        It 'Logs sign-in log requests and writes telemetry' {
+            Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
+            Mock Invoke-RestMethod { @{ value=@(@{id='1'}) } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Write-STLog {} -ModuleName EntraIDTools
+            Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
+            Get-GraphSignInLogs -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid'
             Assert-MockCalled Write-STLog -ModuleName EntraIDTools -Times 1
             Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1
         }
@@ -140,6 +152,13 @@ Describe 'EntraIDTools Module' {
             Mock Get-GraphUserDetails { throw 'bad' } -ModuleName EntraIDTools
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             { Get-UserInfoHybrid -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid' } | Should -Throw
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
+        }
+        It 'logs sign-in log failures' {
+            Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
+            Mock Invoke-RestMethod { throw 'bad' } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
+            { Get-GraphSignInLogs -TenantId 'tid' -ClientId 'cid' } | Should -Throw
             Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
         }
     }
