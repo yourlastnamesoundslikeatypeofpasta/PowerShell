@@ -56,4 +56,55 @@ Describe 'GraphTools Module' {
             }
         }
     }
+
+    Context 'Token caching' {
+        It 'returns cached token when not expired' {
+            $cache = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+            try {
+                @{ accessToken='cached'; expiresOn=(Get-Date).AddMinutes(10) } |
+                    ConvertTo-Json | Out-File -FilePath $cache -Encoding utf8
+                $script:called = 0
+                function Get-MsalToken { $script:called++; throw 'should not call' }
+                $token = Get-GraphAccessToken -TenantId 'tid' -ClientId 'cid' -ClientSecret 'sec' -CachePath $cache
+                $token | Should -Be 'cached'
+                $script:called | Should -Be 0
+            } finally {
+                Remove-Item $cache -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'refreshes expired token' {
+            $cache = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+            try {
+                @{ accessToken='old'; expiresOn=(Get-Date).AddMinutes(-10) } |
+                    ConvertTo-Json | Out-File -FilePath $cache -Encoding utf8
+                $script:called = 0
+                function Get-MsalToken { $script:called++; @{ AccessToken='new'; ExpiresOn=(Get-Date).AddMinutes(30) } }
+                $token = Get-GraphAccessToken -TenantId 'tid' -ClientId 'cid' -ClientSecret 'sec' -CachePath $cache
+                $token | Should -Be 'new'
+                $script:called | Should -Be 1
+                (Get-Content $cache | ConvertFrom-Json).accessToken | Should -Be 'new'
+            } finally {
+                Remove-Item $cache -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context 'Failure telemetry' {
+        It 'logs user detail failures' {
+            Mock Get-GraphAccessToken { 't' } -ModuleName GraphTools
+            Mock Invoke-RestMethod { throw 'bad' } -ModuleName GraphTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Write-STTelemetryEvent {} -ModuleName GraphTools
+            { Get-GraphUserDetails -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid' } | Should -Throw
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName GraphTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
+        }
+
+        It 'logs group detail failures' {
+            Mock Get-GraphAccessToken { 't' } -ModuleName GraphTools
+            Mock Invoke-RestMethod { throw 'bad' } -ModuleName GraphTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Write-STTelemetryEvent {} -ModuleName GraphTools
+            { Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid' } | Should -Throw
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName GraphTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
+        }
+    }
 }
