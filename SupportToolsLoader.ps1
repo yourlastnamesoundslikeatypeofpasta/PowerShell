@@ -4,10 +4,9 @@
     Automatically imports SupportTools modules from the src directory.
 
 .DESCRIPTION
-    This bootstrap script scans the repository's `src` folder for module
-    manifests (*.psd1) or module files (*.psm1) and imports each one.
-    It is safe to dot-source multiple times per session as the modules
-    are only loaded once.
+    This bootstrap script scans the repository's `src` folder recursively for
+    module manifests (*.psd1) and imports each one. It is safe to dot-source
+    multiple times per session as the modules are only loaded once.
 
 .EXAMPLE
     . ./SupportToolsLoader.ps1
@@ -34,39 +33,19 @@ if (-not $script:SupportToolsLoaderLoaded) {
 
     $loadedModules = @()
 
-    # Import the Logging module first so logging functions are available
-    $loggingPath = Get-ChildItem -Path (Join-Path $srcPath 'Logging') \
-        -Filter *.psd1 -File -ErrorAction SilentlyContinue | Select-Object -First 1
-    if (-not $loggingPath) {
-        $loggingPath = Get-ChildItem -Path (Join-Path $srcPath 'Logging') \
-            -Filter *.psm1 -File -ErrorAction SilentlyContinue | Select-Object -First 1
-    }
-    if ($loggingPath) {
+    # Find all module manifests under src
+    $moduleFiles = Get-ChildItem -Path $srcPath -Recurse -Filter *.psd1 -File | Sort-Object FullName
+
+    foreach ($moduleFile in $moduleFiles) {
         try {
-            $name = Split-Path $loggingPath.FullName -LeafBase
+            $name = Split-Path $moduleFile.FullName -LeafBase
             if (-not (Get-Module -Name $name)) {
-                Import-Module $loggingPath.FullName -Force -ErrorAction Stop
+                Import-Module $moduleFile.FullName -Force -ErrorAction Stop
                 $loadedModules += $name
                 Write-LoaderLog "Loaded module $name"
             }
         } catch {
-            Write-Warning "Failed to load Logging module: $($_.Exception.Message)"
-        }
-    }
-
-    foreach ($dir in Get-ChildItem -Path $srcPath -Directory | Where-Object { $_.Name -ne 'Logging' }) {
-        $moduleFile = Get-ChildItem -Path $dir.FullName -Include *.psd1,*.psm1 -File -ErrorAction SilentlyContinue | Select-Object -First 1
-        if ($moduleFile) {
-            try {
-                $name = Split-Path $moduleFile.FullName -LeafBase
-                if (-not (Get-Module -Name $name)) {
-                    Import-Module $moduleFile.FullName -Force -ErrorAction Stop
-                    $loadedModules += $name
-                    Write-LoaderLog "Loaded module $name"
-                }
-            } catch {
-                Write-Warning "Failed to import module from $($moduleFile.FullName): $($_.Exception.Message)"
-            }
+            Write-Warning "Failed to import module from $($moduleFile.FullName): $($_.Exception.Message)"
         }
     }
 
