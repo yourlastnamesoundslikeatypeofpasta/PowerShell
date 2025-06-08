@@ -33,4 +33,27 @@ Describe 'MaintenancePlan Module' {
             Remove-Item $scriptPath -ErrorAction SilentlyContinue
         }
     }
+
+    It 'builds scheduled task command on Windows' {
+        InModuleScope MaintenancePlan {
+            Set-Variable -Name IsWindows -Value $true -Scope Script -Force
+            function Register-ScheduledTask {}
+            function New-ScheduledTaskAction { param($Execute,$Argument) $script:arg = $Argument; [pscustomobject]@{Execute=$Execute;Argument=$Argument} }
+            function New-ScheduledTaskTrigger { param([string]$Daily,[string]$At) [pscustomobject]@{At=$At} }
+            Schedule-MaintenancePlan -PlanPath '/tmp/p.json' -Cron '5 1 * * *' -Name 'MP'
+            $expectedModule = Join-Path (Get-Module MaintenancePlan).ModuleBase 'MaintenancePlan.psd1'
+            $script:arg | Should -Match [Regex]::Escape($expectedModule)
+            $script:arg | Should -Match '/tmp/p.json'
+        }
+    }
+
+    It 'returns cron entry on non-windows' {
+        InModuleScope MaintenancePlan {
+            Set-Variable -Name IsWindows -Value $false -Scope Script -Force
+            $entry = Schedule-MaintenancePlan -PlanPath '/tmp/p.json' -Cron '5 1 * * *' -Name 'MP'
+            $expectedModule = Join-Path (Get-Module MaintenancePlan).ModuleBase 'MaintenancePlan.psd1'
+            $entry | Should -Match [Regex]::Escape($expectedModule)
+            $entry | Should -Match '/tmp/p.json'
+        }
+    }
 }
