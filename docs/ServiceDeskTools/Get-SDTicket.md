@@ -17,7 +17,12 @@ Get-SDTicket [-Id] <Int32> [-ProgressAction <ActionPreference>] [<CommonParamete
 ```
 
 ## DESCRIPTION
-Description forthcoming for Get-SDTicket.
+Queries the Service Desk API for a single incident and returns the
+full incident object.  The command requires the numeric incident ID and
+uses the `SD_API_TOKEN` environment variable for authentication.  The
+returned object includes common fields such as status, subject,
+description, assignee and any custom values defined in your Service
+Desk instance.
 
 ## EXAMPLES
 
@@ -31,7 +36,7 @@ Retrieves incident 123 from the Service Desk.
 ## PARAMETERS
 
 ### -Id
-Incident ID to retrieve.
+Unique numeric identifier of the incident to retrieve.
 
 ```yaml
 Type: Int32

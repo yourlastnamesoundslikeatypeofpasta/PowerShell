@@ -17,7 +17,11 @@ Set-SDTicket [-Id] <Int32> [-Fields] <Hashtable> [-ProgressAction <ActionPrefere
 ```
 
 ## DESCRIPTION
-Description forthcoming for Set-SDTicket.
+Updates an existing Service Desk incident by sending a PUT request to
+the API.  Provide the incident ID along with a hashtable of fields and
+values you wish to modify.  The command uses the authentication token
+from `SD_API_TOKEN` and returns the updated incident object from the
+Service Desk.
 
 ## EXAMPLES
 
@@ -31,7 +35,7 @@ Marks incident 123 as resolved and assigns it to Jane Doe.
 ## PARAMETERS
 
 ### -Id
-Incident ID to update.
+Unique identifier of the incident to modify.
 
 ```yaml
 Type: Int32
@@ -46,7 +50,7 @@ Accept wildcard characters: False
 ```
 
 ### -Fields
-Hashtable of fields to modify.
+Hashtable containing incident field names and the values to apply.
 
 ```yaml
 Type: Hashtable
