@@ -26,6 +26,10 @@ jobs:
         run: |
           $cfg = Import-PowerShellDataFile ./PesterConfiguration.psd1
           Invoke-Pester -Configuration $cfg
+      - name: Ensure all functions have tests
+        shell: pwsh
+        run: |
+          ./scripts/Ensure-TestCoverage.ps1
       - uses: actions/upload-artifact@v4
         with:
           name: coverage
