@@ -50,6 +50,7 @@ function Get-GraphUserDetails {
         [string]$UserPrincipalName,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
+        [Alias('TenantID','tenantId')]
         [string]$TenantId,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

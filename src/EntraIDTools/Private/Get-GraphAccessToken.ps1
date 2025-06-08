@@ -6,6 +6,7 @@ function Get-GraphAccessToken {
     [CmdletBinding()]
     param(
         [ValidateNotNullOrEmpty()]
+        [Alias('TenantID','tenantId')]
         [string]$TenantId,
         [ValidateNotNullOrEmpty()]
         [string]$ClientId,

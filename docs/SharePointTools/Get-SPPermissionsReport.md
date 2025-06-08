@@ -93,6 +93,7 @@ Accept wildcard characters: False
 
 ### -TenantId
 Tenant ID used for authentication.
+Alias: `TenantID`, `tenantId`
 
 ```yaml
 Type: String
