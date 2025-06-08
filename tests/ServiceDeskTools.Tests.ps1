@@ -6,7 +6,7 @@ Describe 'ServiceDeskTools Module' {
 
     Context 'Exported commands' {
         $expected = @(
-            'Get-SDTicket','New-SDTicket','Set-SDTicket',
+            'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
             'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
@@ -22,6 +22,11 @@ Describe 'ServiceDeskTools Module' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
             Get-SDTicket -Id 1
             Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter { $Method -eq 'GET' -and $Path -eq '/incidents/1.json' } -Times 1
+        }
+        It 'Get-SDTicketHistory calls Invoke-SDRequest' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Get-SDTicketHistory -Id 1
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter { $Method -eq 'GET' -and $Path -eq '/incidents/1/audits.json' } -Times 1
         }
         It 'New-SDTicket calls Invoke-SDRequest' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
