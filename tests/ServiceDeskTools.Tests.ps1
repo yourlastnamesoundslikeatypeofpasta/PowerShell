@@ -159,4 +159,17 @@ Describe 'ServiceDeskTools Module' {
             }
         }
     }
+
+    Context 'WhatIf support' {
+        It 'New-SDTicket does not invoke request when -WhatIf used' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            New-SDTicket -Subject 's' -Description 'd' -RequesterEmail 'a@b.com' -WhatIf
+            Assert-MockCalled Invoke-SDRequest -Times 0 -ModuleName ServiceDeskTools
+        }
+        It 'Set-SDTicket does not invoke request when -WhatIf used' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Set-SDTicket -Id 1 -Fields @{status='Open'} -WhatIf
+            Assert-MockCalled Invoke-SDRequest -Times 0 -ModuleName ServiceDeskTools
+        }
+    }
 }

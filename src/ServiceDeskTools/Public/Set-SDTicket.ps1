@@ -7,7 +7,7 @@ function Set-SDTicket {
     .PARAMETER Fields
         Hashtable of fields to modify.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -28,5 +28,7 @@ function Set-SDTicket {
 
     Write-STLog -Message "Set-SDTicket $Id"
     $body = @{ incident = $Fields }
-    Invoke-SDRequest -Method 'PUT' -Path "/incidents/$Id.json" -Body $body -ChaosMode:$ChaosMode
+    if ($PSCmdlet.ShouldProcess("ticket $Id", 'Update')) {
+        Invoke-SDRequest -Method 'PUT' -Path "/incidents/$Id.json" -Body $body -ChaosMode:$ChaosMode
+    }
 }

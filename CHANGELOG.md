@@ -24,3 +24,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 - Build script now uses the latest artifact upload action
 
+## [ServiceDeskTools 1.1.0] - 2024-04-29
+### Added
+- SupportsShouldProcess added to ticket management commands
+- Additional Pester tests for `-WhatIf` scenarios
+### Changed
+- Documentation updated to reflect stable status
+

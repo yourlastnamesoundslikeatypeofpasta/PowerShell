@@ -1,6 +1,6 @@
 # ServiceDeskTools Module
 
-Commands for interacting with the Service Desk ticketing API.
+Commands for interacting with the Service Desk ticketing API. **ServiceDeskTools is now considered Stable** and is fully supported for production use.
 
 ## Available Commands
 
@@ -15,6 +15,7 @@ Commands for interacting with the Service Desk ticketing API.
 | `Submit-Ticket` | Create a Service Desk incident with minimal parameters | `Submit-Ticket -Subject 'Alert' -Description 'Issue detected' -RequesterEmail 'ops@example.com'` |
 
 `SD_API_TOKEN` must be set in the environment. Optionally set `SD_BASE_URI` if your Service Desk API uses a custom URL.
+For guidance on storing the token securely see [CredentialStorage.md](./CredentialStorage.md).
 
 ### Chaos Mode
 
