@@ -3,28 +3,23 @@ function Export-ProductKey {
     .SYNOPSIS
         Retrieves the Windows product key.
     .DESCRIPTION
-        Executes the ProductKey.ps1 script located in the scripts directory.
-        Any arguments are forwarded to that script.
+        Queries the SoftwareLicensingService WMI class for the original
+        product key of the system and writes it to the specified path.
+    .PARAMETER OutputPath
+        Path to the file where the product key should be written.
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
-        [object[]]$Arguments,
-        [Parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
-        [string]$TranscriptPath,
-        [Parameter(Mandatory = $false)]
-        [switch]$Simulate,
-        [Parameter(Mandatory = $false)]
-        [switch]$Explain,
-        [Parameter(Mandatory = $false)]
-        [object]$Logger,
-        [Parameter(Mandatory = $false)]
-        [object]$TelemetryClient,
-        [Parameter(Mandatory = $false)]
-        [object]$Config
+        [Parameter(Mandatory)]
+        [string]$OutputPath
     )
-    process {
-        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "ProductKey.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+
+    $key = (Get-CimInstance -ClassName SoftwareLicensingService | Select-Object -ExpandProperty OA3xOriginalProductKey)
+    if (-not $key) {
+        Write-STStatus 'Product key not found.' -Level WARN
+        return
     }
+
+    Set-Content -Path $OutputPath -Value $key
+    Write-STStatus "Product key exported to $OutputPath" -Level SUCCESS
 }

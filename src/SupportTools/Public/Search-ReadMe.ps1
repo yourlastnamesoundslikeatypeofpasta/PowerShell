@@ -1,30 +1,16 @@
 function Search-ReadMe {
     <#
     .SYNOPSIS
-        Searches README files for a provided term.
+        Searches the system for readme files.
     .DESCRIPTION
-        Launches the Search-ReadMe.ps1 script from the scripts directory with
-        the specified arguments.
+        Recursively searches the C drive for files containing 'readme' in
+        the name and returns the file objects found.
     #>
     [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
-        [object[]]$Arguments,
-        [Parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
-        [string]$TranscriptPath,
-        [Parameter(Mandatory = $false)]
-        [switch]$Simulate,
-        [Parameter(Mandatory = $false)]
-        [switch]$Explain,
-        [Parameter(Mandatory = $false)]
-        [object]$Logger,
-        [Parameter(Mandatory = $false)]
-        [object]$TelemetryClient,
-        [Parameter(Mandatory = $false)]
-        [object]$Config
-    )
-    process {
-        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "Search-ReadMe.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
-    }
+    param()
+
+    Write-STStatus 'Searching for readme files...' -Level INFO
+    $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction SilentlyContinue
+    Write-STStatus "Found $($results.Count) file(s)." -Level SUCCESS
+    return $results
 }

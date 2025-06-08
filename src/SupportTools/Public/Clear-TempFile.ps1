@@ -3,27 +3,17 @@ function Clear-TempFile {
     .SYNOPSIS
         Removes temporary files from the repository.
     .DESCRIPTION
-        Wraps the CleanupTempFiles.ps1 script in the scripts folder and forwards any provided arguments.
+        Deletes any `.tmp` files and empty `.log` files starting at the
+        repository root.
     #>
     [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
-        [object[]]$Arguments,
-        [Parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
-        [string]$TranscriptPath,
-        [Parameter(Mandatory = $false)]
-        [switch]$Simulate,
-        [Parameter(Mandatory = $false)]
-        [switch]$Explain,
-        [Parameter(Mandatory = $false)]
-        [object]$Logger,
-        [Parameter(Mandatory = $false)]
-        [object]$TelemetryClient,
-        [Parameter(Mandatory = $false)]
-        [object]$Config
-    )
-    process {
-        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "CleanupTempFiles.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
-    }
+    param()
+
+    $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '../../..')
+    Write-STStatus 'Cleaning temporary files...' -Level INFO
+    Get-ChildItem -Path $repoRoot -Recurse -Include '*.tmp' -File -ErrorAction SilentlyContinue |
+        Remove-Item -Force -ErrorAction SilentlyContinue
+    Get-ChildItem -Path $repoRoot -Recurse -Include '*.log' -File -ErrorAction SilentlyContinue |
+        Where-Object { $_.Length -eq 0 } | Remove-Item -Force -ErrorAction SilentlyContinue
+    Write-STStatus 'Cleanup complete.' -Level SUCCESS
 }

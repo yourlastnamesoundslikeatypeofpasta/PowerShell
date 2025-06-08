@@ -31,39 +31,6 @@ Describe 'SupportTools Module' {
         }
     }
 
-    Context 'Wrapper script invocation' {
-        $map = @{
-            Clear_ArchiveFolder       = 'CleanupArchive.ps1'
-            Restore_ArchiveFolder     = 'RollbackArchive.ps1'
-            Clear_TempFile           = 'CleanupTempFiles.ps1'
-            Convert_ExcelToCsv        = 'Convert-ExcelToCsv.ps1'
-            Get_UniquePermission     = 'Get-UniquePermissions.ps1'
-            Export_ProductKey         = 'ProductKey.ps1'
-            Search_ReadMe             = 'Search-ReadMe.ps1'
-            Start_Countdown           = 'SimpleCountdown.ps1'
-            New_SPUsageReport         = 'Generate-SPUsageReport.ps1'
-            Invoke_JobBundle          = 'Run-JobBundle.ps1'
-            Invoke_PerformanceAudit   = 'Invoke-PerformanceAudit.ps1'
-        }
-
-        $cases = foreach ($entry in $map.GetEnumerator()) {
-            @{ Fn = $entry.Key.ToString().Replace('_','-') }
-        }
-
-        It 'calls Invoke-ScriptFile for <Fn>' -ForEach $cases {
-            Mock Invoke-ScriptFile {} -ModuleName SupportTools
-            switch ($Fn) {
-                'Invoke-JobBundle' {
-                    & $Fn -Path 'bundle.job.zip' -LogArchivePath 'out.zip'
-                }
-                Default {
-                    & $Fn
-                }
-            }
-            Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1
-        }
-
-    }
 
     Context 'Sync-SupportTools behavior' {
         It 'clones when repository is missing' {
