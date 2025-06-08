@@ -31,3 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 - Documentation updated to reflect stable status
 
+## [ServiceDeskTools 1.3.0] - 2025-06-08
+### Added
+- `Add-SDTicketComment` cmdlet to post incident comments
+

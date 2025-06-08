@@ -7,7 +7,7 @@ Describe 'ServiceDeskTools Module' {
     Context 'Exported commands' {
         $expected = @(
             'Get-SDTicket','New-SDTicket','Set-SDTicket',
-            'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask'
+            'Search-SDTicket','Add-SDTicketComment','Set-SDTicketBulk','Link-SDTicketToSPTask'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -50,6 +50,13 @@ Describe 'ServiceDeskTools Module' {
                 $Method -eq 'GET' -and $Path -eq '/incidents.json?search=error'
             } -Times 1
         }
+        It 'Add-SDTicketComment calls Invoke-SDRequest' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Add-SDTicketComment -Id 99 -Comment 'done'
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $Method -eq 'POST' -and $Path -eq '/incidents/99/comments.json' -and $Body.comment.body -eq 'done'
+            } -Times 1
+        }
         It 'Set-SDTicketBulk calls Set-SDTicket for each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
             Set-SDTicketBulk -Id 10,11 -Fields @{status='Closed'}
@@ -89,6 +96,12 @@ Describe 'ServiceDeskTools Module' {
             Mock Write-STLog {} -ModuleName ServiceDeskTools
             Search-SDTicket -Query 'fail'
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Search-SDTicket fail' } -Times 1
+        }
+        It 'Add-SDTicketComment logs the request' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Mock Write-STLog {} -ModuleName ServiceDeskTools
+            Add-SDTicketComment -Id 8 -Comment 'a'
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Add-SDTicketComment 8' } -Times 1
         }
         It 'Set-SDTicketBulk logs each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
@@ -170,6 +183,13 @@ Describe 'ServiceDeskTools Module' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
             Set-SDTicket -Id 1 -Fields @{status='Open'} -WhatIf
             Assert-MockCalled Invoke-SDRequest -Times 0 -ModuleName ServiceDeskTools
+        }
+    }
+
+    Context 'Error handling' {
+        It 'Add-SDTicketComment surfaces request errors' {
+            Mock Invoke-SDRequest { throw 'fail' } -ModuleName ServiceDeskTools
+            { Add-SDTicketComment -Id 1 -Comment 'hi' } | Should -Throw
         }
     }
 }
