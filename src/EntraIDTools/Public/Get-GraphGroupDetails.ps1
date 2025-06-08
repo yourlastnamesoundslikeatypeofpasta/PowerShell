@@ -18,27 +18,42 @@ function Get-GraphGroupDetails {
         [string]$ClientId,
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$ClientSecret
+        [string]$ClientSecret,
+        [Parameter()]
+        [ValidateSet('Entra','AD')]
+        [string]$Cloud = 'Entra'
     )
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     Write-STLog -Message "Get-GraphGroupDetails $GroupId" -Structured -Metadata @{ group = $GroupId }
     $result = 'Success'
     try {
-        $token = Get-GraphAccessToken -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
-        $headers = @{ Authorization = "Bearer $token" }
+        if ($Cloud -eq 'Entra') {
+            $token = Get-GraphAccessToken -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
+            $headers = @{ Authorization = "Bearer $token" }
 
-        $groupUrl = "https://graph.microsoft.com/v1.0/groups/$GroupId?`$select=displayName,description"
-        $group = Invoke-RestMethod -Uri $groupUrl -Headers $headers -Method Get
+            $groupUrl = "https://graph.microsoft.com/v1.0/groups/$GroupId?`$select=displayName,description"
+            $group = Invoke-RestMethod -Uri $groupUrl -Headers $headers -Method Get
 
-        $membersUrl = "https://graph.microsoft.com/v1.0/groups/$GroupId/members?`$select=displayName"
-        $members = Invoke-RestMethod -Uri $membersUrl -Headers $headers -Method Get
+            $membersUrl = "https://graph.microsoft.com/v1.0/groups/$GroupId/members?`$select=displayName"
+            $members = Invoke-RestMethod -Uri $membersUrl -Headers $headers -Method Get
 
-        return [pscustomobject]@{
-            GroupId     = $GroupId
-            DisplayName = $group.displayName
-            Description = $group.description
-            Members     = ($members.value.displayName -join ',')
+            return [pscustomobject]@{
+                GroupId     = $GroupId
+                DisplayName = $group.displayName
+                Description = $group.description
+                Members     = ($members.value.displayName -join ',')
+            }
+        } else {
+            Import-Module ActiveDirectory -ErrorAction Stop
+            $group = Get-ADGroup -Identity $GroupId -ErrorAction Stop
+            $members = Get-ADGroupMember -Identity $GroupId | Get-ADUser | Select-Object -ExpandProperty Name
+            return [pscustomobject]@{
+                GroupId     = $GroupId
+                DisplayName = $group.Name
+                Description = $group.Description
+                Members     = ($members -join ',')
+            }
         }
     } catch {
         $result = 'Failure'

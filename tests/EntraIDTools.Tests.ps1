@@ -43,6 +43,20 @@ Describe 'EntraIDTools Module' {
         }
     }
 
+    Context 'Cloud parameter' {
+        It 'uses AD for user details when Cloud is AD' {
+            Mock Get-ADUser { @{ UserPrincipalName='u'; Name='User'; MemberOf=@(); LastLogonDate=(Get-Date) } } -ModuleName EntraIDTools
+            $res = Get-GraphUserDetails -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid' -Cloud 'AD'
+            Assert-MockCalled Get-ADUser -ModuleName EntraIDTools -Times 1
+        }
+        It 'uses AD for group details when Cloud is AD' {
+            Mock Get-ADGroup { @{ Name='G'; Description='D' } } -ModuleName EntraIDTools
+            Mock Get-ADGroupMember { @{Name='User'} } -ModuleName EntraIDTools
+            $res = Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid' -Cloud 'AD'
+            Assert-MockCalled Get-ADGroup -ModuleName EntraIDTools -Times 1
+        }
+    }
+
     Context 'Environment variables' {
         It 'uses GRAPH_* variables when parameters missing' {
             $env:GRAPH_TENANT_ID = 'tidEnv'

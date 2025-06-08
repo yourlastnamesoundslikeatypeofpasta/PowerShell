@@ -35,7 +35,11 @@ param(
 
     [Parameter()]
     [ValidateNotNullOrEmpty()]
-    [string]$GroupName
+    [string]$GroupName,
+
+    [Parameter()]
+    [ValidateSet('Entra','AD')]
+    [string]$Cloud = 'Entra'
 )
 
 . $PSScriptRoot/Common.ps1
@@ -45,17 +49,20 @@ Import-SupportToolsLogging
 Add-Type -AssemblyName PresentationFramework, System.Windows.Forms
 $InformationPreference = "Continue"
 
-# Install Microsoft Graph module if not already installed
-$isMicrosoftGraphInstalled = Get-Module -Name Microsoft.Graph.*
-if (!$isMicrosoftGraphInstalled)
-{
-    Write-STStatus 'Microsoft Graph not installed...installing Microsoft Graph PowerShell Module...' -Level WARN
-    Install-Module Microsoft.Graph
-}
+if ($Cloud -eq 'Entra') {
+    # Install Microsoft Graph module if not already installed
+    $isMicrosoftGraphInstalled = Get-Module -Name Microsoft.Graph.*
+    if (!$isMicrosoftGraphInstalled) {
+        Write-STStatus 'Microsoft Graph not installed...installing Microsoft Graph PowerShell Module...' -Level WARN
+        Install-Module Microsoft.Graph
+    }
 
-# Import Microsoft Graph module
-Write-STStatus 'Importing Microsoft Graph...this might take awhile...' -Level INFO
-Import-Module Microsoft.Graph -Verbose
+    # Import Microsoft Graph module
+    Write-STStatus 'Importing Microsoft Graph...this might take awhile...' -Level INFO
+    Import-Module Microsoft.Graph -Verbose
+} else {
+    Import-Module ActiveDirectory -ErrorAction Stop
+}
 
 function Get-CSVFilePath {
     Write-STStatus 'Select CSV from file dialog...' -Level SUB
@@ -165,20 +172,27 @@ function Get-UserID {
 function Start-Main {
     param(
         [string]$CsvPath,
-        [string]$GroupName
+        [string]$GroupName,
+        [string]$Cloud = 'Entra'
     )
-    # Connect to Microsoft Graph
-    try {
-        Connect-MicrosoftGraph -ErrorAction Stop
-    }
-    catch {
-        Write-Error "[ERROR] Connecting to Microsoft Graph $($_.Exception.Message)"
-        throw "[ERROR] Connecting to Microsoft Graph..."
-    }
 
-    # Get all groups and query the user for a group index
-    $group = Get-Group -GroupName $GroupName
-    $groupExistingMembers = Get-GroupExistingMembers -Group $group
+    if ($Cloud -eq 'Entra') {
+        # Connect to Microsoft Graph
+        try {
+            Connect-MicrosoftGraph -ErrorAction Stop
+        }
+        catch {
+            Write-Error "[ERROR] Connecting to Microsoft Graph $($_.Exception.Message)"
+            throw "[ERROR] Connecting to Microsoft Graph..."
+        }
+
+        # Get all groups and query the user for a group index
+        $group = Get-Group -GroupName $GroupName
+        $groupExistingMembers = Get-GroupExistingMembers -Group $group
+    } else {
+        $group = Get-ADGroup -Identity $GroupName -ErrorAction Stop
+        $groupExistingMembers = (Get-ADGroupMember -Identity $group.DistinguishedName -Recursive | Select-Object -ExpandProperty SamAccountName)
+    }
 
     # Import the CSV file with UPN header
     if (-not $CsvPath) { $CsvPath = Get-CSVFilePath }
@@ -192,8 +206,19 @@ function Start-Main {
     # Check if user is in the group and add the user if not
     foreach ($user in $users)
     {
-        # Pull all info | select UPN
-        $userInfo = Get-UserID -UserPrincipalName $user
+        if ($Cloud -eq 'Entra') {
+            # Pull all info | select UPN
+            $userInfo = Get-UserID -UserPrincipalName $user
+            $uid = $userInfo.Id
+            $upn = $userInfo.UserPrincipalName
+            $display = $userInfo.DisplayName
+        } else {
+            $userInfo = Get-ADUser -Filter "UserPrincipalName -eq '$user'" -ErrorAction SilentlyContinue
+            if (-not $userInfo) { $userInfo = Get-ADUser -Identity $user -ErrorAction SilentlyContinue }
+            $uid = $userInfo.SamAccountName
+            $upn = $userInfo.UserPrincipalName
+            $display = $userInfo.Name
+        }
 
         if (-not $userInfo) {
             $skippedUsers.Add($user)
@@ -202,29 +227,35 @@ function Start-Main {
         }
 
         # Add the user to the group if they are not in the group
-        if ($groupExistingMembers -contains $userInfo.UserPrincipalName)
+        if ($groupExistingMembers -contains $upn)
         {
             Write-STStatus "UserIsInGroup: $($user) - $($group.DisplayName)" -Level WARN
-            $skippedUsers.Add($userInfo.UserPrincipalName)
+            $skippedUsers.Add($upn)
         }
         else {
-            Write-STStatus "AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)" -Level INFO
+            Write-STStatus "AddingUserToGroup: User: $display - Group: $($group.DisplayName)" -Level INFO
             try {
-                New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $userInfo.Id -ErrorAction Stop
-                Write-STStatus "[SUCCESS] AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)" -Level SUCCESS
-                $addedUsers.Add($userInfo.UserPrincipalName)
+                if ($Cloud -eq 'Entra') {
+                    New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $uid -ErrorAction Stop
+                } else {
+                    Add-ADGroupMember -Identity $group.DistinguishedName -Members $uid -ErrorAction Stop
+                }
+                Write-STStatus "[SUCCESS] AddingUserToGroup: User: $display - Group: $($group.DisplayName)" -Level SUCCESS
+                $addedUsers.Add($upn)
             }
             catch {
                 Write-Error "[FAIL] Error adding $($user) to $($group.Id)..."
-                throw "ErrorAddingUserToGroup: $($user): $($userInfo.DisplayName)"
+                throw "ErrorAddingUserToGroup: $($user): $display"
             }
         }
     }
 
     Write-STStatus 'Task Completed.' -Level FINAL
-    Write-STStatus 'Disconnecting from Microsoft Graph...' -Level INFO
-    Disconnect-MgGraph | Out-Null
-    Write-STStatus 'Disconnected from Microsoft Graph' -Level SUCCESS
+    if ($Cloud -eq 'Entra') {
+        Write-STStatus 'Disconnecting from Microsoft Graph...' -Level INFO
+        Disconnect-MgGraph | Out-Null
+        Write-STStatus 'Disconnected from Microsoft Graph' -Level SUCCESS
+    }
 
     [pscustomobject]@{
         GroupName    = $group.DisplayName
@@ -234,5 +265,5 @@ function Start-Main {
 }
 
 if ($MyInvocation.InvocationName -ne '.') {
-    Start-Main -CsvPath $CsvPath -GroupName $GroupName
+    Start-Main -CsvPath $CsvPath -GroupName $GroupName -Cloud $Cloud
 }
