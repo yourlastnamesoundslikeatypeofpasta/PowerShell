@@ -10,6 +10,7 @@ This repository packages a collection of scripts into reusable modules.
 * **SharePointTools** – commands for SharePoint cleanup tasks such as removing archives or sharing links.
 * **ServiceDeskTools** – interact with the Service Desk ticketing system.
 * **PerformanceTools** – measure script runtime and resource usage.
+* **MonitoringTools** – gather disk, CPU, event log and general system health data.
 * **GraphTools** – query Microsoft Graph for account details such as license assignments, group membership and sign-in history.
 * **ChaosTools** – inject random delays and failures to test error handling.
 
@@ -23,6 +24,7 @@ This repository packages a collection of scripts into reusable modules.
 | SharePointTools | Stable |
 | ServiceDeskTools | Beta |
 | PerformanceTools | Beta |
+| MonitoringTools | Beta |
 | GraphTools | Stable |
 | ChaosTools | Beta |
 
@@ -44,6 +46,7 @@ Install-Module SupportTools -Repository MyInternalRepo
 Install-Module SharePointTools -Repository MyInternalRepo
 Install-Module ServiceDeskTools -Repository MyInternalRepo
 Install-Module PerformanceTools -Repository MyInternalRepo
+Install-Module MonitoringTools -Repository MyInternalRepo
 Install-Module GraphTools -Repository MyInternalRepo
 Install-Module ChaosTools -Repository MyInternalRepo
 ```
@@ -58,6 +61,7 @@ Import-Module ./src/SupportTools/SupportTools.psd1
 Import-Module ./src/SharePointTools/SharePointTools.psd1
 Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
 Import-Module ./src/PerformanceTools/PerformanceTools.psd1
+Import-Module ./src/MonitoringTools/MonitoringTools.psd1
 Import-Module ./src/GraphTools/GraphTools.psd1
 Import-Module ./src/ChaosTools/ChaosTools.psd1
 ```
@@ -100,7 +104,7 @@ Get-GraphUserDetails -UserPrincipalName 'user@contoso.com' -TenantId <tenantId> 
 ```
 The command gathers basic profile information, assigned licenses, group membership and last sign-in time. Results can be exported to CSV or HTML for reporting.
 
-See [docs/SupportTools.md](docs/SupportTools.md), [docs/IncidentResponseTools.md](docs/IncidentResponseTools.md), [docs/ConfigManagementTools.md](docs/ConfigManagementTools.md), [docs/SharePointTools.md](docs/SharePointTools.md), [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md), [docs/PerformanceTools.md](docs/PerformanceTools.md), [docs/GraphTools.md](docs/GraphTools.md) and [docs/ChaosTools.md](docs/ChaosTools.md) for a full list of commands. For a short introduction refer to [docs/Quickstart.md](docs/Quickstart.md). For detailed deployment guidance see [docs/UserGuide.md](docs/UserGuide.md).
+See [docs/SupportTools.md](docs/SupportTools.md), [docs/IncidentResponseTools.md](docs/IncidentResponseTools.md), [docs/ConfigManagementTools.md](docs/ConfigManagementTools.md), [docs/SharePointTools.md](docs/SharePointTools.md), [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md), [docs/PerformanceTools.md](docs/PerformanceTools.md), [docs/MonitoringTools.md](docs/MonitoringTools.md), [docs/GraphTools.md](docs/GraphTools.md) and [docs/ChaosTools.md](docs/ChaosTools.md) for a full list of commands. For a short introduction refer to [docs/Quickstart.md](docs/Quickstart.md). For detailed deployment guidance see [docs/UserGuide.md](docs/UserGuide.md).
 
 The module also provides `Set-SharedMailboxAutoReply` for configuring automatic
 out-of-office replies on a shared mailbox.

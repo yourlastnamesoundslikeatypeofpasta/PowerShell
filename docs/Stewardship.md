@@ -16,6 +16,7 @@ This guide explains how to keep the PowerShell modules healthy over time and pre
 | SharePointTools   | Beta        |
 | ServiceDeskTools  | Stable |
 | ChaosTools        | Beta |
+| MonitoringTools   | Beta |
 
 
 ## Backup Strategy

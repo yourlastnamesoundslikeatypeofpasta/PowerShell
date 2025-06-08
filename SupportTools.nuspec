@@ -18,6 +18,7 @@
       <dependency id="PerformanceTools" version="[1.0.0]" />
       <dependency id="IncidentResponseTools" version="[1.0.0]" />
       <dependency id="ConfigManagementTools" version="[1.0.0]" />
+      <dependency id="MonitoringTools" version="[1.0.0]" />
     </dependencies>
   </metadata>
   <files>
@@ -30,6 +31,7 @@
     <file src="src\PerformanceTools\**\*" target="tools\PerformanceTools" />
     <file src="src\IncidentResponseTools\**\*" target="tools\IncidentResponseTools" />
     <file src="src\ConfigManagementTools\**\*" target="tools\ConfigManagementTools" />
+    <file src="src\MonitoringTools\**\*" target="tools\MonitoringTools" />
     <file src="tests\**\*" target="tests" />
   </files>
 </package>
