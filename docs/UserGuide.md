@@ -20,7 +20,7 @@ Clone or download this repository to a location accessible by your team:
 
 ```powershell
 # Example clone
-git clone https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git
+git clone <internal repo URL>
 ```
 
 The modules are located under the `src` folder:

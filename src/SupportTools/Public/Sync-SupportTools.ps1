@@ -14,7 +14,7 @@ function Sync-SupportTools {
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
-        [string]$RepositoryUrl = 'https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git',
+        [string]$RepositoryUrl = '<internal repo URL>',
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$InstallPath = $(if ($env:USERPROFILE) { Join-Path $env:USERPROFILE 'SupportTools' } else { Join-Path $env:HOME 'SupportTools' }),

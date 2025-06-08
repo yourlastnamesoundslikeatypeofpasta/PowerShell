@@ -1,6 +1,4 @@
 # SupportTools PowerShell Modules
-[![Pester Tests](https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell/actions/workflows/pester-tests.yml/badge.svg)](https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell/actions/workflows/pester-tests.yml)
-
 
 This repository packages a collection of scripts into reusable modules.
 
@@ -18,8 +16,8 @@ This repository packages a collection of scripts into reusable modules.
 | SupportTools | Stable |
 | SharePointTools | Beta |
 | ServiceDeskTools | Beta |
-| PerformanceTools | Experimental |
-| GraphTools | Beta |
+| PerformanceTools | Beta |
+| GraphTools | Stable |
 | ChaosTools | Beta |
 
 ## Requirements 📋
@@ -33,37 +31,37 @@ This repository packages a collection of scripts into reusable modules.
 
 ## Installation 📦
 
-1. Clone or download this repository:
+Install the modules from your internal repository:
 
-   ```powershell
-   git clone https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git
-   ```
+```powershell
+Install-Module SupportTools -Repository MyInternalRepo
+Install-Module SharePointTools -Repository MyInternalRepo
+Install-Module ServiceDeskTools -Repository MyInternalRepo
+Install-Module PerformanceTools -Repository MyInternalRepo
+Install-Module GraphTools -Repository MyInternalRepo
+Install-Module ChaosTools -Repository MyInternalRepo
+```
 
-2. Install the published modules (optional):
+If your repository isn't registered yet, run `Register-PSRepository` with the feed URL before installing.
 
-   ```powershell
-   ./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
-   # or pin a specific build
-   Install-Module -Name SupportTools -RequiredVersion 1.3.0
-   ```
-   The script attempts to download each module from the gallery and falls back
-   to importing the versions under `src` if the gallery cannot be reached.
+If you'd rather work from source, clone the repo and import the manifests:
 
-3. Import the module manifest files from the `src` folder:
+```powershell
+git clone <internal repo URL>
+Import-Module ./src/SupportTools/SupportTools.psd1
+Import-Module ./src/SharePointTools/SharePointTools.psd1
+Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
+Import-Module ./src/PerformanceTools/PerformanceTools.psd1
+Import-Module ./src/GraphTools/GraphTools.psd1
+Import-Module ./src/ChaosTools/ChaosTools.psd1
+```
 
-   ```powershell
-   Import-Module ./src/SupportTools/SupportTools.psd1
-   Import-Module ./src/SharePointTools/SharePointTools.psd1
-   Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
-   Import-Module ./src/GraphTools/GraphTools.psd1
-   ```
+For SharePoint operations run:
 
-4. Validate the SharePoint dependency and save tenant information:
-
-   ```powershell
-   ./scripts/Test-SPToolsPrereqs.ps1 -Install
-   ./scripts/Configure-SharePointTools.ps1 -ClientId <appId> -TenantId <tenantId> -CertPath <path>
-   ```
+```powershell
+./scripts/Test-SPToolsPrereqs.ps1 -Install
+./scripts/Configure-SharePointTools.ps1 -ClientId <appId> -TenantId <tenantId> -CertPath <path>
+```
 
 ## Usage 💡
 
@@ -104,6 +102,17 @@ The module now includes `Invoke-CompanyPlaceManagement` for administering Micros
 Functions like `Add-SPToolsSite` and `Remove-SPToolsSite` let you manage the list of SharePoint sites stored in the settings file.
 
 For a list of the wrapped scripts and their descriptions see [scripts/README.md](scripts/README.md).
+### ServiceDeskTools example
+
+```powershell
+Search-SDTicket -Query 'printer issue'
+```
+
+### PerformanceTools example
+
+```powershell
+Measure-STCommand { Get-Process }
+```
 
 ## Documentation 📚
 
@@ -142,6 +151,14 @@ Use `-Structured` to emit JSON lines that include the current user and script na
 Set `ST_LOG_STRUCTURED=1` to enable structured output without adding the switch each time.
 Use `-Metric` and `-Value` with `Write-STLog` to capture performance data like durations.
 Review the resulting log file with `Get-Content` when troubleshooting.
+## Running Tests 🧪
+
+Install Pester if it's not already available and run the suite from the repository root:
+
+```powershell
+Install-Module Pester -MinimumVersion 5.0 -Scope CurrentUser
+Invoke-Pester -Configuration ./PesterConfiguration.psd1
+```
 
 ## Roadmap 🛣️
 
@@ -181,10 +198,9 @@ workflow added ([docs/CredentialStorage.md](docs/CredentialStorage.md)).
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+See the [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## Contributing
 
-Contributions are welcome! If you have a bug fix or new feature, feel free to open
-an issue or submit a pull request. Please ensure any new PowerShell code follows
-the style outlined in [docs/ModuleStyleGuide.md](docs/ModuleStyleGuide.md). Test
-coverage for new functionality is greatly appreciated.
+Contributions are welcome! This repo is maintained internally for our team, but collaborators are encouraged to open issues or submit pull requests. Please follow the style outlined in [docs/ModuleStyleGuide.md](docs/ModuleStyleGuide.md) and include tests when possible.
+

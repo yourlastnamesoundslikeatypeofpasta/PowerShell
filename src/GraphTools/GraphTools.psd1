@@ -5,6 +5,11 @@
     Author = 'Contoso'
     Description = 'Microsoft Graph helper functions.'
     RequiredModules = @('Logging','Telemetry')
-    PrivateData = @{ PSData = @{ Tags = @('PowerShell','Graph','Internal') } }
+    PrivateData = @{
+        PSData = @{
+            Tags = @('PowerShell','Graph','Internal')
+            ReleaseNotes = 'Initial stable release of GraphTools.'
+        }
+    }
     FunctionsToExport = @('Get-GraphUserDetails','Get-GraphGroupDetails')
 }
