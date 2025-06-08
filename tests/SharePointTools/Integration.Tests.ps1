@@ -9,6 +9,12 @@ Describe 'SharePointTools Integration Functions' {
         }
     }
 
+    BeforeEach {
+        InModuleScope SharePointTools {
+            Set-Variable -Scope Script -Name SharePointToolsSettings -Value @{ ClientId='id'; TenantId='tid'; CertPath='path'; Sites=@{} }
+        }
+    }
+
     Context 'Get-SPToolsLibraryReport' {
         It 'returns library information' {
             InModuleScope SharePointTools {
