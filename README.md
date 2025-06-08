@@ -1,6 +1,4 @@
 # SupportTools PowerShell Modules
-[![Pester Tests](https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell/actions/workflows/pester-tests.yml/badge.svg)](https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell/actions/workflows/pester-tests.yml)
-
 
 This repository packages a collection of scripts into reusable modules.
 
@@ -33,21 +31,23 @@ This repository packages a collection of scripts into reusable modules.
 
 ## Installation 📦
 
-Install the modules from the internal gallery:
+Install the modules from your internal repository:
 
 ```powershell
-Install-Module SupportTools
-Install-Module SharePointTools
-Install-Module ServiceDeskTools
-Install-Module PerformanceTools
-Install-Module GraphTools
-Install-Module ChaosTools
+Install-Module SupportTools -Repository MyInternalRepo
+Install-Module SharePointTools -Repository MyInternalRepo
+Install-Module ServiceDeskTools -Repository MyInternalRepo
+Install-Module PerformanceTools -Repository MyInternalRepo
+Install-Module GraphTools -Repository MyInternalRepo
+Install-Module ChaosTools -Repository MyInternalRepo
 ```
+
+If your repository isn't registered yet, run `Register-PSRepository` with the feed URL before installing.
 
 If you'd rather work from source, clone the repo and import the manifests:
 
 ```powershell
-git clone https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git
+git clone <internal repo URL>
 Import-Module ./src/SupportTools/SupportTools.psd1
 Import-Module ./src/SharePointTools/SharePointTools.psd1
 Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
