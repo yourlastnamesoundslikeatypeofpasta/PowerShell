@@ -95,7 +95,73 @@ function Get-STConfig {
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig'
+function Invoke-STRequest {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Method,
+        [Parameter(Mandatory)][string]$Uri,
+        [hashtable]$Headers,
+        [object]$Body,
+        [string]$ContentType = 'application/json',
+        [switch]$ChaosMode
+    )
+
+    Assert-ParameterNotNull $Method 'Method'
+    Assert-ParameterNotNull $Uri 'Uri'
+
+    if (-not $ChaosMode) { $ChaosMode = [bool]$env:ST_CHAOS_MODE }
+    if ($ChaosMode) {
+        $delay = Get-Random -Minimum 500 -Maximum 1500
+        Write-STLog -Message "CHAOS MODE delay $delay ms"
+        Start-Sleep -Milliseconds $delay
+        $roll = Get-Random -Minimum 1 -Maximum 100
+        if ($roll -le 10) { throw 'ChaosMode: simulated throttling (429 Too Many Requests)' }
+        elseif ($roll -le 20) { throw 'ChaosMode: simulated server error (500 Internal Server Error)' }
+    }
+
+    Write-STLog -Message "STRequest $Method $Uri"
+    Write-Verbose "Invoking $Method $Uri"
+
+    $json = if ($PSBoundParameters.ContainsKey('Body')) {
+        if ($ContentType -match 'json') { $Body | ConvertTo-Json -Depth 10 } else { $Body }
+    } else { $null }
+
+    $maxRetries = 3
+    $attempt = 1
+    while ($true) {
+        try {
+            if ($json) {
+                $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers -Body $json -ContentType $ContentType
+            } else {
+                $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers
+            }
+            Write-STLog -Message "SUCCESS $Method $Uri"
+            return $response
+        } catch [System.Net.WebException],[Microsoft.PowerShell.Commands.HttpResponseException] {
+            $status = $_.Exception.Response.StatusCode.value__
+            $msg    = $_.Exception.Message
+            Write-STLog -Message "HTTP $status $msg" -Level 'ERROR'
+            if ($status -eq 429 -or ($status -ge 500 -and $status -lt 600)) {
+                if ($attempt -lt $maxRetries) {
+                    $retryAfter = $_.Exception.Response.Headers['Retry-After']
+                    if ($retryAfter) { $delay = [int]$retryAfter } else { $delay = [math]::Pow(2, $attempt) }
+                    Write-STLog -Message "Retry $attempt in $delay sec" -Level WARN
+                    Write-Verbose "Retrying in $delay seconds"
+                    Start-Sleep -Seconds $delay
+                    $attempt++
+                    continue
+                }
+            }
+            $errorObj = New-STErrorObject -Message "HTTP $status $msg" -Category 'HTTP'
+            throw $errorObj
+        } catch {
+            Write-STLog -Message "ERROR $Method $Uri :: $_" -Level 'ERROR'
+            throw
+        }
+    }
+}
+
+Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest'
 
 function Show-STCoreBanner {
     <#

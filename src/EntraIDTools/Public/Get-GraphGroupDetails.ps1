@@ -33,10 +33,10 @@ function Get-GraphGroupDetails {
             $headers = @{ Authorization = "Bearer $token" }
 
             $groupUrl = "https://graph.microsoft.com/v1.0/groups/$GroupId?`$select=displayName,description"
-            $group = Invoke-RestMethod -Uri $groupUrl -Headers $headers -Method Get
+            $group = Invoke-STRequest -Uri $groupUrl -Headers $headers -Method 'GET'
 
             $membersUrl = "https://graph.microsoft.com/v1.0/groups/$GroupId/members?`$select=displayName"
-            $members = Invoke-RestMethod -Uri $membersUrl -Headers $headers -Method Get
+            $members = Invoke-STRequest -Uri $membersUrl -Headers $headers -Method 'GET'
 
             return [pscustomobject]@{
                 GroupId     = $GroupId
