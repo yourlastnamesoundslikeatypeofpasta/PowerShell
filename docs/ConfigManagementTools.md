@@ -15,6 +15,7 @@ Import-Module ./src/ConfigManagementTools/ConfigManagementTools.psd1
 | `Install-Font` | Install font files on the system. | `Install-Font -Source C:\Fonts` |
 | `Install-MaintenanceTasks` | Register scheduled maintenance tasks. | `Install-MaintenanceTasks -Register` |
 | `Invoke-CompanyPlaceManagement` | Manage Microsoft Places locations. | `Invoke-CompanyPlaceManagement -Action Get -DisplayName HQ` |
+| `Out-CompanyPlace` | Display place objects in a table. | `Invoke-CompanyPlaceManagement -Action Get -DisplayName HQ | Out-CompanyPlace` |
 | `Invoke-DeploymentTemplate` | Run the deployment template script. | `Invoke-DeploymentTemplate -Verbose` |
 | `Invoke-ExchangeCalendarManager` | Manage shared calendars in Exchange Online. | `Invoke-ExchangeCalendarManager` |
 | `Invoke-PostInstall` | Execute post installation configuration. | `Invoke-PostInstall -Domain contoso.com` |

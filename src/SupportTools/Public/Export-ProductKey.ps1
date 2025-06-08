@@ -28,6 +28,10 @@ function Export-ProductKey {
 
         Set-Content -Path $OutputPath -Value $key
         Write-STStatus "Product key exported to $OutputPath" -Level SUCCESS
+        return [pscustomobject]@{
+            ProductKey = $key
+            OutputPath = $OutputPath
+        }
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }

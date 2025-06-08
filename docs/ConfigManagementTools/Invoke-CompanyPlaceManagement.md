@@ -27,7 +27,7 @@ Supports creation, editing, and retrieval of Place records using the MicrosoftPl
 ### Example 1
 ```powershell
 PS C:\> # Get building information
-Invoke-CompanyPlaceManagement -Action Get -Type Building -DisplayName "HQ*"
+Invoke-CompanyPlaceManagement -Action Get -Type Building -DisplayName "HQ*" | Out-CompanyPlace
 
 # Create a new building with a default floor
 Invoke-CompanyPlaceManagement -Action Create -DisplayName "HQ North" -Street "1 Company Way" -City "Metropolis" -State "NY" -PostalCode "10001" -CountryOrRegion "USA" -AutoAddFloor
