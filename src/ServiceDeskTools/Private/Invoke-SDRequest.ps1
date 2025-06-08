@@ -4,12 +4,17 @@ function Invoke-SDRequest {
         [Parameter(Mandatory)][string]$Method,
         [Parameter(Mandatory)][string]$Path,
         [hashtable]$Body,
+        [string]$BaseUri,
         [switch]$ChaosMode
     )
     Assert-ParameterNotNull $Method 'Method'
     Assert-ParameterNotNull $Path 'Path'
 
-    $baseUri = $env:SD_BASE_URI
+    if ($PSBoundParameters.ContainsKey('BaseUri') -and $BaseUri) {
+        $baseUri = $BaseUri
+    } else {
+        $baseUri = $env:SD_BASE_URI
+    }
     if (-not $baseUri) { $baseUri = 'https://api.samanage.com' }
     $token = $env:SD_API_TOKEN
     if (-not $token) { throw 'SD_API_TOKEN environment variable must be set.' }

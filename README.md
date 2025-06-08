@@ -144,9 +144,11 @@ ServiceDeskTools reads the following variables for API access:
 ```text
 SD_API_TOKEN
 SD_BASE_URI
+SD_ASSET_BASE_URI
 ```
 
 When set, these variables override values stored in `config/SharePointToolsSettings.psd1`.
+Use `SD_ASSET_BASE_URI` if the asset API is hosted separately from the incident endpoint.
 Set `ST_CHAOS_MODE` to `1` or use the `-ChaosMode` switch on ServiceDeskTools commands to simulate throttled or failing API calls during testing.
 For a step-by-step example of loading these variables from the SecretManagement
 module see [docs/CredentialStorage.md](docs/CredentialStorage.md).

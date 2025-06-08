@@ -14,7 +14,7 @@ Commands for interacting with the Service Desk ticketing API. **ServiceDeskTools
 | `Link-SDTicketToSPTask` | Add a related SharePoint task link | `Link-SDTicketToSPTask -TicketId 42 -TaskUrl 'https://contoso.sharepoint.com/tasks/1'` |
 | `Submit-Ticket` | Create a Service Desk incident with minimal parameters | `Submit-Ticket -Subject 'Alert' -Description 'Issue detected' -RequesterEmail 'ops@example.com'` |
 
-`SD_API_TOKEN` must be set in the environment. Optionally set `SD_BASE_URI` if your Service Desk API uses a custom URL.
+`SD_API_TOKEN` must be set in the environment. Optionally set `SD_BASE_URI` if your Service Desk API uses a custom URL. Use `SD_ASSET_BASE_URI` when asset endpoints require a different base URI.
 For guidance on storing the token securely see [CredentialStorage.md](./CredentialStorage.md).
 
 ### Chaos Mode

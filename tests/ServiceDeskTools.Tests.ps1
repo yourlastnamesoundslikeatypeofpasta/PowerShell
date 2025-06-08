@@ -7,7 +7,8 @@ Describe 'ServiceDeskTools Module' {
     Context 'Exported commands' {
         $expected = @(
             'Get-SDTicket','New-SDTicket','Set-SDTicket',
-            'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask'
+            'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask',
+            'Get-ServiceDeskAsset'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -62,6 +63,15 @@ Describe 'ServiceDeskTools Module' {
             Assert-MockCalled Set-SDTicket -ModuleName ServiceDeskTools -ParameterFilter {
                 $Id -eq 12 -and $Fields.sharepoint_task_url -eq 'https://contoso/tasks/1'
             } -Times 1
+        }
+        It 'Get-ServiceDeskAsset calls Invoke-SDRequest with optional base URI' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            $env:SD_ASSET_BASE_URI = 'https://assets.example.com'
+            Get-ServiceDeskAsset -Id 99
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $Method -eq 'GET' -and $Path -eq '/assets/99.json'
+            } -Times 1
+            Remove-Item env:SD_ASSET_BASE_URI
         }
     }
 
@@ -144,6 +154,16 @@ Describe 'ServiceDeskTools Module' {
                 Remove-Item env:SD_BASE_URI
             }
         }
+        It 'honors BaseUri parameter when provided' {
+            InModuleScope ServiceDeskTools {
+                $env:SD_API_TOKEN = 't'
+                Mock Write-STLog {} -ModuleName ServiceDeskTools
+                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Invoke-SDRequest -Method 'GET' -Path '/incidents/3.json' -BaseUri 'https://override.example.com'
+                Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://override.example.com/incidents/3.json' } -Times 1
+                Remove-Item env:SD_API_TOKEN
+            }
+        }
         It 'converts body to JSON' {
             InModuleScope ServiceDeskTools {
                 $env:SD_API_TOKEN = 't'
@@ -156,6 +176,19 @@ Describe 'ServiceDeskTools Module' {
                     $Body -eq $expected -and $ContentType -eq 'application/json'
                 } -Times 1
                 Remove-Item env:SD_API_TOKEN
+            }
+        }
+        It 'uses SD_ASSET_BASE_URI for asset queries' {
+            InModuleScope ServiceDeskTools {
+                $env:SD_API_TOKEN = 't'
+                $env:SD_ASSET_BASE_URI = 'https://assets.example.com/'
+                Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+                Get-ServiceDeskAsset -Id 7
+                Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                    $BaseUri -eq 'https://assets.example.com/' -and $Path -eq '/assets/7.json'
+                } -Times 1
+                Remove-Item env:SD_API_TOKEN
+                Remove-Item env:SD_ASSET_BASE_URI
             }
         }
     }
