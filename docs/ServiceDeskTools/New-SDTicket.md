@@ -18,7 +18,12 @@ New-SDTicket [-Subject] <String> [-Description] <String> [-RequesterEmail] <Stri
 ```
 
 ## DESCRIPTION
-Description forthcoming for New-SDTicket.
+Creates an incident in the Service Desk with the provided subject,
+description and requester email address.  The cmdlet sends a POST
+request to the Service Desk API using the token stored in the
+`SD_API_TOKEN` environment variable.  The response from the API is
+returned so you can review the newly created incident number and other
+details.
 
 ## EXAMPLES
 
@@ -32,7 +37,7 @@ Creates a new incident describing a printer problem.
 ## PARAMETERS
 
 ### -Subject
-Subject of the incident.
+Short title summarizing the issue being reported.
 
 ```yaml
 Type: String
@@ -47,7 +52,7 @@ Accept wildcard characters: False
 ```
 
 ### -Description
-Description of the incident.
+Detailed explanation of the problem to be logged.
 
 ```yaml
 Type: String
@@ -62,7 +67,7 @@ Accept wildcard characters: False
 ```
 
 ### -RequesterEmail
-Email address of the requester.
+Email address of the user opening the incident.
 
 ```yaml
 Type: String
