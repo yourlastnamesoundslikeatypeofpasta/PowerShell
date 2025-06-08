@@ -44,7 +44,7 @@ Accept wildcard characters: False
 ```
 
 ### -TranscriptPath
-{{ Fill TranscriptPath Description }}
+File path used to capture a transcript of this command's output and actions.
 ```
 Type: String
 Parameter Sets: (All)

@@ -31,7 +31,7 @@ Demonstrates typical usage of Get-SPToolsSettings.
 ## PARAMETERS
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Specifies how this cmdlet responds to progress updates.
 
 ```yaml
 Type: ActionPreference
