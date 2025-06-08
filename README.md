@@ -18,7 +18,6 @@ This repository packages a collection of scripts into reusable modules.
 | SupportTools | Stable |
 | SharePointTools | Beta |
 | ServiceDeskTools | Beta |
-
 | PerformanceTools | Experimental |
 | GraphTools | Beta |
 | ChaosTools | Experimental |
