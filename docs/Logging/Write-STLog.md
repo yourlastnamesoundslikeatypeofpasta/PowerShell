@@ -164,4 +164,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ### System.Object
 ## NOTES
 
+Logs rotate automatically when their size exceeds `ST_LOG_MAX_BYTES` (default
+1 MB). The current file is renamed with a `.1` extension and a fresh log is
+started.
+
 ## RELATED LINKS

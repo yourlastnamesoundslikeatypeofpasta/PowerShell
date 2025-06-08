@@ -129,4 +129,17 @@ Describe 'Logging Module' {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
+
+    It 'rotates log files exceeding ST_LOG_MAX_BYTES' {
+        $logFile = Join-Path $TestDrive 'rotate.log'
+        $env:ST_LOG_MAX_BYTES = 20
+        try {
+            Set-Content -Path $logFile -Value ('x' * 30)
+            Write-STLog -Message 'rotate check' -Path $logFile
+            Test-Path ($logFile + '.1') | Should -Be $true
+            (Get-Content $logFile) | Should -Match 'rotate check'
+        } finally {
+            Remove-Item env:ST_LOG_MAX_BYTES -ErrorAction SilentlyContinue
+        }
+    }
 }
