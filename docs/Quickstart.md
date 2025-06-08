@@ -4,7 +4,7 @@ This short guide shows the basic steps to start using the modules in this reposi
 
 1. **Clone the repository**
    ```powershell
- git clone https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git
+ git clone <internal repo URL>
  cd PowerShell
   ```
 2. **Install required dependencies**
@@ -15,7 +15,7 @@ This short guide shows the basic steps to start using the modules in this reposi
    ```powershell
    ./scripts/Start-MockApiServer.ps1
    ```
-4. **Install from gallery (optional)**
+4. **Install from internal repository (optional)**
    ```powershell
    ./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
    ```
