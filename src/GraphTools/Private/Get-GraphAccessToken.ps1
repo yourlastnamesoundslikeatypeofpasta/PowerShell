@@ -1,11 +1,18 @@
 function Get-GraphAccessToken {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$TenantId,
-        [Parameter(Mandatory)][string]$ClientId,
+        [string]$TenantId,
+        [string]$ClientId,
         [string]$ClientSecret,
         [string]$CachePath = "$env:USERPROFILE/.graphToken.json"
     )
+
+    if (-not $TenantId)     { $TenantId     = $env:GRAPH_TENANT_ID }
+    if (-not $ClientId)     { $ClientId     = $env:GRAPH_CLIENT_ID }
+    if (-not $ClientSecret) { $ClientSecret = $env:GRAPH_CLIENT_SECRET }
+
+    if (-not $TenantId) { throw 'TenantId is required. Provide -TenantId or set GRAPH_TENANT_ID.' }
+    if (-not $ClientId) { throw 'ClientId is required. Provide -ClientId or set GRAPH_CLIENT_ID.' }
     if (Test-Path $CachePath) {
         try {
             $cache = Get-Content $CachePath | ConvertFrom-Json
