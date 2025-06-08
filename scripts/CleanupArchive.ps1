@@ -95,7 +95,7 @@ Write-STStatus ($ZzzArchiveProductionSharePointFolderItems | Format-Table | Out-
 [System.Collections.Generic.List[object]]$Files = $ZzzArchiveProductionSharePointFolderItems | where {$_.GetType().Name -eq "File"}
 
 # snapshot data list
-$snapshot = @()
+$snapshot = [System.Collections.Generic.List[object]]::new()
 
 # Delete all files
 foreach ($file in $Files)
@@ -112,7 +112,7 @@ foreach ($file in $Files)
     {
         Write-STStatus "WouldDeleteFile: $($file.ServerRelativeUrl)" -Level SUB
     }
-    $snapshot += $record
+    $snapshot.Add($record)
 }
 
 # Delete folders
@@ -132,7 +132,7 @@ while ($Folders)
         {
             Write-STStatus "WouldDelete: $($folder.Name)" -Level SUB
         }
-        $snapshot += $record
+        $snapshot.Add($record)
         $Folders.Remove($folder) | Out-Null
     }
     catch {
@@ -161,7 +161,7 @@ foreach ($folder in $ZzzArchiveProductionSharePointFolder)
         {
             Write-STStatus "WouldRemoveFile: $($folder.ServerRelativeUrl)" -Level SUB
         }
-        $snapshot += $record
+        $snapshot.Add($record)
     }
     if ($folder.GetType().Name -eq 'Folder')
     {
@@ -176,7 +176,7 @@ foreach ($folder in $ZzzArchiveProductionSharePointFolder)
         {
             Write-STStatus "WouldRemoveFolder: $($folder.ServerRelativeUrl)" -Level SUB
         }
-        $snapshot += $record
+        $snapshot.Add($record)
     }
 }
 

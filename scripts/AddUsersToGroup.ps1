@@ -186,8 +186,8 @@ function Start-Main {
     $file = Import-Csv $filePath
     $users = $file.UPN
 
-    $addedUsers = @()
-    $skippedUsers = @()
+    $addedUsers = [System.Collections.Generic.List[object]]::new()
+    $skippedUsers = [System.Collections.Generic.List[object]]::new()
 
     # Check if user is in the group and add the user if not
     foreach ($user in $users)
@@ -196,7 +196,7 @@ function Start-Main {
         $userInfo = Get-UserID -UserPrincipalName $user
 
         if (-not $userInfo) {
-            $skippedUsers += $user
+            $skippedUsers.Add($user)
             Write-STStatus "User not found: $user" -Level WARN
             continue
         }
@@ -205,14 +205,14 @@ function Start-Main {
         if ($groupExistingMembers -contains $userInfo.UserPrincipalName)
         {
             Write-STStatus "UserIsInGroup: $($user) - $($group.DisplayName)" -Level WARN
-            $skippedUsers += $userInfo.UserPrincipalName
+            $skippedUsers.Add($userInfo.UserPrincipalName)
         }
         else {
             Write-STStatus "AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)" -Level INFO
             try {
                 New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $userInfo.Id -ErrorAction Stop
                 Write-STStatus "[SUCCESS] AddingUserToGroup: User: $($userInfo.DisplayName) - Group: $($group.DisplayName)" -Level SUCCESS
-                $addedUsers += $userInfo.UserPrincipalName
+                $addedUsers.Add($userInfo.UserPrincipalName)
             }
             catch {
                 Write-Error "[FAIL] Error adding $($user) to $($group.Id)..."
