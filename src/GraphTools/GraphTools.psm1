@@ -11,6 +11,12 @@ Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-O
 Export-ModuleMember -Function 'Get-GraphUserDetails','Get-GraphGroupDetails'
 
 function Show-GraphToolsBanner {
+    <#
+    .SYNOPSIS
+        Displays the GraphTools module banner.
+    #>
+    [CmdletBinding()]
+    param()
     Write-STDivider 'GRAPHTOOLS MODULE LOADED' -Style heavy
     Write-STStatus "Run 'Get-Command -Module GraphTools' to view available tools." -Level SUB
     Write-STLog -Message 'GraphTools module loaded'

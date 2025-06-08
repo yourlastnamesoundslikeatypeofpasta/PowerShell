@@ -1252,6 +1252,8 @@ function Show-SharePointToolsBanner {
     .EXAMPLE
         Show-SharePointToolsBanner
     #>
+    [CmdletBinding()]
+    param()
     Write-STDivider 'SHAREPOINTTOOLS MODULE LOADED' -Style heavy
     Write-STStatus "Run 'Get-Command -Module SharePointTools' to view available tools." -Level SUB
     Write-STLog -Message 'SharePointTools module loaded'

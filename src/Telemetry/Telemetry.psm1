@@ -136,6 +136,12 @@ function Get-STTelemetryMetrics {
 Export-ModuleMember -Function 'Write-STTelemetryEvent','Get-STTelemetryMetrics','Send-STMetric'
 
 function Show-TelemetryBanner {
+    <#
+    .SYNOPSIS
+        Displays the Telemetry module banner.
+    #>
+    [CmdletBinding()]
+    param()
     Write-STDivider 'TELEMETRY MODULE LOADED' -Style heavy
     Write-STStatus "Run 'Get-Command -Module Telemetry' to view available tools." -Level SUB
     Write-STLog -Message 'Telemetry module loaded'
