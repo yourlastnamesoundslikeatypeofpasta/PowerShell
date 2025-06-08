@@ -91,18 +91,35 @@ function Connect-SPToolsOnline {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$Url,
-        [Parameter(Mandatory)][string]$ClientId,
-        [Parameter(Mandatory)][string]$TenantId,
-        [Parameter(Mandatory)][string]$CertPath,
+        [string]$ClientId,
+        [string]$TenantId,
+        [string]$CertPath,
+        [string]$ClientSecret,
+        [switch]$DeviceLogin,
         [int]$RetryCount = 3
     )
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = "Success"
     $attempt = 1
+
+    if (-not $DeviceLogin) {
+        if (-not $ClientId -or -not $TenantId) {
+            throw 'ClientId and TenantId are required unless using -DeviceLogin'
+        }
+        if (-not $CertPath -and -not $ClientSecret) {
+            throw 'Specify CertPath or ClientSecret, or use -DeviceLogin'
+        }
+    }
     while ($true) {
         try {
             Write-STStatus "Connecting to $Url (attempt $attempt)" -Level INFO
-            Connect-PnPOnline -Url $Url -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath -ErrorAction Stop
+            if ($DeviceLogin) {
+                Connect-PnPOnline -Url $Url -DeviceLogin -ErrorAction Stop
+            } elseif ($ClientSecret) {
+                Connect-PnPOnline -Url $Url -ClientId $ClientId -Tenant $TenantId -ClientSecret $ClientSecret -ErrorAction Stop
+            } else {
+                Connect-PnPOnline -Url $Url -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertPath -ErrorAction Stop
+            }
             Write-STStatus 'PnP connection established' -Level SUCCESS
             break
         } catch {

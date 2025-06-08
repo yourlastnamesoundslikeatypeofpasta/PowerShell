@@ -4,6 +4,35 @@ Describe 'SharePointTools Integration Functions' {
         Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force
     }
 
+    Context 'Connect-SPToolsOnline authentication' {
+        It 'uses certificate credentials when CertPath provided' {
+            InModuleScope SharePointTools {
+                function Connect-PnPOnline {}
+                Mock Connect-PnPOnline {}
+                Connect-SPToolsOnline -Url 'https://contoso' -ClientId 'id' -TenantId 'tid' -CertPath 'cert.pfx'
+                Assert-MockCalled Connect-PnPOnline -Times 1 -ParameterFilter { $CertificatePath -eq 'cert.pfx' }
+            }
+        }
+
+        It 'uses client secret when provided' {
+            InModuleScope SharePointTools {
+                function Connect-PnPOnline {}
+                Mock Connect-PnPOnline {}
+                Connect-SPToolsOnline -Url 'https://contoso' -ClientId 'id' -TenantId 'tid' -ClientSecret 'secret'
+                Assert-MockCalled Connect-PnPOnline -Times 1 -ParameterFilter { $ClientSecret -eq 'secret' }
+            }
+        }
+
+        It 'uses device login when -DeviceLogin specified' {
+            InModuleScope SharePointTools {
+                function Connect-PnPOnline {}
+                Mock Connect-PnPOnline {}
+                Connect-SPToolsOnline -Url 'https://contoso' -DeviceLogin
+                Assert-MockCalled Connect-PnPOnline -Times 1 -ParameterFilter { $DeviceLogin }
+            }
+        }
+    }
+
     Context 'Get-SPToolsLibraryReport' {
         It 'returns library information' {
             InModuleScope SharePointTools {

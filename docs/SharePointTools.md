@@ -12,7 +12,7 @@ Validate prerequisites using `Test-SPToolsPrereqs`:
 Test-SPToolsPrereqs -Install
 ```
 
-Before running any command ensure the settings file has been configured using `./scripts/Configure-SharePointTools.ps1` (parameters can be passed for unattended use) or by setting the environment variables `SPTOOLS_CLIENT_ID`, `SPTOOLS_TENANT_ID` and `SPTOOLS_CERT_PATH`.
+Before running any command ensure the settings file has been configured using `./scripts/Configure-SharePointTools.ps1` (parameters can be passed for unattended use) or by setting the environment variables `SPTOOLS_CLIENT_ID`, `SPTOOLS_TENANT_ID` and either `SPTOOLS_CERT_PATH` or `SPTOOLS_CLIENT_SECRET`.
 
 All functions emit short, high contrast messages following the style in [ModuleStyleGuide.md](ModuleStyleGuide.md).
 
@@ -88,9 +88,13 @@ The cleanup commands output a CSV of files with excess versions and remove outda
 
 ### 4. Capture telemetry events
 
+Connect-SPToolsOnline supports certificate, client secret, or device code authentication.
+
 ```powershell
 $env:ST_ENABLE_TELEMETRY = '1'
 Connect-SPToolsOnline -Url https://contoso.sharepoint.com -ClientId $cid -TenantId $tid -CertPath cert.pfx
+Connect-SPToolsOnline -Url https://contoso.sharepoint.com -ClientId $cid -TenantId $tid -ClientSecret $secret
+Connect-SPToolsOnline -Url https://contoso.sharepoint.com -DeviceLogin
 $env:ST_ENABLE_TELEMETRY = ''
 ```
 
