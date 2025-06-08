@@ -11,13 +11,13 @@ Export-ModuleMember -Function 'Invoke-ChaosTest'
 function Show-ChaosToolsBanner {
     <#
     .SYNOPSIS
-        Displays the ChaosTools module banner.
+        Returns ChaosTools module metadata for banner display.
     #>
     [CmdletBinding()]
     param()
-    Write-STDivider 'CHAOSTOOLS MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module ChaosTools' to view available tools." -Level SUB
-    Write-STLog -Message 'ChaosTools module loaded'
+    $manifestPath = Join-Path $PSScriptRoot 'ChaosTools.psd1'
+    [pscustomobject]@{
+        Module  = 'ChaosTools'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-ChaosToolsBanner

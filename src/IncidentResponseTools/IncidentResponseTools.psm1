@@ -13,9 +13,11 @@ Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-O
 Export-ModuleMember -Function 'Get-CommonSystemInfo','Get-FailedLogin','Get-NetworkShare','Invoke-IncidentResponse','Invoke-RemoteAudit','Invoke-FullSystemAudit','Submit-SystemInfoTicket','Update-Sysmon','Search-Indicators'
 
 function Show-IncidentResponseToolsBanner {
-    Write-STDivider 'INCIDENTRESPONSETOOLS MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module IncidentResponseTools' to view available tools." -Level SUB
-    Write-STLog -Message 'IncidentResponseTools module loaded'
+    [CmdletBinding()]
+    param()
+    $manifestPath = Join-Path $PSScriptRoot 'IncidentResponseTools.psd1'
+    [pscustomobject]@{
+        Module  = 'IncidentResponseTools'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-IncidentResponseToolsBanner

@@ -18,13 +18,13 @@ Export-ModuleMember -Function (
 function Show-ServiceDeskToolsBanner {
     <#
     .SYNOPSIS
-        Displays the ServiceDeskTools module banner.
+        Returns ServiceDeskTools module metadata for banner display.
     #>
     [CmdletBinding()]
     param()
-    Write-STDivider 'SERVICEDESKTOOLS MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module ServiceDeskTools' to view available tools." -Level SUB
-    Write-STLog -Message 'ServiceDeskTools module loaded'
+    $manifestPath = Join-Path $PSScriptRoot 'ServiceDeskTools.psd1'
+    [pscustomobject]@{
+        Module  = 'ServiceDeskTools'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-ServiceDeskToolsBanner

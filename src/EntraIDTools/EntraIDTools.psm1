@@ -13,13 +13,13 @@ Export-ModuleMember -Function 'Get-GraphUserDetails','Get-GraphGroupDetails','Ge
 function Show-EntraIDToolsBanner {
     <#
     .SYNOPSIS
-        Displays the EntraIDTools module banner.
+        Returns EntraIDTools module metadata for banner display.
     #>
     [CmdletBinding()]
     param()
-    Write-STDivider 'ENTRAIDTOOLS MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module EntraIDTools' to view available tools." -Level SUB
-    Write-STLog -Message 'EntraIDTools module loaded'
+    $manifestPath = Join-Path $PSScriptRoot 'EntraIDTools.psd1'
+    [pscustomobject]@{
+        Module  = 'EntraIDTools'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-EntraIDToolsBanner

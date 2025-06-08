@@ -138,13 +138,13 @@ Export-ModuleMember -Function 'Write-STTelemetryEvent','Get-STTelemetryMetrics',
 function Show-TelemetryBanner {
     <#
     .SYNOPSIS
-        Displays the Telemetry module banner.
+        Returns Telemetry module metadata for banner display.
     #>
     [CmdletBinding()]
     param()
-    Write-STDivider 'TELEMETRY MODULE LOADED' -Style heavy
-    Write-STStatus "Run 'Get-Command -Module Telemetry' to view available tools." -Level SUB
-    Write-STLog -Message 'Telemetry module loaded'
+    $manifestPath = Join-Path $PSScriptRoot 'Telemetry.psd1'
+    [pscustomobject]@{
+        Module  = 'Telemetry'
+        Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
+    }
 }
-
-Show-TelemetryBanner
