@@ -6,7 +6,7 @@ Describe 'ServiceDeskTools Module' {
 
     Context 'Exported commands' {
         $expected = @(
-            'Get-SDTicket','New-SDTicket','Set-SDTicket',
+            'Get-SDTicket','Get-ServiceDeskAsset','New-SDTicket','Set-SDTicket',
             'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
@@ -22,6 +22,11 @@ Describe 'ServiceDeskTools Module' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
             Get-SDTicket -Id 1
             Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter { $Method -eq 'GET' -and $Path -eq '/incidents/1.json' } -Times 1
+        }
+        It 'Get-ServiceDeskAsset calls Invoke-SDRequest' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskAsset -Id 4
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter { $Method -eq 'GET' -and $Path -eq '/assets/4.json' } -Times 1
         }
         It 'New-SDTicket calls Invoke-SDRequest' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
@@ -71,6 +76,12 @@ Describe 'ServiceDeskTools Module' {
             Mock Write-STLog {} -ModuleName ServiceDeskTools
             Get-SDTicket -Id 5
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Get-SDTicket 5' } -Times 1
+        }
+        It 'Get-ServiceDeskAsset logs the request' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Mock Write-STLog {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskAsset -Id 6
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Get-ServiceDeskAsset 6' } -Times 1
         }
         It 'New-SDTicket logs the request' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
@@ -169,6 +180,11 @@ Describe 'ServiceDeskTools Module' {
         It 'Set-SDTicket does not invoke request when -WhatIf used' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
             Set-SDTicket -Id 1 -Fields @{status='Open'} -WhatIf
+            Assert-MockCalled Invoke-SDRequest -Times 0 -ModuleName ServiceDeskTools
+        }
+        It 'Get-ServiceDeskAsset does not invoke request when -WhatIf used' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskAsset -Id 2 -WhatIf
             Assert-MockCalled Invoke-SDRequest -Times 0 -ModuleName ServiceDeskTools
         }
     }
