@@ -21,4 +21,36 @@ Describe 'MonitoringTools Module' {
         $result.CpuPercent | Should -Be 10
         $result.DiskInfo   | Should -Be @()
     }
+
+    Context 'Logging' {
+        It 'logs CPU usage' {
+            Mock Write-STRichLog {} -ModuleName MonitoringTools
+            Mock Get-Counter { [pscustomobject]@{ CounterSamples = @([pscustomobject]@{ CookedValue = 10 }) } } -ModuleName MonitoringTools -Verifiable
+            Get-CPUUsage | Out-Null
+            Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -ParameterFilter { $Tool -eq 'Get-CPUUsage' } -Times 1
+        }
+
+        It 'logs disk info' {
+            Mock Write-STRichLog {} -ModuleName MonitoringTools
+            Mock Get-CimInstance { @() } -ModuleName MonitoringTools
+            Get-DiskSpaceInfo | Out-Null
+            Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -ParameterFilter { $Tool -eq 'Get-DiskSpaceInfo' } -Times 1
+        }
+
+        It 'logs event log summary' {
+            Mock Write-STRichLog {} -ModuleName MonitoringTools
+            Mock Get-WinEvent { @() } -ModuleName MonitoringTools
+            Get-EventLogSummary | Out-Null
+            Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -ParameterFilter { $Tool -eq 'Get-EventLogSummary' } -Times 1
+        }
+
+        It 'logs system health' {
+            Mock Write-STRichLog {} -ModuleName MonitoringTools
+            Mock Get-CPUUsage { 10 } -ModuleName MonitoringTools
+            Mock Get-DiskSpaceInfo { @() } -ModuleName MonitoringTools
+            Mock Get-EventLogSummary { @() } -ModuleName MonitoringTools
+            Get-SystemHealth | Out-Null
+            Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -ParameterFilter { $Tool -eq 'Get-SystemHealth' } -Times 1
+        }
+    }
 }

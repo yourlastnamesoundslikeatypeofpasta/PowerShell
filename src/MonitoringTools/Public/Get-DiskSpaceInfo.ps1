@@ -4,6 +4,7 @@ function Get-DiskSpaceInfo {
         Retrieves disk usage information.
     .DESCRIPTION
         Returns drive size and free space for fixed disks.
+        Logs a structured entry via Write-STRichLog.
     #>
     [CmdletBinding()]
     param(
@@ -13,10 +14,12 @@ function Get-DiskSpaceInfo {
     )
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+    $computer = if ($env:COMPUTERNAME) { $env:COMPUTERNAME } else { $env:HOSTNAME }
+    $time = Get-Date -Format 'o'
     try {
         if ($IsWindows) {
             $disks = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType = 3"
-            foreach ($d in $disks) {
+            $info = foreach ($d in $disks) {
                 [pscustomobject]@{
                     Drive       = $d.DeviceID
                     SizeGB      = [math]::Round($d.Size / 1GB,2)
@@ -25,7 +28,7 @@ function Get-DiskSpaceInfo {
                 }
             }
         } else {
-            Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Free -ne $null } | ForEach-Object {
+            $info = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Free -ne $null } | ForEach-Object {
                 [pscustomobject]@{
                     Drive       = $_.Root
                     SizeGB      = [math]::Round($_.Used/1GB + $_.Free/1GB,2)
@@ -34,7 +37,10 @@ function Get-DiskSpaceInfo {
                 }
             }
         }
+        Write-STRichLog -Tool 'Get-DiskSpaceInfo' -Status 'success' -Details @("ComputerName=$computer","Timestamp=$time","DriveCount=$($info.Count)")
+        $info
     } catch {
+        Write-STRichLog -Tool 'Get-DiskSpaceInfo' -Status 'error' -Details @("ComputerName=$computer","Timestamp=$time","Error=$($_.Exception.Message)")
         return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
