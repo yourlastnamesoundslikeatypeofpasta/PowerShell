@@ -45,3 +45,4 @@ The table below lists each command and the script it invokes. Arguments not list
 | `Start-Countdown` | `SimpleCountdown.ps1` | *passthrough* | `Start-Countdown -Seconds 30` |
 | `Sync-SupportTools` | *git* | `[RepositoryUrl]`, `[InstallPath]` | `Sync-SupportTools` |
 | `New-SPUsageReport` | `Generate-SPUsageReport.ps1` | `[ItemThreshold]`, `[RequesterEmail]`, `[CsvPath]`, `[TranscriptPath]` | `New-SPUsageReport -RequesterEmail 'user@contoso.com'` |
+| `Invoke-NewHireUserAutomation` | `Create-NewHireUser.ps1` | `[PollMinutes]`, `[-Once]` | `Invoke-NewHireUserAutomation -Once` |
