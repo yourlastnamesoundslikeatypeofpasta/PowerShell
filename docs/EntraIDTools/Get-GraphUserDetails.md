@@ -39,6 +39,7 @@ User principal name (UPN) of the account to retrieve.
 
 ### -TenantId
 GUID identifier for the Azure AD tenant containing the user.
+Alias: `TenantID`, `tenantId`
 
 ### -ClientId
 Application (client) ID used for Microsoft Graph authentication.

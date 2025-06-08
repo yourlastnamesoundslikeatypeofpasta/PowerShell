@@ -12,6 +12,7 @@ function Get-GraphGroupDetails {
         [string]$GroupId,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
+        [Alias('TenantID','tenantId')]
         [string]$TenantId,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

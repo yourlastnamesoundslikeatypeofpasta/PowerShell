@@ -102,6 +102,7 @@ function Connect-SPToolsOnline {
         [string]$ClientId,
         [Parameter(Mandatory, ParameterSetName='Certificate')]
         [Parameter(Mandatory, ParameterSetName='Secret')]
+        [Alias('TenantID','tenantId')]
         [string]$TenantId,
         [Parameter(Mandatory, ParameterSetName='Certificate')]
         [string]$CertPath,
@@ -406,6 +407,11 @@ function Invoke-ArchiveCleanup {
         [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Shared Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [Alias('TenantID','tenantId')]
+        [Alias('TenantID','tenantId')]
+        [Alias('TenantID','tenantId')]
+        [Alias('TenantID','tenantId')]
+        [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
         [string]$TranscriptPath
@@ -543,6 +549,7 @@ function Invoke-FileVersionCleanup {
         [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Shared Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
         [string]$ReportPath = 'exportedReport.csv'
@@ -599,6 +606,7 @@ function Invoke-SharingLinkCleanup {
         [string]$LibraryName = 'Shared Documents',
         [string]$FolderName,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
         [string]$TranscriptPath
@@ -720,6 +728,7 @@ function Get-SPToolsLibraryReport {
         [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -790,6 +799,7 @@ function Get-SPToolsRecycleBinReport {
         [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -830,6 +840,7 @@ function Clear-SPToolsRecycleBin {
         [string]$SiteUrl,
         [switch]$SecondStage,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -888,6 +899,7 @@ function Get-SPToolsPreservationHoldReport {
         [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -944,6 +956,7 @@ function Get-SPPermissionsReport {
         [string]$SiteUrl,
         [string]$FolderUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -990,6 +1003,7 @@ function Clean-SPVersionHistory {
         [ValidateRange(1, [int]::MaxValue)]
         [int]$KeepVersions = 5,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
+        [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
