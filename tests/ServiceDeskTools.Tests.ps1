@@ -6,7 +6,7 @@ Describe 'ServiceDeskTools Module' {
 
     Context 'Exported commands' {
         $expected = @(
-            'Get-SDTicket','New-SDTicket','Set-SDTicket',
+            'Get-SDTicket','Get-ServiceDeskStats','New-SDTicket','Set-SDTicket',
             'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
@@ -50,6 +50,13 @@ Describe 'ServiceDeskTools Module' {
                 $Method -eq 'GET' -and $Path -eq '/incidents.json?search=error'
             } -Times 1
         }
+        It 'Get-ServiceDeskStats calls Invoke-SDRequest' {
+            Mock Invoke-SDRequest { @() } -ModuleName ServiceDeskTools
+            Get-ServiceDeskStats -From (Get-Date).AddDays(-1) -To (Get-Date)
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $Method -eq 'GET' -and $Path -like '/incidents.json*'
+            } -Times 1
+        }
         It 'Set-SDTicketBulk calls Set-SDTicket for each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
             Set-SDTicketBulk -Id 10,11 -Fields @{status='Closed'}
@@ -90,6 +97,12 @@ Describe 'ServiceDeskTools Module' {
             Search-SDTicket -Query 'fail'
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Search-SDTicket fail' } -Times 1
         }
+        It 'Get-ServiceDeskStats logs the request' {
+            Mock Invoke-SDRequest { @() } -ModuleName ServiceDeskTools
+            Mock Write-STLog {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskStats -From (Get-Date).AddDays(-1) -To (Get-Date)
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -like 'Get-ServiceDeskStats*' } -Times 1
+        }
         It 'Set-SDTicketBulk logs each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
             Mock Write-STLog {} -ModuleName ServiceDeskTools
@@ -111,6 +124,22 @@ Describe 'ServiceDeskTools Module' {
                 $Subject -eq 'S' -and $Description -eq 'D' -and $RequesterEmail -eq 'a@b.com'
             } -Times 1
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Submit-Ticket S' } -Times 1
+        }
+    }
+
+    Context 'Statistics' {
+        It 'groups incidents by state' {
+            Mock Invoke-SDRequest { @(@{ state='open' },@{ state='open' },@{ state='closed' }) } -ModuleName ServiceDeskTools
+            $stats = Get-ServiceDeskStats -From (Get-Date).AddDays(-2) -To (Get-Date)
+            $stats.open | Should -Be 2
+            $stats.closed | Should -Be 1
+            $stats.Total | Should -Be 3
+        }
+        It 'records telemetry' {
+            Mock Invoke-SDRequest { @() } -ModuleName ServiceDeskTools
+            Mock Send-STMetric {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskStats -From (Get-Date).AddDays(-2) -To (Get-Date)
+            Assert-MockCalled Send-STMetric -ModuleName ServiceDeskTools -ParameterFilter { $MetricName -eq 'Get-ServiceDeskStats' } -Times 1
         }
     }
 

@@ -7,6 +7,7 @@ Commands for interacting with the Service Desk ticketing API. **ServiceDeskTools
 | Command | Description | Example |
 |---------|-------------|---------|
 | `Get-SDTicket` | Retrieve an incident by ID | `Get-SDTicket -Id 42` |
+| `Get-ServiceDeskStats` | Count incidents by state over a date range | `Get-ServiceDeskStats -From (Get-Date).AddDays(-7) -To (Get-Date)` |
 | `New-SDTicket` | Create a new incident | `New-SDTicket -Subject "Printer issue" -Description "Cannot print" -RequesterEmail 'jane.doe@example.com'` |
 | `Set-SDTicket` | Update an existing incident | `Set-SDTicket -Id 42 -Fields @{ status = 'Resolved' }` |
 | `Search-SDTicket` | Search incidents by keyword | `Search-SDTicket -Query 'printer'` |
