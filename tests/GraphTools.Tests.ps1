@@ -8,6 +8,14 @@ Describe 'GraphTools Module' {
         . $PSScriptRoot/../src/GraphTools/Private/Get-GraphAccessToken.ps1
     }
 
+    Context 'Module import' {
+        It 'imports when MSAL.PS is installed' {
+            Remove-Module GraphTools -ErrorAction SilentlyContinue
+            Import-Module MSAL.PS -ErrorAction Stop
+            { Import-Module $PSScriptRoot/../src/GraphTools/GraphTools.psd1 -Force } | Should -Not -Throw
+        }
+    }
+
     Context 'Exported commands' {
         It 'Exports Get-GraphUserDetails' {
             (Get-Command -Module GraphTools).Name | Should -Contain 'Get-GraphUserDetails'
