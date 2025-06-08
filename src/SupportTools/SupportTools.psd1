@@ -33,6 +33,7 @@
         'Search-ReadMe',
         'Start-Countdown',
         'Export-ITReport',
+        'New-STDashboard',
         'Sync-SupportTools',
         'Invoke-NewHireUserAutomation'
     )
