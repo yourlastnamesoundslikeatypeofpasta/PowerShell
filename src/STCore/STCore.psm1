@@ -38,7 +38,8 @@ function Write-STDebug {
         [string]$Message
     )
     if ($env:ST_DEBUG -eq '1') {
-        Write-Host "[DEBUG] $Message" -ForegroundColor DarkGray
+        Write-STStatus "[DEBUG] $Message" -Level SUB
+        Write-STLog "[DEBUG] $Message" -Level INFO
     }
 }
 
@@ -84,7 +85,7 @@ function Show-STCoreBanner {
     #>
     [CmdletBinding()]
     param()
-    Write-Host 'STCore module loaded' -ForegroundColor DarkGray
+    Write-STStatus 'STCore module loaded' -Level SUB -Log
 }
 
 Show-STCoreBanner

@@ -23,11 +23,12 @@ jobs:
       - name: Check outdated modules
         shell: pwsh
         run: |
+          . ./SupportToolsLoader.ps1
           $outdated = Get-InstalledModule | Where-Object { $_.UpdateAvailable }
           if ($outdated) {
             $outdated | Format-Table Name, Version, LatestVersion
           } else {
-            Write-Host 'All modules are up to date.'
+            Write-STStatus 'All modules are up to date.' -Level INFO -Log
           }
 
       - name: Lint with PSScriptAnalyzer
