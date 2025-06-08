@@ -19,6 +19,9 @@ function Sync-SupportTools {
         [ValidateNotNullOrEmpty()]
         [string]$InstallPath = $(if ($env:USERPROFILE) { Join-Path $env:USERPROFILE 'SupportTools' } else { Join-Path $env:HOME 'SupportTools' }),
         [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TranscriptPath,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain,
         [Parameter(Mandatory = $false)]
         [object]$Logger,
@@ -48,6 +51,8 @@ function Sync-SupportTools {
             return
         }
 
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
         $result = 'Success'
         if (Test-Path (Join-Path $InstallPath '.git')) {
@@ -70,6 +75,7 @@ function Sync-SupportTools {
         $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'General'
     } finally {
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
         $sw.Stop()
         Send-STMetric -MetricName 'Sync-SupportTools' -Category 'Deployment' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
     }
