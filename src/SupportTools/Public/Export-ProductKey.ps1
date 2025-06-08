@@ -11,15 +11,24 @@ function Export-ProductKey {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [string]$OutputPath
+        [string]$OutputPath,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TranscriptPath
     )
 
-    $key = (Get-CimInstance -ClassName SoftwareLicensingService | Select-Object -ExpandProperty OA3xOriginalProductKey)
-    if (-not $key) {
-        Write-STStatus 'Product key not found.' -Level WARN
-        return
-    }
+    try {
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
-    Set-Content -Path $OutputPath -Value $key
-    Write-STStatus "Product key exported to $OutputPath" -Level SUCCESS
+        $key = (Get-CimInstance -ClassName SoftwareLicensingService | Select-Object -ExpandProperty OA3xOriginalProductKey)
+        if (-not $key) {
+            Write-STStatus 'Product key not found.' -Level WARN
+            return
+        }
+
+        Set-Content -Path $OutputPath -Value $key
+        Write-STStatus "Product key exported to $OutputPath" -Level SUCCESS
+    } finally {
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+    }
 }

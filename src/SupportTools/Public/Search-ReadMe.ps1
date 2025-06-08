@@ -7,10 +7,20 @@ function Search-ReadMe {
         the name and returns the file objects found.
     #>
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TranscriptPath
+    )
 
-    Write-STStatus 'Searching for readme files...' -Level INFO
-    $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction SilentlyContinue
-    Write-STStatus "Found $($results.Count) file(s)." -Level SUCCESS
-    return $results
+    try {
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+
+        Write-STStatus 'Searching for readme files...' -Level INFO
+        $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction SilentlyContinue
+        Write-STStatus "Found $($results.Count) file(s)." -Level SUCCESS
+        return $results
+    } finally {
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+    }
 }

@@ -25,10 +25,14 @@ function Sync-SupportTools {
         [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
         [Parameter(Mandatory = $false)]
-        [object]$Config
+        [object]$Config,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TranscriptPath
     )
 
     try {
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
         if ($Logger) {
             Import-Module $Logger -ErrorAction SilentlyContinue
         } else {
@@ -70,6 +74,7 @@ function Sync-SupportTools {
         $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'General'
     } finally {
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
         $sw.Stop()
         Send-STMetric -MetricName 'Sync-SupportTools' -Category 'Deployment' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
     }
