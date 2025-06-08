@@ -1,5 +1,5 @@
 @{
-    RootModule = 'GraphTools.psm1'
+    RootModule = 'EntraIDTools.psm1'
     ModuleVersion = '1.0.0'
     GUID = 'b6b7e080-4ad4-4d58-8b8c-000000000012'
     Author = 'Contoso'
@@ -8,7 +8,7 @@
     PrivateData = @{
         PSData = @{
             Tags = @('PowerShell','Graph','Internal')
-            ReleaseNotes = 'Initial stable release of GraphTools.'
+            ReleaseNotes = 'Initial stable release of EntraIDTools.'
         }
     }
     FunctionsToExport = @('Get-GraphUserDetails','Get-GraphGroupDetails')

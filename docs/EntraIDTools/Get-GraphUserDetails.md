@@ -1,6 +1,6 @@
 ---
-external help file: GraphTools-help.xml
-Module Name: GraphTools
+external help file: EntraIDTools-help.xml
+Module Name: EntraIDTools
 online version:
 schema: 2.0.0
 ---
