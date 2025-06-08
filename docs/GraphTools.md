@@ -6,6 +6,14 @@ Commands that query Microsoft Graph for tenant data. Import the module:
 Import-Module ./src/GraphTools/GraphTools.psd1
 ```
 
+This module depends on the **MSAL.PS** module which provides the `Get-MsalToken`
+command used for authentication. Install the dependency from the PowerShell
+Gallery first:
+
+```powershell
+Install-Module MSAL.PS
+```
+
 ## Available Commands
 
 | Command | Description | Example |
