@@ -18,7 +18,7 @@ Get-SPToolsLibraryReport [-SiteName] <String> [[-SiteUrl] <String>] [[-ClientId]
 ```
 
 ## DESCRIPTION
-Description forthcoming for Get-SPToolsLibraryReport.
+Summarizes document library usage for a site.
 
 ## EXAMPLES
 

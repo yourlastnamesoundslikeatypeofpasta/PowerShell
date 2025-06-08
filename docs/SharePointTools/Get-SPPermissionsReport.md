@@ -18,7 +18,7 @@ Get-SPPermissionsReport [-SiteUrl] <String> [[-FolderUrl] <String>] [[-ClientId]
 ```
 
 ## DESCRIPTION
-Description forthcoming for Get-SPPermissionsReport.
+Lists role assignments for a site or folder.
 
 ## EXAMPLES
 

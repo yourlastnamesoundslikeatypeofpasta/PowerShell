@@ -18,7 +18,7 @@ Get-SPToolsRecycleBinReport [-SiteName] <String> [[-SiteUrl] <String>] [[-Client
 ```
 
 ## DESCRIPTION
-Description forthcoming for Get-SPToolsRecycleBinReport.
+Summarizes recycle bin usage for a site.
 
 ## EXAMPLES
 

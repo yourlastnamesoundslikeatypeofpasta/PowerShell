@@ -18,7 +18,7 @@ Find-OrphanedSPFiles [-SiteUrl] <String> [[-LibraryName] <String>] [[-Days] <Int
 ```
 
 ## DESCRIPTION
-Description forthcoming for Find-OrphanedSPFiles.
+Reports files not modified within a specified number of days.
 
 ## EXAMPLES
 

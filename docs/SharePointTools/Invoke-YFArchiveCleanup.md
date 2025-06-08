@@ -17,7 +17,7 @@ Invoke-YFArchiveCleanup [-ProgressAction <ActionPreference>] [<CommonParameters>
 ```
 
 ## DESCRIPTION
-Description forthcoming for Invoke-YFArchiveCleanup.
+Deletes files and folders flagged as archives in the YF site.
 
 ## EXAMPLES
 

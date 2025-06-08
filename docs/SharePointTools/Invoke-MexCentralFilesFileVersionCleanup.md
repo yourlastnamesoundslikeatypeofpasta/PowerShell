@@ -17,7 +17,7 @@ Invoke-MexCentralFilesFileVersionCleanup [-ProgressAction <ActionPreference>] [<
 ```
 
 ## DESCRIPTION
-Description forthcoming for Invoke-MexCentralFilesFileVersionCleanup.
+Removes old file versions from the MexCentralFiles site.
 
 ## EXAMPLES
 

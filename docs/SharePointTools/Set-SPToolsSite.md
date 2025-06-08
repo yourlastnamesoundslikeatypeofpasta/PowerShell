@@ -18,7 +18,7 @@ Set-SPToolsSite [-Name] <String> [-Url] <String> [-ProgressAction <ActionPrefere
 ```
 
 ## DESCRIPTION
-Description forthcoming for Set-SPToolsSite.
+Updates an existing site entry in the settings file.
 
 ## EXAMPLES
 

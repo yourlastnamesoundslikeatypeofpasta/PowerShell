@@ -18,7 +18,7 @@ Add-SPToolsSite [-Name] <String> [-Url] <String> [-ProgressAction <ActionPrefere
 ```
 
 ## DESCRIPTION
-Description forthcoming for Add-SPToolsSite.
+Adds a site name and URL to the settings file.
 
 ## EXAMPLES
 

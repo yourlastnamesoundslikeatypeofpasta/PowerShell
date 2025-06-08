@@ -18,7 +18,7 @@ Get-SPToolsPreservationHoldReport [-SiteName] <String> [[-SiteUrl] <String>] [[-
 ```
 
 ## DESCRIPTION
-Description forthcoming for Get-SPToolsPreservationHoldReport.
+Reports the size of the Preservation Hold Library.
 
 ## EXAMPLES
 

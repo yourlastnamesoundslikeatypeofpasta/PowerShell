@@ -17,7 +17,7 @@ Get-SPToolsSiteUrl [-SiteName] <String> [-ProgressAction <ActionPreference>] [<C
 ```
 
 ## DESCRIPTION
-Description forthcoming for Get-SPToolsSiteUrl.
+Gets the URL for a stored site name.
 
 ## EXAMPLES
 

@@ -17,7 +17,7 @@ Get-SPToolsAllLibraryReports [-ProgressAction <ActionPreference>] [<CommonParame
 ```
 
 ## DESCRIPTION
-Description forthcoming for Get-SPToolsAllLibraryReports.
+Generates library reports for all configured sites.
 
 ## EXAMPLES
 

@@ -17,7 +17,7 @@ Invoke-MexCentralFilesArchiveCleanup [-ProgressAction <ActionPreference>] [<Comm
 ```
 
 ## DESCRIPTION
-Description forthcoming for Invoke-MexCentralFilesArchiveCleanup.
+Deletes archive items in the MexCentralFiles site.
 
 ## EXAMPLES
 

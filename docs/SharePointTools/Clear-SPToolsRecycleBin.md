@@ -19,7 +19,7 @@ Clear-SPToolsRecycleBin [-SiteName] <String> [[-SiteUrl] <String>] [-SecondStage
 ```
 
 ## DESCRIPTION
-Description forthcoming for Clear-SPToolsRecycleBin.
+Empties the recycle bin for a site.
 
 ## EXAMPLES
 

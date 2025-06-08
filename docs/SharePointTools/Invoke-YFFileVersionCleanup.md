@@ -17,7 +17,7 @@ Invoke-YFFileVersionCleanup [-ProgressAction <ActionPreference>] [<CommonParamet
 ```
 
 ## DESCRIPTION
-Description forthcoming for Invoke-YFFileVersionCleanup.
+Removes old file versions from the YF site.
 
 ## EXAMPLES
 

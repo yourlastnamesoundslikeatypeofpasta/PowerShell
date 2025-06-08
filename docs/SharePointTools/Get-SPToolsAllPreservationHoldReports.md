@@ -17,7 +17,7 @@ Get-SPToolsAllPreservationHoldReports [-ProgressAction <ActionPreference>] [<Com
 ```
 
 ## DESCRIPTION
-Description forthcoming for Get-SPToolsAllPreservationHoldReports.
+Runs hold library reports across all sites.
 
 ## EXAMPLES
 

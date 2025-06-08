@@ -17,7 +17,7 @@ Invoke-IBCCentralFilesFileVersionCleanup [-ProgressAction <ActionPreference>] [<
 ```
 
 ## DESCRIPTION
-Description forthcoming for Invoke-IBCCentralFilesFileVersionCleanup.
+Removes old file versions from the IBCCentralFiles site.
 
 ## EXAMPLES
 
