@@ -57,6 +57,36 @@ Describe 'SupportTools Module' {
                 Assert-MockCalled git -ModuleName SupportTools -Times 1 -ParameterFilter { $args[0] -eq '-C' -and $args[2] -eq 'pull' }
             }
         }
+
+        It 'records transcript when path provided' {
+            InModuleScope SupportTools {
+                function git {}
+                function Import-Module {}
+                function Start-Transcript {}
+                function Stop-Transcript {}
+                Mock git {} -ModuleName SupportTools
+                Mock Import-Module {} -ModuleName SupportTools
+                Mock Start-Transcript {} -ModuleName SupportTools
+                Mock Stop-Transcript {} -ModuleName SupportTools
+                $path = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid())
+                Sync-SupportTools -RepositoryUrl 'url' -InstallPath $path -TranscriptPath 't.log'
+                Assert-MockCalled Start-Transcript -ModuleName SupportTools -Times 1 -ParameterFilter { $Path -eq 't.log' -and $Append }
+                Assert-MockCalled Stop-Transcript -ModuleName SupportTools -Times 1
+            }
+        }
     }
 
+    Context 'Search-ReadMe transcript' {
+        It 'starts and stops transcript when path is given' {
+            InModuleScope SupportTools {
+                function Start-Transcript {}
+                function Stop-Transcript {}
+                Mock Start-Transcript {} -ModuleName SupportTools
+                Mock Stop-Transcript {} -ModuleName SupportTools
+                Search-ReadMe -TranscriptPath 'log.txt' | Out-Null
+                Assert-MockCalled Start-Transcript -ModuleName SupportTools -Times 1 -ParameterFilter { $Path -eq 'log.txt' -and $Append }
+                Assert-MockCalled Stop-Transcript -ModuleName SupportTools -Times 1
+            }
+        }
+    }
 }

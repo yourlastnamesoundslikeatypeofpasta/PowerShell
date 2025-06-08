@@ -19,8 +19,6 @@ if (-not $script:SupportToolsLoaderLoaded) {
         param([string]$Message)
         if (Get-Command Write-STStatus -ErrorAction SilentlyContinue) {
             Write-STStatus -Message $Message -Level SUB -Log
-        } else {
-            Write-Host $Message
         }
     }
 

@@ -19,6 +19,9 @@ function Sync-SupportTools {
         [ValidateNotNullOrEmpty()]
         [string]$InstallPath = $(if ($env:USERPROFILE) { Join-Path $env:USERPROFILE 'SupportTools' } else { Join-Path $env:HOME 'SupportTools' }),
         [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$TranscriptPath,
+        [Parameter(Mandatory = $false)]
         [switch]$Explain,
         [Parameter(Mandatory = $false)]
         [object]$Logger,
@@ -51,6 +54,8 @@ function Sync-SupportTools {
             Get-Help $MyInvocation.PSCommandPath -Full
             return
         }
+
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
         $result = 'Success'

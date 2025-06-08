@@ -13,9 +13,8 @@ function Search-ReadMe {
         [string]$TranscriptPath
     )
 
+    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     try {
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-
         Write-STStatus 'Searching for readme files...' -Level INFO
         $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction SilentlyContinue
         Write-STStatus "Found $($results.Count) file(s)." -Level SUCCESS
