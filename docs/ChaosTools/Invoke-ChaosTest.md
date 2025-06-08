@@ -22,8 +22,9 @@ an exception based on `FailureRate` before running the provided script block.
 This helps verify that your automation gracefully handles transient errors and
 slower responses.
 
-While the cmdlet does not use environment variables directly, other modules such
-as **ServiceDeskTools** honor the `ST_CHAOS_MODE` environment variable and call
+If the `CHAOSTOOLS_ENABLED` environment variable is set to `0` or `False`, chaos
+injection is skipped and the script block runs normally. Other modules such as
+**ServiceDeskTools** honor the `ST_CHAOS_MODE` environment variable and call
 `Invoke-ChaosTest` internally when it is set to `1`.
 
 ## EXAMPLES
