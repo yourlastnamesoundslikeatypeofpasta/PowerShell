@@ -19,6 +19,9 @@ Describe 'EntraIDTools Module' {
         It 'Exports Get-GraphGroupDetails' {
             (Get-Command -Module EntraIDTools).Name | Should -Contain 'Get-GraphGroupDetails'
         }
+        It 'Exports Get-UserInfoHybrid' {
+            (Get-Command -Module EntraIDTools).Name | Should -Contain 'Get-UserInfoHybrid'
+        }
     }
 
     Context 'Logging and telemetry' {
@@ -38,6 +41,15 @@ Describe 'EntraIDTools Module' {
             Mock Write-STLog {} -ModuleName EntraIDTools
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid'
+            Assert-MockCalled Write-STLog -ModuleName EntraIDTools -Times 1
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1
+        }
+        It 'Logs hybrid requests and writes telemetry' {
+            Mock Get-GraphUserDetails { @{ UserPrincipalName='u'; DisplayName='User'; Licenses='L'; Groups='G'; LastSignIn='t' } } -ModuleName EntraIDTools
+            Mock Get-ADUser { [pscustomobject]@{ SamAccountName='sam'; Enabled=$true } } -ModuleName EntraIDTools
+            Mock Write-STLog {} -ModuleName EntraIDTools
+            Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
+            Get-UserInfoHybrid -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid'
             Assert-MockCalled Write-STLog -ModuleName EntraIDTools -Times 1
             Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1
         }
@@ -108,6 +120,12 @@ Describe 'EntraIDTools Module' {
             Mock Invoke-RestMethod { throw 'bad' } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             { Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid' } | Should -Throw
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
+        }
+        It 'logs hybrid failures' {
+            Mock Get-GraphUserDetails { throw 'bad' } -ModuleName EntraIDTools
+            Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
+            { Get-UserInfoHybrid -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid' } | Should -Throw
             Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
         }
     }
