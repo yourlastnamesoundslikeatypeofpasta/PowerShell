@@ -3,6 +3,7 @@ Param(
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
+. (Join-Path $root 'SupportToolsLoader.ps1')
 if (-not $Version) {
     $Version = (Import-PowerShellDataFile (Join-Path $root 'src/SupportTools/SupportTools.psd1')).ModuleVersion
 }
@@ -20,5 +21,5 @@ if (-not $nuget) {
     }
 }
 & $nuget pack (Join-Path $root 'SupportTools.nuspec') -Version $Version -OutputDirectory $packageDir
-Write-Host "Package created in $packageDir"
+Write-STLog -Message "Package created in $packageDir" -Level INFO
 

@@ -27,7 +27,7 @@ jobs:
           if ($outdated) {
             $outdated | Format-Table Name, Version, LatestVersion
           } else {
-            Write-Host 'All modules are up to date.'
+            Write-Information 'All modules are up to date.'
           }
 
       - name: Lint with PSScriptAnalyzer

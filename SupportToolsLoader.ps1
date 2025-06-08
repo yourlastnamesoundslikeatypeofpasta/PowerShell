@@ -21,7 +21,7 @@ if (-not $script:SupportToolsLoaderLoaded) {
         if (Get-Command Write-STStatus -ErrorAction SilentlyContinue) {
             Write-STStatus -Message $Message -Level SUB -Log
         } else {
-            Write-Host $Message
+            Write-STLog -Message $Message -Level INFO
         }
     }
 

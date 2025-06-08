@@ -38,7 +38,7 @@ function Write-STDebug {
         [string]$Message
     )
     if ($env:ST_DEBUG -eq '1') {
-        Write-Host "[DEBUG] $Message" -ForegroundColor DarkGray
+        Write-STStatus "[DEBUG] $Message" -Level SUB
     }
 }
 
@@ -57,7 +57,7 @@ function Test-IsElevated {
 Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','Write-STDebug','Test-IsElevated'
 
 function Show-STCoreBanner {
-    Write-Host 'STCore module loaded' -ForegroundColor DarkGray
+    Write-STStatus 'STCore module loaded' -Level SUB
 }
 
 Show-STCoreBanner

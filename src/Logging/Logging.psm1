@@ -60,11 +60,20 @@ function Write-STLog {
         New-Item -Path $dir -ItemType Directory -Force | Out-Null
     }
     $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+    $stack = Get-PSCallStack
+    $callerIndex = 1
+    if ($stack.Count -gt 1 -and $stack[1].InvocationInfo.MyCommand.Name -eq 'Write-STStatus') {
+        $callerIndex = 2
+    }
+    $module = $null
+    if ($stack.Count -gt $callerIndex) { $module = $stack[$callerIndex].InvocationInfo.MyCommand.ModuleName }
+    if (-not $module) { $module = 'Script' }
     if ($Structured) {
         $user = if ($env:USERNAME) { $env:USERNAME } else { $env:USER }
         $script = $MyInvocation.PSCommandPath
         $entry = [ordered]@{
             timestamp = $timestamp
+            module    = $module
             user      = $user
             script    = $script
             level     = $Level
@@ -73,7 +82,7 @@ function Write-STLog {
         if ($Metadata) { foreach ($k in $Metadata.Keys) { $entry[$k] = $Metadata[$k] } }
         ($entry | ConvertTo-Json -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
     } else {
-        "$timestamp [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
+        "$timestamp [$module] [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
     }
 }
 
