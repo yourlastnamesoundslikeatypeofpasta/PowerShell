@@ -22,38 +22,18 @@ Get-ChildItem -Path "$PublicDir" -Filter *.ps1 -ErrorAction SilentlyContinue |
 
 
 Export-ModuleMember -Function @(
-    'Add-UserToGroup',
     'Clear-ArchiveFolder',
     'Clear-TempFile',
     'Convert-ExcelToCsv',
     'Export-ProductKey',
     'New-SPUsageReport',
-    'Get-CommonSystemInfo',
-    'Get-FailedLogin',
-    'Get-NetworkShare',
     'Get-UniquePermission',
-    'Install-Font',
-    'Install-MaintenanceTasks',
-    'Invoke-CompanyPlaceManagement',
-    'Invoke-DeploymentTemplate',
-    'Invoke-ExchangeCalendarManager',
-    'Invoke-GroupMembershipCleanup',
     'Invoke-JobBundle',
-    'Invoke-PostInstall',
     'Invoke-PerformanceAudit',
-    'Invoke-RemoteAudit',
-    'Invoke-FullSystemAudit',
     'Restore-ArchiveFolder',
     'Search-ReadMe',
-    'Set-ComputerIPAddress',
-    'Set-NetAdapterMetering',
-    'Set-SharedMailboxAutoReply',
-    'Set-TimeZoneEasternStandardTime',
     'Start-Countdown',
-    'Invoke-IncidentResponse',
-    'Submit-SystemInfoTicket',
-    'Sync-SupportTools',
-    'Update-Sysmon'
+    'Sync-SupportTools'
 )
 
 

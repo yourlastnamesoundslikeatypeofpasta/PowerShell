@@ -1,34 +1,33 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: ConfigManagementTools
 online version:
 schema: 2.0.0
 ---
 
-# Invoke-PostInstall
+# Set-ComputerIPAddress
 
 ## SYNOPSIS
-Executes the automated post installation script.
+Configures the IP address of a local or remote computer.
 
 ## SYNTAX
 
 ```
-Invoke-PostInstall [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+Set-ComputerIPAddress [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Runs PostInstallScript.ps1 from the scripts folder, forwarding any
-arguments provided.
+Wraps the Set-ComputerIPAddress.ps1 script, forwarding all arguments.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-PostInstall -ConfigPath './install.json'
+PS C:\> Set-ComputerIPAddress -CSVPath './ComputerIPAddress.csv'
 ```
 
-Demonstrates typical usage of Invoke-PostInstall.
+Demonstrates typical usage of Set-ComputerIPAddress.
 
 ## PARAMETERS
 

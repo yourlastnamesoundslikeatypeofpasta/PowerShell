@@ -1,34 +1,34 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: ConfigManagementTools
 online version:
 schema: 2.0.0
 ---
 
-# Invoke-DeploymentTemplate
+# Set-NetAdapterMetering
 
 ## SYNOPSIS
-Runs the sample deployment template script.
+Toggles the metered connection flag on a network adapter.
 
 ## SYNTAX
 
 ```
-Invoke-DeploymentTemplate [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
+Set-NetAdapterMetering [[-Arguments] <Object[]>] [[-TranscriptPath] <String>]
  [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This cmdlet executes SS_DEPLOYMENT_TEMPLATE.ps1 from the repository's
-scripts folder with any additional arguments supplied.
+Invokes the Set-NetAdapterMetering.ps1 script with any supplied
+arguments.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-DeploymentTemplate -Config './deployment.json'
+PS C:\> Set-NetAdapterMetering -InterfaceName 'Ethernet0'
 ```
 
-Demonstrates typical usage of Invoke-DeploymentTemplate.
+Demonstrates typical usage of Set-NetAdapterMetering.
 
 ## PARAMETERS
 

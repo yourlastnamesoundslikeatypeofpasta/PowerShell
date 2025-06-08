@@ -1,34 +1,34 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: IncidentResponseTools
 online version:
 schema: 2.0.0
 ---
 
-# Get-FailedLogin
+# Get-NetworkShare
 
 ## SYNOPSIS
-Retrieves failed login attempts from the Security event log.
+Lists network shares on a specified computer.
 
 ## SYNTAX
 
 ```
-Get-FailedLogin [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+Get-NetworkShare [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Calls the Get-FailedLogins.ps1 script in the scripts folder and returns
-its output.
+Executes the Get-NetworkShares.ps1 script from the scripts folder and
+returns its results.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Get-FailedLogin -ComputerName $env:COMPUTERNAME
+PS C:\> Get-NetworkShare -ComputerName $env:COMPUTERNAME
 ```
 
-Demonstrates typical usage of Get-FailedLogin.
+Demonstrates typical usage of Get-NetworkShare.
 
 ## PARAMETERS
 

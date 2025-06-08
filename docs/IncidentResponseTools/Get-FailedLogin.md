@@ -1,36 +1,51 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: IncidentResponseTools
 online version:
 schema: 2.0.0
 ---
 
-# Invoke-ExchangeCalendarManager
+# Get-FailedLogin
 
 ## SYNOPSIS
-Manages Exchange Online calendar permissions.
+Retrieves failed login attempts from the Security event log.
 
 ## SYNTAX
 
 ```
-Invoke-ExchangeCalendarManager [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+Get-FailedLogin [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Wrapper around the ExchangeCalendarManager script which ensures the
-ExchangeOnlineManagement module is installed before running.
+Calls the Get-FailedLogins.ps1 script in the scripts folder and returns
+its output.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-ExchangeCalendarManager
+PS C:\> Get-FailedLogin -ComputerName $env:COMPUTERNAME
 ```
 
-Demonstrates typical usage of Invoke-ExchangeCalendarManager.
+Demonstrates typical usage of Get-FailedLogin.
 
 ## PARAMETERS
+
+### -Arguments
+Arguments passed directly to the underlying script.
+
+```yaml
+Type: Object[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
 
 ### -TranscriptPath
 File path used to capture a transcript of this command's output and actions.
@@ -41,7 +56,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 1
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

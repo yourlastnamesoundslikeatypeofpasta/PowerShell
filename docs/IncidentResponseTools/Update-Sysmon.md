@@ -1,34 +1,33 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: IncidentResponseTools
 online version:
 schema: 2.0.0
 ---
 
-# Get-NetworkShare
+# Update-Sysmon
 
 ## SYNOPSIS
-Lists network shares on a specified computer.
+Updates the Sysmon installation on a computer.
 
 ## SYNTAX
 
 ```
-Get-NetworkShare [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+Update-Sysmon [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Executes the Get-NetworkShares.ps1 script from the scripts folder and
-returns its results.
+Calls the Update-Sysmon.ps1 script with the supplied arguments.
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> Get-NetworkShare -ComputerName $env:COMPUTERNAME
+PS C:\> Update-Sysmon -SourcePath 'E:/Sysmon'
 ```
 
-Demonstrates typical usage of Get-NetworkShare.
+Demonstrates typical usage of Update-Sysmon.
 
 ## PARAMETERS
 

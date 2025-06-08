@@ -1,6 +1,6 @@
 ---
 external help file: SupportTools-help.xml
-Module Name: SupportTools
+Module Name: IncidentResponseTools
 online version:
 schema: 2.0.0
 ---
