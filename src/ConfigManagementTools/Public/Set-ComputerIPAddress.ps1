@@ -5,7 +5,7 @@ function Set-ComputerIPAddress {
     .DESCRIPTION
         Wraps the Set-ComputerIPAddress.ps1 script, forwarding all arguments.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

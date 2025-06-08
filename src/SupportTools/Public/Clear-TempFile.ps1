@@ -6,7 +6,7 @@ function Clear-TempFile {
         Deletes any `.tmp` files and empty `.log` files starting at the
         repository root.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]

@@ -8,20 +8,25 @@ function Invoke-NewHireUserAutomation {
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory=$false)]
+        [ValidateRange(1,60)]
         [int]$PollMinutes = 5,
         [Parameter(Mandatory=$false)]
         [switch]$Once,
         [Parameter(Mandatory=$false)]
+        [ValidateNotNullOrEmpty()]
         [string]$TranscriptPath,
         [Parameter(Mandatory=$false)]
         [switch]$Simulate,
         [Parameter(Mandatory=$false)]
         [switch]$Explain,
         [Parameter(Mandatory=$false)]
+        [ValidateNotNull()]
         [object]$Logger,
         [Parameter(Mandatory=$false)]
+        [ValidateNotNull()]
         [object]$TelemetryClient,
         [Parameter(Mandatory=$false)]
+        [ValidateNotNull()]
         [object]$Config
     )
     process {

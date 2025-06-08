@@ -6,13 +6,16 @@ function Get-CommonSystemInfo {
         Collects operating system, processor, disk and memory information using
         CIM classes and returns it as a custom object.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false)]
+        [ValidateNotNull()]
         [object]$Logger,
         [Parameter(Mandatory = $false)]
+        [ValidateNotNull()]
         [object]$TelemetryClient,
         [Parameter(Mandatory = $false)]
+        [ValidateNotNull()]
         [object]$Config
     )
 

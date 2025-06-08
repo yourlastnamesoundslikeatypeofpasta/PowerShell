@@ -6,7 +6,7 @@ function Invoke-ExchangeCalendarManager {
         Wrapper around the ExchangeCalendarManager script which ensures the
         ExchangeOnlineManagement module is installed before running.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]

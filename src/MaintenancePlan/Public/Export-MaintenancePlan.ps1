@@ -7,11 +7,14 @@ function Export-MaintenancePlan {
     .PARAMETER Path
         Destination path for the JSON file.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory,ValueFromPipeline)]
+        [ValidateNotNull()]
         [object]$Plan,
-        [Parameter(Mandatory)][string]$Path
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Path
     )
     process {
         $Plan | ConvertTo-Json -Depth 5 | Set-Content -Path $Path

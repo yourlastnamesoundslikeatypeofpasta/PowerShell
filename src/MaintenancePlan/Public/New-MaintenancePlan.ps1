@@ -11,10 +11,14 @@ function New-MaintenancePlan {
     .PARAMETER Schedule
         Optional description of the schedule.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)][string]$Name,
-        [Parameter(Mandatory)][object[]]$Steps,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Name,
+        [Parameter(Mandatory)]
+        [ValidateNotNull()]
+        [object[]]$Steps,
         [string]$Schedule
     )
     Assert-ParameterNotNull $Name 'Name'

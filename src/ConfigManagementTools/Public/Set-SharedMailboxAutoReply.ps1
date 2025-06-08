@@ -6,7 +6,7 @@ function Set-SharedMailboxAutoReply {
         Wraps a script that manages Exchange Online auto-reply settings for a
         shared mailbox. All specified parameters are forwarded to the script.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

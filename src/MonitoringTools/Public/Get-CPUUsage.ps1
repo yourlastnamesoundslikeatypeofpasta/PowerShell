@@ -5,7 +5,7 @@ function Get-CPUUsage {
     .DESCRIPTION
         Uses Get-Counter when available to calculate average CPU usage.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param()
 
     if (Get-Command Get-Counter -ErrorAction SilentlyContinue) {

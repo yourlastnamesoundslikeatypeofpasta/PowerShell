@@ -5,7 +5,7 @@ function Invoke-PerformanceAudit {
     .DESCRIPTION
         Runs the Invoke-PerformanceAudit.ps1 script located in the scripts folder.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

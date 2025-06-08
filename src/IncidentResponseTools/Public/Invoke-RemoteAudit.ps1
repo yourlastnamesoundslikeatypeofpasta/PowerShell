@@ -18,13 +18,15 @@ function Invoke-RemoteAudit {
         PSCustomObject with ComputerName, Success, and either Info or Error
         properties describing the result for each computer.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory, Position=0, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [ValidateNotNullOrEmpty()]
         [string[]]$ComputerName,
         [Parameter()]
         [System.Management.Automation.PSCredential]$Credential,
         [switch]$UseSSL,
+        [ValidateRange(1,65535)]
         [int]$Port = 5985
     )
     process {

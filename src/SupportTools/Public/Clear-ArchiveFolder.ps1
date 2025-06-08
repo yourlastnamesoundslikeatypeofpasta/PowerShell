@@ -6,7 +6,7 @@ function Clear-ArchiveFolder {
         This function wraps the CleanupArchive.ps1 script in the scripts folder.
         All parameters are forwarded to that script.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

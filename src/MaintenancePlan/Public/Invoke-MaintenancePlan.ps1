@@ -7,9 +7,11 @@ function Invoke-MaintenancePlan {
     .PARAMETER WhatIf
         Display commands without executing.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory)][object]$Plan,
+        [Parameter(Mandatory)]
+        [ValidateNotNull()]
+        [object]$Plan,
         [switch]$WhatIf
     )
     Assert-ParameterNotNull $Plan 'Plan'

@@ -6,7 +6,7 @@ function Start-Countdown {
         Writes numbers from 10 down to 1 with a one second delay between
         each number. Useful for short pauses in scripts.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]

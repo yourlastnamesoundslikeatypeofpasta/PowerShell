@@ -5,7 +5,7 @@ function Search-Indicators {
     .DESCRIPTION
         Calls the Search-Indicators.ps1 script with the supplied indicator list.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]

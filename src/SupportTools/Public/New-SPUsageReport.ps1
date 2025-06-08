@@ -5,7 +5,7 @@ function New-SPUsageReport {
     .DESCRIPTION
         This is a wrapper for the Generate-SPUsageReport.ps1 script in the scripts folder.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

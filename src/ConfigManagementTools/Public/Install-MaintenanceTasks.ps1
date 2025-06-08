@@ -8,7 +8,7 @@ function Install-MaintenanceTasks {
     .PARAMETER Register
         If set, tasks are registered immediately; otherwise XML files are created.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $false)]
         [switch]$Register,

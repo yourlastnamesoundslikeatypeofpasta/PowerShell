@@ -5,7 +5,7 @@ function Submit-SystemInfoTicket {
     .DESCRIPTION
         Wraps the Submit-SystemInfoTicket.ps1 script in the scripts folder with the supplied parameters.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

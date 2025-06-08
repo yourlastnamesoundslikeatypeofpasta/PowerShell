@@ -5,7 +5,7 @@ function Get-SystemHealth {
     .DESCRIPTION
         Returns CPU usage, disk free space and recent event log summary.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param()
 
     $cpu = Get-CPUUsage
