@@ -5,11 +5,11 @@ Describe 'Invoke-ArchiveCleanup' {
     }
     BeforeEach {
         InModuleScope SharePointTools {
-            function Connect-PnPOnline {}
+            $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ SiteA='https://contoso' }; ClientId='id'; TenantId='tid'; CertPath='c' })
+            function Connect-PnPOnline { param($Url,$ClientId,$TenantId,$CertificatePath) }
             function Get-PnPListItem { $script:testItems }
             function Remove-PnPFile {}
             function Remove-PnPFolder {}
-            Mock Connect-PnPOnline {}
             Mock Get-PnPListItem { $script:testItems }
             Mock Remove-PnPFile {}
             Mock Remove-PnPFolder {}
