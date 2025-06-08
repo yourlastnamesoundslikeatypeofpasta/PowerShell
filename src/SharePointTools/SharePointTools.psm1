@@ -246,7 +246,7 @@ function Add-SPToolsSite {
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$Name,
         [Parameter(Mandatory = $true)]
@@ -276,7 +276,7 @@ function Set-SPToolsSite {
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$Name,
         [Parameter(Mandatory = $true)]
@@ -304,7 +304,7 @@ function Remove-SPToolsSite {
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
         [string]$Name
     )
@@ -1206,6 +1206,12 @@ function Register-SPToolsCompleters {
     #>
     $siteCmds = 'Get-SPToolsSiteUrl','Get-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsPreservationHoldReport','Get-SPToolsAllLibraryReports','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Select-SPToolsFolder'
     Register-ArgumentCompleter -CommandName $siteCmds -ParameterName SiteName -ScriptBlock {
+        param($commandName,$parameterName,$wordToComplete)
+        $SharePointToolsSettings.Sites.Keys | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_,$_, 'ParameterValue', $_) }
+    }
+    $nameCmds = 'Set-SPToolsSite','Remove-SPToolsSite','Add-SPToolsSite'
+    Register-ArgumentCompleter -CommandName $nameCmds -ParameterName Name -ScriptBlock {
         param($commandName,$parameterName,$wordToComplete)
         $SharePointToolsSettings.Sites.Keys | Where-Object { $_ -like "$wordToComplete*" } |
             ForEach-Object { [System.Management.Automation.CompletionResult]::new($_,$_, 'ParameterValue', $_) }

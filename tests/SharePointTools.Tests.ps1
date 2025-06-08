@@ -144,6 +144,35 @@ Describe 'SharePointTools Module' {
             }
         }
 
+        It 'Add-SPToolsSite accepts pipeline input for Name' {
+            InModuleScope SharePointTools {
+                Mock Save-SPToolsSettings {}
+                'PipeSite' | Add-SPToolsSite -Url 'https://pipe'
+                $SharePointToolsSettings.Sites['PipeSite'] | Should -Be 'https://pipe'
+                Assert-MockCalled Save-SPToolsSettings -Times 1
+            }
+        }
+
+        It 'Set-SPToolsSite accepts pipeline input for Name' {
+            InModuleScope SharePointTools {
+                Mock Save-SPToolsSettings {}
+                $SharePointToolsSettings.Sites['PipeSite'] = 'https://old'
+                'PipeSite' | Set-SPToolsSite -Url 'https://new'
+                $SharePointToolsSettings.Sites['PipeSite'] | Should -Be 'https://new'
+                Assert-MockCalled Save-SPToolsSettings -Times 1
+            }
+        }
+
+        It 'Remove-SPToolsSite accepts pipeline input' {
+            InModuleScope SharePointTools {
+                Mock Save-SPToolsSettings {}
+                $SharePointToolsSettings.Sites['PipeSite'] = 'https://contoso'
+                'PipeSite' | Remove-SPToolsSite
+                $SharePointToolsSettings.Sites.ContainsKey('PipeSite') | Should -BeFalse
+                Assert-MockCalled Save-SPToolsSettings -Times 1
+            }
+        }
+
         It 'Get-SPToolsSiteUrl returns the url and throws when missing' {
             InModuleScope SharePointTools {
                 $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso'
