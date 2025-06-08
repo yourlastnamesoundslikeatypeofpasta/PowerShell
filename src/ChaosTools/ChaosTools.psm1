@@ -9,6 +9,12 @@ Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-O
 Export-ModuleMember -Function 'Invoke-ChaosTest'
 
 function Show-ChaosToolsBanner {
+    <#
+    .SYNOPSIS
+        Displays the ChaosTools module banner.
+    #>
+    [CmdletBinding()]
+    param()
     Write-STDivider 'CHAOSTOOLS MODULE LOADED' -Style heavy
     Write-STStatus "Run 'Get-Command -Module ChaosTools' to view available tools." -Level SUB
     Write-STLog -Message 'ChaosTools module loaded'

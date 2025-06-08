@@ -217,6 +217,12 @@ function Write-STClosing {
 Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing'
 
 function Show-LoggingBanner {
+    <#
+    .SYNOPSIS
+        Displays the Logging module banner.
+    #>
+    [CmdletBinding()]
+    param()
     Write-STDivider 'LOGGING MODULE LOADED' -Style heavy
     Write-STStatus "Run 'Get-Command -Module Logging' to view available tools." -Level SUB
     Write-STLog -Message 'Logging module loaded'

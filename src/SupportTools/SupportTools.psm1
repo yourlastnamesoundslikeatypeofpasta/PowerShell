@@ -58,6 +58,12 @@ Export-ModuleMember -Function @(
 
 
 function Show-SupportToolsBanner {
+    <#
+    .SYNOPSIS
+        Displays the SupportTools module banner.
+    #>
+    [CmdletBinding()]
+    param()
     Write-STDivider 'SUPPORTTOOLS MODULE LOADED' -Style heavy
     Write-STStatus "Run 'Get-Command -Module SupportTools' to view available tools." -Level SUB
     Write-STLog -Message 'SupportTools module loaded'
