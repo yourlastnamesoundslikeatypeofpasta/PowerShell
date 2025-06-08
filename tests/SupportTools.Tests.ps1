@@ -53,7 +53,6 @@ Describe 'SupportTools Module' {
 
     Context 'Wrapper script invocation' {
         $map = @{
-            Add_UserToGroup             = 'AddUsersToGroup.ps1'
             Clear_ArchiveFolder          = 'CleanupArchive.ps1'
             Restore_ArchiveFolder        = 'RollbackArchive.ps1'
             Clear_TempFile              = 'CleanupTempFiles.ps1'
@@ -142,13 +141,24 @@ Describe 'SupportTools Module' {
         }
     }
 
-    Context 'Add-UserToGroup output passthrough' {
-        It 'returns the object produced by the script' {
+    Context 'Add-UserToGroup output' {
+        It 'returns summary information' {
             InModuleScope SupportTools {
-                $expected = [pscustomobject]@{ GroupName = 'MyGroup'; AddedUsers = @('a'); SkippedUsers = @('b') }
-                Mock Invoke-ScriptFile { $expected } -ModuleName SupportTools
+                Mock Connect-MgGraph {}
+                Mock Get-MgContext { [pscustomobject]@{ Account='acc' } }
+                Mock Disconnect-MgGraph {}
+                Mock Get-MgGroup { [pscustomobject]@{ Id='grp'; DisplayName='MyGroup' } }
+                Mock Get-MgGroupMember { [pscustomobject]@{ Id=@('user1') } }
+                Mock Get-MgUser { param($UserId) [pscustomobject]@{ Id=$UserId; UserPrincipalName=$UserId; DisplayName=$UserId } }
+                Mock Import-Csv { [pscustomobject]@{ UPN='user1' }, [pscustomobject]@{ UPN='user2' } }
+                Mock New-MgGroupMember {}
+
                 $result = Add-UserToGroup -CsvPath 'users.csv' -GroupName 'MyGroup'
-                $result | Should -Be $expected
+
+                Assert-MockCalled New-MgGroupMember -Times 1 -ParameterFilter { $DirectoryObjectId -eq 'user2' }
+                $result.GroupName | Should -Be 'MyGroup'
+                $result.AddedUsers | Should -Be @('user2')
+                $result.SkippedUsers | Should -Be @('user1')
             }
         }
     }

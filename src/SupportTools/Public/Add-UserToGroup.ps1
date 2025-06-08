@@ -19,7 +19,8 @@ function Add-UserToGroup {
     )
 
     begin {
-        . (Join-Path $PSScriptRoot '../..' 'scripts/Common.ps1')
+        # Load logging helpers from the repository scripts directory
+        . (Join-Path $PSScriptRoot '../../../scripts/Common.ps1')
         Import-SupportToolsLogging
         Add-Type -AssemblyName PresentationFramework, System.Windows.Forms
         $InformationPreference = 'Continue'

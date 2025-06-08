@@ -4,33 +4,39 @@ Describe 'Add-UserToGroup function' {
         Import-Module $PSScriptRoot/../../src/SupportTools/SupportTools.psd1 -Force
     }
 
-    It 'passes parameters to Invoke-ScriptFile' {
+    BeforeEach {
         InModuleScope SupportTools {
-            Mock Invoke-ScriptFile {} -ModuleName SupportTools
-            Add-UserToGroup -CsvPath 'users.csv' -GroupName 'TeamA'
-            Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1 -ParameterFilter {
-                $Name -eq 'AddUsersToGroup.ps1'
+            Mock Connect-MgGraph {}
+            Mock Get-MgContext { [pscustomobject]@{ Account='acc' } }
+            Mock Disconnect-MgGraph {}
+            Mock Get-MgGroup { [pscustomobject]@{ Id='grp'; DisplayName='Group' } }
+            Mock Get-MgGroupMember { [pscustomobject]@{ Id=@('user1') } }
+            Mock Get-MgUser {
+                param($UserId)
+                [pscustomobject]@{ Id=$UserId; UserPrincipalName=$UserId; DisplayName=$UserId }
             }
+            Mock Import-Csv {
+                [pscustomobject]@{ UPN='user1' },
+                [pscustomobject]@{ UPN='user2' }
+            }
+            Mock New-MgGroupMember {}
+        }
+    }
+
+    It 'adds only new users to the group' {
+        InModuleScope SupportTools {
+            $result = Add-UserToGroup -CsvPath 'users.csv' -GroupName 'Group'
+            Assert-MockCalled New-MgGroupMember -Times 1 -ParameterFilter { $DirectoryObjectId -eq 'user2' }
+            $result.GroupName    | Should -Be 'Group'
+            $result.AddedUsers   | Should -Be @('user2')
+            $result.SkippedUsers | Should -Be @('user1')
         }
     }
 
     It 'accepts pipeline input' {
         InModuleScope SupportTools {
-            Mock Invoke-ScriptFile {} -ModuleName SupportTools
-            [pscustomobject]@{ CsvPath='input.csv'; GroupName='G1' } | Add-UserToGroup
-            Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1 -ParameterFilter {
-                $Name -eq 'AddUsersToGroup.ps1'
-            }
-        }
-    }
-
-    It 'forwards transcript and switches' {
-        InModuleScope SupportTools {
-            Mock Invoke-ScriptFile {} -ModuleName SupportTools
-            Add-UserToGroup -CsvPath 'users.csv' -GroupName 'G1' -TranscriptPath 't.log' -Simulate -Explain
-            Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 1 -ParameterFilter {
-                $TranscriptPath -eq 't.log' -and $Simulate -and $Explain
-            }
+            [pscustomobject]@{ CsvPath='users.csv'; GroupName='Group' } | Add-UserToGroup
+            Assert-MockCalled Connect-MgGraph -Times 1
         }
     }
 }
