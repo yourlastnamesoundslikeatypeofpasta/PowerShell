@@ -13,7 +13,7 @@ This guide explains how to keep the PowerShell modules healthy over time and pre
 | Module            | Status       |
 |-------------------|-------------|
 | SupportTools      | Stable      |
-| SharePointTools   | Beta        |
+| SharePointTools   | Stable      |
 | ServiceDeskTools  | Experimental|
 
 ## Backup Strategy
