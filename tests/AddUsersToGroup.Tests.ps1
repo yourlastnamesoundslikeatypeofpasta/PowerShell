@@ -1,3 +1,4 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'AddUsersToGroup Script' {
     BeforeAll {
         function Install-Module {}
@@ -36,21 +37,21 @@ Describe 'AddUsersToGroup Script' {
         Mock Get-ADGroupMember {}
         Mock Get-ADUser {}
     }
-    It 'connects and disconnects from Graph' {
+    Safe-It 'connects and disconnects from Graph' {
         Start-Main -CsvPath 'dummy.csv' -GroupName 'Group' | Out-Null
         Assert-MockCalled Connect-MgGraph -Times 1
         Assert-MockCalled Disconnect-MgGraph -Times 1
     }
-    It 'imports the CSV' {
+    Safe-It 'imports the CSV' {
         Start-Main -CsvPath 'dummy.csv' -GroupName 'Group' | Out-Null
         Assert-MockCalled Import-Csv -ParameterFilter { $Path -eq 'dummy.csv' } -Times 1
     }
-    It 'adds only missing users' {
+    Safe-It 'adds only missing users' {
         Start-Main -CsvPath 'dummy.csv' -GroupName 'Group' | Out-Null
         Assert-MockCalled New-MgGroupMember -Times 1
     }
 
-    It 'uses AD cmdlets when Cloud is AD' {
+    Safe-It 'uses AD cmdlets when Cloud is AD' {
         Start-Main -CsvPath 'dummy.csv' -GroupName 'Group' -Cloud 'AD' | Out-Null
         Assert-MockCalled Add-ADGroupMember -Times 1
         Assert-MockCalled Connect-MgGraph -Times 0

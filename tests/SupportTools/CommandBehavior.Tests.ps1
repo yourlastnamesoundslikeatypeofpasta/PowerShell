@@ -1,10 +1,11 @@
+. $PSScriptRoot/../TestHelpers.ps1
 Describe 'SupportTools command behaviors' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SupportTools/SupportTools.psd1 -Force
     }
 
-    It 'Clear-TempFile removes tmp and log files' {
+    Safe-It 'Clear-TempFile removes tmp and log files' {
         $repoRoot = Resolve-Path "$PSScriptRoot/../.."
         $dir = Join-Path $repoRoot 'TempTest'
         New-Item -ItemType Directory -Path $dir | Out-Null
@@ -21,7 +22,7 @@ Describe 'SupportTools command behaviors' {
         }
     }
 
-    It 'Convert-ExcelToCsv passes correct path to Excel' {
+    Safe-It 'Convert-ExcelToCsv passes correct path to Excel' {
         InModuleScope SupportTools {
             Mock Import-Csv { @() } -ModuleName SupportTools
             function New-Object { param([string]$ComObject)
@@ -45,7 +46,7 @@ Describe 'SupportTools command behaviors' {
         }
     }
 
-    It 'Export-ProductKey writes key to file' {
+    Safe-It 'Export-ProductKey writes key to file' {
         InModuleScope SupportTools {
             Mock Get-CimInstance { [pscustomobject]@{ OA3xOriginalProductKey='AAAAA-BBBBB-CCCCC-DDDDD' } }
             $out = Join-Path $TestDrive 'key.txt'
@@ -60,14 +61,14 @@ Describe 'SupportTools command behaviors' {
     }
 
     Context 'Get-UniquePermission' {
-        It 'accepts pipeline input and forwards arguments' {
+        Safe-It 'accepts pipeline input and forwards arguments' {
             InModuleScope SupportTools {
                 Mock Invoke-ScriptFile {} -ModuleName SupportTools
                 'arg1','arg2' | Get-UniquePermission
                 Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 2
             }
         }
-        It 'produces ErrorRecord when script fails' {
+        Safe-It 'produces ErrorRecord when script fails' {
             InModuleScope SupportTools {
                 function Invoke-ScriptFile { throw 'fail' }
                 try { Get-UniquePermission -Arguments 'a' } catch { $err = $_ }
@@ -76,7 +77,7 @@ Describe 'SupportTools command behaviors' {
         }
     }
 
-    It 'Start-Countdown loops ten times' {
+    Safe-It 'Start-Countdown loops ten times' {
         InModuleScope SupportTools {
             $count = 0
             Mock Write-STStatus {}
@@ -87,7 +88,7 @@ Describe 'SupportTools command behaviors' {
     }
 
     Context 'Invoke-JobBundle' {
-        It 'passes bundle path to script' {
+        Safe-It 'passes bundle path to script' {
             InModuleScope SupportTools {
                 Mock Compress-Archive {}
                 Mock Invoke-ScriptFile {} -ModuleName SupportTools
@@ -97,7 +98,7 @@ Describe 'SupportTools command behaviors' {
                 }
             }
         }
-        It 'returns ErrorRecord when script fails' {
+        Safe-It 'returns ErrorRecord when script fails' {
             InModuleScope SupportTools {
                 function Invoke-ScriptFile { throw 'oops' }
                 try { Invoke-JobBundle -Path 'bad.job.zip' } catch { $err = $_ }
@@ -106,7 +107,7 @@ Describe 'SupportTools command behaviors' {
         }
     }
 
-    It 'New-SPUsageReport forwards parameters' {
+    Safe-It 'New-SPUsageReport forwards parameters' {
         InModuleScope SupportTools {
             Mock Invoke-ScriptFile { 'report.csv' } -ModuleName SupportTools
             $res = New-SPUsageReport -CsvPath 'input.csv' -TranscriptPath 't.log'

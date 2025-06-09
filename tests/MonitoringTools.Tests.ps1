@@ -1,3 +1,4 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'MonitoringTools Module' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
@@ -5,19 +6,19 @@ Describe 'MonitoringTools Module' {
         Import-Module $PSScriptRoot/../src/MonitoringTools/MonitoringTools.psd1 -Force
     }
 
-    It 'exports Get-CPUUsage' {
+    Safe-It 'exports Get-CPUUsage' {
         (Get-Command -Module MonitoringTools).Name | Should -Contain 'Get-CPUUsage'
     }
 
-    It 'exports Get-SystemHealth' {
+    Safe-It 'exports Get-SystemHealth' {
         (Get-Command -Module MonitoringTools).Name | Should -Contain 'Get-SystemHealth'
     }
 
-    It 'exports Start-HealthMonitor' {
+    Safe-It 'exports Start-HealthMonitor' {
         (Get-Command -Module MonitoringTools).Name | Should -Contain 'Start-HealthMonitor'
     }
 
-    It 'returns system health object' {
+    Safe-It 'returns system health object' {
         Mock Get-CPUUsage { 10 } -ModuleName MonitoringTools
         Mock Get-DiskSpaceInfo { @() } -ModuleName MonitoringTools
         Mock Get-EventLogSummary { @() } -ModuleName MonitoringTools
@@ -26,7 +27,7 @@ Describe 'MonitoringTools Module' {
         $result.DiskInfo   | Should -Be @()
     }
 
-    It 'logs health samples on a loop' {
+    Safe-It 'logs health samples on a loop' {
         Mock Get-SystemHealth { @{ CpuPercent=1; DiskInfo=@(); EventLogSummary=@() } } -ModuleName MonitoringTools
         Mock Write-STRichLog {} -ModuleName MonitoringTools
         Start-HealthMonitor -IntervalSeconds 0 -Count 2

@@ -1,3 +1,4 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'STPlatform Module' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
@@ -5,15 +6,15 @@ Describe 'STPlatform Module' {
         Import-Module $PSScriptRoot/../src/STPlatform/STPlatform.psd1 -Force
     }
 
-    It 'exports Connect-STPlatform' {
+    Safe-It 'exports Connect-STPlatform' {
         (Get-Command -Module STPlatform).Name | Should -Contain 'Connect-STPlatform'
     }
 
-    It 'includes Vault parameter' {
+    Safe-It 'includes Vault parameter' {
         (Get-Command Connect-STPlatform).Parameters.Keys | Should -Contain 'Vault'
     }
 
-    It 'loads secrets when variables missing' {
+    Safe-It 'loads secrets when variables missing' {
         InModuleScope STPlatform {
             Remove-Item env:SPTOOLS_CLIENT_ID -ErrorAction SilentlyContinue
             Mock Get-Secret { 'fromvault' }
@@ -24,7 +25,7 @@ Describe 'STPlatform Module' {
         }
     }
 
-    It 'loads all required secrets from the vault' {
+    Safe-It 'loads all required secrets from the vault' {
         InModuleScope STPlatform {
             $names = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
             foreach ($n in $names) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
@@ -55,7 +56,7 @@ Describe 'STPlatform Module' {
     }
 
     Context 'Mode connections' {
-        It 'initializes Cloud mode and logs metrics' {
+        Safe-It 'initializes Cloud mode and logs metrics' {
             InModuleScope STPlatform {
                 function Install-Module {}
                 function Import-Module {}
@@ -86,7 +87,7 @@ Describe 'STPlatform Module' {
             }
         }
 
-        It 'initializes Hybrid mode and logs metrics' {
+        Safe-It 'initializes Hybrid mode and logs metrics' {
             InModuleScope STPlatform {
                 function Install-Module {}
                 function Import-Module {}
@@ -117,7 +118,7 @@ Describe 'STPlatform Module' {
             }
         }
 
-        It 'initializes OnPrem mode and logs metrics' {
+        Safe-It 'initializes OnPrem mode and logs metrics' {
             InModuleScope STPlatform {
                 function Install-Module {}
                 function Import-Module {}

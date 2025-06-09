@@ -1,3 +1,4 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'System Scripts' {
     BeforeAll {
         . "$PSScriptRoot/../scripts/Get-NetworkShares.ps1"
@@ -17,7 +18,7 @@ Describe 'System Scripts' {
             }
             Mock Write-STStatus {}
         }
-        It 'returns network share objects' {
+        Safe-It 'returns network share objects' {
             $result = Get-NetworkShares -ComputerName 'PC1'
             $result.ComputerName | Should -Be 'PC1'
             $result.Shares.Count | Should -Be 2
@@ -36,7 +37,7 @@ Describe 'System Scripts' {
             }
             Mock Write-STStatus {}
         }
-        It 'retrieves failed login events' {
+        Safe-It 'retrieves failed login events' {
             $result = Get-FailedLogins -ComputerName 'PC2'
             $result.Count | Should -Be 2
         }
@@ -48,7 +49,7 @@ Describe 'System Scripts' {
             function Set-TimeZone { param([string]$ID) $script:tz = $ID }
             function Write-STStatus {}
         }
-        It 'calls Set-TimeZone with the EST identifier' {
+        Safe-It 'calls Set-TimeZone with the EST identifier' {
             Set-TimeZoneEasternStandardTime
             $script:tz | Should -Be 'Eastern Standard Time'
         }
@@ -61,7 +62,7 @@ Describe 'System Scripts' {
             Mock Get-CimInstance { [pscustomobject]@{ OA3xOriginalProductKey = 'AAAAA-BBBBB-CCCCC-DDDDD-EEEEE' } }
             Mock Write-STStatus {}
         }
-        It 'writes the product key to output file' {
+        Safe-It 'writes the product key to output file' {
             $temp = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
             & $PSScriptRoot/../scripts/ProductKey.ps1 -OutputPath $temp
             (Get-Content $temp) | Should -Be 'AAAAA-BBBBB-CCCCC-DDDDD-EEEEE'

@@ -1,3 +1,4 @@
+. $PSScriptRoot/../TestHelpers.ps1
 Describe 'Measure-STCommand function' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
@@ -5,7 +6,7 @@ Describe 'Measure-STCommand function' {
         InModuleScope PerformanceTools { function Send-STMetric {} }
     }
 
-    It 'returns timing metrics' {
+    Safe-It 'returns timing metrics' {
         InModuleScope PerformanceTools {
             function Send-STMetric {}
             Mock Write-STStatus {}
@@ -16,7 +17,7 @@ Describe 'Measure-STCommand function' {
         }
     }
 
-    It 'writes status messages when not quiet' {
+    Safe-It 'writes status messages when not quiet' {
         InModuleScope PerformanceTools {
             function Send-STMetric {}
             Mock Write-STStatus {} -Verifiable
@@ -25,7 +26,7 @@ Describe 'Measure-STCommand function' {
         }
     }
 
-    It 'suppresses status when Quiet' {
+    Safe-It 'suppresses status when Quiet' {
         InModuleScope PerformanceTools {
             function Send-STMetric {}
             Mock Write-STStatus {}

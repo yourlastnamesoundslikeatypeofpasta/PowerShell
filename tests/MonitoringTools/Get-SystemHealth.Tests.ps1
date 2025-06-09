@@ -1,3 +1,4 @@
+. $PSScriptRoot/../TestHelpers.ps1
 Describe 'Get-SystemHealth function' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
@@ -5,7 +6,7 @@ Describe 'Get-SystemHealth function' {
         Import-Module $PSScriptRoot/../../src/MonitoringTools/MonitoringTools.psd1 -Force
     }
 
-    It 'returns expected health object' {
+    Safe-It 'returns expected health object' {
         Mock Get-CPUUsage { 42 } -ModuleName MonitoringTools
         $disk = @([pscustomobject]@{ Drive='C:'; SizeGB=100; FreeGB=50 })
         Mock Get-DiskSpaceInfo { $disk } -ModuleName MonitoringTools

@@ -1,9 +1,10 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'Logging UI Functions' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
     }
 
-    It 'formats shell prompt output' {
+    Safe-It 'formats shell prompt output' {
         $oldUser = $env:USERNAME
         $oldComp = $env:COMPUTERNAME
         try {
@@ -17,7 +18,7 @@ Describe 'Logging UI Functions' {
         }
     }
 
-    It 'renders dividers for light and heavy styles' {
+    Safe-It 'renders dividers for light and heavy styles' {
         function Get-ExpectedDivider($title, $style) {
             $char = if ($style -eq 'heavy') { '═' } else { '─' }
             $total = 65
@@ -32,7 +33,7 @@ Describe 'Logging UI Functions' {
         { Write-STDivider -Title 'TITLE' -Style 'heavy' } | Should -Output $expectedHeavy
     }
 
-    It 'aligns block fields correctly' {
+    Safe-It 'aligns block fields correctly' {
         $data = @{ Name='Alice'; Email='alice@example.com'; Dept='IT' }
         function FormatBlock([hashtable]$d) {
             $max = ($d.Keys | Measure-Object -Property Length -Maximum).Maximum
@@ -45,11 +46,11 @@ Describe 'Logging UI Functions' {
         { Write-STBlock -Data $data } | Should -Output $expected
     }
 
-    It 'prints closing banner with custom message' {
+    Safe-It 'prints closing banner with custom message' {
         { Write-STClosing -Message 'Done' } | Should -Output '┌──[ Done ]──────────────'
     }
 
-    It 'returns module name and version' {
+    Safe-It 'returns module name and version' {
         $banner = Show-LoggingBanner
         $banner.Module | Should -Be 'Logging'
         $banner.Version | Should -Not -BeNullOrEmpty

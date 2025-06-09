@@ -1,9 +1,10 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'Logging Module' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
     }
 
-    It 'writes to the path parameter' {
+    Safe-It 'writes to the path parameter' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             Write-STLog -Message 'path test' -Path $temp
@@ -13,7 +14,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'writes to ST_LOG_PATH when set' {
+    Safe-It 'writes to ST_LOG_PATH when set' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             $env:ST_LOG_PATH = $temp
@@ -25,7 +26,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'writes to the default log path' {
+    Safe-It 'writes to the default log path' {
         $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         New-Item -ItemType Directory -Path $tempDir | Out-Null
         $oldHome = $env:HOME
@@ -44,7 +45,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'creates the log directory when needed' {
+    Safe-It 'creates the log directory when needed' {
         $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         $logPath = Join-Path $tempDir 'nested/log.txt'
         try {
@@ -55,7 +56,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'includes timestamp and level in the output' {
+    Safe-It 'includes timestamp and level in the output' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             Write-STLog -Message 'format test' -Level WARN -Path $temp
@@ -66,7 +67,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'writes structured log entries when requested' {
+    Safe-It 'writes structured log entries when requested' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             Write-STLog -Message 'json test' -Path $temp -Structured -Metadata @{action='test'}
@@ -79,7 +80,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'writes structured log entries when ST_LOG_STRUCTURED is set' {
+    Safe-It 'writes structured log entries when ST_LOG_STRUCTURED is set' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             $env:ST_LOG_STRUCTURED = '1'
@@ -93,7 +94,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'module functions respect ST_LOG_STRUCTURED' {
+    Safe-It 'module functions respect ST_LOG_STRUCTURED' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             Import-Module $PSScriptRoot/../src/OutTools/OutTools.psd1 -Force
@@ -109,7 +110,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'throws on invalid log level' {
+    Safe-It 'throws on invalid log level' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             { Write-STLog -Message 'bad level' -Level INVALID -Path $temp } | Should -Throw
@@ -118,7 +119,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'writes rich JSON log entries' {
+    Safe-It 'writes rich JSON log entries' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             Write-STRichLog -Tool 'TestTool' -Status 'success' -User 'a@b.com' -Duration ([TimeSpan]::FromSeconds(5)) -Details 'ok' -Path $temp
@@ -134,7 +135,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'logs metric entries' {
+    Safe-It 'logs metric entries' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             Write-STLog -Metric 'Duration' -Value 2.5 -Path $temp
@@ -146,7 +147,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'rotates log files exceeding the maximum size' {
+    Safe-It 'rotates log files exceeding the maximum size' {
         $logFile = Join-Path $TestDrive 'rotate.log'
         try {
             Set-Content -Path $logFile -Value ('x' * 30)

@@ -1,3 +1,4 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'Invoke-ArchiveCleanup' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
@@ -22,7 +23,7 @@ Describe 'Invoke-ArchiveCleanup' {
             Mock Get-SPToolsSiteUrl { 'https://contoso' }
         }
     }
-    It 'removes archived files and folders' {
+    Safe-It 'removes archived files and folders' {
         InModuleScope SharePointTools {
             $script:testItems = @(
                 [pscustomobject]@{ FileSystemObjectType='File'; FieldValues=@{ FileRef='Shared Documents/zzz_Archive/file.txt' } },

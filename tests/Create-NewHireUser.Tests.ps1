@@ -1,3 +1,4 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'Create-NewHireUser script' {
     BeforeAll {
         function Search-SDTicket {}
@@ -18,7 +19,7 @@ Describe 'Create-NewHireUser script' {
         Mock Disconnect-MgGraph {}
         Mock New-MgUser {}
     }
-    It 'creates a user and resolves the ticket' {
+    Safe-It 'creates a user and resolves the ticket' {
         Start-Main -PollMinutes 1 -Once | Out-Null
         Assert-MockCalled Search-SDTicket -Times 1
         Assert-MockCalled New-MgUser -Times 1

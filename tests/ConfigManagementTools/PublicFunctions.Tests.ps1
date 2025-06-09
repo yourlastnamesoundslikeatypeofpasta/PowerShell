@@ -38,14 +38,14 @@ Describe 'ConfigManagementTools public functions' {
     }
 
     Context 'Invoke-GroupMembershipCleanup' {
-        It 'calls cleanup script' {
+        Safe-It 'calls cleanup script' {
             InModuleScope ConfigManagementTools {
                 Mock Invoke-ScriptFile {} -ModuleName ConfigManagementTools
                 Invoke-GroupMembershipCleanup -CsvPath 'c.csv' -GroupName 'g1'
                 Assert-MockCalled Invoke-ScriptFile -ModuleName ConfigManagementTools -Times 1 -ParameterFilter { $Name -eq 'CleanupGroupMembership.ps1' }
             }
         }
-        It 'throws on failure' {
+        Safe-It 'throws on failure' {
             InModuleScope ConfigManagementTools {
                 Mock Invoke-ScriptFile { throw 'oops' } -ModuleName ConfigManagementTools
                 { Invoke-GroupMembershipCleanup -CsvPath 'c.csv' -GroupName 'g1' } | Should -Throw
@@ -55,14 +55,14 @@ Describe 'ConfigManagementTools public functions' {
 
     Context 'Set-SharedMailboxAutoReply' {
         $commonParams = @{ MailboxIdentity='mb'; StartTime=(Get-Date); EndTime=(Get-Date).AddHours(1); InternalMessage='msg'; AdminUser='admin' }
-        It 'returns simulation object' {
+        Safe-It 'returns simulation object' {
             InModuleScope ConfigManagementTools {
                 Mock Write-STStatus {}
                 $res = Set-SharedMailboxAutoReply @commonParams -Simulate
                 $res.Simulated | Should -BeTrue
             }
         }
-        It 'returns error object when connection fails' {
+        Safe-It 'returns error object when connection fails' {
             InModuleScope ConfigManagementTools {
                 Mock Write-STStatus {}
                 Mock Write-STLog {}
@@ -76,7 +76,7 @@ Describe 'ConfigManagementTools public functions' {
                 $res.Category | Should -Be 'Exchange'
             }
         }
-        It 'returns error object when connection fails without web login' {
+        Safe-It 'returns error object when connection fails without web login' {
             InModuleScope ConfigManagementTools {
                 Mock Write-STStatus {}
                 Mock Write-STLog {}
@@ -93,14 +93,14 @@ Describe 'ConfigManagementTools public functions' {
     }
 
     Context 'Invoke-ExchangeCalendarManager' {
-        It 'returns simulation object' {
+        Safe-It 'returns simulation object' {
             InModuleScope ConfigManagementTools {
                 Mock Write-STStatus {}
                 $res = Invoke-ExchangeCalendarManager -Simulate
                 $res.Simulated | Should -BeTrue
             }
         }
-        It 'returns error object when connect fails' {
+        Safe-It 'returns error object when connect fails' {
             InModuleScope ConfigManagementTools {
                 Mock Write-STStatus {}
                 Mock Write-STLog {}
@@ -115,7 +115,7 @@ Describe 'ConfigManagementTools public functions' {
                 $res.Category | Should -Be 'Exchange'
             }
         }
-        It 'returns error object when connect fails without parameters' {
+        Safe-It 'returns error object when connect fails without parameters' {
             InModuleScope ConfigManagementTools {
                 Mock Write-STStatus {}
                 Mock Write-STLog {}

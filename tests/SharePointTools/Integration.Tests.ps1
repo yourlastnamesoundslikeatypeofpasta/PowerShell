@@ -1,3 +1,4 @@
+. $PSScriptRoot/../TestHelpers.ps1
 Describe 'SharePointTools Integration Functions' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
@@ -16,7 +17,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Get-SPToolsLibraryReport' {
-        It 'returns library information' {
+        Safe-It 'returns library information' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Get-PnPList {}
@@ -33,7 +34,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Get-SPToolsRecycleBinReport' {
-        It 'summarizes recycle bin usage' {
+        Safe-It 'summarizes recycle bin usage' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Get-PnPRecycleBinItem {}
@@ -51,7 +52,7 @@ Describe 'SharePointTools Integration Functions' {
 
 
     Context 'Invoke-FileVersionCleanup' {
-        It 'exports a CSV report' {
+        Safe-It 'exports a CSV report' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Get-PnPFolder {}
@@ -75,7 +76,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Invoke-SharingLinkCleanup' {
-        It 'removes sharing links from specified folder' {
+        Safe-It 'removes sharing links from specified folder' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Get-PnPFolderItem {}
@@ -101,7 +102,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Clear-SPToolsRecycleBin' {
-        It 'clears the first stage bin by default' {
+        Safe-It 'clears the first stage bin by default' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Clear-PnPRecycleBinItem { param([switch]$FirstStage,[switch]$SecondStage,[switch]$Force) }
@@ -116,7 +117,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Get-SPToolsPreservationHoldReport' {
-        It 'reports total hold size' {
+        Safe-It 'reports total hold size' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Get-PnPListItem {}
@@ -134,7 +135,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Get-SPPermissionsReport' {
-        It 'returns permission assignments' {
+        Safe-It 'returns permission assignments' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Get-PnPSite {}
@@ -151,7 +152,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Clean-SPVersionHistory' {
-        It 'invokes version cleanup when versions exceed threshold' {
+        Safe-It 'invokes version cleanup when versions exceed threshold' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Get-PnPListItem {}
@@ -172,7 +173,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Find-OrphanedSPFiles' {
-        It 'returns files older than specified days' {
+        Safe-It 'returns files older than specified days' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Get-PnPListItem {}
@@ -191,7 +192,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Select-SPToolsFolder' {
-        It 'returns chosen folder object' {
+        Safe-It 'returns chosen folder object' {
             InModuleScope SharePointTools {
                 function Get-PnPConnection {}
                 function Connect-PnPOnline {}
@@ -213,7 +214,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Get-SPToolsFileReport' {
-        It 'returns report entries for files' {
+        Safe-It 'returns report entries for files' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Get-PnPListItem {}
@@ -229,7 +230,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'List-OneDriveUsage' {
-        It 'reports tenant site usage' {
+        Safe-It 'reports tenant site usage' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
                 function Get-PnPTenantSite {}
@@ -246,7 +247,7 @@ Describe 'SharePointTools Integration Functions' {
     }
 
     Context 'Test-SPToolsPrereqs' {
-        It 'installs module when missing and install flag used' {
+        Safe-It 'installs module when missing and install flag used' {
             InModuleScope SharePointTools {
                 function Install-Module {}
                 Mock Get-Module { $null } -ModuleName SharePointTools

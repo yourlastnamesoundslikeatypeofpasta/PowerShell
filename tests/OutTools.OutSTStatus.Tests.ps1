@@ -1,16 +1,17 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'Out-STStatus function' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/OutTools/OutTools.psd1 -Force
     }
 
-    It 'forwards parameters to Write-STStatus' {
+    Safe-It 'forwards parameters to Write-STStatus' {
         Mock Write-STStatus {} -ModuleName OutTools
         Out-STStatus -Message 'hello' -Level WARN
         Assert-MockCalled Write-STStatus -ModuleName OutTools -ParameterFilter { $Message -eq 'hello' -and $Level -eq 'WARN' } -Times 1
     }
 
-    It 'invokes Write-STLog when -Log specified' {
+    Safe-It 'invokes Write-STLog when -Log specified' {
         Mock Write-STStatus {} -ModuleName OutTools
         Mock Write-STLog {} -ModuleName Logging
         Out-STStatus -Message 'log me' -Level INFO -Log
