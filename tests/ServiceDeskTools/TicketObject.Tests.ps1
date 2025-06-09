@@ -42,3 +42,14 @@ Describe 'TicketObject class' {
         [TicketObject]::FromApiResponse($null) | Should -Be $null
     }
 }
+
+Describe 'Ticket ID argument completer' {
+    Safe-It 'registers completer for Id parameters' {
+        Mock Register-ArgumentCompleter {}
+        Import-Module $PSScriptRoot/../../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force
+        $cmds = 'Get-SDTicket','Set-SDTicket','Add-SDTicketComment','Get-SDTicketHistory','Set-SDTicketBulk'
+        foreach ($c in $cmds) {
+            Assert-MockCalled Register-ArgumentCompleter -ParameterFilter { $CommandName -eq $c -and $ParameterName -eq 'Id' } -Times 1
+        }
+    }
+}
