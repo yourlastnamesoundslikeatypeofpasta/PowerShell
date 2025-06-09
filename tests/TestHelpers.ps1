@@ -9,6 +9,9 @@ function Safe-It {
     It @itParams {
         param($case)
         try {
+            if (Get-PSDrive -Name TestDrive -ErrorAction SilentlyContinue) {
+                Remove-PSDrive -Name TestDrive -Force -ErrorAction SilentlyContinue
+            }
             if ($PSBoundParameters.ContainsKey('ForEach')) { & $ScriptBlock $case } else { & $ScriptBlock }
         } catch {
             $err = $_
