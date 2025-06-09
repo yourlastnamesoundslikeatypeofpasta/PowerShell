@@ -10,7 +10,7 @@ Describe 'ServiceDeskTools Module' {
         $expected = @(
             'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
             'Add-SDTicketComment','Search-SDTicket','Get-ServiceDeskAsset',
-            'Set-SDTicketBulk','Link-SDTicketToSPTask','Export-SDConfig'
+            'Get-SDUser','Set-SDTicketBulk','Link-SDTicketToSPTask','Export-SDConfig'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -97,6 +97,20 @@ Describe 'ServiceDeskTools Module' {
                 $ChaosMode -eq $true -and $Method -eq 'GET' -and $Path -eq '/assets/4.json'
             } -Times 1
         }
+        Safe-It 'Get-SDUser calls Invoke-SDRequest' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Get-SDUser -Id 3
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $Method -eq 'GET' -and $Path -eq '/users/3.json'
+            } -Times 1
+        }
+        Safe-It 'Get-SDUser passes ChaosMode' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Get-SDUser -Id 3 -ChaosMode
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $ChaosMode -eq $true -and $Method -eq 'GET' -and $Path -eq '/users/3.json'
+            } -Times 1
+        }
         Safe-It 'Set-SDTicketBulk calls Set-SDTicket for each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
             Set-SDTicketBulk -Id 10,11 -Fields @{status='Closed'}
@@ -142,6 +156,12 @@ Describe 'ServiceDeskTools Module' {
             Mock Write-STLog {} -ModuleName ServiceDeskTools
             Get-ServiceDeskAsset -Id 6
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Get-ServiceDeskAsset 6' } -Times 1
+        }
+        Safe-It 'Get-SDUser logs the request' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Mock Write-STLog {} -ModuleName ServiceDeskTools
+            Get-SDUser -Id 6
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Get-SDUser 6' } -Times 1
         }
         Safe-It 'Set-SDTicketBulk logs each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
