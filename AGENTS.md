@@ -14,6 +14,8 @@ If the environment prevents running these tests, mention this in the PR using th
 
 ## Code Style
 - Follow the conventions in `docs/ModuleStyleGuide.md` for progress messages and logging (`Write-STStatus`, `Show-STPrompt`, etc.).
+- Review the [Key Functions](docs/ModuleStyleGuide.md#key-functions) section for required helpers that standardize progress output.
+- See the [Example](docs/ModuleStyleGuide.md#example) section to learn how messages and logs should appear in practice.
 - Use the `Logging` module for console output and respect `ST_LOG_PATH` and `ST_LOG_STRUCTURED` when writing logs.
 - Enable telemetry only when `ST_ENABLE_TELEMETRY` is set. Summarize with `Get-STTelemetryMetrics`.
 - Chaos testing can be triggered with the `-ChaosMode` switch or by setting `ST_CHAOS_MODE=1`.
