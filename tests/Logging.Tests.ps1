@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'Logging Module' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
     }

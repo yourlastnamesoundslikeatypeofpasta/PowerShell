@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'Invoke-ArchiveCleanup' {
+    Initialize-TestDrive
     BeforeAll {
         if (Get-PSDrive -Name TestDrive -ErrorAction SilentlyContinue) {
             Remove-PSDrive -Name TestDrive -Force

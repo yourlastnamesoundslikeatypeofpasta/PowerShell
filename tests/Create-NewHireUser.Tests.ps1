@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'Create-NewHireUser script' {
+    Initialize-TestDrive
     BeforeAll {
         function Search-SDTicket {}
         function Set-SDTicket {}

@@ -7,6 +7,7 @@ $moduleFiles = Get-ChildItem -Path (Join-Path $repoRoot 'src') -Recurse -Filter 
 $moduleNames = $moduleFiles | ForEach-Object { $_.BaseName }
 
 Describe 'SupportToolsLoader Script' {
+    Initialize-TestDrive
     BeforeAll {
         $repoRoot = Split-Path $PSScriptRoot -Parent
         $tempRepo = Join-Path $TestDrive 'repo'

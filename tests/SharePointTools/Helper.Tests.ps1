@@ -1,5 +1,6 @@
 . $PSScriptRoot/../TestHelpers.ps1
 Describe 'SharePointTools helper functions' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force

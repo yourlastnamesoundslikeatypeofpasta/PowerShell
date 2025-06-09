@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'System Scripts' {
+    Initialize-TestDrive
     BeforeAll {
         . "$PSScriptRoot/../scripts/Get-NetworkShares.ps1"
         . "$PSScriptRoot/../scripts/Get-FailedLogins.ps1"

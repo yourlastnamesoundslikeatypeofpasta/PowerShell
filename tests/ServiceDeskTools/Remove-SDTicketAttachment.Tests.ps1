@@ -1,6 +1,7 @@
 . $PSScriptRoot/../TestHelpers.ps1
 
 Describe 'Remove-SDTicketAttachment' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force

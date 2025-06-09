@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'STCore Error Helpers' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../src/STCore/STCore.psd1 -Force
     }

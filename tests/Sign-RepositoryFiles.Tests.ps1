@@ -1,6 +1,7 @@
 . $PSScriptRoot/TestHelpers.ps1
 
 Describe 'Sign-RepositoryFiles script' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
     }

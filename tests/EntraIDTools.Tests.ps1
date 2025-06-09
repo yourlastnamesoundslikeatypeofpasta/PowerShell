@@ -1,6 +1,7 @@
 . $PSScriptRoot/TestHelpers.ps1
 
 Describe 'EntraIDTools Module' {
+    Initialize-TestDrive
     BeforeAll {
         if (-not (Get-Module -ListAvailable -Name 'MSAL.PS')) {
             try { Install-Module -Name 'MSAL.PS' -Scope CurrentUser -Force } catch {}

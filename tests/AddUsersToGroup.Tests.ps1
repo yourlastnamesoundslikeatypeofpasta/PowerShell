@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'AddUsersToGroup Script' {
+    Initialize-TestDrive
     BeforeAll {
         function Install-Module {}
         function Import-Module {}

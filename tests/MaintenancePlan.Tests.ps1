@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'MaintenancePlan Module' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/MaintenancePlan/MaintenancePlan.psd1 -Force

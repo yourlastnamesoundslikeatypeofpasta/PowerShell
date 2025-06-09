@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'Start-MockApiServer script' {
+    Initialize-TestDrive
     Safe-It 'serves one Graph request and stops' {
         function Write-STStatus { param([string]$Message,[string]$Level) }
         class FakeResponse {
