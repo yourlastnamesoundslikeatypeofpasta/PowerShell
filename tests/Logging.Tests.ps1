@@ -173,4 +173,28 @@ Describe 'Logging Module' {
             Remove-Item env:ST_LOG_MAX_BYTES -ErrorAction SilentlyContinue
         }
     }
+
+    Safe-It 'sanitizes email addresses in logs' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            Write-STLog -Message 'contact admin@example.com for help' -Path $temp
+            $content = Get-Content $temp
+            $content | Should -Not -Match 'admin@example.com'
+            $content | Should -Match '\[REDACTED\]'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
+
+    Safe-It 'sanitizes secret patterns in logs' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            Write-STLog -Message 'token=abc123def456ghi789jkl' -Path $temp
+            $content = Get-Content $temp
+            $content | Should -Not -Match 'abc123def456ghi789jkl'
+            $content | Should -Match 'token=\[REDACTED\]'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
 }
