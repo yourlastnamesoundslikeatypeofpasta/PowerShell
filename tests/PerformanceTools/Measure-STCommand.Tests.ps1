@@ -35,4 +35,20 @@ Describe 'Measure-STCommand function' {
             Assert-MockCalled Write-STStatus -Times 0
         }
     }
+
+    Safe-It 'throws when ScriptBlock is null' {
+        InModuleScope PerformanceTools {
+            { Measure-STCommand -ScriptBlock $null } | Should -Throw 'ScriptBlock'
+        }
+    }
+
+    Safe-It 'returns consistent structure across runs' {
+        InModuleScope PerformanceTools {
+            function Send-STMetric {}
+            Mock Write-STStatus {}
+            $first = Measure-STCommand -ScriptBlock { Start-Sleep -Milliseconds 5 }
+            $second = Measure-STCommand -ScriptBlock { Start-Sleep -Milliseconds 5 }
+            $first.PSObject.Properties.Name | Should -Be $second.PSObject.Properties.Name
+        }
+    }
 }
