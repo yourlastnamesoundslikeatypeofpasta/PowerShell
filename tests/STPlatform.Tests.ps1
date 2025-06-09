@@ -258,6 +258,15 @@ Describe 'STPlatform Module' {
                 }
             }
         }
+
+        Safe-It 'throws on invalid Mode and does not import modules' {
+            InModuleScope STPlatform {
+                function Import-Module {}
+                Mock Import-Module {}
+                { Connect-STPlatform -Mode Invalid } | Should -Throw
+                Assert-MockCalled Import-Module -Times 0
+            }
+        }
     }
 
     Context 'Connect-EntraID' {
