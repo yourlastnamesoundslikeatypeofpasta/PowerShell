@@ -246,6 +246,26 @@ Describe 'SharePointTools Integration Functions' {
         }
     }
 
+    Context 'Invoke-SPSiteAudit' {
+        Safe-It 'aggregates site reports' {
+            InModuleScope SharePointTools {
+                function Get-SPToolsLibraryReport {}
+                function Get-SPToolsRecycleBinReport {}
+                function Get-SPToolsPreservationHoldReport {}
+                Mock Get-SPToolsLibraryReport { 'lib' }
+                Mock Get-SPToolsRecycleBinReport { 'rec' }
+                Mock Get-SPToolsPreservationHoldReport { 'hold' }
+                $s = Invoke-SPSiteAudit -SiteName 'A' -SiteUrl 'https://c'
+                $s.LibraryReport | Should -Be 'lib'
+                $s.RecycleBinReport | Should -Be 'rec'
+                $s.PreservationHoldReport | Should -Be 'hold'
+                Assert-MockCalled Get-SPToolsLibraryReport -Times 1
+                Assert-MockCalled Get-SPToolsRecycleBinReport -Times 1
+                Assert-MockCalled Get-SPToolsPreservationHoldReport -Times 1
+            }
+        }
+    }
+
     Context 'Test-SPToolsPrereqs' {
         Safe-It 'installs module when missing and install flag used' {
             InModuleScope SharePointTools {

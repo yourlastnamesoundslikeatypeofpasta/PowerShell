@@ -38,6 +38,7 @@
         'Select-SPToolsFolder',
         'List-OneDriveUsage',
         'Test-SPToolsPrereqs',
-        'Test-SPToolsSiteAdmin'
+        'Test-SPToolsSiteAdmin',
+        'Invoke-SPSiteAudit'
     )
 }
