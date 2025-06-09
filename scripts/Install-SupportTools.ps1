@@ -26,7 +26,7 @@ $modules = @(
     'SupportTools'
 )
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
 foreach ($module in $modules) {
     try {
@@ -39,7 +39,7 @@ foreach ($module in $modules) {
         Write-Warning "Failed to install $module from gallery: $($_.Exception.Message)"
         $localPath = Join-Path $PSScriptRoot '..' 'src' $module "$module.psd1"
         if (Test-Path $localPath) {
-            Import-Module $localPath -Force
+            Import-Module $localPath -Force -DisableNameChecking
             Write-Warning "Imported $module from $localPath"
         } else {
             Write-Warning "Could not find $module in src"
