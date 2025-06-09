@@ -6,16 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 ### Added
-- Telemetry events recorded for Connect-SPToolsOnline
-- `Sync-SupportTools` cmdlet to download modules from a feed
+- Telemetry events recorded for `Connect-SPToolsOnline` ([SharePointTools docs](docs/SharePointTools.md#4-capture-telemetry-events))
+- [`Sync-SupportTools`](docs/SupportTools/Sync-SupportTools.md) cmdlet to download modules from a feed
 - Automatic registration of public functions in module manifests
-- Option to persist structured logs via environment variable
-- `Invoke-CompanyPlaceManagement` command for Microsoft Places
+- Option to persist structured logs via environment variable ([RichLogFormat](docs/Logging/RichLogFormat.md))
+- [`Invoke-CompanyPlaceManagement`](docs/ConfigManagementTools/Invoke-CompanyPlaceManagement.md) command for Microsoft Places
 - GitHub Actions workflows for caching modules and labeling PRs
 - SupportTools cmdlets can inject custom logging and telemetry modules
-- Detailed scenario documentation for the SharePointTools module
+- Detailed scenario documentation for the [SharePointTools](docs/SharePointTools.md) module
 - SharePointTools module graduated from Beta to Stable with version 1.2.0
-- `Out-STBanner` now accepts `-Color` to output ANSI colored titles
+- `Out-STBanner` now accepts `-Color` to output ANSI colored titles ([ModuleStyleGuide](docs/ModuleStyleGuide.md#banners-with-color))
 ### Breaking Changes
 - None in this release
 
