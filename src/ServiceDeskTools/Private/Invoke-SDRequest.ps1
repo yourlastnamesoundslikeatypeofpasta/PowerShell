@@ -25,7 +25,7 @@ function Invoke-SDRequest {
     if (-not $ChaosMode) { $ChaosMode = [bool]$env:ST_CHAOS_MODE }
     if ($ChaosMode) {
         $delay = Get-Random -Minimum 500 -Maximum 1500
-        Write-STLog -Message "CHAOS MODE delay $delay ms" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STLog -Message "CHAOS MODE delay $delay ms"
         Start-Sleep -Milliseconds $delay
         $roll = Get-Random -Minimum 1 -Maximum 100
         if ($roll -le 10) { throw 'ChaosMode: simulated throttling (429 Too Many Requests)' }
@@ -37,7 +37,7 @@ function Invoke-SDRequest {
 
     $headers = @{ 'X-Samanage-Authorization' = "Bearer $token"; Accept = 'application/json' }
     $uri = $baseUri.TrimEnd('/') + $Path
-    Write-STLog -Message "SDRequest $Method $uri" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+    Write-STLog -Message "SDRequest $Method $uri"
     Write-Verbose "Invoking $Method $uri"
     $json = if ($Body) { $Body | ConvertTo-Json -Depth 10 } else { $null }
     Invoke-SDRestWithRetry -Method $Method -Uri $uri -Headers $headers -Body $json

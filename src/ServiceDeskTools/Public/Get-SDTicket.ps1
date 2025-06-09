@@ -23,7 +23,7 @@ function Get-SDTicket {
         return
     }
 
-    Write-STLog -Message "Get-SDTicket $Id" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+    Write-STLog -Message "Get-SDTicket $Id"
     if ($PSCmdlet.ShouldProcess("ticket $Id", 'Get')) {
         $result = Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id.json" -ChaosMode:$ChaosMode
         return [TicketObject]::FromApiResponse($result)

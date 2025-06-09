@@ -56,7 +56,7 @@ function Disable-GraphUser {
     } catch {
         $result = 'Failure'
         Write-STStatus "Failed to disable $UserPrincipalName: $_" -Level ERROR -Log
-        Write-STLog -Message "Disable-GraphUser failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STLog -Message "Disable-GraphUser failed: $_" -Level ERROR
         throw
     } finally {
         $sw.Stop()

@@ -36,7 +36,7 @@ function Get-ServiceDeskStats {
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = 'Success'
-    Write-STLog -Message "Get-ServiceDeskStats" -Structured:$($env:ST_LOG_STRUCTURED -eq '1') -Metadata @{ start=$StartDate; end=$EndDate }
+    Write-STLog -Message "Get-ServiceDeskStats" -Metadata @{ start=$StartDate; end=$EndDate }
     try {
         $after  = [uri]::EscapeDataString($StartDate.ToString('yyyy-MM-dd'))
         $before = [uri]::EscapeDataString($EndDate.ToString('yyyy-MM-dd'))
@@ -50,7 +50,7 @@ function Get-ServiceDeskStats {
     }
     catch {
         $result = 'Failure'
-        Write-STLog -Message "Get-ServiceDeskStats failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STLog -Message "Get-ServiceDeskStats failed: $_" -Level ERROR
         throw
     }
     finally {

@@ -28,7 +28,7 @@ function Out-STBanner {
     }
     Write-STDivider -Title $title -Style heavy
     Write-STStatus "Run 'Get-Command -Module $($Info.Module)' to view available tools." -Level SUB
-    Write-STLog -Message "$($Info.Module) module loaded" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+    Write-STLog -Message "$($Info.Module) module loaded"
 }
 
 Export-ModuleMember -Function 'Out-STStatus','Out-STBanner'

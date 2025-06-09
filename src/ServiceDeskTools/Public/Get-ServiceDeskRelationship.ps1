@@ -23,7 +23,7 @@ function Get-ServiceDeskRelationship {
         return
     }
 
-    Write-STLog -Message "Get-ServiceDeskRelationship $AssetId $Type" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+    Write-STLog -Message "Get-ServiceDeskRelationship $AssetId $Type"
 
     $path = '/asset_relationships.json'
     $query = @()

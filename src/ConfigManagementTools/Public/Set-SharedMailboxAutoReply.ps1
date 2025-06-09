@@ -125,7 +125,7 @@ function Set-SharedMailboxAutoReply {
         return $result
     } catch {
         Write-STStatus "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Log
-        Write-STLog -Message "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STLog -Message "Set-SharedMailboxAutoReply failed: $_" -Level ERROR
         $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'Exchange'
     } finally {

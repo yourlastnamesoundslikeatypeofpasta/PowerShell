@@ -19,7 +19,7 @@ function Get-SDUser {
         return
     }
 
-    Write-STLog -Message "Get-SDUser $Id" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+    Write-STLog -Message "Get-SDUser $Id"
     if ($PSCmdlet.ShouldProcess("user $Id", 'Get')) {
         Invoke-SDRequest -Method 'GET' -Path "/users/$Id.json" -ChaosMode:$ChaosMode
     }

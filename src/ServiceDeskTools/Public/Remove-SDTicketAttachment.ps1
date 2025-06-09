@@ -21,7 +21,7 @@ function Remove-SDTicketAttachment {
         return
     }
 
-    Write-STLog -Message "Remove-SDTicketAttachment $Id" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+    Write-STLog -Message "Remove-SDTicketAttachment $Id"
     if ($PSCmdlet.ShouldProcess("attachment $Id", 'Remove')) {
         Invoke-SDRequest -Method 'DELETE' -Path "/attachments/$Id.json" -ChaosMode:$ChaosMode
     }

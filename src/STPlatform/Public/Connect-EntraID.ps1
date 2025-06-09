@@ -60,7 +60,7 @@ function Connect-EntraID {
     } catch {
         $result = 'Failure'
         Write-STStatus "Connect-EntraID failed: $_" -Level ERROR -Log
-        Write-STLog -Message "Connect-EntraID failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STLog -Message "Connect-EntraID failed: $_" -Level ERROR
         throw
     } finally {
         $sw.Stop()

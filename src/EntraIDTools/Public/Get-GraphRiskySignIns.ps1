@@ -40,7 +40,7 @@ function Get-GraphRiskySignIns {
         return $response.value
     } catch {
         $result = 'Failure'
-        Write-STLog -Message "Get-GraphRiskySignIns failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STLog -Message "Get-GraphRiskySignIns failed: $_" -Level ERROR
         throw
     } finally {
         $sw.Stop()
