@@ -27,7 +27,7 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskToo
 if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
 try {
-    Write-STStatus 'Generating library usage report...' -Level INFO -Log
+    Write-STStatus -Message 'Generating library usage report...' -Level INFO -Log
     $report = Get-SPToolsAllLibraryReports
     $report | Export-Csv -Path $CsvPath -NoTypeInformation
     Write-STStatus "Report saved to $CsvPath" -Level SUCCESS -Log

@@ -23,7 +23,7 @@ if (-not $settings.ContainsKey('Sites')) { $settings.Sites = @{} }
 if ($PSBoundParameters.ContainsKey('ClientId')) {
     $settings.ClientId = $ClientId
 } else {
-    Write-STStatus 'Enter SharePoint application settings. Leave blank to keep existing values.' -Level INFO
+    Write-STStatus -Message 'Enter SharePoint application settings. Leave blank to keep existing values.' -Level INFO
     $clientId = Read-Host "Client ID (current: $($settings.ClientId))"
     if ($clientId) { $settings.ClientId = $clientId }
 }

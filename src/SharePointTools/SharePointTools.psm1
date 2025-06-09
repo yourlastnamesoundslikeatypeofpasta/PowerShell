@@ -26,7 +26,7 @@ if ($env:SPTOOLS_CERT_PATH) { $SharePointToolsSettings.CertPath = $env:SPTOOLS_C
 try {
     Import-Module PnP.PowerShell -ErrorAction Stop
 } catch {
-    Write-STStatus 'PnP.PowerShell module not found. SharePoint functions may not work until it is installed.' -Level WARN
+    Write-STStatus -Message 'PnP.PowerShell module not found. SharePoint functions may not work until it is installed.' -Level WARN
 }
 
 function Write-SPToolsHacker {
@@ -133,13 +133,13 @@ function Connect-SPToolsOnline {
                     Connect-PnPOnline -Url $Url -DeviceLogin -ErrorAction Stop
                 }
             }
-            Write-STStatus 'PnP connection established' -Level SUCCESS
+            Write-STStatus -Message 'PnP connection established' -Level SUCCESS
             break
         } catch {
             Write-STStatus "Connection failed: $($_.Exception.Message)" -Level WARN
             $result = 'Failure'
             if ($attempt -ge $RetryCount) {
-                Write-STStatus 'All connection attempts failed.' -Level ERROR
+                Write-STStatus -Message 'All connection attempts failed.' -Level ERROR
                 throw
             }
             Start-Sleep -Seconds 5
@@ -658,10 +658,10 @@ function Invoke-SharingLinkCleanup {
     }
 
     if ($removed.Count) {
-        Write-STStatus 'Sharing links removed from the following items:' -Level WARN
+        Write-STStatus -Message 'Sharing links removed from the following items:' -Level WARN
         $removed | ForEach-Object { Write-STStatus $_ -Level WARN }
     } else {
-        Write-STStatus 'No sharing links found.' -Level SUCCESS
+        Write-STStatus -Message 'No sharing links found.' -Level SUCCESS
     }
 
     Stop-Transcript
@@ -857,7 +857,7 @@ function Clear-SPToolsRecycleBin {
             } else {
                 Clear-PnPRecycleBinItem -FirstStage -Force
             }
-            Write-STStatus 'Recycle bin cleared' -Level SUCCESS
+            Write-STStatus -Message 'Recycle bin cleared' -Level SUCCESS
         } catch {
             Write-STStatus "Failed to clear recycle bin: $($_.Exception.Message)" -Level ERROR
         }

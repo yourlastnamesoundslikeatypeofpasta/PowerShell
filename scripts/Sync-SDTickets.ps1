@@ -22,7 +22,7 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAc
 Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -ErrorAction SilentlyContinue
 
 function Get-AllTickets {
-    Write-STStatus 'Retrieving all tickets...' -Level INFO -Log
+    Write-STStatus -Message 'Retrieving all tickets...' -Level INFO -Log
     Invoke-SDRequest -Method 'GET' -Path '/incidents.json?per_page=100'
 }
 
@@ -46,7 +46,7 @@ if ($cache.tickets) { $tickets.AddRange($cache.tickets) }
 
 while ($true) {
     if ((Get-Date) -gt $lastFullSync.AddHours($FullSyncHours)) {
-        Write-STStatus 'Running full ticket sync...' -Level INFO -Log
+        Write-STStatus -Message 'Running full ticket sync...' -Level INFO -Log
         $tickets = Get-AllTickets
         $lastFullSync = Get-Date
     } else {
@@ -57,7 +57,7 @@ while ($true) {
                 $tickets.AddRange($new)
                 Write-STStatus "Added $($new.Count) new tickets to cache." -Level SUCCESS -Log
             } else {
-                Write-STStatus 'No new tickets found.' -Level SUB -Log
+                Write-STStatus -Message 'No new tickets found.' -Level SUB -Log
             }
         }
     }

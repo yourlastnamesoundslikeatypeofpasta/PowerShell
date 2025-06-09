@@ -18,7 +18,7 @@ param(
 )
 
 if ($Cloud -eq 'Entra') {
-    Write-STStatus 'Connecting to Microsoft Graph...' -Level INFO
+    Write-STStatus -Message 'Connecting to Microsoft Graph...' -Level INFO
     Connect-MgGraph -Scopes "User.Read.All","Group.ReadWrite.All" -NoWelcome
 
     $group = Get-MgGroup -Filter "displayName eq '$GroupName'" | Select-Object -First 1
@@ -55,4 +55,4 @@ if ($Cloud -eq 'Entra') {
     }
 }
 
-Write-STStatus 'Group membership cleanup finished.' -Level SUCCESS
+Write-STStatus -Message 'Group membership cleanup finished.' -Level SUCCESS

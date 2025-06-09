@@ -67,7 +67,7 @@ function Sync-SupportTools {
         $sd = Join-Path $InstallPath 'src/ServiceDeskTools/ServiceDeskTools.psd1'
         if (Test-Path $sd) { Import-Module $sd -ErrorAction SilentlyContinue }
 
-        Write-STStatus 'SupportTools synchronized' -Level FINAL
+        Write-STStatus -Message 'SupportTools synchronized' -Level FINAL
         return [pscustomobject]@{
             RepositoryUrl = $RepositoryUrl
             InstallPath   = $InstallPath

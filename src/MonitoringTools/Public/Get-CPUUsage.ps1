@@ -18,7 +18,7 @@ function Get-CPUUsage {
         $samples = Get-Counter '\\Processor(_Total)\\% Processor Time' -SampleInterval 1 -MaxSamples 3
         $cpu = [math]::Round(($samples.CounterSamples | Measure-Object -Property CookedValue -Average).Average,2)
     } else {
-        Write-STStatus 'Get-Counter not available.' -Level WARN
+        Write-STStatus -Message 'Get-Counter not available.' -Level WARN
     }
     $json = @{ ComputerName = $computer; CpuPercent = $cpu; Timestamp = $timestamp } | ConvertTo-Json -Compress
     Write-STRichLog -Tool 'Get-CPUUsage' -Status 'queried' -Details $json

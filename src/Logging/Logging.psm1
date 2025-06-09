@@ -7,14 +7,14 @@ if (-not $SupportToolsConfig.ContainsKey('maintenanceMode')) {
     $SupportToolsConfig.maintenanceMode = $false
 }
 if ($SupportToolsConfig.maintenanceMode) {
-    Write-STStatus 'SupportTools is currently in maintenance mode. Exiting.' -Level WARN -Log
+    Write-STStatus -Message 'SupportTools is currently in maintenance mode. Exiting.' -Level WARN -Log
     exit 1
 }
 
 function Write-STLog {
-    [CmdletBinding(DefaultParameterSetName='Message')]
+    [CmdletBinding(DefaultParameterSetName='Message', PositionalBinding=$false)]
     param(
-        [Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'Message')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Message')]
         [ValidateNotNullOrEmpty()]
         [string]$Message,
         [Parameter(Mandatory = $false)]
@@ -117,7 +117,7 @@ function Write-STLog {
 
 # Writes a structured JSON log entry following a common schema.
 function Write-STRichLog {
-    [CmdletBinding()]
+    [CmdletBinding(PositionalBinding=$false)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -165,7 +165,7 @@ function Write-STRichLog {
 }
 
 function Write-STStatus {
-    [CmdletBinding()]
+    [CmdletBinding(PositionalBinding=$false)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -193,7 +193,7 @@ function Write-STStatus {
 }
 
 function Show-STPrompt {
-    [CmdletBinding()]
+    [CmdletBinding(PositionalBinding=$false)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -209,7 +209,7 @@ function Show-STPrompt {
 }
 
 function Write-STDivider {
-    [CmdletBinding()]
+    [CmdletBinding(PositionalBinding=$false)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -229,7 +229,7 @@ function Write-STDivider {
 }
 
 function Write-STBlock {
-    [CmdletBinding()]
+    [CmdletBinding(PositionalBinding=$false)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -243,7 +243,7 @@ function Write-STBlock {
 }
 
 function Write-STClosing {
-    [CmdletBinding()]
+    [CmdletBinding(PositionalBinding=$false)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
@@ -259,7 +259,7 @@ function Show-LoggingBanner {
     .SYNOPSIS
         Returns Logging module metadata for banner display.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(PositionalBinding=$false)]
     param()
     $manifestPath = Join-Path $PSScriptRoot 'Logging.psd1'
     [pscustomobject]@{

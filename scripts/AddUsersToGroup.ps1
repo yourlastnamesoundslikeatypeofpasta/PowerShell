@@ -54,19 +54,19 @@ if ($Cloud -eq 'Entra') {
     # Install Microsoft Graph module if not already installed
     $isMicrosoftGraphInstalled = Get-Module -Name Microsoft.Graph.*
     if (!$isMicrosoftGraphInstalled) {
-        Write-STStatus 'Microsoft Graph not installed...installing Microsoft Graph PowerShell Module...' -Level WARN
+        Write-STStatus -Message 'Microsoft Graph not installed...installing Microsoft Graph PowerShell Module...' -Level WARN
         Install-Module Microsoft.Graph
     }
 
     # Import Microsoft Graph module
-    Write-STStatus 'Importing Microsoft Graph...this might take awhile...' -Level INFO
+    Write-STStatus -Message 'Importing Microsoft Graph...this might take awhile...' -Level INFO
     Import-Module Microsoft.Graph -Verbose
 } else {
     Import-Module ActiveDirectory -ErrorAction Stop
 }
 
 function Get-CSVFilePath {
-    Write-STStatus 'Select CSV from file dialog...' -Level SUB
+    Write-STStatus -Message 'Select CSV from file dialog...' -Level SUB
     # Open file dialog to get CSV path
     $openFileDialog = New-Object Microsoft.Win32.OpenFileDialog
     $openFileDialog.InitialDirectory = [Environment]::GetFolderPath('MyDocuments')
@@ -79,7 +79,7 @@ function Get-CSVFilePath {
         return $filePath
     }
     else {
-        Write-STStatus 'No file selected' -Level SUB
+        Write-STStatus -Message 'No file selected' -Level SUB
         return $null
     }
 }
@@ -91,7 +91,7 @@ function Get-GroupNames {
 
 function Connect-MicrosoftGraph {
     # Connect to Microsoft Graph API
-    Write-STStatus 'Connecting to Microsoft Graph...' -Level INFO
+    Write-STStatus -Message 'Connecting to Microsoft Graph...' -Level INFO
     $scopes = 'User.Read.All','Group.ReadWrite.All','Directory.ReadWrite.All'
     try {
         Connect-MgGraph -Scopes $scopes -NoWelcome
@@ -255,11 +255,11 @@ function Start-Main {
         }
     }
 
-    Write-STStatus 'Task Completed.' -Level FINAL
+    Write-STStatus -Message 'Task Completed.' -Level FINAL
     if ($Cloud -eq 'Entra') {
-        Write-STStatus 'Disconnecting from Microsoft Graph...' -Level INFO
+        Write-STStatus -Message 'Disconnecting from Microsoft Graph...' -Level INFO
         Disconnect-MgGraph | Out-Null
-        Write-STStatus 'Disconnected from Microsoft Graph' -Level SUCCESS
+        Write-STStatus -Message 'Disconnected from Microsoft Graph' -Level SUCCESS
     }
 
     [pscustomobject]@{

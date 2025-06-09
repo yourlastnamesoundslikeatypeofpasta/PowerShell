@@ -31,7 +31,7 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/EntraIDTools/EntraIDTools.psd1'
 if (Test-Path $StatePath) { $processed = Get-Content $StatePath | ConvertFrom-Json } else { $processed = @() }
 
 while ($true) {
-    Write-STStatus 'Searching for termination tickets...' -Level INFO -Log
+    Write-STStatus -Message 'Searching for termination tickets...' -Level INFO -Log
     $tickets = Search-SDTicket -Query 'termination'
     foreach ($t in $tickets) {
         if ($processed -contains $t.Id) { continue }

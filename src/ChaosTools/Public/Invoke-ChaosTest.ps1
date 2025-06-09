@@ -31,7 +31,7 @@ function Invoke-ChaosTest {
     }
     $chaosEnabledVar = $env:CHAOSTOOLS_ENABLED
     if ($chaosEnabledVar -ne $null -and $chaosEnabledVar -match '^(0|False)$') {
-        Write-STStatus 'ChaosTools disabled via CHAOSTOOLS_ENABLED.' -Level INFO -Log
+        Write-STStatus -Message 'ChaosTools disabled via CHAOSTOOLS_ENABLED.' -Level INFO -Log
         & $ScriptBlock
         return
     }
@@ -44,10 +44,10 @@ function Invoke-ChaosTest {
     $threshold = [int]([int]::MaxValue * $FailureRate)
     $rand = Get-Random
     if ($rand -lt $threshold) {
-        Write-STStatus 'Chaos failure injected.' -Level ERROR -Log
+        Write-STStatus -Message 'Chaos failure injected.' -Level ERROR -Log
         throw 'Chaos test failure.'
     }
 
-    Write-STStatus 'Executing chaos test script block.' -Level INFO -Log
+    Write-STStatus -Message 'Executing chaos test script block.' -Level INFO -Log
     & $ScriptBlock
 }

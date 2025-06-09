@@ -169,7 +169,7 @@ function Get-WHVersions {
         [switch]
         $Login
     )
-    Write-STStatus 'Getting production file versions...' -Level INFO
+    Write-STStatus -Message 'Getting production file versions...' -Level INFO
     $loginFileHashDict = @{
         whLogProductionHash = '39B316E7C273F032999EFCD14A382B649F155039B843784EC6CA99BB553F5BEE'
         rmLogProductionHash = 'D2E331FD7ACF00836A1DE19BA73FD0C3ACFAD9EF1EFE7CEEDA1DBFB8C87E9860'

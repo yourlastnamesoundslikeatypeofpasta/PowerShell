@@ -37,7 +37,7 @@ function Get-CommonSystemInfo {
                 Import-Module $Config -ErrorAction SilentlyContinue
             }
 
-            Write-STStatus 'Collecting system information...' -Level INFO
+            Write-STStatus -Message 'Collecting system information...' -Level INFO
 
             if (Get-Command -Name Get-CimInstance -ErrorAction SilentlyContinue) {
                 $operatingSystemInfo = Get-CimInstance -ClassName Win32_OperatingSystem
@@ -63,7 +63,7 @@ function Get-CommonSystemInfo {
                                 @{Name = 'Size'; Expression = { "{0:N2}" -f ($_.Size / 1GB) }},
                                 @{Name = 'FreeSpace'; Expression = { "{0:N2}" -f ($_.FreeSpace / 1GB) }}
             }
-            Write-STStatus 'System information collected.' -Level SUCCESS
+            Write-STStatus -Message 'System information collected.' -Level SUCCESS
             return $commonSystemInfoObj
         } catch {
             Write-STStatus "Get-CommonSystemInfo failed: $_" -Level ERROR -Log

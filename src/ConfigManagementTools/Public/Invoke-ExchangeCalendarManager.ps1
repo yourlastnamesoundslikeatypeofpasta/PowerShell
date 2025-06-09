@@ -46,9 +46,9 @@ function Invoke-ExchangeCalendarManager {
         }
 
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-        Write-STStatus 'ExchangeCalendarManager launched' -Level SUCCESS -Log
+        Write-STStatus -Message 'ExchangeCalendarManager launched' -Level SUCCESS -Log
         if ($Simulate) {
-            Write-STStatus 'Simulation mode active - no Exchange operations will occur.' -Level WARN -Log
+            Write-STStatus -Message 'Simulation mode active - no Exchange operations will occur.' -Level WARN -Log
             $mock = [pscustomobject]@{
                 Simulated = $true
                 Timestamp = Get-Date
@@ -60,15 +60,15 @@ function Invoke-ExchangeCalendarManager {
         throw 'This function requires PowerShell 7 or higher.'
     }
 
-    Write-STStatus 'Checking ExchangeOnlineManagement module...' -Level SUB
+    Write-STStatus -Message 'Checking ExchangeOnlineManagement module...' -Level SUB
     $module = Get-InstalledModule ExchangeOnlineManagement -ErrorAction SilentlyContinue
     $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
     if (-not $module) {
-        Write-STStatus 'Installing Exchange Online module...' -Level INFO -Log
+        Write-STStatus -Message 'Installing Exchange Online module...' -Level INFO -Log
         Install-Module -Name ExchangeOnlineManagement -Force
     } elseif ($updateVersion -and $module.Version -lt $updateVersion.Version) {
-        Write-STStatus 'Updating Exchange Online module...' -Level INFO -Log
+        Write-STStatus -Message 'Updating Exchange Online module...' -Level INFO -Log
         Update-Module -Name ExchangeOnlineManagement -Force
     }
 
@@ -83,11 +83,11 @@ function Invoke-ExchangeCalendarManager {
 
     while ($true) {
         Write-STStatus ('-' * 88) -Level INFO
-        Write-STStatus '1 - Grant calendar access' -Level INFO
-        Write-STStatus '2 - Revoke calendar access' -Level INFO
+        Write-STStatus -Message '1 - Grant calendar access' -Level INFO
+        Write-STStatus -Message '2 - Revoke calendar access' -Level INFO
         Write-STStatus "3 - Remove user's future meetings" -Level INFO
-        Write-STStatus '4 - List mailbox permissions' -Level INFO
-        Write-STStatus 'Q - Quit' -Level INFO
+        Write-STStatus -Message '4 - List mailbox permissions' -Level INFO
+        Write-STStatus -Message 'Q - Quit' -Level INFO
 
         $selection = Read-Host 'Please make a selection'
         if ($selection -match '^[Qq]$') { break }
@@ -114,12 +114,12 @@ function Invoke-ExchangeCalendarManager {
                 Get-Mailbox | Get-MailboxPermission -User $userEmail
             }
             default {
-                Write-STStatus 'Invalid selection.' -Level ERROR
+                Write-STStatus -Message 'Invalid selection.' -Level ERROR
             }
         }
     }
 
-        Write-STStatus 'ExchangeCalendarManager finished' -Level FINAL -Log
+        Write-STStatus -Message 'ExchangeCalendarManager finished' -Level FINAL -Log
     } catch {
         Write-STStatus "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR -Log
         Write-STLog -Message "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')

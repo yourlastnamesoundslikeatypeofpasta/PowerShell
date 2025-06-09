@@ -65,7 +65,7 @@ $salesSharePointFolderLvl42024Sales = $salesSharePointFolderLvl3Private[7] | Get
 $salesSharePointFolderLvl42024SalesALLFOLDERS = $salesSharePointFolderLvl42024Sales | Get-PnPFolderItem -Recursive -ItemType Folder -Verbose
 
 # Initialize a list to hold all items with ListItemAllFields property
-Write-STStatus 'Getting PnpProperties...' -Level INFO
+Write-STStatus -Message 'Getting PnpProperties...' -Level INFO
 $itemsWithAllListItemFieldsList = [System.Collections.Generic.List[object]]::new()
 
 # Loop through each folder to get its ListItemAllFields property
@@ -76,7 +76,7 @@ foreach ($salesSharePointFolderLvl42024SalesALLFOLDER in $salesSharePointFolderL
 }
 
 # Initialize a list to hold all items with specific fields
-Write-STStatus 'Getting PnpListItems...' -Level INFO
+Write-STStatus -Message 'Getting PnpListItems...' -Level INFO
 $items = [System.Collections.Generic.List[object]]::new()
 
 # Loop through each item to get its ListItemAllFields properties using the retrieved ID

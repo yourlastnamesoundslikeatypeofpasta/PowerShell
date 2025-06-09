@@ -37,7 +37,7 @@ function Search-Indicators {
             FileMatches    = $fileHits.Count
         }
     }
-    Write-STStatus 'Search complete.' -Level SUCCESS
+    Write-STStatus -Message 'Search complete.' -Level SUCCESS
     return $results
 }
 

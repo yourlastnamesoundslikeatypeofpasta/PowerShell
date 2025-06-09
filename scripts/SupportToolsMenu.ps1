@@ -18,8 +18,8 @@ param(
 )
 
 $Menu = @(
-    @{ Label = 'Add users to group'; Action = { Write-STStatus 'Running Add-UserToGroup...' -Level INFO; Add-UserToGroup } },
-    @{ Label = 'Cleanup archive folder'; Action = { Write-STStatus 'Running Clear-ArchiveFolder...' -Level INFO; Clear-ArchiveFolder } }
+    @{ Label = 'Add users to group'; Action = { Write-STStatus -Message 'Running Add-UserToGroup...' -Level INFO; Add-UserToGroup } },
+    @{ Label = 'Cleanup archive folder'; Action = { Write-STStatus -Message 'Running Clear-ArchiveFolder...' -Level INFO; Clear-ArchiveFolder } }
 )
 
 if ($UserRole -eq 'Helpdesk') {
@@ -36,12 +36,12 @@ if ($UserRole -eq 'Site Admin') {
 }
 
 function Show-Menu {
-    Write-STDivider 'SupportTools Menu' -Style heavy
+    Write-STDivider -Title 'SupportTools Menu' -Style heavy
     for ($i = 0; $i -lt $Menu.Count; $i++) {
         $num = $i + 1
         Write-STStatus "$num. $($Menu[$i].Label)" -Level INFO
     }
-    Write-STStatus 'Q. Quit' -Level INFO
+    Write-STStatus -Message 'Q. Quit' -Level INFO
 }
 
 while ($true) {
@@ -52,9 +52,9 @@ while ($true) {
     if ($index -ge 0 -and $index -lt $Menu.Count) {
         & $Menu[$index].Action
     } else {
-        Write-STStatus 'Invalid choice. Try again.' -Level WARN
+        Write-STStatus -Message 'Invalid choice. Try again.' -Level WARN
     }
-    Write-STStatus '' -Level INFO
+    Write-STStatus -Message '' -Level INFO
 }
 
 Write-STClosing

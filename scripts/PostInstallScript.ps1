@@ -26,11 +26,11 @@ function MSStoreAppInstallerUpdate {
     Start-Process ms-windows-store://pdp/?ProductId=9NBLGGH4NNS1
     if (!$LASTEXITCODE)
     {
-        Write-STStatus 'Opened Microsoft Store App Installer' -Level SUCCESS
+        Write-STStatus -Message 'Opened Microsoft Store App Installer' -Level SUCCESS
     }
     else
     {
-        Write-STStatus 'FAILED opening Microsoft Store' -Level ERROR
+        Write-STStatus -Message 'FAILED opening Microsoft Store' -Level ERROR
     }
 }
 
@@ -40,14 +40,14 @@ function Install-Chrome {
     .SYNOPSIS
         Installs the Google Chrome browser using winget.
     #>
-    Write-STStatus 'Installing: Google Chrome' -Level INFO
+    Write-STStatus -Message 'Installing: Google Chrome' -Level INFO
 
     $PackageId = 'Google.Chrome'
     winget install -e --id $PackageId --scope machine --accept-source-agreements --silent
 
     # validate install
     if (!$LASTEXITCODE) {
-        Write-STStatus 'Google Chrome: Installed' -Level SUCCESS
+        Write-STStatus -Message 'Google Chrome: Installed' -Level SUCCESS
     } 
     else {
         Write-Error 'GoogleChromeNotInstalled'
@@ -60,14 +60,14 @@ function Install-AdobeAcrobatReader {
     .SYNOPSIS
         Installs Adobe Acrobat Reader via winget.
     #>
-    Write-STStatus 'Installing: Adobe Acrobat Reader' -Level INFO
+    Write-STStatus -Message 'Installing: Adobe Acrobat Reader' -Level INFO
 
     $PackageId = 'Adobe.Acrobat.Reader.64-bit'
     winget install -e --id $PackageId --scope machine --accept-source-agreements --silent
 
     # validate install
     if (!$LASTEXITCODE) {
-        Write-STStatus 'Adobe Acrobat Reader: Installed' -Level SUCCESS
+        Write-STStatus -Message 'Adobe Acrobat Reader: Installed' -Level SUCCESS
     } 
     else {
         Write-Error 'AdobeAcrobatReaderNotInstalled'
@@ -80,7 +80,7 @@ function Install-ExcelMobile {
     .SYNOPSIS
         Installs the Excel Mobile application via winget.
     #>
-    Write-STStatus 'Installing: Excel Mobile' -Level INFO
+    Write-STStatus -Message 'Installing: Excel Mobile' -Level INFO
 
     $PackageId = '9WZDNCRFJBH3'
     winget install -e --id $PackageId --scope machine --accept-source-agreements --silent
@@ -88,7 +88,7 @@ function Install-ExcelMobile {
     # validate install
     if (!$LASTEXITCODE)
     {
-        Write-STStatus 'Excel Mobile: Installed' -Level SUCCESS
+        Write-STStatus -Message 'Excel Mobile: Installed' -Level SUCCESS
     }
     else {
         Write-Error 'ExcelMobileNotInstalled'
@@ -101,12 +101,12 @@ function Enable-NetFramework {
     .SYNOPSIS
         Enables the .NET Framework 3.5 feature.
     #>
-    Write-STStatus '.NET 3.5 Framework: Enabling...' -Level INFO
+    Write-STStatus -Message '.NET 3.5 Framework: Enabling...' -Level INFO
     Enable-WindowsOptionalFeature -Online -FeatureName "NetFx3" -All -NoRestart -ErrorAction Stop > $null
 
     # validate install
     if (!$LASTEXITCODE) {
-        Write-STStatus '.NET Framework 3.5: ENABLED' -Level SUCCESS
+        Write-STStatus -Message '.NET Framework 3.5: ENABLED' -Level SUCCESS
     } 
     else {
         Write-Error '.NETFramework3.5NotEnabled'
@@ -136,7 +136,7 @@ function Get-ComputerName {
         }
         else
         {
-            Write-STStatus 'Computer names do not match up. Try again.' -Level WARN
+            Write-STStatus -Message 'Computer names do not match up. Try again.' -Level WARN
         }
     }
     $ComputerNameOne
@@ -245,7 +245,7 @@ function Install-[REDACTED] {
         Get-Content ".\assets\agents\[REDACTED]\key.txt" | Set-Clipboard
     }
 
-    Write-STStatus 'Key copied to clipboard...' -Level SUCCESS
+    Write-STStatus -Message 'Key copied to clipboard...' -Level SUCCESS
 
     # open [REDACTED]
     $Path = Get-AgentPath -Agent "[REDACTED]" -USB
@@ -344,30 +344,30 @@ function Set-PowerPlan {
     $PowerSaverGuid = 'a1841308-3541-4fab-bc81-f71556f20b4a'
 
     # set power plan to high performance
-    Write-STStatus 'Setting Power Plan: High Performance' -Level INFO
+    Write-STStatus -Message 'Setting Power Plan: High Performance' -Level INFO
     powercfg.exe /S $HighPerformanceGuid
     if (!$LASTEXITCODE) {
-        Write-STStatus 'Set Power Plan: High Performance' -Level SUCCESS
+        Write-STStatus -Message 'Set Power Plan: High Performance' -Level SUCCESS
     }
     else {
         Write-Error 'PowerPlanHighPerformanceNotSet'
     }
 
     # remove balanced power plan
-    Write-STStatus 'Deleting Power Plan: Balanced' -Level INFO
+    Write-STStatus -Message 'Deleting Power Plan: Balanced' -Level INFO
     powercfg.exe /D $BalancedGuid
     if (!$LASTEXITCODE) {
-        Write-STStatus 'Deleted Power Plan: Balanced' -Level SUCCESS
+        Write-STStatus -Message 'Deleted Power Plan: Balanced' -Level SUCCESS
     }
     else {
         Write-Error 'PowerPlanBalancedNotDeleted'
     }
 
     # remove power saver power plan
-    Write-STStatus 'Deleting Power Plan: Power Saver' -Level INFO
+    Write-STStatus -Message 'Deleting Power Plan: Power Saver' -Level INFO
     powercfg.exe /D $PowerSaverGuid
     if (!$LASTEXITCODE) {
-        Write-STStatus 'Deleted Power Plan: Power Saver' -Level SUCCESS
+        Write-STStatus -Message 'Deleted Power Plan: Power Saver' -Level SUCCESS
     }
     else {
         Write-Error 'PowerPlanPowerSaverNotDeleted'
@@ -384,7 +384,7 @@ function Main {
         computer to the domain.
     #>
     # install agents
-    Write-STStatus 'Executing Agent Installers' -Level INFO
+    Write-STStatus -Message 'Executing Agent Installers' -Level INFO
     Install-[REDACTED] -USB
     Install-[REDACTED] 
     Install-Sysmon 
@@ -392,36 +392,36 @@ function Main {
     Read-Host -Prompt "Press enter to continue..." 
 
     # Install winget applications
-    Write-STStatus 'Update App Installer...' -Level INFO
+    Write-STStatus -Message 'Update App Installer...' -Level INFO
     MSStoreAppInstallerUpdate
     Read-Host -Prompt "Press enter to continue..."
     
     # install applications
-    Write-STStatus 'Installing Chrome, Excel Mobile, and Adobe Acrobat Reader...' -Level INFO
+    Write-STStatus -Message 'Installing Chrome, Excel Mobile, and Adobe Acrobat Reader...' -Level INFO
     Install-Chrome
     Install-ExcelMobile
     Install-AdobeAcrobatReader
 
     # configure
-    Write-STStatus 'Enabling .NET Frame 3.5...' -Level INFO
+    Write-STStatus -Message 'Enabling .NET Frame 3.5...' -Level INFO
     Enable-NetFramework
 
     # copy files
     Copy-Files -USB
 
-    Write-STStatus 'Setting Power Plan...' -Level INFO
+    Write-STStatus -Message 'Setting Power Plan...' -Level INFO
     Set-PowerPlan
 
     # name computer
-    Write-STStatus 'Renaming Computer...' -Level INFO
+    Write-STStatus -Message 'Renaming Computer...' -Level INFO
     $NewComputerName = Get-ComputerName
     Rename-Computer -NewName $NewComputerName -Force
 
     # add computer to domain
-    Write-STStatus 'Adding Computer to domain...Press [CTRL] + [C] to abort...' -Level WARN
+    Write-STStatus -Message 'Adding Computer to domain...Press [CTRL] + [C] to abort...' -Level WARN
     Add-Computer -NewName $NewComputerName -DomainName "myus.local" -DomainCredential (Get-Credential) -Force
 
-    Write-STStatus 'Restart computer to apply changes...' -Level INFO
+    Write-STStatus -Message 'Restart computer to apply changes...' -Level INFO
 
 }
 

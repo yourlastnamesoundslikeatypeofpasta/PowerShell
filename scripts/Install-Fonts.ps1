@@ -24,7 +24,7 @@ function Main {
 
     $fonts = Get-Fonts -FontFolder $FontFolder
     Install-Fonts -Fonts $fonts
-    Write-STStatus 'Font installation complete.' -Level SUCCESS
+    Write-STStatus -Message 'Font installation complete.' -Level SUCCESS
 }
 
 function Get-Fonts {

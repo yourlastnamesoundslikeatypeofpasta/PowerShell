@@ -70,9 +70,9 @@ function Set-SharedMailboxAutoReply {
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
         $result = 'Success'
-        Write-STStatus 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
+        Write-STStatus -Message 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
         if ($Simulate) {
-            Write-STStatus 'Simulation mode active - auto-reply settings will not be changed.' -Level WARN -Log
+            Write-STStatus -Message 'Simulation mode active - auto-reply settings will not be changed.' -Level WARN -Log
             $mock = [pscustomobject]@{
                 MailboxIdentity = $MailboxIdentity
                 Simulated       = $true
@@ -85,15 +85,15 @@ function Set-SharedMailboxAutoReply {
         $ExternalMessage = $InternalMessage
     }
 
-    Write-STStatus 'Checking ExchangeOnlineManagement module...' -Level SUB
+    Write-STStatus -Message 'Checking ExchangeOnlineManagement module...' -Level SUB
     $module = Get-InstalledModule ExchangeOnlineManagement -ErrorAction SilentlyContinue
     $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
     if (-not $module) {
-        Write-STStatus 'Installing Exchange Online module...' -Level INFO -Log
+        Write-STStatus -Message 'Installing Exchange Online module...' -Level INFO -Log
         Install-Module -Name ExchangeOnlineManagement -Force
     } elseif ($updateVersion -and $module.Version -lt $updateVersion.Version) {
-        Write-STStatus 'Updating Exchange Online module...' -Level INFO -Log
+        Write-STStatus -Message 'Updating Exchange Online module...' -Level INFO -Log
         Update-Module -Name ExchangeOnlineManagement -Force
     }
 
@@ -121,7 +121,7 @@ function Set-SharedMailboxAutoReply {
 
         Disconnect-ExchangeOnline -Confirm:$false
 
-        Write-STStatus 'Auto-reply configuration complete' -Level FINAL -Log
+        Write-STStatus -Message 'Auto-reply configuration complete' -Level FINAL -Log
         return $result
     } catch {
         Write-STStatus "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Log

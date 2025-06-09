@@ -25,7 +25,7 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskToo
 if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
 function Get-NewHireTickets {
-    Write-STStatus 'Searching Service Desk for new hire tickets...' -Level INFO -Log
+    Write-STStatus -Message 'Searching Service Desk for new hire tickets...' -Level INFO -Log
     Search-SDTicket -Query 'new hire'
 }
 

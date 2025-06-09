@@ -54,7 +54,7 @@ $result = 'Success'
 $alerts = @()
 
 try {
-    Write-STDivider 'PERFORMANCE AUDIT' -Style heavy
+    Write-STDivider -Title 'PERFORMANCE AUDIT' -Style heavy
 
     # CPU usage
     $cpuSamples = Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 1 -MaxSamples 3
@@ -93,7 +93,7 @@ try {
         Uptime         = $uptime
     }
 
-    Write-STBlock $report
+    Write-STBlock -Data $report
 
     if ($cpuUsage -gt $CpuThreshold)    { $alerts += "CPU usage $cpuUsage% > $CpuThreshold%" }
     if ($memUsedPct -gt $MemoryThreshold) { $alerts += "Memory usage $memUsedPct% > $MemoryThreshold%" }
@@ -101,10 +101,10 @@ try {
     if ($netMbps -gt $NetworkThreshold) { $alerts += "Network usage $netMbps Mbps > $NetworkThreshold Mbps" }
 
     if ($alerts.Count -gt 0) {
-        Write-STStatus 'Performance thresholds exceeded:' -Level WARN -Log
-        foreach ($alert in $alerts) { Write-STStatus $alert -Level WARN -Log }
+        Write-STStatus -Message 'Performance thresholds exceeded:' -Level WARN -Log
+        foreach ($alert in $alerts) { Write-STStatus -Message $alert -Level WARN -Log }
     } else {
-        Write-STStatus 'All metrics within thresholds.' -Level SUCCESS -Log
+        Write-STStatus -Message 'All metrics within thresholds.' -Level SUCCESS -Log
     }
 
     if ($CreateTicket -and $alerts.Count -gt 0) {
@@ -112,13 +112,13 @@ try {
         $subject = "Performance alert on $env:COMPUTERNAME"
         $desc = $alerts -join '\n'
         $ticket = New-SDTicket -Subject $subject -Description $desc -RequesterEmail $RequesterEmail
-        Write-STStatus "Created Service Desk ticket ID $($ticket.id)" -Level SUCCESS -Log
+        Write-STStatus -Message "Created Service Desk ticket ID $($ticket.id)" -Level SUCCESS -Log
         $report | Add-Member -NotePropertyName TicketId -NotePropertyValue $ticket.id -Force
     }
 
     $report
 } catch {
-    Write-STStatus "Audit failed: $_" -Level ERROR -Log
+    Write-STStatus -Message "Audit failed: $_" -Level ERROR -Log
     $result = 'Failure'
     throw
 } finally {

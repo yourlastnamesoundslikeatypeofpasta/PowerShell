@@ -76,7 +76,7 @@ function Connect-STPlatform {
             }
         }
 
-        Write-STStatus 'Connections initialized.' -Level SUCCESS -Log
+        Write-STStatus -Message 'Connections initialized.' -Level SUCCESS -Log
     } catch {
         $result = 'Failure'
         Write-STStatus "Connect-STPlatform failed: $_" -Level ERROR -Log
