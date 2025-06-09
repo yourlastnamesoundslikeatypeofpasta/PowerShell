@@ -1,5 +1,7 @@
 # ChaosTools Module
 
+ChaosTools is currently in **Beta**.
+
 Provides helpers for chaos testing and fault injection.
 Import the module with its manifest:
 
