@@ -24,7 +24,11 @@ function Import-SupportToolsModules {
         $script:SupportToolsLoaderLoaded = $true
     }
 
-    Import-Module (Join-Path $PSScriptRoot 'src/OutTools/OutTools.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
+    try {
+        Import-Module (Join-Path $PSScriptRoot 'src/OutTools/OutTools.psd1') -Force -ErrorAction Stop -DisableNameChecking
+    } catch {
+        Write-STStatus -Message "Failed to import OutTools module: $($_.Exception.Message)" -Level WARN
+    }
 
     function Write-LoaderLog {
         param([string]$Message)

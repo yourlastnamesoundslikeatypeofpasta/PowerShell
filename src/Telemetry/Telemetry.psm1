@@ -1,7 +1,15 @@
 $coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
-Import-Module $coreModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
+try {
+    Import-Module $coreModule -Force -ErrorAction Stop -DisableNameChecking
+} catch {
+    Write-STStatus -Message "Failed to import STCore module: $($_.Exception.Message)" -Level WARN
+}
 $loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
-Import-Module $loggingModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
+try {
+    Import-Module $loggingModule -Force -ErrorAction Stop -DisableNameChecking
+} catch {
+    Write-STStatus -Message "Failed to import Logging module: $($_.Exception.Message)" -Level WARN
+}
 
 function Send-STMetric {
     [CmdletBinding()]
