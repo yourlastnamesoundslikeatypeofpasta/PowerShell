@@ -151,7 +151,7 @@ function Invoke-CompanyPlaceManagement {
         Write-STStatus 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
     } catch {
         Write-STStatus "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Log
-        Write-STLog -Message "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR
+        Write-STLog -Message "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'SharePoint'
     } finally {

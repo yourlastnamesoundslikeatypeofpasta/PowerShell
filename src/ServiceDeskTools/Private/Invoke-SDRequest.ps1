@@ -17,7 +17,7 @@ function Invoke-SDRequest {
     if (-not $ChaosMode) { $ChaosMode = [bool]$env:ST_CHAOS_MODE }
     if ($ChaosMode) {
         $delay = Get-Random -Minimum 500 -Maximum 1500
-        Write-STLog -Message "CHAOS MODE delay $delay ms"
+        Write-STLog -Message "CHAOS MODE delay $delay ms" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         Start-Sleep -Milliseconds $delay
         $roll = Get-Random -Minimum 1 -Maximum 100
         if ($roll -le 10) { throw 'ChaosMode: simulated throttling (429 Too Many Requests)' }
@@ -44,7 +44,7 @@ function Invoke-SDRequest {
 
     $headers = @{ 'X-Samanage-Authorization' = "Bearer $token"; Accept = 'application/json' }
     $uri = $baseUri.TrimEnd('/') + $Path
-    Write-STLog -Message "SDRequest $Method $uri"
+    Write-STLog -Message "SDRequest $Method $uri" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     Write-Verbose "Invoking $Method $uri"
     $json = if ($Body) { $Body | ConvertTo-Json -Depth 10 } else { $null }
     $maxRetries = 3
@@ -56,12 +56,12 @@ function Invoke-SDRequest {
             } else {
                 $response = Invoke-RestMethod -Method $Method -Uri $uri -Headers $headers
             }
-            Write-STLog -Message "SUCCESS $Method $uri"
+            Write-STLog -Message "SUCCESS $Method $uri" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             return $response
         } catch [System.Net.WebException],[Microsoft.PowerShell.Commands.HttpResponseException] {
             $status = $_.Exception.Response.StatusCode.value__
             $msg    = $_.Exception.Message
-            Write-STLog -Message "HTTP $status $msg" -Level 'ERROR'
+            Write-STLog -Message "HTTP $status $msg" -Level 'ERROR' -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             if ($status -eq 429 -or ($status -ge 500 -and $status -lt 600)) {
                 if ($attempt -lt $maxRetries) {
                     $retryAfter = $_.Exception.Response.Headers['Retry-After']
@@ -70,7 +70,7 @@ function Invoke-SDRequest {
                     } else {
                         $delay = [math]::Pow(2, $attempt)
                     }
-                    Write-STLog -Message "Retry $attempt in $delay sec" -Level WARN
+                    Write-STLog -Message "Retry $attempt in $delay sec" -Level WARN -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
                     Write-Verbose "Retrying in $delay seconds"
                     Start-Sleep -Seconds $delay
                     $attempt++
@@ -80,7 +80,7 @@ function Invoke-SDRequest {
             $errorObj = New-STErrorObject -Message "HTTP $status $msg" -Category 'HTTP'
             throw $errorObj
         } catch {
-            Write-STLog -Message "ERROR $Method $uri :: $_" -Level 'ERROR'
+            Write-STLog -Message "ERROR $Method $uri :: $_" -Level 'ERROR' -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             throw
         }
     }

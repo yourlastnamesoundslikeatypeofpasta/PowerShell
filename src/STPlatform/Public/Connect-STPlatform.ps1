@@ -80,7 +80,7 @@ function Connect-STPlatform {
     } catch {
         $result = 'Failure'
         Write-STStatus "Connect-STPlatform failed: $_" -Level ERROR -Log
-        Write-STLog -Message "Connect-STPlatform failed: $_" -Level ERROR
+        Write-STLog -Message "Connect-STPlatform failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         throw
     } finally {
         $sw.Stop()

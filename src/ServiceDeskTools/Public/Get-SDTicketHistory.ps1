@@ -21,7 +21,7 @@ function Get-SDTicketHistory {
         return
     }
 
-    Write-STLog -Message "Get-SDTicketHistory $Id"
+    Write-STLog -Message "Get-SDTicketHistory $Id" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     if ($PSCmdlet.ShouldProcess("ticket $Id", 'Get history')) {
         $result = Invoke-SDRequest -Method 'GET' -Path "/incidents/$Id/audits.json" -ChaosMode:$ChaosMode
         return $result

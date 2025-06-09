@@ -171,7 +171,7 @@ function Write-STStatus {
     }
 
     Write-Host "$prefix $Message" -ForegroundColor $color
-    if ($Log) { Write-STLog -Message "$prefix $Message" }
+    if ($Log) { Write-STLog -Message "$prefix $Message" -Structured:$($env:ST_LOG_STRUCTURED -eq '1') }
 }
 
 function Show-STPrompt {

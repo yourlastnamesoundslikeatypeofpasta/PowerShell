@@ -93,6 +93,22 @@ Describe 'Logging Module' {
         }
     }
 
+    It 'module functions respect ST_LOG_STRUCTURED' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            Import-Module $PSScriptRoot/../src/OutTools/OutTools.psd1 -Force
+            $env:ST_LOG_STRUCTURED = '1'
+            $env:ST_LOG_PATH = $temp
+            Out-STBanner -Info @{ Module = 'TestMod' }
+            $json = Get-Content $temp | ConvertFrom-Json
+            $json.message | Should -Be 'TestMod module loaded'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+            Remove-Item env:ST_LOG_STRUCTURED -ErrorAction SilentlyContinue
+            Remove-Item env:ST_LOG_PATH -ErrorAction SilentlyContinue
+        }
+    }
+
     It 'throws on invalid log level' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {

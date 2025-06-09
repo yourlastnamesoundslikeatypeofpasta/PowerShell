@@ -58,7 +58,7 @@ function Get-UserInfoHybrid {
         return [pscustomobject]$combined
     } catch {
         $result = 'Failure'
-        Write-STLog -Message "Get-UserInfoHybrid failed: $_" -Level ERROR
+        Write-STLog -Message "Get-UserInfoHybrid failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         throw
     } finally {
         $sw.Stop()

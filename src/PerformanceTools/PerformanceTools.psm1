@@ -31,7 +31,7 @@ function Measure-STCommand {
         & $ScriptBlock
     } catch {
         Write-STStatus "Measure-STCommand failed: $_" -Level ERROR -Log
-        Write-STLog -Message "Measure-STCommand failed: $_" -Level ERROR
+        Write-STLog -Message "Measure-STCommand failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $errorObj = New-STErrorObject -Message $_.Exception.Message -Category 'Performance'
     } finally {
         $sw.Stop()
