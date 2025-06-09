@@ -12,7 +12,9 @@ This guide explains how to set up and use the **SupportTools** and **SharePointT
 
 Ensure the modules above are installed prior to running the included commands.
 You can run `./scripts/Install-ModuleDependencies.ps1` to automatically check
-for and install any missing dependencies.
+for and install any missing dependencies. After installation you can run
+`./scripts/Update-ModuleDependencies.ps1` to update them to the latest
+available versions.
 
 ## Obtaining the Modules
 
