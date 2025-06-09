@@ -306,7 +306,9 @@ Describe 'STPlatform Module' {
             InModuleScope STPlatform {
                 Mock Connect-MgGraph { throw 'boom' }
                 Mock Write-STLog {}
-                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { $env:$n = $n.ToLower() }
+                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') {
+                    Set-Item -Path "env:$n" -Value $n.ToLower()
+                }
                 $log = Join-Path ([IO.Path]::GetTempPath()) ([IO.Path]::GetRandomFileName())
                 try {
                     $env:ST_ENABLE_TELEMETRY = '1'

@@ -135,7 +135,7 @@ function Write-STLog {
             try {
                 Invoke-RestMethod -Uri $ForwardUri -Method Post -Body $json -ContentType 'application/json' | Out-Null
             } catch {
-                Write-STDebug "Failed to forward log to $ForwardUri: $_"
+                Write-STDebug "Failed to forward log to ${ForwardUri}: $_"
             }
         }
     } else {
