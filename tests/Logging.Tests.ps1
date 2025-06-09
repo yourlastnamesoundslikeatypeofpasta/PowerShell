@@ -157,4 +157,17 @@ Describe 'Logging Module' {
             Remove-Item $logFile* -ErrorAction SilentlyContinue
         }
     }
+
+    It 'filters messages according to ST_LOG_LEVEL' {
+        $env:ST_LOG_LEVEL = 'WARN'
+        try {
+            { Write-STStatus -Message 'info msg' -Level INFO } | Should -BeNullOrEmpty
+            { Write-STStatus -Message 'warn msg' -Level WARN } | Should -Output '[!] warn msg'
+            $env:ST_LOG_LEVEL = 'ERROR'
+            { Write-STStatus -Message 'warn skip' -Level WARN } | Should -BeNullOrEmpty
+            { Write-STStatus -Message 'err msg' -Level ERROR } | Should -Output '[-] err msg'
+        } finally {
+            Remove-Item env:ST_LOG_LEVEL -ErrorAction SilentlyContinue
+        }
+    }
 }

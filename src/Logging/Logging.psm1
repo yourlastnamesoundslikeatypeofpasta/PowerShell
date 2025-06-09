@@ -178,6 +178,16 @@ function Write-STStatus {
         [switch]$Log
     )
 
+    $rank = @{ INFO = 1; WARN = 2; ERROR = 3 }
+    $aliases = @{ SUCCESS='INFO'; SUB='INFO'; FINAL='INFO'; FATAL='ERROR' }
+    $thresholdName = if ($env:ST_LOG_LEVEL -and $rank.ContainsKey($env:ST_LOG_LEVEL)) {
+        $env:ST_LOG_LEVEL
+    } else {
+        'INFO'
+    }
+    $normalized = if ($aliases.ContainsKey($Level)) { $aliases[$Level] } else { $Level }
+    if ($rank[$normalized] -lt $rank[$thresholdName]) { return }
+
     switch ($Level) {
         'SUCCESS' { $prefix = '[+]'; $color = 'Green' }
         'ERROR'   { $prefix = '[-]'; $color = 'Red' }

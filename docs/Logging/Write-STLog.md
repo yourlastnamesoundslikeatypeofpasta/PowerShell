@@ -23,6 +23,15 @@ Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-Progres
 Records log messages in a consistent format. Logs are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` or `$env:ST_LOG_PATH` if set.
 Set `ST_LOG_STRUCTURED=1` or use `-Structured` to output JSON lines. The structure is described in [RichLogFormat.md](./RichLogFormat.md).
 
+## LOG LEVELS
+The `-Level` parameter accepts the following values:
+
+- **INFO** - informational messages
+- **WARN** - warnings that may require attention
+- **ERROR** - errors that prevented an action
+
+`Write-STStatus` respects the `$env:ST_LOG_LEVEL` variable using the same values to filter console output.
+
 ## EXAMPLES
 
 ### Example 1
