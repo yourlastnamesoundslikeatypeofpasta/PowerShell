@@ -81,9 +81,11 @@ function Start-Main {
     }
 }
 
-try {
-    Start-Main -PollMinutes $PollMinutes -Once:$Once
-} finally {
-    if ($TranscriptPath) { Stop-Transcript | Out-Null }
+if ($MyInvocation.InvocationName -ne '.') {
+    try {
+        Start-Main -PollMinutes $PollMinutes -Once:$Once
+    } finally {
+        if ($TranscriptPath) { Stop-Transcript | Out-Null }
+    }
 }
 
