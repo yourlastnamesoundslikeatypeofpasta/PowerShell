@@ -31,6 +31,12 @@ Get-STTelemetryMetrics -SqlitePath metrics.db
 ```
 Creates or updates a `metrics.db` SQLite file with a `metrics` table containing the summarized data.
 
+### Example 3
+```powershell
+Send-TelemetryToLogAnalytics.ps1 -Vault CompanyVault
+```
+Forwards telemetry events to Azure Monitor using secrets from `CompanyVault`.
+
 ## PARAMETERS
 ### -LogPath
 Path to the telemetry log. Defaults to `$env:ST_TELEMETRY_PATH` or `~/SupportToolsTelemetry/telemetry.jsonl`.
