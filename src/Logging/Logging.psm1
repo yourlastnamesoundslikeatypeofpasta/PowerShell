@@ -39,7 +39,9 @@ function Write-STLog {
         [int]$MaxSizeMB = 1,
         [Parameter(Mandatory = $false)]
         [ValidateRange(1,[int]::MaxValue)]
-        [int]$MaxFiles = 1
+        [int]$MaxFiles = 1,
+        [Parameter(Mandatory = $false)]
+        [switch]$Encrypt
     )
     if ($PSCmdlet.ParameterSetName -eq 'Metric') {
         if (-not $Metadata) { $Metadata = @{} }
@@ -109,10 +111,15 @@ function Write-STLog {
             message   = $Message
         }
         if ($Metadata) { foreach ($k in $Metadata.Keys) { $entry[$k] = $Metadata[$k] } }
-        ($entry | ConvertTo-Json -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
+        $output = $entry | ConvertTo-Json -Compress
     } else {
-        "$timestamp [$module] [$user] [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
+        $output = "$timestamp [$module] [$user] [$Level] $Message"
     }
+    if ($Encrypt -or $env:ST_LOG_ENCRYPT -eq '1') {
+        $secure = ConvertTo-SecureString -String $output -AsPlainText -Force
+        $output = ConvertFrom-SecureString -SecureString $secure
+    }
+    $output | Out-File -FilePath $logFile -Append -Encoding utf8
 }
 
 # Writes a structured JSON log entry following a common schema.
@@ -162,6 +169,33 @@ function Write-STRichLog {
     if ($PSBoundParameters.ContainsKey('Details'))  { $entry.details  = $Details }
 
     ($entry | ConvertTo-Json -Depth 5 -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
+}
+
+# Reads and decrypts log entries written with -Encrypt
+function Read-STLog {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false)]
+        [string]$Path
+    )
+    $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
+    if ($Path) {
+        $logFile = $Path
+    } elseif ($env:ST_LOG_PATH) {
+        $logFile = $env:ST_LOG_PATH
+    } else {
+        $logDir = Join-Path $userProfile 'SupportToolsLogs'
+        $logFile = Join-Path $logDir 'supporttools.log'
+    }
+    if (-not (Test-Path $logFile)) { return }
+    foreach ($line in Get-Content $logFile) {
+        try {
+            $secure = ConvertTo-SecureString -String $line
+            ConvertFrom-SecureString -SecureString $secure -AsPlainText -Force
+        } catch {
+            $line
+        }
+    }
 }
 
 function Write-STStatus {
@@ -252,7 +286,7 @@ function Write-STClosing {
     Write-Host "┌──[ $Message ]──────────────" -ForegroundColor DarkGray
 }
 
-Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing'
+Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Read-STLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing'
 
 function Show-LoggingBanner {
     <#

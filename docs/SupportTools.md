@@ -31,6 +31,7 @@ if ($result -is [System.Management.Automation.ErrorRecord]) {
 
 Commands record their activity to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default or to `$env:ST_LOG_PATH` if set.
 Use `-Structured` or set `ST_LOG_STRUCTURED=1` to output JSON events. See [../Logging/RichLogFormat.md](../Logging/RichLogFormat.md) for an example of the structure.
+Set `ST_LOG_ENCRYPT=1` or use `-Encrypt` with `Write-STLog` to store encrypted log entries.
 
 ## Available Commands
 

@@ -157,4 +157,28 @@ Describe 'Logging Module' {
             Remove-Item $logFile* -ErrorAction SilentlyContinue
         }
     }
+
+    It 'encrypts log lines when -Encrypt specified' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            Write-STLog -Message 'secret text' -Path $temp -Encrypt
+            (Get-Content $temp) | Should -NotMatch 'secret text'
+            Read-STLog -Path $temp | Should -Match 'secret text'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
+
+    It 'encrypts log lines when ST_LOG_ENCRYPT is set' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            $env:ST_LOG_ENCRYPT = '1'
+            Write-STLog -Message 'env secret' -Path $temp
+            (Get-Content $temp) | Should -NotMatch 'env secret'
+            Read-STLog -Path $temp | Should -Match 'env secret'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+            Remove-Item env:ST_LOG_ENCRYPT -ErrorAction SilentlyContinue
+        }
+    }
 }
