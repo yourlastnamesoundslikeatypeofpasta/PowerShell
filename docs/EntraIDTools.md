@@ -14,6 +14,10 @@ Gallery first:
 Install-Module MSAL.PS
 ```
 
+The MSAL library maintains a shared token cache. `Get-GraphAccessToken` first
+attempts to retrieve a token silently using `Get-MsalToken -Silent` and only
+prompts for interactive or device login when no cached token is available.
+
 ## Prerequisites
 
 1. Create an Entra ID application registration with Microsoft Graph permissions.
