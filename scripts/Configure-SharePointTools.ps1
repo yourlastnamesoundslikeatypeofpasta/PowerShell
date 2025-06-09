@@ -38,8 +38,25 @@ if ($PSBoundParameters.ContainsKey('TenantId')) {
 if ($PSBoundParameters.ContainsKey('CertPath')) {
     $settings.CertPath = $CertPath
 } else {
-    $certPath = Read-Host "Certificate Path (current: $($settings.CertPath))"
-    if ($certPath) { $settings.CertPath = $certPath }
+    if ($IsWindows) {
+        try {
+            Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
+            $dialog = New-Object System.Windows.Forms.OpenFileDialog
+            $dialog.Title  = 'Select certificate file'
+            $dialog.Filter = 'PFX files (*.pfx)|*.pfx|All files (*.*)|*.*'
+            $dialog.FileName = $settings.CertPath
+            Write-STStatus -Message 'Select certificate file or press Cancel to keep the current value.' -Level INFO
+            if ($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+                $settings.CertPath = $dialog.FileName
+            }
+        } catch {
+            $certPath = Read-Host "Certificate Path (current: $($settings.CertPath))"
+            if ($certPath) { $settings.CertPath = $certPath }
+        }
+    } else {
+        $certPath = Read-Host "Certificate Path (current: $($settings.CertPath))"
+        if ($certPath) { $settings.CertPath = $certPath }
+    }
 }
 
 # Configure SharePoint sites
