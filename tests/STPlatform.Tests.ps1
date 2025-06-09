@@ -293,4 +293,26 @@ Describe 'STPlatform Module' {
             }
         }
     }
+
+    Context 'Connect-EntraID validation' {
+        Safe-It 'throws when TenantId missing and env vars absent' {
+            InModuleScope STPlatform {
+                Mock Connect-MgGraph {}
+                Mock Get-Secret { $null }
+                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                { Connect-EntraID -ClientId 'cid' } | Should -Throw 'TenantId is required. Provide -TenantId or set GRAPH_TENANT_ID.'
+                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+            }
+        }
+
+        Safe-It 'throws when ClientId missing and env vars absent' {
+            InModuleScope STPlatform {
+                Mock Connect-MgGraph {}
+                Mock Get-Secret { $null }
+                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                { Connect-EntraID -TenantId 'tid' } | Should -Throw 'ClientId is required. Provide -ClientId or set GRAPH_CLIENT_ID.'
+                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+            }
+        }
+    }
 }
