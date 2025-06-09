@@ -58,7 +58,7 @@ function Write-STDebug {
     )
     if ($env:ST_DEBUG -eq '1') {
         Write-STStatus "[DEBUG] $Message" -Level SUB
-        Write-STLog "[DEBUG] $Message" -Level INFO
+        Write-STLog "[DEBUG] $Message" -Level INFO -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     }
 }
 
@@ -112,14 +112,14 @@ function Invoke-STRequest {
     if (-not $ChaosMode) { $ChaosMode = [bool]$env:ST_CHAOS_MODE }
     if ($ChaosMode) {
         $delay = Get-Random -Minimum 500 -Maximum 1500
-        Write-STLog -Message "CHAOS MODE delay $delay ms"
+        Write-STLog -Message "CHAOS MODE delay $delay ms" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         Start-Sleep -Milliseconds $delay
         $roll = Get-Random -Minimum 1 -Maximum 100
         if ($roll -le 10) { throw 'ChaosMode: simulated throttling (429 Too Many Requests)' }
         elseif ($roll -le 20) { throw 'ChaosMode: simulated server error (500 Internal Server Error)' }
     }
 
-    Write-STLog -Message "STRequest $Method $Uri"
+    Write-STLog -Message "STRequest $Method $Uri" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     Write-Verbose "Invoking $Method $Uri"
 
     $json = if ($PSBoundParameters.ContainsKey('Body')) {
@@ -135,17 +135,17 @@ function Invoke-STRequest {
             } else {
                 $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers
             }
-            Write-STLog -Message "SUCCESS $Method $Uri"
+            Write-STLog -Message "SUCCESS $Method $Uri" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             return $response
         } catch [System.Net.WebException],[Microsoft.PowerShell.Commands.HttpResponseException] {
             $status = $_.Exception.Response.StatusCode.value__
             $msg    = $_.Exception.Message
-            Write-STLog -Message "HTTP $status $msg" -Level 'ERROR'
+            Write-STLog -Message "HTTP $status $msg" -Level 'ERROR' -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             if ($status -eq 429 -or ($status -ge 500 -and $status -lt 600)) {
                 if ($attempt -lt $maxRetries) {
                     $retryAfter = $_.Exception.Response.Headers['Retry-After']
                     if ($retryAfter) { $delay = [int]$retryAfter } else { $delay = [math]::Pow(2, $attempt) }
-                    Write-STLog -Message "Retry $attempt in $delay sec" -Level WARN
+                    Write-STLog -Message "Retry $attempt in $delay sec" -Level WARN -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
                     Write-Verbose "Retrying in $delay seconds"
                     Start-Sleep -Seconds $delay
                     $attempt++
@@ -155,7 +155,7 @@ function Invoke-STRequest {
             $errorObj = New-STErrorObject -Message "HTTP $status $msg" -Category 'HTTP'
             throw $errorObj
         } catch {
-            Write-STLog -Message "ERROR $Method $Uri :: $_" -Level 'ERROR'
+            Write-STLog -Message "ERROR $Method $Uri :: $_" -Level 'ERROR' -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             throw
         }
     }
