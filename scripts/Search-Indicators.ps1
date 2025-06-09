@@ -10,6 +10,7 @@ param(
 )
 
 function Search-Indicators {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Search event logs, registry and file system for suspicious indicators.

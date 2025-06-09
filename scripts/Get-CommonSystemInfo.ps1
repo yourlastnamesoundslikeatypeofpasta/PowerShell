@@ -1,6 +1,8 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 function Get-CommonSystemInfo {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
     Gather OS version, processor details, memory and disk space.

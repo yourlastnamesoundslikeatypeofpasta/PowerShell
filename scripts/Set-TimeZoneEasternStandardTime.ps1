@@ -1,6 +1,8 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 function Set-TimeZoneEasternStandardTime {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
     Set time zone to Eastern Standard Time.

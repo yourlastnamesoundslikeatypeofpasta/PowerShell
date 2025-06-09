@@ -47,6 +47,7 @@ Import-Module Pnp.PowerShell
 $InformationPreference = 'Continue'
 
 function Test-PathIsArchived {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Validates that an item resides in the archive directory.
@@ -57,6 +58,8 @@ function Test-PathIsArchived {
         The SharePoint item object to validate.
     #>
     param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [object]$ArchivedFileItem
     )
     $DirectoryPath = 'zzz_Archive_Production'

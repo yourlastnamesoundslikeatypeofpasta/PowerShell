@@ -1,4 +1,5 @@
 function Set-ComputerIPAddress {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Set a systems static IP address.

@@ -27,12 +27,19 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -
 Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -Force -ErrorAction SilentlyContinue
 
 function Get-AllTickets {
+    [CmdletBinding()]
+    param()
     Write-STStatus -Message 'Retrieving all tickets...' -Level INFO -Log
     Invoke-SDRequest -Method 'GET' -Path '/incidents.json?per_page=100'
 }
 
 function Get-NewTickets {
-    param([datetime]$Since)
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [datetime]$Since
+    )
     $param = [uri]::EscapeDataString($Since.ToString('o'))
     Write-STStatus "Checking for new tickets since $Since" -Level SUB -Log
     Invoke-SDRequest -Method 'GET' -Path "/incidents.json?created_after=$param"

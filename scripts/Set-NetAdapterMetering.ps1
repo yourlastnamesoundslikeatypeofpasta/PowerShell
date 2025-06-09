@@ -2,6 +2,7 @@
 Import-SupportToolsLogging
 
 function Set-NetAdapterMetric {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
     Set a network adapters metric priority

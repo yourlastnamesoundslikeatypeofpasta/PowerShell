@@ -24,6 +24,7 @@
 
 
 function Install-Something {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Installs a package from a server share.
@@ -35,15 +36,16 @@ function Install-Something {
         Additional arguments to pass to Start-Process.
     #>
     param (
-        [Parameter()]
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string]
         $ServerSharePath,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string]
         $FilePath,
 
-        [Parameter()]
         [string]
         $Arguments
     )
@@ -52,6 +54,7 @@ function Install-Something {
 }
 
 function Confirm-ServiceRunning {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Confirms required services are running.
@@ -92,6 +95,7 @@ function Confirm-ServiceRunning {
 }
 
 function Export-Client {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Exports client system information to an XML file on a share.
@@ -152,6 +156,7 @@ function Export-Client {
 }
 
 function Get-WHVersions {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Checks file versions for deployment validation.
@@ -240,6 +245,7 @@ function Get-WHVersions {
 }
 
 function Get-ServerSharePath {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Returns the UNC path to the deployment server.
@@ -268,6 +274,7 @@ function Get-ServerSharePath {
 }
 
 function Get-UpdateVersion {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Generates a string representing the deployment version.
@@ -297,6 +304,7 @@ function Get-UpdateVersion {
 }
 
 function Set-Signoff {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Displays a completion image at the end of deployment.
