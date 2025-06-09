@@ -17,7 +17,7 @@ Once published, install the entire suite on a fresh system using the helper scri
 ./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
 ```
 
-The script downloads `Logging`, `SharePointTools`, `ServiceDeskTools` and the specified version of `SupportTools` from the gallery. If the gallery can't be reached it imports the local copies from `src` instead.
+The script downloads `Logging`, `Telemetry`, `SharePointTools`, `ServiceDeskTools` and the specified version of `SupportTools` from the gallery. If the gallery can't be reached it imports the local copies from `src` instead.
 
 ## Signing Scripts
 
