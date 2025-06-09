@@ -7,6 +7,8 @@ Import the module with its manifest:
 Import-Module ./src/ChaosTools/ChaosTools.psd1
 ```
 
+Chaos commands log to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default. Specify `$env:ST_LOG_PATH` to change the location. Structured JSON output is enabled with `ST_LOG_STRUCTURED=1` (see [Logging/RichLogFormat.md](Logging/RichLogFormat.md)).
+
 ## Available Commands
 
 | Command | Description | Example |

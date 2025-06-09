@@ -6,6 +6,8 @@ Commands that query Microsoft Graph for tenant data. Import the module:
 Import-Module ./src/EntraIDTools/EntraIDTools.psd1
 ```
 
+Logs are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` unless `$env:ST_LOG_PATH` is provided. Enable `ST_LOG_STRUCTURED=1` to produce JSON logs; see [Logging/RichLogFormat.md](Logging/RichLogFormat.md).
+
 This module depends on the **MSAL.PS** module which provides the `Get-MsalToken`
 command used for authentication. Install the dependency from the PowerShell
 Gallery first:

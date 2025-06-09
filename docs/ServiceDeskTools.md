@@ -2,6 +2,8 @@
 
 Commands for interacting with the Service Desk ticketing API. **ServiceDeskTools is now considered Stable** and is fully supported for production use.
 
+Logs are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` unless `$env:ST_LOG_PATH` is set. Set `ST_LOG_STRUCTURED=1` for JSON-formatted events; see [Logging/RichLogFormat.md](Logging/RichLogFormat.md).
+
 ## Available Commands
 
 | Command | Description | Example |

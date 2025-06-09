@@ -21,6 +21,5 @@ Write-STBlock @{ 'User'='svc-backend'; 'Domain'='corp.local'; 'IP'='10.10.10.5' 
 Write-STClosing
 ```
 
-All messages can also be logged to `%USERPROFILE%\SupportToolsLogs\supporttools.log` using the `-Log` switch or by setting `ST_LOG_PATH`.
-Use the `-Structured` parameter of `Write-STLog` to output JSON lines with extra metadata for ingestion into a centralized dashboard.
-Set the `ST_LOG_STRUCTURED` environment variable to `1` to enable structured output automatically.
+Logs are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default. Override the path with `$env:ST_LOG_PATH` or the `-Log` switch.
+Use the `-Structured` parameter of `Write-STLog` or set `ST_LOG_STRUCTURED=1` to output JSON lines in the [RichLogFormat](Logging/RichLogFormat.md) for dashboards.

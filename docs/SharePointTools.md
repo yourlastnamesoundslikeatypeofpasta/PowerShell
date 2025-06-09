@@ -6,6 +6,8 @@ This module provides SharePoint cleanup and reporting utilities. Import the modu
 Import-Module ./src/SharePointTools/SharePointTools.psd1
 ```
 
+Logs are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` unless `$env:ST_LOG_PATH` overrides the path. Enable `ST_LOG_STRUCTURED=1` to capture JSON events; see [Logging/RichLogFormat.md](Logging/RichLogFormat.md).
+
 Validate prerequisites using `Test-SPToolsPrereqs`:
 
 ```powershell

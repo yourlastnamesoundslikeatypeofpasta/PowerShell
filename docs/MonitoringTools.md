@@ -7,6 +7,8 @@ Import the module using its manifest:
 Import-Module ./src/MonitoringTools/MonitoringTools.psd1
 ```
 
+Log entries are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default. Specify `$env:ST_LOG_PATH` for a custom path. Set `ST_LOG_STRUCTURED=1` to record JSON formatted events (see [Logging/RichLogFormat.md](Logging/RichLogFormat.md)).
+
 ## Available Commands
 
 | Command | Description | Example |

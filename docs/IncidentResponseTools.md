@@ -6,6 +6,8 @@ Import the module using its manifest:
 Import-Module ./src/IncidentResponseTools/IncidentResponseTools.psd1
 ```
 
+All commands log to `%USERPROFILE%\SupportToolsLogs\supporttools.log` unless `$env:ST_LOG_PATH` is set. Use `ST_LOG_STRUCTURED=1` to capture structured JSON entries; see [Logging/RichLogFormat.md](Logging/RichLogFormat.md).
+
 ## Available Commands
 
 | Command | Description | Example |

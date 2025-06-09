@@ -6,6 +6,8 @@ Import the module using its manifest:
 Import-Module ./src/ConfigManagementTools/ConfigManagementTools.psd1
 ```
 
+Logs are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default. Override with `$env:ST_LOG_PATH`. Set `ST_LOG_STRUCTURED=1` for JSON output; see [Logging/RichLogFormat.md](Logging/RichLogFormat.md).
+
 ## Available Commands
 
 | Command | Description | Example |

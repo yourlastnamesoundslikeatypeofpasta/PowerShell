@@ -8,6 +8,8 @@ Import-Module ./src/SupportTools/SupportTools.psd1
 
 For a guided experience, run `./scripts/SupportToolsMenu.ps1` with the optional `-UserRole` parameter to select common tasks from an interactive menu tailored for `Helpdesk` or `Site Admin` roles. To browse and execute any script in the repository, use `./scripts/ScriptLauncher.ps1` for a general menu of options.
 
+All commands log to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default. Set `$env:ST_LOG_PATH` to choose a different location. Set `ST_LOG_STRUCTURED=1` to record JSON entries; see [Logging/RichLogFormat.md](Logging/RichLogFormat.md).
+
 ### Simulation Mode
 
 All commands now accept a `-Simulate` switch. When used, the command logs each step and returns randomized mock data without making changes. This is useful for testing in lab environments.

@@ -21,6 +21,8 @@ Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-Progres
 
 ## DESCRIPTION
 Used by scripts and modules to record log messages in a consistent format.
+Logs default to `%USERPROFILE%\SupportToolsLogs\supporttools.log` unless
+`$env:ST_LOG_PATH` specifies another location.
 
 ## EXAMPLES
 
@@ -67,7 +69,8 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-Custom path to the log file. Overrides the default location and the `ST_LOG_PATH`
+Custom path to the log file. Overrides the default log at
+`%USERPROFILE%\SupportToolsLogs\supporttools.log` and the `ST_LOG_PATH`
 environment variable.
 
 ```yaml
@@ -97,7 +100,7 @@ Accept wildcard characters: False
 ```
 
 ### -Structured
-Outputs the log entry as a JSON object. Set the `ST_LOG_STRUCTURED` environment variable to `1` to enable structured output by default.
+Outputs the log entry as a JSON object. Set the `ST_LOG_STRUCTURED` environment variable to `1` to enable structured output by default. The resulting schema is shown in [RichLogFormat](RichLogFormat.md).
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
@@ -169,3 +172,4 @@ Logs rotate automatically when their size exceeds `ST_LOG_MAX_BYTES` (default
 started.
 
 ## RELATED LINKS
+[RichLogFormat](RichLogFormat.md)

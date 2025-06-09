@@ -6,6 +6,8 @@ Provides helper commands for measuring script performance. Import the module usi
 Import-Module ./src/PerformanceTools/PerformanceTools.psd1
 ```
 
+Performance logs are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` unless `$env:ST_LOG_PATH` is set. Enable `ST_LOG_STRUCTURED=1` for JSON output. See [Logging/RichLogFormat.md](Logging/RichLogFormat.md).
+
 ## Available Commands
 
 | Command | Description |
