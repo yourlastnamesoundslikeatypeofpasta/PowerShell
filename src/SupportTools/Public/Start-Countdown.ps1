@@ -18,7 +18,7 @@ function Start-Countdown {
     .NOTES
         Intended for demo scripts and small delays.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
