@@ -7,7 +7,8 @@ Describe 'ServiceDeskTools Module' {
     Context 'Exported commands' {
         $expected = @(
             'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
-            'Search-SDTicket','Get-ServiceDeskAsset','Set-SDTicketBulk','Link-SDTicketToSPTask'
+            'Add-SDTicketComment','Search-SDTicket','Get-ServiceDeskAsset',
+            'Set-SDTicketBulk','Link-SDTicketToSPTask'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -46,6 +47,15 @@ Describe 'ServiceDeskTools Module' {
                 $Method -eq 'PUT' -and
                 $Path -eq '/incidents/2.json' -and
                 $Body.incident.status -eq 'Open'
+            } -Times 1
+        }
+        It 'Add-SDTicketComment calls Invoke-SDRequest' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Add-SDTicketComment -Id 5 -Comment 'c'
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $Method -eq 'POST' -and
+                $Path -eq '/incidents/5/comments.json' -and
+                $Body.comment.body -eq 'c'
             } -Times 1
         }
         It 'Search-SDTicket calls Invoke-SDRequest' {
@@ -114,6 +124,12 @@ Describe 'ServiceDeskTools Module' {
             Set-SDTicketBulk -Id 7,8 -Fields @{priority='High'}
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Set-SDTicketBulk 7' } -Times 1
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Set-SDTicketBulk 8' } -Times 1
+        }
+        It 'Add-SDTicketComment logs the request' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Mock Write-STLog {} -ModuleName ServiceDeskTools
+            Add-SDTicketComment -Id 8 -Comment 'c'
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Add-SDTicketComment 8' } -Times 1
         }
         It 'Link-SDTicketToSPTask logs the update' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools

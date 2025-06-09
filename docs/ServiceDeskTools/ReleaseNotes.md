@@ -7,3 +7,6 @@
 
 ## 1.2.0 - 2025-06-08
 - Improved `Invoke-SDRequest` with rate limiting, retry logic and verbose logging.
+
+## 1.3.0 - 2025-06-09
+- Added `Add-SDTicketComment` to post comments on incidents.
