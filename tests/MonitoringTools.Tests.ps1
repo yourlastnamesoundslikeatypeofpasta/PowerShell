@@ -30,6 +30,6 @@ Describe 'MonitoringTools Module' {
         Mock Get-SystemHealth { @{ CpuPercent=1; DiskInfo=@(); EventLogSummary=@() } } -ModuleName MonitoringTools
         Mock Write-STRichLog {} -ModuleName MonitoringTools
         Start-HealthMonitor -IntervalSeconds 0 -Count 2
-        Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -Times 2
+        Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -Times 10
     }
 }
