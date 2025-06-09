@@ -12,7 +12,7 @@ Periodically log system health metrics.
 
 ## SYNTAX
 ```powershell
-Start-HealthMonitor [[-IntervalSeconds] <Int32>] [[-Count] <Int32>] [<CommonParameters>]
+Start-HealthMonitor [[-IntervalSeconds] <Int32>] [[-Count] <Int32>] [[-LogPath] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,6 +30,9 @@ Collects five health samples thirty seconds apart.
 Seconds between health checks. Default is 60.
 ### -Count
 Number of samples to capture before exiting. Zero runs indefinitely.
+### -LogPath
+Path to the structured log file. Defaults to `$env:ST_LOG_PATH` or
+`~/SupportToolsLogs/supporttools.log`.
 
 ## INPUTS
 None. You cannot pipe objects to this command.
