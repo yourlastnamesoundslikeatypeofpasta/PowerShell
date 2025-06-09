@@ -21,6 +21,11 @@ Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-Progres
 
 ## DESCRIPTION
 Used by scripts and modules to record log messages in a consistent format.
+Logs are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default.
+Set the `$env:ST_LOG_PATH` environment variable or the `-Path` parameter to use a different file.
+Set `$env:ST_LOG_STRUCTURED=1` to automatically emit structured JSON entries.
+The rich output format is shown in
+[RichLogFormat.md](RichLogFormat.md).
 
 ## EXAMPLES
 
@@ -165,3 +170,4 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+[RichLogFormat.md](RichLogFormat.md)
