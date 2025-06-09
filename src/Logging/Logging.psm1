@@ -190,6 +190,14 @@ function Write-STStatus {
         [switch]$Log
     )
 
+    $levelTable = @{ INFO = 1; WARN = 2; ERROR = 3 }
+    $msgTable   = @{ INFO = 1; SUCCESS = 1; SUB = 1; FINAL = 1; WARN = 2; ERROR = 3; FATAL = 3 }
+    $envLevel   = $env:ST_LOG_LEVEL
+    $envValue   = if ($envLevel) { $levelTable[$envLevel.ToUpper()] } else { 1 }
+    if (-not $envValue) { $envValue = 1 }
+    $msgValue   = $msgTable[$Level]
+    if ($msgValue -lt $envValue) { return }
+
     switch ($Level) {
         'SUCCESS' { $prefix = '[+]'; $color = 'Green' }
         'ERROR'   { $prefix = '[-]'; $color = 'Red' }
