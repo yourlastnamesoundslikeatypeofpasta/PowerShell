@@ -1,6 +1,9 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'Invoke-ArchiveCleanup' {
     BeforeAll {
+        if (Get-PSDrive -Name TestDrive -ErrorAction SilentlyContinue) {
+            Remove-PSDrive -Name TestDrive -Force
+        }
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/SharePointTools/SharePointTools.psd1 -Force
     }
