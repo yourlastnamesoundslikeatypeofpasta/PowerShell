@@ -33,4 +33,14 @@ Describe 'MonitoringTools Module' {
         Start-HealthMonitor -IntervalSeconds 0 -Count 2
         Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -Times 10
     }
+
+    Safe-It 'writes logs to a specified file' {
+        Mock Get-CPUUsage { 1 } -ModuleName MonitoringTools
+        Mock Get-DiskSpaceInfo { @() } -ModuleName MonitoringTools
+        Mock Get-EventLogSummary { @() } -ModuleName MonitoringTools
+        $logFile = Join-Path $TestDrive 'health.log'
+        Start-HealthMonitor -IntervalSeconds 0 -Count 1 -LogPath $logFile
+        Test-Path $logFile | Should -Be $true
+        (Get-Content $logFile | Measure-Object).Count | Should -Be 5
+    }
 }

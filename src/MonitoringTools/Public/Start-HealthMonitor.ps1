@@ -10,11 +10,15 @@ function Start-HealthMonitor {
         Seconds between health checks. Defaults to 60.
     .PARAMETER Count
         Number of samples to collect before exiting. 0 runs indefinitely.
+    .PARAMETER LogPath
+        Optional path for the rich log file. Defaults to $env:ST_LOG_PATH or
+        ~/SupportToolsLogs/supporttools.log.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [int]$IntervalSeconds = 60,
-        [int]$Count = 0
+        [int]$Count = 0,
+        [string]$LogPath
     )
 
     if (-not $PSCmdlet.ShouldProcess('system health monitoring')) { return }
@@ -25,7 +29,11 @@ function Start-HealthMonitor {
             $start = Get-Date
             $health = Get-SystemHealth
             $json = $health | ConvertTo-Json -Compress
-            Write-STRichLog -Tool 'HealthMonitor' -Status 'sample' -Details $json
+            if ($PSBoundParameters.ContainsKey('LogPath')) {
+                Write-STRichLog -Tool 'HealthMonitor' -Status 'sample' -Details $json -Path $LogPath
+            } else {
+                Write-STRichLog -Tool 'HealthMonitor' -Status 'sample' -Details $json
+            }
 
             $collected++
 
