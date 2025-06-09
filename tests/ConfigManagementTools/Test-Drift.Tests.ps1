@@ -1,10 +1,11 @@
+. $PSScriptRoot/../TestHelpers.ps1
 Describe 'Test-Drift function' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/ConfigManagementTools/ConfigManagementTools.psd1 -Force
     }
 
-    It 'detects configuration drift' {
+    Safe-It 'detects configuration drift' {
         InModuleScope ConfigManagementTools {
             $baseline = @{ timezone='UTC'; hostname='HOST1'; services=@{ svc1='Running' } }
             $file = [System.IO.Path]::GetTempFileName()
@@ -21,7 +22,7 @@ Describe 'Test-Drift function' {
         }
     }
 
-    It 'returns empty when system matches baseline' {
+    Safe-It 'returns empty when system matches baseline' {
         InModuleScope ConfigManagementTools {
             $baseline = @{ timezone='UTC'; hostname='HOST1'; services=@{ svc1='Running' } }
             $file = [System.IO.Path]::GetTempFileName()

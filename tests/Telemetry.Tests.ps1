@@ -1,3 +1,4 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'Telemetry Opt-In' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
@@ -7,7 +8,7 @@ Describe 'Telemetry Opt-In' {
         Import-Module $PSScriptRoot/../src/SupportTools/SupportTools.psd1 -Force
     }
 
-    It 'does not log telemetry when not opted in' {
+    Safe-It 'does not log telemetry when not opted in' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         $scriptFile = Join-Path $PSScriptRoot/.. 'scripts/TelemetryTest.ps1'
         Set-Content $scriptFile "Write-Host 'test'"
@@ -24,7 +25,7 @@ Describe 'Telemetry Opt-In' {
         }
     }
 
-    It 'logs telemetry when opt-in variable is set' {
+    Safe-It 'logs telemetry when opt-in variable is set' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         $scriptFile = Join-Path $PSScriptRoot/.. 'scripts/TelemetryTest.ps1'
         Set-Content $scriptFile "Write-Host 'test'"
@@ -56,7 +57,7 @@ Describe 'Telemetry Metrics Summary' {
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
     }
 
-    It 'aggregates telemetry data' {
+    Safe-It 'aggregates telemetry data' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         $events = @(
             @{Timestamp='2024-01-01T00:00:00Z'; Script='Test.ps1'; Result='Success'; Duration=2},
@@ -75,7 +76,7 @@ Describe 'Telemetry Metrics Summary' {
         }
     }
 
-    It 'records metrics using Send-STMetric' {
+    Safe-It 'records metrics using Send-STMetric' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         try {
             $env:ST_ENABLE_TELEMETRY = '1'
@@ -93,7 +94,7 @@ Describe 'Telemetry Metrics Summary' {
         }
     }
 
-    It 'writes metrics to a sqlite database' {
+    Safe-It 'writes metrics to a sqlite database' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         $db  = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         $events = @(
@@ -127,7 +128,7 @@ Describe 'Telemetry Banner' {
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
     }
 
-    It 'returns module and version data' {
+    Safe-It 'returns module and version data' {
         InModuleScope Telemetry {
             $expected = (Import-PowerShellDataFile "$PSScriptRoot/../src/Telemetry/Telemetry.psd1").ModuleVersion
             $banner = Show-TelemetryBanner

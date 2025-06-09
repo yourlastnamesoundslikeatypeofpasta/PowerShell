@@ -1,10 +1,11 @@
+. $PSScriptRoot/../TestHelpers.ps1
 Describe 'Invoke-NewHireUserAutomation function' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SupportTools/SupportTools.psd1 -Force
     }
 
-    It 'passes parameters to Invoke-ScriptFile' {
+    Safe-It 'passes parameters to Invoke-ScriptFile' {
         InModuleScope SupportTools {
             Mock Invoke-ScriptFile {} -ModuleName SupportTools
             Invoke-NewHireUserAutomation -PollMinutes 1 -Once -TranscriptPath 't.log'

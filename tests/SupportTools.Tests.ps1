@@ -1,3 +1,4 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'SupportTools Module' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
@@ -28,7 +29,7 @@ Describe 'SupportTools Module' {
 
         $exported = (Get-Command -Module SupportTools).Name
         foreach ($cmd in $expected) {
-            It "Exports $cmd" {
+            Safe-It "Exports $cmd" {
                 $exported | Should -Contain $cmd
             }
         }
@@ -36,7 +37,7 @@ Describe 'SupportTools Module' {
 
 
     Context 'Sync-SupportTools behavior' {
-        It 'clones when repository is missing' {
+        Safe-It 'clones when repository is missing' {
             InModuleScope SupportTools {
                 function git {}
                 function Import-Module {}
@@ -48,7 +49,7 @@ Describe 'SupportTools Module' {
             }
         }
 
-        It 'pulls when repository exists' {
+        Safe-It 'pulls when repository exists' {
             InModuleScope SupportTools {
                 function git {}
                 function Import-Module {}
@@ -61,7 +62,7 @@ Describe 'SupportTools Module' {
             }
         }
 
-        It 'records transcript when path provided' {
+        Safe-It 'records transcript when path provided' {
             InModuleScope SupportTools {
                 function git {}
                 function Import-Module {}
@@ -80,7 +81,7 @@ Describe 'SupportTools Module' {
     }
 
     Context 'Search-ReadMe transcript' {
-        It 'starts and stops transcript when path is given' {
+        Safe-It 'starts and stops transcript when path is given' {
             InModuleScope SupportTools {
                 function Start-Transcript {}
                 function Stop-Transcript {}
@@ -94,7 +95,7 @@ Describe 'SupportTools Module' {
     }
 
     Context 'Error handling' {
-        It 'returns error record when git fails' {
+        Safe-It 'returns error record when git fails' {
             InModuleScope SupportTools {
                 function git { throw 'git fail' }
                 $res = Sync-SupportTools -RepositoryUrl 'url' -InstallPath 'path'
@@ -103,7 +104,7 @@ Describe 'SupportTools Module' {
             }
         }
 
-        It 'returns error record when search fails' {
+        Safe-It 'returns error record when search fails' {
             InModuleScope SupportTools {
                 function Get-ChildItem { throw 'bad' }
                 $res = Search-ReadMe

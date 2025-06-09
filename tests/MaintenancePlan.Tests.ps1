@@ -1,14 +1,15 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'MaintenancePlan Module' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/MaintenancePlan/MaintenancePlan.psd1 -Force
     }
 
-    It 'exports New-MaintenancePlan' {
+    Safe-It 'exports New-MaintenancePlan' {
         (Get-Command -Module MaintenancePlan).Name | Should -Contain 'New-MaintenancePlan'
     }
 
-    It 'creates and persists a plan' {
+    Safe-It 'creates and persists a plan' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             $plan = New-MaintenancePlan -Name Test -Steps @('Write-Host "hi"')
@@ -21,7 +22,7 @@ Describe 'MaintenancePlan Module' {
         }
     }
 
-    It 'executes script steps' {
+    Safe-It 'executes script steps' {
         $scriptPath = Join-Path ([IO.Path]::GetTempPath()) 'step.ps1'
         Set-Content $scriptPath '$script:ran = $true'
         try {
@@ -34,7 +35,7 @@ Describe 'MaintenancePlan Module' {
         }
     }
 
-    It 'builds scheduled task command on Windows' {
+    Safe-It 'builds scheduled task command on Windows' {
         InModuleScope MaintenancePlan {
             Set-Variable -Name IsWindows -Value $true -Scope Script -Force
             function Register-ScheduledTask {}
@@ -47,7 +48,7 @@ Describe 'MaintenancePlan Module' {
         }
     }
 
-    It 'returns cron entry on non-windows' {
+    Safe-It 'returns cron entry on non-windows' {
         InModuleScope MaintenancePlan {
             Set-Variable -Name IsWindows -Value $false -Scope Script -Force
             $entry = Schedule-MaintenancePlan -PlanPath '/tmp/p.json' -Cron '5 1 * * *' -Name 'MP'

@@ -1,3 +1,4 @@
+. $PSScriptRoot/../TestHelpers.ps1
 Describe 'New-STDashboard function' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
@@ -5,7 +6,7 @@ Describe 'New-STDashboard function' {
         Import-Module $PSScriptRoot/../../src/SupportTools/SupportTools.psd1 -Force
     }
 
-    It 'creates an HTML dashboard with metrics' {
+    Safe-It 'creates an HTML dashboard with metrics' {
         $log = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString() + '.log')
         $tlog = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString() + '.jsonl')
         $out = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString() + '.html')

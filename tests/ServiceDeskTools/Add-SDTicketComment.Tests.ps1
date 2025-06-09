@@ -6,7 +6,7 @@ Describe 'Add-SDTicketComment' {
         Import-Module $PSScriptRoot/../../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force
     }
 
-    It 'returns API response on success' {
+    Safe-It 'returns API response on success' {
         InModuleScope ServiceDeskTools {
             Mock Invoke-SDRequest { @{ ok = $true } }
             $res = Add-SDTicketComment -Id 1 -Comment 'done'
@@ -19,7 +19,7 @@ Describe 'Add-SDTicketComment' {
         }
     }
 
-    It 'throws when Invoke-SDRequest fails' {
+    Safe-It 'throws when Invoke-SDRequest fails' {
         InModuleScope ServiceDeskTools {
             Mock Invoke-SDRequest { throw 'bad' }
             { Add-SDTicketComment -Id 2 -Comment 'x' } | Should -Throw

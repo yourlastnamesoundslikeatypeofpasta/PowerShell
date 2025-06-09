@@ -1,5 +1,6 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'Standalone Scripts' {
-    It 'generates maintenance task XML without registering' {
+    Safe-It 'generates maintenance task XML without registering' {
         $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         New-Item -ItemType Directory -Path $tempDir | Out-Null
         Push-Location $tempDir
@@ -14,7 +15,7 @@ Describe 'Standalone Scripts' {
         }
     }
 
-    It 'builds a function dependency graph' {
+    Safe-It 'builds a function dependency graph' {
         $result = & $PSScriptRoot/../scripts/Get-FunctionDependencyGraph.ps1 -Path $PSScriptRoot/../scripts/AddUsersToGroup.ps1 -Format Graphviz
         $result | Should -Match 'digraph'
         $result | Should -Match 'Start-Main'

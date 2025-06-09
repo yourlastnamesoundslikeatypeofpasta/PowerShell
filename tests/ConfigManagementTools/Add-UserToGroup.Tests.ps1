@@ -1,10 +1,11 @@
+. $PSScriptRoot/../TestHelpers.ps1
 Describe 'Add-UserToGroup function' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/ConfigManagementTools/ConfigManagementTools.psd1 -Force
     }
 
-    It 'passes parameters to Invoke-ScriptFile' {
+    Safe-It 'passes parameters to Invoke-ScriptFile' {
         InModuleScope ConfigManagementTools {
             Mock Invoke-ScriptFile {} -ModuleName ConfigManagementTools
             Add-UserToGroup -CsvPath 'users.csv' -GroupName 'TeamA'
@@ -14,7 +15,7 @@ Describe 'Add-UserToGroup function' {
         }
     }
 
-    It 'accepts pipeline input' {
+    Safe-It 'accepts pipeline input' {
         InModuleScope ConfigManagementTools {
             Mock Invoke-ScriptFile {} -ModuleName ConfigManagementTools
             [pscustomobject]@{ CsvPath='input.csv'; GroupName='G1' } | Add-UserToGroup
@@ -24,7 +25,7 @@ Describe 'Add-UserToGroup function' {
         }
     }
 
-    It 'forwards transcript and switches' {
+    Safe-It 'forwards transcript and switches' {
         InModuleScope ConfigManagementTools {
             Mock Invoke-ScriptFile {} -ModuleName ConfigManagementTools
             Add-UserToGroup -CsvPath 'users.csv' -GroupName 'G1' -TranscriptPath 't.log' -Simulate -Explain
@@ -34,7 +35,7 @@ Describe 'Add-UserToGroup function' {
         }
     }
 
-    It 'passes Cloud parameter' {
+    Safe-It 'passes Cloud parameter' {
         InModuleScope ConfigManagementTools {
             Mock Invoke-ScriptFile {} -ModuleName ConfigManagementTools
             Add-UserToGroup -CsvPath 'users.csv' -GroupName 'G1' -Cloud 'AD'
@@ -44,7 +45,7 @@ Describe 'Add-UserToGroup function' {
         }
     }
 
-    It 'returns error record on failure' {
+    Safe-It 'returns error record on failure' {
         InModuleScope ConfigManagementTools {
             function Invoke-ScriptFile { throw 'oops' }
             $res = Add-UserToGroup -CsvPath 'u.csv' -GroupName 'G1'

@@ -7,7 +7,7 @@ Describe 'Get-ServiceDeskStats' {
         Import-Module $PSScriptRoot/../../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force
     }
 
-    It 'groups incidents by status' {
+    Safe-It 'groups incidents by status' {
         InModuleScope ServiceDeskTools {
             $data = @(
                 @{ state = 'Open' },
@@ -22,7 +22,7 @@ Describe 'Get-ServiceDeskStats' {
         }
     }
 
-    It 'throws when Invoke-SDRequest fails' {
+    Safe-It 'throws when Invoke-SDRequest fails' {
         InModuleScope ServiceDeskTools {
             Mock Invoke-SDRequest { throw 'bad' }
             { Get-ServiceDeskStats -StartDate (Get-Date) -EndDate (Get-Date) } | Should -Throw

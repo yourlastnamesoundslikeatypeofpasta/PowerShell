@@ -39,7 +39,7 @@ Describe 'IncidentResponseTools public functions' {
     }
 
     Context 'Get-CommonSystemInfo' {
-        It 'returns system info when CIM available' {
+        Safe-It 'returns system info when CIM available' {
             InModuleScope IncidentResponseTools {
                 Mock Get-Command { @{ Name='Get-CimInstance' } } -ParameterFilter { $Name -eq 'Get-CimInstance' }
                 Mock Get-Command { $null } -ParameterFilter { $Name -eq 'Get-WmiObject' }
@@ -58,7 +58,7 @@ Describe 'IncidentResponseTools public functions' {
                 Assert-MockCalled Send-STMetric -ParameterFilter { $MetricName -eq 'Get-CommonSystemInfo' } -Times 1
             }
         }
-        It 'returns error object on failure' {
+        Safe-It 'returns error object on failure' {
             InModuleScope IncidentResponseTools {
                 Mock Get-Command { @{ Name='Get-CimInstance' } } -ParameterFilter { $Name -eq 'Get-CimInstance' }
                 Mock Get-CimInstance { throw 'bad' }
@@ -72,7 +72,7 @@ Describe 'IncidentResponseTools public functions' {
     }
 
     Context 'Invoke-RemoteAudit' {
-        It 'collects info from computers' {
+        Safe-It 'collects info from computers' {
             InModuleScope IncidentResponseTools {
                 Mock Invoke-Command { [pscustomobject]@{ ComputerName=$ComputerName; Info='i' } }
                 $r = Invoke-RemoteAudit -ComputerName 'PC1'
@@ -80,7 +80,7 @@ Describe 'IncidentResponseTools public functions' {
                 $r.Info | Should -Be 'i'
             }
         }
-        It 'captures errors from Invoke-Command' {
+        Safe-It 'captures errors from Invoke-Command' {
             InModuleScope IncidentResponseTools {
                 Mock Invoke-Command { throw 'fail' }
                 $r = Invoke-RemoteAudit -ComputerName 'PC1'
@@ -91,7 +91,7 @@ Describe 'IncidentResponseTools public functions' {
     }
 
     Context 'Invoke-FullSystemAudit' {
-        It 'aggregates step output' {
+        Safe-It 'aggregates step output' {
             InModuleScope IncidentResponseTools {
                 Mock Get-CommonSystemInfo { 'info' }
                 Mock Get-FailedLogin { 'fails' }
@@ -102,7 +102,7 @@ Describe 'IncidentResponseTools public functions' {
                 $s.Errors.Count | Should -Be 0
             }
         }
-        It 'records errors when steps fail' {
+        Safe-It 'records errors when steps fail' {
             InModuleScope IncidentResponseTools {
                 Mock Get-CommonSystemInfo { throw 'boom' }
                 Mock Get-FailedLogin { 'fails' }

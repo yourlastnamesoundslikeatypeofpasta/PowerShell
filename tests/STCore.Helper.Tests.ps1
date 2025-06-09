@@ -1,15 +1,16 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'STCore Helper Functions' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/STCore/STCore.psd1 -Force
     }
 
-    It 'Assert-ParameterNotNull throws on null' {
+    Safe-It 'Assert-ParameterNotNull throws on null' {
         { Assert-ParameterNotNull $null 'Param' } | Should -Throw
     }
 
     Context 'Get-STConfig' {
-        It 'reads JSON files' {
+        Safe-It 'reads JSON files' {
             $path = Join-Path $TestDrive 'c.json'
             Set-Content -Path $path -Value '{"x":42}'
             try {
@@ -20,7 +21,7 @@ Describe 'STCore Helper Functions' {
             }
         }
 
-        It 'reads PSD1 files' {
+        Safe-It 'reads PSD1 files' {
             $path = Join-Path $TestDrive 'c.psd1'
             Set-Content -Path $path -Value '@{ y = 99 }'
             try {
@@ -31,7 +32,7 @@ Describe 'STCore Helper Functions' {
             }
         }
 
-        It 'returns empty for missing file' {
+        Safe-It 'returns empty for missing file' {
             $path = Join-Path $TestDrive 'nofile.json'
             $cfg = Get-STConfig -Path $path
             $cfg | Should -BeOfType 'hashtable'
@@ -40,7 +41,7 @@ Describe 'STCore Helper Functions' {
     }
 
     Context 'Write-STDebug' {
-        It 'emits output only when ST_DEBUG=1' {
+        Safe-It 'emits output only when ST_DEBUG=1' {
             InModuleScope STCore {
                 Mock Write-STStatus {}
                 Mock Write-STLog {}
@@ -59,7 +60,7 @@ Describe 'STCore Helper Functions' {
     }
 
     Context 'Test-IsElevated' {
-        It 'uses Windows APIs when IsWindows is true' {
+        Safe-It 'uses Windows APIs when IsWindows is true' {
             InModuleScope STCore {
                 Set-Variable -Name IsWindows -Value $true -Scope Script -Force
                 Mock id { 0 }
@@ -67,7 +68,7 @@ Describe 'STCore Helper Functions' {
                 Assert-MockCalled id -Times 0
             }
         }
-        It 'checks uid 0 when IsWindows is false' {
+        Safe-It 'checks uid 0 when IsWindows is false' {
             InModuleScope STCore {
                 Set-Variable -Name IsWindows -Value $false -Scope Script -Force
                 Mock id { '0' }
@@ -79,7 +80,7 @@ Describe 'STCore Helper Functions' {
     }
 
     Context 'Invoke-STRequest' {
-        It 'invokes once on success' {
+        Safe-It 'invokes once on success' {
             InModuleScope STCore {
                 Mock Write-STLog {}
                 Mock Invoke-RestMethod { @{ ok = 1 } }
@@ -89,7 +90,7 @@ Describe 'STCore Helper Functions' {
             }
         }
 
-        It 'retries on server error' {
+        Safe-It 'retries on server error' {
             InModuleScope STCore {
                 Mock Write-STLog {}
                 Mock Start-Sleep {}
@@ -112,7 +113,7 @@ Describe 'STCore Helper Functions' {
             }
         }
 
-        It 'honors -ChaosMode' {
+        Safe-It 'honors -ChaosMode' {
             InModuleScope STCore {
                 Mock Write-STLog {}
                 Mock Start-Sleep {}
@@ -124,7 +125,7 @@ Describe 'STCore Helper Functions' {
             }
         }
 
-        It 'honors ST_CHAOS_MODE environment variable' {
+        Safe-It 'honors ST_CHAOS_MODE environment variable' {
             InModuleScope STCore {
                 Mock Write-STLog {}
                 Mock Start-Sleep {}

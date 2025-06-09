@@ -1,3 +1,4 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'SharePointTools Module' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
@@ -38,7 +39,7 @@ Describe 'SharePointTools Module' {
         $exported = (Get-Command -Module SharePointTools).Name
         foreach ($cmd in $expected) {
             $c = $cmd
-            It "Exports $c" {
+            Safe-It "Exports $c" {
                 $exported | Should -Contain $c
             }
         }
@@ -61,7 +62,7 @@ Describe 'SharePointTools Module' {
             @{ Fn = $m.Fn; Target = $m.Target }
         }
 
-        It '<Fn> calls <Target>' -ForEach $cases {
+        Safe-It '<Fn> calls <Target>' -ForEach $cases {
             Mock $Target {} -ModuleName SharePointTools
             & $Fn
             Assert-MockCalled $Target -ModuleName SharePointTools -Times 1
@@ -69,7 +70,7 @@ Describe 'SharePointTools Module' {
     }
 
     Context 'Library reporting wrapper' {
-        It 'calls Get-SPToolsLibraryReport for each site' {
+        Safe-It 'calls Get-SPToolsLibraryReport for each site' {
             $SharePointToolsSettings.Sites.Clear()
             $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
             $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
@@ -80,7 +81,7 @@ Describe 'SharePointTools Module' {
         }
     }
     Context 'Recycle bin reporting wrapper' {
-        It 'calls Get-SPToolsRecycleBinReport for each site' {
+        Safe-It 'calls Get-SPToolsRecycleBinReport for each site' {
             $SharePointToolsSettings.Sites.Clear()
             $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
             $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
@@ -91,7 +92,7 @@ Describe 'SharePointTools Module' {
         }
     }
     Context 'Preservation hold reporting wrapper' {
-        It 'calls Get-SPToolsPreservationHoldReport for each site' {
+        Safe-It 'calls Get-SPToolsPreservationHoldReport for each site' {
             $SharePointToolsSettings.Sites.Clear()
             $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso.sharepoint.com/sites/a'
             $SharePointToolsSettings.Sites['SiteB'] = 'https://contoso.sharepoint.com/sites/b'
@@ -115,7 +116,7 @@ Describe 'SharePointTools Module' {
             Remove-Item $tempCfg -ErrorAction SilentlyContinue
         }
 
-        It 'Add-SPToolsSite stores the URL and saves settings' {
+        Safe-It 'Add-SPToolsSite stores the URL and saves settings' {
             InModuleScope SharePointTools {
                 Mock Save-SPToolsSettings {}
                 Add-SPToolsSite -Name 'SiteA' -Url 'https://contoso.sharepoint.com/sites/a'
@@ -124,7 +125,7 @@ Describe 'SharePointTools Module' {
             }
         }
 
-        It 'Set-SPToolsSite updates an existing entry' {
+        Safe-It 'Set-SPToolsSite updates an existing entry' {
             InModuleScope SharePointTools {
                 Mock Save-SPToolsSettings {}
                 $SharePointToolsSettings.Sites['SiteA'] = 'https://old'
@@ -134,7 +135,7 @@ Describe 'SharePointTools Module' {
             }
         }
 
-        It 'Remove-SPToolsSite deletes the entry' {
+        Safe-It 'Remove-SPToolsSite deletes the entry' {
             InModuleScope SharePointTools {
                 Mock Save-SPToolsSettings {}
                 $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso'
@@ -144,7 +145,7 @@ Describe 'SharePointTools Module' {
             }
         }
 
-        It 'Add-SPToolsSite accepts pipeline input for Name' {
+        Safe-It 'Add-SPToolsSite accepts pipeline input for Name' {
             InModuleScope SharePointTools {
                 Mock Save-SPToolsSettings {}
                 'PipeSite' | Add-SPToolsSite -Url 'https://pipe'
@@ -153,7 +154,7 @@ Describe 'SharePointTools Module' {
             }
         }
 
-        It 'Set-SPToolsSite accepts pipeline input for Name' {
+        Safe-It 'Set-SPToolsSite accepts pipeline input for Name' {
             InModuleScope SharePointTools {
                 Mock Save-SPToolsSettings {}
                 $SharePointToolsSettings.Sites['PipeSite'] = 'https://old'
@@ -163,7 +164,7 @@ Describe 'SharePointTools Module' {
             }
         }
 
-        It 'Remove-SPToolsSite accepts pipeline input' {
+        Safe-It 'Remove-SPToolsSite accepts pipeline input' {
             InModuleScope SharePointTools {
                 Mock Save-SPToolsSettings {}
                 $SharePointToolsSettings.Sites['PipeSite'] = 'https://contoso'
@@ -173,7 +174,7 @@ Describe 'SharePointTools Module' {
             }
         }
 
-        It 'Get-SPToolsSiteUrl returns the url and throws when missing' {
+        Safe-It 'Get-SPToolsSiteUrl returns the url and throws when missing' {
             InModuleScope SharePointTools {
                 $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso'
                 Get-SPToolsSiteUrl -SiteName 'SiteA' | Should -Be 'https://contoso'
@@ -181,7 +182,7 @@ Describe 'SharePointTools Module' {
             }
         }
 
-        It 'Get-SPToolsSettings returns the current settings object' {
+        Safe-It 'Get-SPToolsSettings returns the current settings object' {
             InModuleScope SharePointTools {
                 $SharePointToolsSettings.Sites['SiteA'] = 'https://contoso'
                 (Get-SPToolsSettings).Sites['SiteA'] | Should -Be 'https://contoso'

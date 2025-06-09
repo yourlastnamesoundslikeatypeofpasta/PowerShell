@@ -1,9 +1,10 @@
+. $PSScriptRoot/../TestHelpers.ps1
 Describe 'Get-SPToolsSiteUrl function' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force
     }
-    It 'returns the matching URL' {
+    Safe-It 'returns the matching URL' {
         InModuleScope SharePointTools {
             $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A='https://a'; B='https://b' } })
             Mock Write-SPToolsHacker {}
@@ -11,7 +12,7 @@ Describe 'Get-SPToolsSiteUrl function' {
         }
     }
 
-    It 'parameter does not accept pipeline input' {
+    Safe-It 'parameter does not accept pipeline input' {
         InModuleScope SharePointTools {
             $meta = Get-Command Get-SPToolsSiteUrl
             $paramAttr = $meta.Parameters['SiteName'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] }
@@ -20,7 +21,7 @@ Describe 'Get-SPToolsSiteUrl function' {
         }
     }
 
-    It 'throws when site is missing' {
+    Safe-It 'throws when site is missing' {
         InModuleScope SharePointTools {
             $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A='https://a' } })
             Mock Write-SPToolsHacker {}
@@ -28,7 +29,7 @@ Describe 'Get-SPToolsSiteUrl function' {
         }
     }
 
-    It 'logs lookup messages' {
+    Safe-It 'logs lookup messages' {
         InModuleScope SharePointTools {
             $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A='https://a' } })
             Mock Write-SPToolsHacker {}
