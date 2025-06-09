@@ -187,12 +187,14 @@ function Save-SPToolsSettings {
         Save-SPToolsSettings
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
-    param()
+    param(
+        [string]$Path = $settingsFile
+    )
     process {
-        if ($PSCmdlet.ShouldProcess($settingsFile, 'Save configuration')) {
+        if ($PSCmdlet.ShouldProcess($Path, 'Save configuration')) {
             Write-SPToolsHacker 'Saving configuration'
-            $SharePointToolsSettings | Out-File -FilePath $settingsFile -Encoding utf8
-            Write-SPToolsHacker 'Configuration saved' -Level SUCCESS -Metadata @{ Path = $settingsFile }
+            $SharePointToolsSettings | Out-File -FilePath $Path -Encoding utf8
+            Write-SPToolsHacker 'Configuration saved' -Level SUCCESS -Metadata @{ Path = $Path }
         }
     }
 }
