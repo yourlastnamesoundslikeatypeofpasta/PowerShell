@@ -205,10 +205,10 @@ Describe 'ServiceDeskTools Module' {
             InModuleScope ServiceDeskTools {
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
                 Mock Get-Secret { 'fromvault' }
-                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json'
                 Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq 'SD_API_TOKEN' } -Times 1
-                Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -Times 1
+                Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -Times 1
                 $env:SD_API_TOKEN | Should -Be 'fromvault'
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
             }
@@ -217,7 +217,7 @@ Describe 'ServiceDeskTools Module' {
             InModuleScope ServiceDeskTools {
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
                 Mock Get-Secret { 'vaultvalue' }
-                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json' -Vault 'TestVault'
                 Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq 'SD_API_TOKEN' -and $Vault -eq 'TestVault' } -Times 1
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
@@ -245,9 +245,9 @@ Describe 'ServiceDeskTools Module' {
                 $env:SD_API_TOKEN = 't'
                 Remove-Item env:SD_BASE_URI -ErrorAction SilentlyContinue
                 Mock Write-STLog {} -ModuleName ServiceDeskTools
-                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json'
-                Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://api.samanage.com/incidents/1.json' } -Times 1
+                Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://api.samanage.com/incidents/1.json' } -Times 1
                 Remove-Item env:SD_API_TOKEN
             }
         }
@@ -256,9 +256,9 @@ Describe 'ServiceDeskTools Module' {
                 $env:SD_API_TOKEN = 't'
                 $env:SD_BASE_URI = 'https://custom.example.com/api/'
                 Mock Write-STLog {} -ModuleName ServiceDeskTools
-                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 Invoke-SDRequest -Method 'GET' -Path '/incidents/2.json'
-                Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://custom.example.com/api/incidents/2.json' } -Times 1
+                Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://custom.example.com/api/incidents/2.json' } -Times 1
                 Remove-Item env:SD_API_TOKEN
                 Remove-Item env:SD_BASE_URI
             }
@@ -269,9 +269,9 @@ Describe 'ServiceDeskTools Module' {
                 $env:SD_BASE_URI = 'https://custom.example.com/api/'
                 Remove-Item env:SD_ASSET_BASE_URI -ErrorAction SilentlyContinue
                 Mock Write-STLog {} -ModuleName ServiceDeskTools
-                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 Get-ServiceDeskAsset -Id 3
-                Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://custom.example.com/api/assets/3.json' } -Times 1
+                Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://custom.example.com/api/assets/3.json' } -Times 1
                 Remove-Item env:SD_API_TOKEN
                 Remove-Item env:SD_BASE_URI
             }
@@ -281,9 +281,9 @@ Describe 'ServiceDeskTools Module' {
                 $env:SD_API_TOKEN = 't'
                 $env:SD_ASSET_BASE_URI = 'https://assets.example.com/api/'
                 Mock Write-STLog {} -ModuleName ServiceDeskTools
-                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 Get-ServiceDeskAsset -Id 4
-                Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://assets.example.com/api/assets/4.json' } -Times 1
+                Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://assets.example.com/api/assets/4.json' } -Times 1
                 Remove-Item env:SD_API_TOKEN
                 Remove-Item env:SD_ASSET_BASE_URI
             }
@@ -292,12 +292,11 @@ Describe 'ServiceDeskTools Module' {
             InModuleScope ServiceDeskTools {
                 $env:SD_API_TOKEN = 't'
                 Mock Write-STLog {} -ModuleName ServiceDeskTools
-                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 $body = @{ value = 1 }
-                $expected = $body | ConvertTo-Json -Depth 10
                 Invoke-SDRequest -Method 'POST' -Path '/test' -Body $body
-                Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -ParameterFilter {
-                    $Body -eq $expected -and $ContentType -eq 'application/json'
+                Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                    $Body.value -eq 1 -and $Method -eq 'POST'
                 } -Times 1
                 Remove-Item env:SD_API_TOKEN
             }
@@ -342,7 +341,7 @@ Describe 'ServiceDeskTools Module' {
                 Mock Get-Date { $dates[$i++] } -ModuleName ServiceDeskTools
                 Mock Start-Sleep {} -ModuleName ServiceDeskTools
                 Mock Wait-SDRateLimit { } -ModuleName ServiceDeskTools
-                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
 
                 Invoke-SDRequest -Method 'GET' -Path '/one'
                 Invoke-SDRequest -Method 'GET' -Path '/two'
@@ -362,12 +361,12 @@ Describe 'ServiceDeskTools Module' {
                 $env:ST_CHAOS_MODE = '1'
                 $random = @(1000, 5)
                 $r = 0
-                Mock Get-Random { $random[$r++] } -ModuleName ServiceDeskTools
-                Mock Start-Sleep {} -ModuleName ServiceDeskTools
+                Mock Get-Random { $random[$r++] } -ModuleName STCore
+                Mock Start-Sleep {} -ModuleName STCore
 
                 { Invoke-SDRequest -Method 'GET' -Path '/fail' } | Should -Throw 'ChaosMode:'
 
-                Assert-MockCalled Start-Sleep -ModuleName ServiceDeskTools -ParameterFilter { $Milliseconds -eq 1000 } -Times 1
+                Assert-MockCalled Start-Sleep -ModuleName STCore -ParameterFilter { $Milliseconds -eq 1000 } -Times 1
 
                 Remove-Item env:SD_API_TOKEN
                 Remove-Item env:ST_CHAOS_MODE

@@ -22,16 +22,6 @@ function Invoke-SDRequest {
         if ($token) { $env:SD_API_TOKEN = $token } else { throw 'SD_API_TOKEN environment variable must be set.' }
     }
 
-    if (-not $ChaosMode) { $ChaosMode = [bool]$env:ST_CHAOS_MODE }
-    if ($ChaosMode) {
-        $delay = Get-Random -Minimum 500 -Maximum 1500
-        Write-STLog -Message "CHAOS MODE delay $delay ms"
-        Start-Sleep -Milliseconds $delay
-        $roll = Get-Random -Minimum 1 -Maximum 100
-        if ($roll -le 10) { throw 'ChaosMode: simulated throttling (429 Too Many Requests)' }
-        elseif ($roll -le 20) { throw 'ChaosMode: simulated server error (500 Internal Server Error)' }
-    }
-
     $rateLimit = if ($env:SD_RATE_LIMIT_PER_MINUTE) { [int]$env:SD_RATE_LIMIT_PER_MINUTE } else { $null }
     Wait-SDRateLimit -RateLimit $rateLimit
 
@@ -39,6 +29,5 @@ function Invoke-SDRequest {
     $uri = $baseUri.TrimEnd('/') + $Path
     Write-STLog -Message "SDRequest $Method $uri"
     Write-Verbose "Invoking $Method $uri"
-    $json = if ($Body) { $Body | ConvertTo-Json -Depth 10 } else { $null }
-    Invoke-SDRestWithRetry -Method $Method -Uri $uri -Headers $headers -Body $json
+    Invoke-SDRestWithRetry -Method $Method -Uri $uri -Headers $headers -Body $Body -ChaosMode:$ChaosMode
 }
