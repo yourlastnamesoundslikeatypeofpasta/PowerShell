@@ -148,6 +148,9 @@ SD_ASSET_BASE_URI
 ```
 
 When set, these variables override values stored in `config/SharePointToolsSettings.psd1`.
+`Connect-STPlatform` now checks the registered SecretManagement vault for these variables
+when they are missing and loads them automatically. See
+[docs/CredentialStorage.md](docs/CredentialStorage.md) for configuring a vault.
 Set `ST_CHAOS_MODE` to `1` or use the `-ChaosMode` switch on ServiceDeskTools commands to simulate throttled or failing API calls during testing.
 For a step-by-step example of loading these variables from the SecretManagement
 module see [docs/CredentialStorage.md](docs/CredentialStorage.md).
@@ -157,6 +160,8 @@ module see [docs/CredentialStorage.md](docs/CredentialStorage.md).
 Commands automatically record their activity to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default or to `$env:ST_LOG_PATH` when set.
 Use the `-Path` parameter of `Write-STLog` to log elsewhere as needed.
 Use `-Structured` or set `ST_LOG_STRUCTURED=1` to emit rich JSON events that include user and script metadata.
+Set `ST_LOG_LEVEL` to control the minimum severity written to the log (INFO, WARN or ERROR).
+Set `ST_LOG_ENCRYPT=1` to encrypt log files with the current user's credentials.
 For the schema of these structured entries see [docs/Logging/RichLogFormat.md](docs/Logging/RichLogFormat.md).
 Use `-MaxSizeMB` and `-MaxFiles` with `Write-STLog` to control log rotation. Logs over the size limit (default 1 MB) are renamed with incrementing numeric suffixes.
 Use `-Metric` and `-Value` with `Write-STLog` to capture performance data like durations.
