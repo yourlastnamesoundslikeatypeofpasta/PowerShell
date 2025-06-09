@@ -6,5 +6,11 @@
     Description = 'Commands for interacting with the Service Desk ticketing system.'
     RequiredModules = @('Logging','Telemetry')
     PrivateData = @{ PSData = @{ Tags = @('PowerShell','ServiceDesk','Internal') } }
-    FunctionsToExport = '*'
+    FunctionsToExport = @(
+        'Add-SDTicketComment','Export-SDConfig','Get-SDTicket',
+        'Get-SDTicketHistory','Get-SDUser','Get-ServiceDeskAsset',
+        'Get-ServiceDeskRelationship','Get-ServiceDeskStats',
+        'Link-SDTicketToSPTask','New-SDTicket','Search-SDTicket',
+        'Set-SDTicket','Set-SDTicketBulk','Submit-Ticket'
+    )
 }
