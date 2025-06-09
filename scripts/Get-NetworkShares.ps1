@@ -24,7 +24,7 @@ function Get-NetworkShares {
     if ($ComputerName -eq $null) {
         $ComputerName = $env:COMPUTERNAME
     }
-    Write-STStatus "Gathering network shares on $ComputerName..." -Level INFO
+    Write-STStatus -Message "Gathering network shares on $ComputerName..." -Level INFO
 
     $shares = Get-CimInstance -ClassName Win32_Share -ComputerName $ComputerName
 
@@ -42,7 +42,7 @@ function Get-NetworkShares {
         Shares       = $shareObjects
     }
 
-    Write-STStatus "Found $($shareObjects.Count) shares." -Level SUCCESS
+    Write-STStatus -Message "Found $($shareObjects.Count) shares." -Level SUCCESS
     return $result
 }
 

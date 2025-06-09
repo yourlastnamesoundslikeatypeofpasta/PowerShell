@@ -54,7 +54,7 @@ if ($LogPath) {
 }
 
 if (-not (Test-Path $path)) {
-    Write-STStatus "Telemetry log not found: $path" -Level ERROR
+    Write-STStatus -Message "Telemetry log not found: $path" -Level ERROR
     return
 }
 
