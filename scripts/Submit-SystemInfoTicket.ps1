@@ -19,6 +19,8 @@
     Optional folder path within the library.
 .PARAMETER TranscriptPath
     Path for the transcript log file.
+.PARAMETER SmtpServer
+    Optional SMTP server to deliver the summary email.
 #>
 param(
     [Parameter(Mandatory)]
@@ -29,7 +31,8 @@ param(
     [string]$Description = 'System information collected automatically.',
     [string]$LibraryName = 'Shared Documents',
     [string]$FolderPath = '',
-    [string]$TranscriptPath
+    [string]$TranscriptPath,
+    [string]$SmtpServer
 )
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
@@ -60,6 +63,14 @@ try {
     $ticketBody = "$Description`n`nReport: $fileUrl"
     New-SDTicket -Subject $Subject -Description $ticketBody -RequesterEmail $RequesterEmail | Out-Null
     Write-STStatus -Message 'Service Desk ticket created.' -Level SUCCESS -Log
+
+    if ($SmtpServer) {
+        Write-STStatus -Message 'Sending summary email...' -Level INFO -Log
+        $mailSubject = "System info ticket created on $env:COMPUTERNAME"
+        $mailBody = "A Service Desk ticket has been opened with subject '$Subject'.`nReport: $fileUrl"
+        Send-MailMessage -To $RequesterEmail -From $RequesterEmail -Subject $mailSubject -Body $mailBody -SmtpServer $SmtpServer
+        Write-STStatus -Message 'Summary email sent.' -Level SUCCESS -Log
+    }
 }
 finally {
     if ($TranscriptPath) { Stop-Transcript | Out-Null }

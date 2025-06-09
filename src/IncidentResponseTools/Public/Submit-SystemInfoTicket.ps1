@@ -29,6 +29,9 @@ function Submit-SystemInfoTicket {
         [ValidateNotNullOrEmpty()]
         [string]$TranscriptPath,
         [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$SmtpServer,
+        [Parameter(Mandatory = $false)]
         [switch]$Simulate,
         [Parameter(Mandatory = $false)]
         [switch]$Explain,
@@ -45,6 +48,7 @@ function Submit-SystemInfoTicket {
         if ($PSBoundParameters.ContainsKey('Description')) { $arguments += @('-Description', $Description) }
         if ($PSBoundParameters.ContainsKey('LibraryName')) { $arguments += @('-LibraryName', $LibraryName) }
         if ($PSBoundParameters.ContainsKey('FolderPath'))  { $arguments += @('-FolderPath', $FolderPath) }
+        if ($PSBoundParameters.ContainsKey('SmtpServer'))  { $arguments += @('-SmtpServer', $SmtpServer) }
         Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Submit-SystemInfoTicket.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }
