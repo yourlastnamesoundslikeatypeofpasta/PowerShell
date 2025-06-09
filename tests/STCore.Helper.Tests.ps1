@@ -86,7 +86,7 @@ Describe 'STCore Helper Functions' {
                 Mock Invoke-RestMethod { @{ ok = 1 } }
                 $result = Invoke-STRequest -Method GET -Uri 'https://example.com'
                 $result.ok | Should -Be 1
-                Assert-MockCalled Invoke-RestMethod -Times 1 -ParameterFilter { $Method -eq 'GET' -and $Uri -eq 'https://example.com' }
+                Assert-MockCalled Invoke-RestMethod -Times 1 -ParameterFilter { $Method -eq 'GET' -and $Uri -eq 'https://example.com' -and $ErrorAction -eq 'Stop' }
             }
         }
 

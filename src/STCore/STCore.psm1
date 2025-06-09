@@ -131,9 +131,9 @@ function Invoke-STRequest {
     while ($true) {
         try {
             if ($json) {
-                $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers -Body $json -ContentType $ContentType
+                $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers -Body $json -ContentType $ContentType -ErrorAction Stop
             } else {
-                $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers
+                $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers -ErrorAction Stop
             }
             Write-STLog -Message "SUCCESS $Method $Uri" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             return $response
