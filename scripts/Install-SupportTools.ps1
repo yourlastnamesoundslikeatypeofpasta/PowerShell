@@ -2,10 +2,10 @@
 .SYNOPSIS
     Imports the SupportTools suite from the repository source.
 .DESCRIPTION
-    Loads SupportTools, SharePointTools, ServiceDeskTools and Logging from the
-    local `src` folder. The script no longer attempts to download modules from
-    any gallery. `SupportToolsVersion` and `Scope` are retained for backward
-    compatibility but are ignored.
+    Loads SupportTools, IncidentResponseTools, SharePointTools, ServiceDeskTools
+    and Logging from the local `src` folder. The script no longer attempts to
+    download modules from any gallery. `SupportToolsVersion` and `Scope` are
+    retained for backward compatibility but are ignored.
 .PARAMETER SupportToolsVersion
     Ignored parameter kept for compatibility with older automation.
 .PARAMETER Scope
@@ -22,6 +22,7 @@ param(
 $modules = @(
     'Logging',
     'Telemetry',
+    'IncidentResponseTools',
     'SharePointTools',
     'ServiceDeskTools',
     'SupportTools'

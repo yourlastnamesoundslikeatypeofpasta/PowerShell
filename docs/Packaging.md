@@ -17,7 +17,7 @@ Once published, install the entire suite on a fresh system using the helper scri
 ./scripts/Install-SupportTools.ps1
 ```
 
-The script imports `Logging`, `Telemetry`, `SharePointTools`, `ServiceDeskTools` and `SupportTools` from the `src` directory.
+The script imports `Logging`, `Telemetry`, `IncidentResponseTools`, `SharePointTools`, `ServiceDeskTools` and `SupportTools` from the `src` directory.
 
 ## Signing Scripts
 
