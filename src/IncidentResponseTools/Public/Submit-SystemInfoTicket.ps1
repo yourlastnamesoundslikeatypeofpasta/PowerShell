@@ -43,6 +43,7 @@ function Submit-SystemInfoTicket {
         [object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('system info ticket')) { return }
         $arguments = @('-SiteName', $SiteName, '-RequesterEmail', $RequesterEmail)
         if ($PSBoundParameters.ContainsKey('Subject'))     { $arguments += @('-Subject', $Subject) }
         if ($PSBoundParameters.ContainsKey('Description')) { $arguments += @('-Description', $Description) }

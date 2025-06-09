@@ -31,6 +31,7 @@ function Invoke-RemoteAudit {
     )
     process {
         foreach ($comp in $ComputerName) {
+            if (-not $PSCmdlet.ShouldProcess($comp, 'Audit')) { continue }
             $invokeParams = @{ ComputerName = $comp }
             if ($PSBoundParameters.ContainsKey('Credential')) { $invokeParams.Credential = $Credential }
             if ($UseSSL) { $invokeParams.UseSSL = $true }

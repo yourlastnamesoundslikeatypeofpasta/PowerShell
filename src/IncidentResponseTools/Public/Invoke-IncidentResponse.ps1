@@ -24,6 +24,7 @@ function Invoke-IncidentResponse {
         [object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('incident response collection')) { return }
         Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Invoke-IncidentResponse.ps1' -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }
