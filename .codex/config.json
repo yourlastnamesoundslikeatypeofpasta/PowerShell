@@ -8,8 +8,8 @@
     "config": "PesterConfiguration.psd1"
   },
   "analysis": {
-    "include": ["./"],
-    "exclude": ["*.log"]
+    "include": ["src", "scripts", "tests"],
+    "exclude": ["*.log", ".git"]
   },
   "language": "powershell",
   "features": ["summarize", "doc", "test", "refactor"]
