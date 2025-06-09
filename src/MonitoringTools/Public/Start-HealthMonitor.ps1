@@ -21,6 +21,10 @@ function Start-HealthMonitor {
         [string]$LogPath
     )
 
+    if (-not $PSBoundParameters.ContainsKey('IntervalSeconds')) {
+        if ($env:ST_HEALTH_INTERVAL) { $IntervalSeconds = [int]$env:ST_HEALTH_INTERVAL }
+    }
+
     if (-not $PSCmdlet.ShouldProcess('system health monitoring')) { return }
 
     try {
