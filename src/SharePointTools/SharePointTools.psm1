@@ -120,6 +120,12 @@ function Connect-SPToolsOnline {
         [Alias('TenantID','tenantId')]
         [string]$TenantId,
         [Parameter(Mandatory, ParameterSetName='Certificate')]
+        [ValidateScript({
+            if (-not (Test-Path $_)) {
+                throw "Certificate file not found at path '$_'"
+            }
+            $true
+        })]
         [string]$CertPath,
         [Parameter(Mandatory, ParameterSetName='Secret')]
         [string]$ClientSecret,
