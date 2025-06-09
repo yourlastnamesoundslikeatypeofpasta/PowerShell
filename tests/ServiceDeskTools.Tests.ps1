@@ -208,6 +208,16 @@ Describe 'ServiceDeskTools Module' {
                 { Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json' } | Should -Throw
             }
         }
+        It 'throws an ErrorRecord when token cleared and vault missing' {
+            InModuleScope ServiceDeskTools {
+                $env:SD_API_TOKEN = 't'
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Mock Get-Secret { $null }
+                try { Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json' } catch { $err = $_ }
+                $err | Should -BeOfType 'System.Management.Automation.ErrorRecord'
+                $err.Exception.Message | Should -Be 'SD_API_TOKEN environment variable must be set.'
+            }
+        }
         Safe-It 'uses default base URI when SD_BASE_URI not set' {
             InModuleScope ServiceDeskTools {
                 $env:SD_API_TOKEN = 't'
