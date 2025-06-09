@@ -55,7 +55,12 @@ function Invoke-PerformanceAudit {
         [object]$Config
     )
     process {
-        $output = Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Invoke-PerformanceAudit.ps1' -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        try {
+            $output = Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Invoke-PerformanceAudit.ps1' -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        } catch {
+            Write-Error $_.Exception.Message
+            throw
+        }
         return [pscustomobject]@{
             Script = 'Invoke-PerformanceAudit.ps1'
             Result = $output

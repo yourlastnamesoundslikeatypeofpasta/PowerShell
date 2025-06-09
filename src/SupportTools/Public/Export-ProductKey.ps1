@@ -33,13 +33,25 @@ function Export-ProductKey {
     try {
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
-        $key = (Get-CimInstance -ClassName SoftwareLicensingService | Select-Object -ExpandProperty OA3xOriginalProductKey)
+        try {
+            $key = Get-CimInstance -ClassName SoftwareLicensingService -ErrorAction Stop | Select-Object -ExpandProperty OA3xOriginalProductKey
+        } catch {
+            Write-Error $_.Exception.Message
+            throw
+        }
+
         if (-not $key) {
             Write-STStatus -Message 'Product key not found.' -Level WARN
             return
         }
 
-        Set-Content -Path $OutputPath -Value $key
+        try {
+            Set-Content -Path $OutputPath -Value $key -ErrorAction Stop
+        } catch {
+            Write-Error $_.Exception.Message
+            throw
+        }
+
         Write-STStatus "Product key exported to $OutputPath" -Level SUCCESS
         return [pscustomobject]@{
             ProductKey = $key

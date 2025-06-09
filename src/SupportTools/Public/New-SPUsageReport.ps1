@@ -54,7 +54,12 @@ function New-SPUsageReport {
         [object]$Config
     )
     process {
-        $output = Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Generate-SPUsageReport.ps1' -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        try {
+            $output = Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Generate-SPUsageReport.ps1' -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        } catch {
+            Write-Error $_.Exception.Message
+            throw
+        }
         return [pscustomobject]@{
             Script = 'Generate-SPUsageReport.ps1'
             Result = $output
