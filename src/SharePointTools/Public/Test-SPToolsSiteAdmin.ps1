@@ -35,7 +35,7 @@ function Test-SPToolsSiteAdmin {
 
     try {
         Write-STStatus 'Checking HTTP response' -Level INFO
-        $resp = Invoke-WebRequest -Uri $SiteUrl -Method Head -UseBasicParsing -ErrorAction Stop
+        $resp = Invoke-WebRequest -Uri $SiteUrl -Method Head -ErrorAction Stop
         $status = [int]$resp.StatusCode
         Write-STStatus "HTTP status: $status" -Level SUB
     } catch {
