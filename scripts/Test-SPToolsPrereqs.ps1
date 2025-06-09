@@ -16,6 +16,6 @@ param(
     [switch]$Install
 )
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src' 'SharePointTools' 'SharePointTools.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src' 'SharePointTools' 'SharePointTools.psd1') -Force -ErrorAction SilentlyContinue
 
 Test-SPToolsPrereqs -Install:$Install

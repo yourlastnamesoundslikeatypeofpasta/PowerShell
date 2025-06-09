@@ -31,8 +31,8 @@ param(
     [string]$LogPath
 )
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
 
 if ($env:ST_ENABLE_TELEMETRY -ne '1') {
     Write-STStatus -Message 'ST_ENABLE_TELEMETRY is not set. Telemetry will not be sent.' -Level WARN

@@ -64,7 +64,7 @@ function Connect-STPlatform {
                     Write-STStatus "$m module missing." -Level WARN -Log
                 }
             }
-            Import-Module $m -ErrorAction SilentlyContinue
+            Import-Module $m -Force -ErrorAction SilentlyContinue
         }
 
         switch ($Mode) {

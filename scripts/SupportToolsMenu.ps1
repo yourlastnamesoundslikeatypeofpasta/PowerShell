@@ -9,8 +9,8 @@
     ./SupportToolsMenu.ps1
 #>
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
-Import-Module (Join-Path $PSScriptRoot '..' 'src/SupportTools/SupportTools.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/SupportTools/SupportTools.psd1') -Force -ErrorAction SilentlyContinue
 
 param(
     [ValidateSet('Helpdesk','Site Admin')]

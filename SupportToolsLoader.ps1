@@ -15,7 +15,7 @@
 if (-not $script:SupportToolsLoaderLoaded) {
     $script:SupportToolsLoaderLoaded = $true
 
-    Import-Module (Join-Path $PSScriptRoot 'src/OutTools/OutTools.psd1') -ErrorAction SilentlyContinue
+    Import-Module (Join-Path $PSScriptRoot 'src/OutTools/OutTools.psd1') -Force -ErrorAction SilentlyContinue
 
     function Write-LoaderLog {
         param([string]$Message)

@@ -10,7 +10,7 @@
     ./Update-ModuleDependencies.ps1
 #>
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 $nuspecPath = Join-Path $PSScriptRoot '..' 'SupportTools.nuspec'
 [xml]$nuspec = Get-Content $nuspecPath

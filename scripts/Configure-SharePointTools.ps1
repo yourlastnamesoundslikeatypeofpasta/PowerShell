@@ -5,8 +5,8 @@ param(
     [hashtable]$Sites
 )
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
-Import-Module (Join-Path $PSScriptRoot '..' 'src/STCore/STCore.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/STCore/STCore.psd1') -Force -ErrorAction SilentlyContinue
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $settingsPath = Join-Path $repoRoot 'config/SharePointToolsSettings.psd1'

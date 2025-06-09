@@ -1,8 +1,8 @@
 $PublicDir = Join-Path $PSScriptRoot 'Public'
 $loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
 $telemetryModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Telemetry/Telemetry.psd1'
-Import-Module $loggingModule -ErrorAction SilentlyContinue
-Import-Module $telemetryModule -ErrorAction SilentlyContinue
+Import-Module $loggingModule -Force -ErrorAction SilentlyContinue
+Import-Module $telemetryModule -Force -ErrorAction SilentlyContinue
 
 Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 

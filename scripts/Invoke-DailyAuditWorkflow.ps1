@@ -39,10 +39,10 @@ $scriptName = $MyInvocation.MyCommand.Name
 $ErrorActionPreference = 'Stop'
 
 # Import required modules from the repository
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction Stop
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Telemetry/Telemetry.psd1') -ErrorAction Stop
-Import-Module (Join-Path $PSScriptRoot '..' 'src/SharePointTools/SharePointTools.psd1') -ErrorAction Stop
-Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -ErrorAction Stop
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction Stop
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Telemetry/Telemetry.psd1') -Force -ErrorAction Stop
+Import-Module (Join-Path $PSScriptRoot '..' 'src/SharePointTools/SharePointTools.psd1') -Force -ErrorAction Stop
+Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -Force -ErrorAction Stop
 
 if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 

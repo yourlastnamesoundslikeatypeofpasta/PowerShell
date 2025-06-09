@@ -16,7 +16,7 @@ param(
 )
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
-Import-Module (Join-Path $repoRoot 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $repoRoot 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 Show-STPrompt './scripts/Sign-RepositoryFiles.ps1'
 
