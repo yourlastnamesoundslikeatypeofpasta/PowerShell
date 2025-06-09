@@ -7,7 +7,8 @@ Describe 'ServiceDeskTools Module' {
     Context 'Exported commands' {
         $expected = @(
             'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
-            'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask'
+            'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask',
+            'Get-ServiceDeskAsset'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -55,6 +56,13 @@ Describe 'ServiceDeskTools Module' {
                 $Method -eq 'GET' -and $Path -eq '/incidents.json?search=error'
             } -Times 1
         }
+        It 'Get-ServiceDeskAsset calls Invoke-SDRequest' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskAsset -Id 20
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $Method -eq 'GET' -and $Path -eq '/assets/20.json'
+            } -Times 1
+        }
         It 'Set-SDTicketBulk calls Set-SDTicket for each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
             Set-SDTicketBulk -Id 10,11 -Fields @{status='Closed'}
@@ -94,6 +102,12 @@ Describe 'ServiceDeskTools Module' {
             Mock Write-STLog {} -ModuleName ServiceDeskTools
             Search-SDTicket -Query 'fail'
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Search-SDTicket fail' } -Times 1
+        }
+        It 'Get-ServiceDeskAsset logs the request' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Mock Write-STLog {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskAsset -Id 15
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Get-ServiceDeskAsset 15' } -Times 1
         }
         It 'Set-SDTicketBulk logs each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
@@ -147,6 +161,19 @@ Describe 'ServiceDeskTools Module' {
                 Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://custom.example.com/api/incidents/2.json' } -Times 1
                 Remove-Item env:SD_API_TOKEN
                 Remove-Item env:SD_BASE_URI
+            }
+        }
+        It 'uses SD_ASSET_BASE_URI when retrieving assets' {
+            InModuleScope ServiceDeskTools {
+                $env:SD_API_TOKEN = 't'
+                $env:SD_ASSET_BASE_URI = 'https://assets.example.com/api/'
+                Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+                Get-ServiceDeskAsset -Id 9
+                Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                    $BaseUri -eq 'https://assets.example.com/api/' -and $Path -eq '/assets/9.json'
+                } -Times 1
+                Remove-Item env:SD_API_TOKEN
+                Remove-Item env:SD_ASSET_BASE_URI
             }
         }
         It 'converts body to JSON' {

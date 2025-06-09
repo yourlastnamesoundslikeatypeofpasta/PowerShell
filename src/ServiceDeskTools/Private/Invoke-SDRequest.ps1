@@ -4,13 +4,14 @@ function Invoke-SDRequest {
         [Parameter(Mandatory)][string]$Method,
         [Parameter(Mandatory)][string]$Path,
         [hashtable]$Body,
+        [string]$BaseUri,
         [switch]$ChaosMode
     )
     Assert-ParameterNotNull $Method 'Method'
     Assert-ParameterNotNull $Path 'Path'
 
-    $baseUri = $env:SD_BASE_URI
-    if (-not $baseUri) { $baseUri = 'https://api.samanage.com' }
+    if (-not $BaseUri) { $BaseUri = $env:SD_BASE_URI }
+    if (-not $BaseUri) { $BaseUri = 'https://api.samanage.com' }
     $token = $env:SD_API_TOKEN
     if (-not $token) { throw 'SD_API_TOKEN environment variable must be set.' }
 
@@ -43,7 +44,7 @@ function Invoke-SDRequest {
     }
 
     $headers = @{ 'X-Samanage-Authorization' = "Bearer $token"; Accept = 'application/json' }
-    $uri = $baseUri.TrimEnd('/') + $Path
+    $uri = $BaseUri.TrimEnd('/') + $Path
     Write-STLog -Message "SDRequest $Method $uri"
     Write-Verbose "Invoking $Method $uri"
     $json = if ($Body) { $Body | ConvertTo-Json -Depth 10 } else { $null }

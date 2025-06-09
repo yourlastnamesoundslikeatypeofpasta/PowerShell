@@ -144,6 +144,7 @@ ServiceDeskTools reads the following variables for API access:
 ```text
 SD_API_TOKEN
 SD_BASE_URI
+SD_ASSET_BASE_URI
 ```
 
 When set, these variables override values stored in `config/SharePointToolsSettings.psd1`.
