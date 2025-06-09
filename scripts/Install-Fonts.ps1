@@ -45,11 +45,17 @@ function Install-Fonts {
         $Fonts
     )
 
+    $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
+    $defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+    $STDefaults = Get-STConfig -Path $defaultsFile
+    $fontsDir = Get-STConfigValue -Config $STDefaults -Key 'FontsDir'
+    $fontsReg = Get-STConfigValue -Config $STDefaults -Key 'FontsRegPath'
+
     foreach ($font in $Fonts)
     {
         $fontName = $font.Name
-        Copy-Item -Path $font.FullName -Destination "C:\Windows\Fonts" -Force
-        New-ItemProperty -Name $font.BaseName -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Fonts" -PropertyType string -Value $font.Name -Force
+        Copy-Item -Path $font.FullName -Destination $fontsDir -Force
+        New-ItemProperty -Name $font.BaseName -Path $fontsReg -PropertyType string -Value $font.Name -Force
     }
     
 }

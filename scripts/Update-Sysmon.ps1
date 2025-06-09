@@ -27,12 +27,17 @@ function Main {
     }
 
     # copy the updated sysmon dir to c drive
-    Copy-Item -Path $drivePath -Destination "C:\SYSV2"  -Recurse -Verbose
+    $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
+    $defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+    $STDefaults = Get-STConfig -Path $defaultsFile
+    $sysmonDir = Get-STConfigValue -Config $STDefaults -Key 'SysmonDir'
+
+    Copy-Item -Path $drivePath -Destination $sysmonDir  -Recurse -Verbose
 
     Start-Sleep -Seconds 2
 
     # change working dir to c drive
-    Set-Location -Path "C:\SYSV2\" -Verbose
+    Set-Location -Path $sysmonDir -Verbose
 
     # uninstall sysmon
     .\Sysmon64.exe -u force

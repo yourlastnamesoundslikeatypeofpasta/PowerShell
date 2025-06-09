@@ -4,7 +4,9 @@
 $repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
 $coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
 Import-Module $coreModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
-$settingsFile = Join-Path $repoRoot 'config/SharePointToolsSettings.psd1'
+$defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+$STDefaults = Get-STConfig -Path $defaultsFile
+$settingsFile = Join-Path $repoRoot (Get-STConfigValue -Config $STDefaults -Key 'SharePointSettings')
 $SharePointToolsSettings = Get-STConfig -Path $settingsFile
 if (-not $SharePointToolsSettings) { $SharePointToolsSettings = @{} }
 if (-not $SharePointToolsSettings.ContainsKey('ClientId')) { $SharePointToolsSettings.ClientId = '' }

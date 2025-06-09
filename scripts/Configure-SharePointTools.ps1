@@ -9,7 +9,9 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -
 Import-Module (Join-Path $PSScriptRoot '..' 'src/STCore/STCore.psd1') -Force -ErrorAction SilentlyContinue
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
-$settingsPath = Join-Path $repoRoot 'config/SharePointToolsSettings.psd1'
+$defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+$STDefaults = Get-STConfig -Path $defaultsFile
+$settingsPath = Join-Path $repoRoot (Get-STConfigValue -Config $STDefaults -Key 'SharePointSettings')
 
 $settings = Get-STConfig -Path $settingsPath
 if (-not $settings) { $settings = @{} }

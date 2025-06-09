@@ -95,6 +95,18 @@ function Get-STConfig {
     }
 }
 
+function Get-STConfigValue {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][hashtable]$Config,
+        [Parameter(Mandatory)][string]$Key,
+        $Default = $null
+    )
+    if (-not $Config) { return $Default }
+    if ($Config.ContainsKey($Key) -and $Config[$Key]) { return $Config[$Key] }
+    return $Default
+}
+
 function Invoke-STRequest {
     [CmdletBinding()]
     param(

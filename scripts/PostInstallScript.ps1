@@ -14,6 +14,10 @@
 # Functions listed here
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
+$defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+$STDefaults = Get-STConfig -Path $defaultsFile
+$publicDesktop = Get-STConfigValue -Config $STDefaults -Key 'PublicDesktop'
 
 function MSStoreAppInstallerUpdate {
     <#
@@ -313,7 +317,7 @@ function Copy-Files {
 
     foreach ($shortcut in $AdminShortcuts)
     {
-        Copy-Item -Path $shortcut.Fullname -Destination "C:\Users\Public\Desktop\"
+        Copy-Item -Path $shortcut.Fullname -Destination $publicDesktop
     }
 
 
@@ -321,12 +325,12 @@ function Copy-Files {
     # Copy printer drivers to public desktop
     if ($USB)
     {
-        Copy-Item -Path "$($DriveLetter)assets\PrinterDrivers" -Destination "C:\Users\Public\Desktop" -Recurse
+        Copy-Item -Path "$($DriveLetter)assets\PrinterDrivers" -Destination $publicDesktop -Recurse
     }
 
     if ($Local)
     {
-        Copy-Item -Path ".\assets\PrinterDrivers" -Destination "C:\Users\Public\Desktop" -Recurse
+        Copy-Item -Path ".\assets\PrinterDrivers" -Destination $publicDesktop -Recurse
     }
 }
 

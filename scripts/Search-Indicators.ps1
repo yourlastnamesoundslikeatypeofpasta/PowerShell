@@ -1,4 +1,8 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
+$defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+$STDefaults = Get-STConfig -Path $defaultsFile
+$rootPath = Get-STConfigValue -Config $STDefaults -Key 'SystemDriveRoot'
 
 param(
     [Parameter(Mandatory=$true)]
@@ -28,7 +32,7 @@ function Search-Indicators {
             Where-Object { $_.Message -match [regex]::Escape($ind) }
         $regHits = Get-ChildItem -Path HKLM:\,HKCU:\ -Recurse -ErrorAction SilentlyContinue |
             Where-Object { $_.Name -match [regex]::Escape($ind) }
-        $fileHits = Get-ChildItem -Path C:\ -Recurse -ErrorAction SilentlyContinue -Force |
+        $fileHits = Get-ChildItem -Path $rootPath -Recurse -ErrorAction SilentlyContinue -Force |
             Where-Object { $_.FullName -match [regex]::Escape($ind) }
         [pscustomobject]@{
             Indicator      = $ind

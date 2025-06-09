@@ -12,8 +12,13 @@
 .PARAMETER FullSyncHours
     Interval between full synchronizations in hours. Defaults to 24.
 #>
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
+$defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+$STDefaults = Get-STConfig -Path $defaultsFile
+$defaultCache = Join-Path $repoRoot (Get-STConfigValue -Config $STDefaults -Key 'TicketCache')
+
 param(
-    [string]$CachePath = "$PSScriptRoot/../config/ticketCache.json",
+    [string]$CachePath = $defaultCache,
     [int]$PollMinutes = 5,
     [int]$FullSyncHours = 24
 )
