@@ -37,6 +37,7 @@
         'Get-SPToolsFileReport',
         'Select-SPToolsFolder',
         'List-OneDriveUsage',
-        'Test-SPToolsPrereqs'
+        'Test-SPToolsPrereqs',
+        'Test-SPToolsSiteAdmin'
     )
 }
