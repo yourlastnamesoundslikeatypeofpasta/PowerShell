@@ -44,7 +44,7 @@ function Disable-GraphUser {
             $url = "https://graph.microsoft.com/v1.0/users/$UserPrincipalName"
             $body = @{ accountEnabled = $false } | ConvertTo-Json
             if ($PSCmdlet.ShouldProcess($UserPrincipalName, 'Disable user')) {
-                Invoke-RestMethod -Uri $url -Headers $headers -Method Patch -Body $body -ContentType 'application/json'
+                Invoke-RestMethod -Uri $url -Headers $headers -Method Patch -Body $body -ContentType 'application/json' -ErrorAction Stop
             }
         } else {
             Import-Module ActiveDirectory -ErrorAction Stop

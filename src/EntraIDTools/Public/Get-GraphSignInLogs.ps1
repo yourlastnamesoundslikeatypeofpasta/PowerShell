@@ -56,7 +56,7 @@ function Get-GraphSignInLogs {
             $filter = [string]::Join(' and ', $filterParts)
             $uri += "?`$filter=" + [System.Web.HttpUtility]::UrlEncode($filter)
         }
-        $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
+        $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get -ErrorAction Stop
         return $response.value
     } catch {
         $result = 'Failure'
