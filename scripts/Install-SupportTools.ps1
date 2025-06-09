@@ -30,12 +30,17 @@ $modules = @(
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
+Show-STPrompt './scripts/Install-SupportTools.ps1'
+
 foreach ($module in $modules) {
     $localPath = Join-Path $PSScriptRoot '..' 'src' $module "$module.psd1"
     if (Test-Path $localPath) {
+        Write-STStatus -Message "Importing $module..." -Level INFO
         Import-Module $localPath -Force -DisableNameChecking
-        Write-Warning "Imported $module from $localPath"
+        Write-STStatus -Message "Imported $module from $localPath" -Level SUCCESS
     } else {
-        Write-Warning "Could not find $module in src"
+        Write-STStatus -Message "Could not find $module in src" -Level ERROR
     }
 }
+
+Write-STClosing 'Module import complete'
