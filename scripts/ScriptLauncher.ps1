@@ -25,12 +25,12 @@ $scriptFiles = Get-ChildItem -Path $PSScriptRoot -Filter '*.ps1' |
     ForEach-Object { Get-ScriptInfo $_.FullName }
 
 function Show-Menu {
-    Write-STDivider 'Available Scripts' -Style light
+    Write-STDivider -Title 'Available Scripts' -Style light
     for ($i = 0; $i -lt $scriptFiles.Count; $i++) {
         $num = $i + 1
         Write-STStatus "$num. $($scriptFiles[$i].Name) - $($scriptFiles[$i].Synopsis)" -Level INFO
     }
-    Write-STStatus 'Q. Quit' -Level INFO
+    Write-STStatus -Message 'Q. Quit' -Level INFO
 }
 
 while ($true) {
@@ -41,9 +41,9 @@ while ($true) {
     if ($index -ge 0 -and $index -lt $scriptFiles.Count) {
         & $scriptFiles[$index].Path
     } else {
-        Write-STStatus 'Invalid choice. Try again.' -Level WARN
+        Write-STStatus -Message 'Invalid choice. Try again.' -Level WARN
     }
-    Write-STStatus '' -Level INFO
+    Write-STStatus -Message '' -Level INFO
 }
 
 Write-STClosing

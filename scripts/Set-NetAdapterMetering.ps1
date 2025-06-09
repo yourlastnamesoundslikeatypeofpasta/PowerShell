@@ -33,7 +33,7 @@ Write-STStatus "Setting metric $Metric on adapter $Adapter..." -Level INFO
 $Adapter = Get-NetAdapter -Name $Adapter
 
 $Adapter | Set-NetIPInterface -InterfaceMetric $Metric
-Write-STStatus 'Metric updated.' -Level SUCCESS
+Write-STStatus -Message 'Metric updated.' -Level SUCCESS
 
 }
 

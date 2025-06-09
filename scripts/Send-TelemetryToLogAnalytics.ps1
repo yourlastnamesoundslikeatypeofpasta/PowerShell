@@ -26,7 +26,7 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAc
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
 
 if ($env:ST_ENABLE_TELEMETRY -ne '1') {
-    Write-STStatus 'ST_ENABLE_TELEMETRY is not set. Telemetry will not be sent.' -Level WARN
+    Write-STStatus -Message 'ST_ENABLE_TELEMETRY is not set. Telemetry will not be sent.' -Level WARN
     return
 }
 
@@ -47,7 +47,7 @@ Write-STStatus "Loading telemetry from $logPath" -Level INFO -Log
 $events = Get-Content -Path $logPath | ForEach-Object { $_ | ConvertFrom-Json }
 
 if (-not $events) {
-    Write-STStatus 'No telemetry events to send.' -Level WARN -Log
+    Write-STStatus -Message 'No telemetry events to send.' -Level WARN -Log
     return
 }
 
@@ -72,12 +72,12 @@ $headers = @{
 
 Write-STStatus "Sending $($events.Count) events to Log Analytics" -Level INFO -Log
 Invoke-RestMethod -Method Post -Uri $uri -Headers $headers -Body $body -ContentType 'application/json' | Out-Null
-Write-STStatus 'Telemetry sent successfully.' -Level SUCCESS -Log
+Write-STStatus -Message 'Telemetry sent successfully.' -Level SUCCESS -Log
 
-Write-STDivider 'TELEMETRY SUMMARY'
+Write-STDivider -Title 'TELEMETRY SUMMARY'
 $summary = Get-STTelemetryMetrics -LogPath $logPath
 foreach ($m in $summary) {
-    Write-STBlock @{ 
+    Write-STBlock -Data @{
         Script = $m.Script
         Executions = $m.Executions
         Successes = $m.Successes

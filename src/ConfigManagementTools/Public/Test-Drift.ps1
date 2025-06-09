@@ -63,9 +63,9 @@ function Test-Drift {
         }
 
         if ($drift.Count -eq 0) {
-            Write-STStatus 'System matches baseline configuration.' -Level SUCCESS
+            Write-STStatus -Message 'System matches baseline configuration.' -Level SUCCESS
         } else {
-            Write-STStatus 'Configuration drift detected.' -Level WARN
+            Write-STStatus -Message 'Configuration drift detected.' -Level WARN
             foreach ($item in $drift) {
                 Write-STStatus "$($item.Setting) Expected: $($item.Expected) Actual: $($item.Actual)" -Level SUB
             }

@@ -14,8 +14,8 @@ function Set-TimeZoneEasternStandardTime {
     .NOTES
     Can be used as a one liner.
     #>
-    Write-STStatus 'Setting time zone to Eastern Standard Time...' -Level INFO
+    Write-STStatus -Message 'Setting time zone to Eastern Standard Time...' -Level INFO
     Set-TimeZone -ID "Eastern Standard Time"
-    Write-STStatus 'Time zone updated.' -Level SUCCESS
+    Write-STStatus -Message 'Time zone updated.' -Level SUCCESS
 }
 

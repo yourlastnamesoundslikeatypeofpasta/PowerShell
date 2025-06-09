@@ -83,7 +83,7 @@ function Invoke-CompanyPlaceManagement {
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
         Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
         if ($Simulate) {
-            Write-STStatus 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log
+            Write-STStatus -Message 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log
             $mock = [pscustomobject]@{
                 Action      = $Action
                 DisplayName = $DisplayName
@@ -148,7 +148,7 @@ function Invoke-CompanyPlaceManagement {
             }
         }
 
-        Write-STStatus 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
+        Write-STStatus -Message 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
     } catch {
         Write-STStatus "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Log
         Write-STLog -Message "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')

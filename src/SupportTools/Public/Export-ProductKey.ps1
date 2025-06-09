@@ -23,7 +23,7 @@ function Export-ProductKey {
 
         $key = (Get-CimInstance -ClassName SoftwareLicensingService | Select-Object -ExpandProperty OA3xOriginalProductKey)
         if (-not $key) {
-            Write-STStatus 'Product key not found.' -Level WARN
+            Write-STStatus -Message 'Product key not found.' -Level WARN
             return
         }
 

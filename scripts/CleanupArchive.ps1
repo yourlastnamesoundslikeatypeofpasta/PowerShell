@@ -37,7 +37,7 @@ param(
 if ($Commit) {
     $response = Read-Host 'This will permanently delete items from the archive. Continue? (y/N)'
     if ($response -notmatch '^[Yy]$') {
-        Write-STStatus 'Operation cancelled.' -Level WARN
+        Write-STStatus -Message 'Operation cancelled.' -Level WARN
         return
     }
 }
@@ -69,7 +69,7 @@ function Test-PathIsArchived {
 
 # Connect to SharePoint Online
 Connect-PnPOnline -Url $SiteUrl -Interactive
-Write-STStatus 'Connected to SharePoint...' -Level SUB
+Write-STStatus -Message 'Connected to SharePoint...' -Level SUB
 
 # Navigate to the root folder of the document library
 $SharedDocumentsLibrary = Get-PnPFolder -ListRootFolder $Libraries

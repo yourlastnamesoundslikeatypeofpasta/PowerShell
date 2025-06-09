@@ -14,10 +14,10 @@ The style mimics a modern terminal session with short, high contrast messages.
 ## Example
 
 ```powershell
-Show-STPrompt './run-task.ps1 -Verbose'
-Write-STStatus 'Starting cleanup...' -Level INFO
-Write-STDivider 'ENUMERATING USERS'
-Write-STBlock @{ 'User'='svc-backend'; 'Domain'='corp.local'; 'IP'='10.10.10.5' }
+Show-STPrompt -Command './run-task.ps1 -Verbose'
+Write-STStatus -Message 'Starting cleanup...' -Level INFO
+Write-STDivider -Title 'ENUMERATING USERS'
+Write-STBlock -Data @{ 'User'='svc-backend'; 'Domain'='corp.local'; 'IP'='10.10.10.5' }
 Write-STClosing
 ```
 

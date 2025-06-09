@@ -40,7 +40,7 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskToo
 if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
 try {
-    Write-STStatus 'Gathering system information...' -Level INFO -Log
+    Write-STStatus -Message 'Gathering system information...' -Level INFO -Log
     $info = Get-CommonSystemInfo
     $tempFile = Join-Path $env:TEMP "systeminfo_$((Get-Date).ToString('yyyyMMdd_HHmmss')).json"
     $info | ConvertTo-Json -Depth 10 | Out-File -FilePath $tempFile -Encoding utf8
@@ -50,16 +50,16 @@ try {
     $siteUrl = Get-SPToolsSiteUrl -SiteName $SiteName
     Connect-PnPOnline -Url $siteUrl -ClientId $settings.ClientId -Tenant $settings.TenantId -CertificatePath $settings.CertPath
 
-    Write-STStatus 'Uploading report to SharePoint...' -Level INFO -Log
+    Write-STStatus -Message 'Uploading report to SharePoint...' -Level INFO -Log
     $targetFolder = if ($FolderPath) { "$LibraryName/$FolderPath" } else { $LibraryName }
     $upload = Add-PnPFile -Path $tempFile -Folder $targetFolder -ErrorAction Stop
     $fileUrl = "$siteUrl$($upload.ServerRelativeUrl)"
     Write-STStatus "Uploaded report to $fileUrl" -Level SUCCESS -Log
 
-    Write-STStatus 'Creating Service Desk ticket...' -Level INFO -Log
+    Write-STStatus -Message 'Creating Service Desk ticket...' -Level INFO -Log
     $ticketBody = "$Description`n`nReport: $fileUrl"
     New-SDTicket -Subject $Subject -Description $ticketBody -RequesterEmail $RequesterEmail | Out-Null
-    Write-STStatus 'Service Desk ticket created.' -Level SUCCESS -Log
+    Write-STStatus -Message 'Service Desk ticket created.' -Level SUCCESS -Log
 }
 finally {
     if ($TranscriptPath) { Stop-Transcript | Out-Null }
