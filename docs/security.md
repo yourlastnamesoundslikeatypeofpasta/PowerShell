@@ -33,3 +33,13 @@ This document summarizes the key security aspects of the PowerShell modules cont
 - API tokens stored in environment variables should be protected to prevent unauthorized access.
 - Always review scripts before execution and run test mode (`-Simulate` or `-ChaosMode` switches where available) in non‑production environments first.
 
+
+## Script Signing
+
+All PowerShell files can be signed with the provided `Sign-RepositoryFiles.ps1` script. The script scans the `src` and `scripts` folders for `.ps1`, `.psm1`, and `.psd1` files and applies `Set-AuthenticodeSignature` to each file. Supply the code-signing certificate using the `-CertificatePath` parameter or set the `ST_SIGN_CERT_PATH` environment variable.
+
+```powershell
+$env:ST_SIGN_CERT_PATH = 'C:\certs\internal.pfx'
+./scripts/Sign-RepositoryFiles.ps1
+```
+
