@@ -23,3 +23,16 @@ See [ChaosTools/Invoke-ChaosTest.md](ChaosTools/Invoke-ChaosTest.md) for full
 command documentation.
 
 Use these tools to validate that your automation gracefully handles transient failures.
+
+## Example
+
+Proper error handling is required when chaos is enabled. Wrap calls to `Invoke-ChaosTest` in a `try`/`catch` block and log failures:
+
+```powershell
+try {
+    Invoke-ChaosTest -ScriptBlock { Invoke-RestMethod $uri }
+} catch {
+    Write-STStatus -Message $_ -Level ERROR
+}
+```
+
