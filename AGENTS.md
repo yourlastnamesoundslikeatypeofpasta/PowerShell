@@ -4,11 +4,16 @@
 These instructions apply to the entire repository.
 
 ## Testing
-Run Pester tests from the repository root before committing:
+Run Pester tests from the repository root before committing. In PowerShell run:
 
 ```powershell
 Invoke-Pester -Configuration ./PesterConfiguration.psd1
 ```
+
+Common failures include:
+
+- The Pester module is missing. Install it with `Install-Module Pester`.
+- The PowerShell version is incompatible. Use PowerShell 7 or later.
 
 If the environment prevents running these tests, mention this in the PR using the provided disclaimer.
 
