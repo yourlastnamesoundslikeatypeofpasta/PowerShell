@@ -10,6 +10,15 @@ function Invoke-JobBundle {
     .PARAMETER LogArchivePath
         Optional path to save the resulting log archive. Defaults to
         '<bundle>.logs.zip'.
+    .EXAMPLE
+        Invoke-JobBundle -Path ./MyJob.job.zip -LogArchivePath ./MyJob.logs.zip
+
+        Executes the job bundle and archives the transcript and log output to
+        `MyJob.logs.zip`.
+
+    .NOTES
+        The bundle must contain a `job.json` file describing the job script to
+        run.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(

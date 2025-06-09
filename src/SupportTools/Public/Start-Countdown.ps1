@@ -2,9 +2,21 @@ function Start-Countdown {
     <#
     .SYNOPSIS
         Displays a countdown timer.
+
     .DESCRIPTION
-        Writes numbers from 10 down to 1 with a one second delay between
-        each number. Useful for short pauses in scripts.
+        Writes numbers from 10 down to 1 with a one second delay between each
+        number. Useful for short pauses in scripts.
+
+    .PARAMETER TranscriptPath
+        Optional path for a transcript log.
+
+    .EXAMPLE
+        Start-Countdown -TranscriptPath ./countdown.log
+
+        Shows the countdown and records output to `countdown.log`.
+
+    .NOTES
+        Intended for demo scripts and small delays.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(

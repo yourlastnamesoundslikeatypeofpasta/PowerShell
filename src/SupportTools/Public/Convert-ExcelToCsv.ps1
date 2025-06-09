@@ -2,11 +2,24 @@ function Convert-ExcelToCsv {
     <#
     .SYNOPSIS
         Converts an Excel workbook to CSV.
+
     .DESCRIPTION
         Uses Excel COM automation to save the provided workbook as a CSV file and
         returns the resulting CSV object.
+
     .PARAMETER XlsxFilePath
         Path to the Excel workbook to convert.
+
+    .PARAMETER TranscriptPath
+        Optional path for a transcript log file.
+
+    .EXAMPLE
+        Convert-ExcelToCsv -XlsxFilePath ./Book.xlsx -TranscriptPath ./convert.log
+
+        Converts the specified workbook and writes a transcript to `convert.log`.
+
+    .NOTES
+        Requires Microsoft Excel to be installed on the system.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(

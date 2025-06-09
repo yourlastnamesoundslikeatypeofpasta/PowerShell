@@ -5,8 +5,20 @@ function Export-ProductKey {
     .DESCRIPTION
         Queries the SoftwareLicensingService WMI class for the original
         product key of the system and writes it to the specified path.
+
     .PARAMETER OutputPath
         Path to the file where the product key should be written.
+
+    .PARAMETER TranscriptPath
+        Optional path for a transcript log.
+
+    .EXAMPLE
+        Export-ProductKey -OutputPath ./productkey.txt
+
+        Retrieves the local product key and saves it to `productkey.txt`.
+
+    .NOTES
+        Administrative privileges are required to query the licensing service.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(

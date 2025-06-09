@@ -2,9 +2,22 @@ function Clear-TempFile {
     <#
     .SYNOPSIS
         Removes temporary files from the repository.
+
     .DESCRIPTION
-        Deletes any `.tmp` files and empty `.log` files starting at the
+        Deletes any `*.tmp` files and empty `*.log` files starting at the
         repository root.
+
+    .PARAMETER TranscriptPath
+        Optional path for a transcript log of the cleanup operation.
+
+    .EXAMPLE
+        Clear-TempFile -TranscriptPath ./cleanup.log
+
+        Deletes all temporary files under the repository and logs the actions to
+        `cleanup.log`.
+
+    .NOTES
+        This command relies on the Logging module for progress output.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(

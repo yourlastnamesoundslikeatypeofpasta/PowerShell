@@ -2,8 +2,39 @@ function Invoke-PerformanceAudit {
     <#
     .SYNOPSIS
         Collects performance metrics for common tasks.
+
     .DESCRIPTION
-        Runs the Invoke-PerformanceAudit.ps1 script located in the scripts folder.
+        Wraps the `Invoke-PerformanceAudit.ps1` script located in the `scripts`
+        folder.
+
+    .PARAMETER Arguments
+        Additional parameters forwarded to `Invoke-PerformanceAudit.ps1`.
+
+    .PARAMETER TranscriptPath
+        Optional path for a transcript log.
+
+    .PARAMETER Simulate
+        Perform a dry run without making changes.
+
+    .PARAMETER Explain
+        Display the help for `Invoke-PerformanceAudit.ps1`.
+
+    .PARAMETER Logger
+        Optional instance of the Logging module used for output.
+
+    .PARAMETER TelemetryClient
+        Optional telemetry client used to record metrics.
+
+    .PARAMETER Config
+        Optional configuration object injected into the script.
+
+    .EXAMPLE
+        Invoke-PerformanceAudit -Simulate
+
+        Runs the audit in dry-run mode without writing data.
+
+    .NOTES
+        Metrics are written to the telemetry log for later analysis.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
