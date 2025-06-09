@@ -45,6 +45,9 @@ function Export-ProductKey {
             return
         }
 
+        if (-not $PSCmdlet.ShouldProcess($OutputPath, 'Write product key')) {
+            return
+        }
         try {
             Set-Content -Path $OutputPath -Value $key -ErrorAction Stop
         } catch {

@@ -41,6 +41,15 @@ function Convert-ExcelToCsv {
         $directory = $xlsxFile.DirectoryName
         $basename = $xlsxFile.BaseName
         $csvFilePath = Join-Path $directory "$basename.csv"
+        if (-not $PSCmdlet.ShouldProcess($csvFilePath, 'Convert to CSV')) {
+            $workbook.Close($false)
+            $excel.Quit()
+            [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($workbook)
+            [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel)
+            [GC]::Collect()
+            [GC]::WaitForPendingFinalizers()
+            return
+        }
 
         $xlCSV = 6
         foreach ($worksheet in $workbook.Worksheets) {

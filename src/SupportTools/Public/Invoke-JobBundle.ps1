@@ -48,6 +48,10 @@ function Invoke-JobBundle {
 
         $files = @($transcript)
         if (Test-Path $logFile) { $files += $logFile }
+        if (-not $PSCmdlet.ShouldProcess($LogArchivePath, 'Archive job logs')) {
+            Remove-Item $transcript -Force -ErrorAction SilentlyContinue
+            return
+        }
         try {
             Compress-Archive -Path $files -DestinationPath $LogArchivePath -Force -ErrorAction Stop
             Remove-Item $transcript -Force -ErrorAction Stop

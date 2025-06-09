@@ -39,6 +39,9 @@ function Clear-TempFile {
             throw
         }
 
+        if (-not $PSCmdlet.ShouldProcess($repoRoot, 'Clear temporary files')) {
+            return
+        }
         try {
             $tmpFiles | Remove-Item -Force -ErrorAction Stop
             $logFiles | Remove-Item -Force -ErrorAction Stop
