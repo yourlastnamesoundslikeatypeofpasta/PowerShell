@@ -3,13 +3,14 @@
 $publicDir = Join-Path $PSScriptRoot '..' 'src/SupportTools/Public'
 $testDir = Join-Path $PSScriptRoot '..' 'tests'
 $publicFunctions = Get-ChildItem -Path $publicDir -Filter '*.ps1' | ForEach-Object { $_.BaseName }
-$missing = @()
+$missing = [System.Collections.Generic.List[object]]::new()
 foreach ($func in $publicFunctions) {
     $pattern = "\b$func\b"
     $found = Select-String -Path (Join-Path $testDir '*.ps1') -Pattern $pattern -SimpleMatch -CaseSensitive -Quiet
     if (-not $found) {
         Write-Error "No tests found referencing function '$func'"
-        $missing += $func
+        # Use Add() to avoid array resizing in the loop
+        $missing.Add($func)
     }
 }
 if ($missing.Count -gt 0) {

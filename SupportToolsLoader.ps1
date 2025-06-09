@@ -31,7 +31,8 @@ if (-not $script:SupportToolsLoaderLoaded) {
         return
     }
 
-    $loadedModules = @()
+    # Track loaded modules using a growable list
+    $loadedModules = [System.Collections.Generic.List[object]]::new()
 
     # Find all module manifests under src
     $moduleFiles = Get-ChildItem -Path $srcPath -Recurse -Filter *.psd1 -File | Sort-Object FullName
@@ -41,7 +42,8 @@ if (-not $script:SupportToolsLoaderLoaded) {
             $name = Split-Path $moduleFile.FullName -LeafBase
             if (-not (Get-Module -Name $name)) {
                 Import-Module $moduleFile.FullName -Force -ErrorAction Stop -DisableNameChecking
-                $loadedModules += $name
+                # Add the module name without reallocating arrays
+                $loadedModules.Add($name)
                 Write-LoaderLog "Loaded module $name"
                 $bannerFunc = "Show-$name`Banner"
                 if (Get-Command $bannerFunc -ErrorAction SilentlyContinue) {
