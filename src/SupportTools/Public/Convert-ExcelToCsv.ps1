@@ -18,13 +18,13 @@ function Convert-ExcelToCsv {
     )
 
     try {
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append -ErrorAction Stop | Out-Null }
 
         Write-STStatus "Converting $XlsxFilePath to CSV..." -Level INFO
         $excel = New-Object -ComObject Excel.Application
         $workbook = $excel.Workbooks.Open($XlsxFilePath)
 
-        $xlsxFile = Get-ChildItem $XlsxFilePath
+        $xlsxFile = Get-ChildItem $XlsxFilePath -ErrorAction Stop
         $directory = $xlsxFile.DirectoryName
         $basename = $xlsxFile.BaseName
         $csvFilePath = Join-Path $directory "$basename.csv"
@@ -41,9 +41,10 @@ function Convert-ExcelToCsv {
         [GC]::WaitForPendingFinalizers()
 
         Write-STStatus "CSV saved to $csvFilePath" -Level SUCCESS
-        return (Import-Csv $csvFilePath)
+        return (Import-Csv $csvFilePath -ErrorAction Stop)
     } catch {
-        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
+        Write-STLog -Message $_.Exception.Message -Level ERROR
+        throw
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }

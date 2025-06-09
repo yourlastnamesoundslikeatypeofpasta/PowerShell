@@ -62,17 +62,17 @@ function Invoke-CompanyPlaceManagement {
     $result = 'Success'
     try {
         if ($Logger) {
-            Import-Module $Logger -Force -ErrorAction SilentlyContinue
+            Import-Module $Logger -Force -ErrorAction Stop
         } else {
-            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction Stop
         }
         if ($TelemetryClient) {
-            Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
+            Import-Module $TelemetryClient -Force -ErrorAction Stop
         } else {
-            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction Stop
         }
         if ($Config) {
-            Import-Module $Config -Force -ErrorAction SilentlyContinue
+            Import-Module $Config -Force -ErrorAction Stop
         }
 
         if ($Explain) {
@@ -80,7 +80,7 @@ function Invoke-CompanyPlaceManagement {
             return
         }
 
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append -ErrorAction Stop | Out-Null }
         Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
         if ($Simulate) {
             Write-STStatus -Message 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log
@@ -153,7 +153,7 @@ function Invoke-CompanyPlaceManagement {
         Write-STStatus "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Log
         Write-STLog -Message "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
-        return New-STErrorObject -Message $_.Exception.Message -Category 'SharePoint'
+        throw
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
         $sw.Stop()

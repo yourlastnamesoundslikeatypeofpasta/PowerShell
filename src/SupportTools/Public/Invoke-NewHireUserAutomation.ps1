@@ -36,7 +36,8 @@ function Invoke-NewHireUserAutomation {
             if ($PSBoundParameters.ContainsKey('TranscriptPath')) { $args += '-TranscriptPath'; $args += $TranscriptPath }
             Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Create-NewHireUser.ps1' -Args $args -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         } catch {
-            return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
+            Write-STLog -Message $_.Exception.Message -Level ERROR
+            throw
         }
     }
 }

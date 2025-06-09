@@ -13,14 +13,15 @@ function Search-ReadMe {
         [string]$TranscriptPath
     )
 
-    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append -ErrorAction Stop | Out-Null }
     try {
         Write-STStatus -Message 'Searching for readme files...' -Level INFO
-        $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction SilentlyContinue
+        $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction Stop
         Write-STStatus "Found $($results.Count) file(s)." -Level SUCCESS
         return $results
     } catch {
-        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
+        Write-STLog -Message $_.Exception.Message -Level ERROR
+        throw
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }

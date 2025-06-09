@@ -14,7 +14,7 @@ function Start-Countdown {
     )
 
     try {
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append -ErrorAction Stop | Out-Null }
 
         foreach ($num in 10..1) {
             Write-STStatus $num -Level INFO
@@ -25,7 +25,8 @@ function Start-Countdown {
             Completed     = $true
         }
     } catch {
-        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
+        Write-STLog -Message $_.Exception.Message -Level ERROR
+        throw
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }

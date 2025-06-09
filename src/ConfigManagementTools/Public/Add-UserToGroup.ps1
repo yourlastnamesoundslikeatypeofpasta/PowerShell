@@ -61,7 +61,8 @@ function Add-UserToGroup {
 
             Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         } catch {
-            return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
+            Write-STLog -Message $_.Exception.Message -Level ERROR
+            throw
         }
     }
 }

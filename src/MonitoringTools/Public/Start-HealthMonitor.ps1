@@ -31,7 +31,7 @@ function Start-HealthMonitor {
         $collected = 0
         while (-not $script:StopHealthMonitor -and ($Count -eq 0 -or $collected -lt $Count)) {
             $start = Get-Date
-            $health = Get-SystemHealth
+            $health = Get-SystemHealth -ErrorAction Stop
             $json = $health | ConvertTo-Json -Compress
             if ($PSBoundParameters.ContainsKey('LogPath')) {
                 Write-STRichLog -Tool 'HealthMonitor' -Status 'sample' -Details $json -Path $LogPath
@@ -46,6 +46,7 @@ function Start-HealthMonitor {
             if ($sleep -gt 0) { Start-Sleep -Seconds $sleep }
         }
     } catch {
-        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
+        Write-STLog -Message $_.Exception.Message -Level ERROR
+        throw
     }
 }

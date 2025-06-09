@@ -39,8 +39,8 @@ function New-STDashboard {
             else { $TelemetryLogPath = Join-Path $HOME 'SupportToolsTelemetry/telemetry.jsonl' }
         }
 
-        $logLines = if (Test-Path $LogPath) { Get-Content $LogPath -Tail $LogLines } else { @() }
-        $metrics  = if (Test-Path $TelemetryLogPath) { Get-STTelemetryMetrics -LogPath $TelemetryLogPath } else { @() }
+        $logLines = if (Test-Path $LogPath) { Get-Content $LogPath -Tail $LogLines -ErrorAction Stop } else { @() }
+        $metrics  = if (Test-Path $TelemetryLogPath) { Get-STTelemetryMetrics -LogPath $TelemetryLogPath -ErrorAction Stop } else { @() }
 
         $html = @()
         $html += '<html><head><title>Support Tools Dashboard</title></head><body>'
@@ -65,10 +65,11 @@ function New-STDashboard {
         }
         $html += '</body></html>'
 
-        $html -join "`n" | Out-File -FilePath $OutputPath -Encoding utf8
+        $html -join "`n" | Out-File -FilePath $OutputPath -Encoding utf8 -ErrorAction Stop
         Write-STStatus "Dashboard saved to $OutputPath" -Level SUCCESS
         return $OutputPath
     } catch {
-        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
+        Write-STLog -Message $_.Exception.Message -Level ERROR
+        throw
     }
 }

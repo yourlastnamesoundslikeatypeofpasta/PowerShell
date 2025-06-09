@@ -32,19 +32,19 @@ function Sync-SupportTools {
     )
 
     try {
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append -ErrorAction Stop | Out-Null }
         if ($Logger) {
-            Import-Module $Logger -Force -ErrorAction SilentlyContinue
+            Import-Module $Logger -Force -ErrorAction Stop
         } else {
-            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction Stop
         }
         if ($TelemetryClient) {
-            Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
+            Import-Module $TelemetryClient -Force -ErrorAction Stop
         } else {
-            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction Stop
         }
         if ($Config) {
-            Import-Module $Config -Force -ErrorAction SilentlyContinue
+            Import-Module $Config -Force -ErrorAction Stop
         }
 
         if ($Explain) {
@@ -61,11 +61,11 @@ function Sync-SupportTools {
             git clone $RepositoryUrl $InstallPath
         }
 
-        Import-Module (Join-Path $InstallPath 'src/SupportTools/SupportTools.psd1') -Force
+        Import-Module (Join-Path $InstallPath 'src/SupportTools/SupportTools.psd1') -Force -ErrorAction Stop
         $sp = Join-Path $InstallPath 'src/SharePointTools/SharePointTools.psd1'
-        if (Test-Path $sp) { Import-Module $sp -Force -ErrorAction SilentlyContinue }
+        if (Test-Path $sp) { Import-Module $sp -Force -ErrorAction Stop }
         $sd = Join-Path $InstallPath 'src/ServiceDeskTools/ServiceDeskTools.psd1'
-        if (Test-Path $sd) { Import-Module $sd -Force -ErrorAction SilentlyContinue }
+        if (Test-Path $sd) { Import-Module $sd -Force -ErrorAction Stop }
 
         Write-STStatus -Message 'SupportTools synchronized' -Level FINAL
         return [pscustomobject]@{
@@ -77,7 +77,7 @@ function Sync-SupportTools {
         Write-STStatus "Sync-SupportTools failed: $_" -Level ERROR -Log
         Write-STLog -Message "Sync-SupportTools failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
-        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
+        throw
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
         $sw.Stop()

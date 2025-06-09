@@ -49,17 +49,17 @@ function Set-SharedMailboxAutoReply {
 
     try {
         if ($Logger) {
-            Import-Module $Logger -Force -ErrorAction SilentlyContinue
+            Import-Module $Logger -Force -ErrorAction Stop
         } else {
-            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction Stop
         }
         if ($TelemetryClient) {
-            Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
+            Import-Module $TelemetryClient -Force -ErrorAction Stop
         } else {
-            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction Stop
         }
         if ($Config) {
-            Import-Module $Config -Force -ErrorAction SilentlyContinue
+            Import-Module $Config -Force -ErrorAction Stop
         }
 
         if ($Explain) {
@@ -67,7 +67,7 @@ function Set-SharedMailboxAutoReply {
             return
         }
 
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append -ErrorAction Stop | Out-Null }
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
         $result = 'Success'
         Write-STStatus -Message 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
@@ -86,18 +86,18 @@ function Set-SharedMailboxAutoReply {
     }
 
     Write-STStatus -Message 'Checking ExchangeOnlineManagement module...' -Level SUB
-    $module = Get-InstalledModule ExchangeOnlineManagement -ErrorAction SilentlyContinue
-    $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
+    $module = Get-InstalledModule ExchangeOnlineManagement -ErrorAction Stop
+    $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction Stop
 
     if (-not $module) {
         Write-STStatus -Message 'Installing Exchange Online module...' -Level INFO -Log
-        Install-Module -Name ExchangeOnlineManagement -Force
+        Install-Module -Name ExchangeOnlineManagement -Force -ErrorAction Stop
     } elseif ($updateVersion -and $module.Version -lt $updateVersion.Version) {
         Write-STStatus -Message 'Updating Exchange Online module...' -Level INFO -Log
-        Update-Module -Name ExchangeOnlineManagement -Force
+        Update-Module -Name ExchangeOnlineManagement -Force -ErrorAction Stop
     }
 
-    Import-Module ExchangeOnlineManagement
+    Import-Module ExchangeOnlineManagement -ErrorAction Stop
 
     try {
         if ($UseWebLogin) {
@@ -127,7 +127,7 @@ function Set-SharedMailboxAutoReply {
         Write-STStatus "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Log
         Write-STLog -Message "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
-        return New-STErrorObject -Message $_.Exception.Message -Category 'Exchange'
+        throw
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
         Disconnect-ExchangeOnline -Confirm:$false | Out-Null

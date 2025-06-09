@@ -17,11 +17,11 @@ function Get-DiskSpaceInfo {
 
     $computer = if ($env:COMPUTERNAME) { $env:COMPUTERNAME } else { $env:HOSTNAME }
     $timestamp = (Get-Date).ToString('o')
-    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+    if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append -ErrorAction Stop | Out-Null }
     $info = @()
     try {
         if ($IsWindows) {
-            $disks = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType = 3"
+            $disks = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType = 3" -ErrorAction Stop
             foreach ($d in $disks) {
                 $info += [pscustomobject]@{
                     Drive       = $d.DeviceID
@@ -31,7 +31,7 @@ function Get-DiskSpaceInfo {
                 }
             }
         } else {
-            Get-PSDrive -PSProvider FileSystem | Where-Object { $null -ne $_.Free } | ForEach-Object {
+            Get-PSDrive -PSProvider FileSystem -ErrorAction Stop | Where-Object { $null -ne $_.Free } | ForEach-Object {
                 $info += [pscustomobject]@{
                     Drive       = $_.Root
                     SizeGB      = [math]::Round($_.Used/1GB + $_.Free/1GB,2)
@@ -41,7 +41,8 @@ function Get-DiskSpaceInfo {
             }
         }
     } catch {
-        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
+        Write-STLog -Message $_.Exception.Message -Level ERROR
+        throw
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
