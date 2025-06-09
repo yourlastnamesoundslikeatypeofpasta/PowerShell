@@ -153,10 +153,10 @@ module see [docs/CredentialStorage.md](docs/CredentialStorage.md).
 
 ## Centralized Logging 📝
 
-Commands automatically record their activity to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default.
-Set the `ST_LOG_PATH` environment variable or use the `-Path` parameter of `Write-STLog` to write logs to a custom location.
-Use `-Structured` to emit JSON lines that include the current user and script name for ingestion into tools like Azure Log Analytics.
-Set `ST_LOG_STRUCTURED=1` to enable structured output without adding the switch each time.
+Commands automatically record their activity to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default or to `$env:ST_LOG_PATH` when set.
+Use the `-Path` parameter of `Write-STLog` to log elsewhere as needed.
+Use `-Structured` or set `ST_LOG_STRUCTURED=1` to emit rich JSON events that include user and script metadata.
+For the schema of these structured entries see [docs/Logging/RichLogFormat.md](docs/Logging/RichLogFormat.md).
 Use `-MaxSizeMB` and `-MaxFiles` with `Write-STLog` to control log rotation. Logs over the size limit (default 1 MB) are renamed with incrementing numeric suffixes.
 Use `-Metric` and `-Value` with `Write-STLog` to capture performance data like durations.
 Review the resulting log file with `Get-Content` when troubleshooting.
