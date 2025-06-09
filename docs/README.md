@@ -20,3 +20,29 @@ The key guides are:
 
 
 Command specific help topics live in the `SupportTools`, `SharePointTools` and `ServiceDeskTools` subfolders.
+
+## Module Dependency Overview
+
+Most modules build on a few shared components. `Logging` is the base layer for consistent output and is imported by nearly every module. The `Telemetry` module records usage metrics and depends on `Logging`. `STCore` provides common utility functions consumed across the toolkit.
+
+Higher level modules such as `SharePointTools` and `ServiceDeskTools` load these core modules to perform their work. Modules like `ConfigManagementTools` and `IncidentResponseTools` combine features from both `SharePointTools` and `ServiceDeskTools`, while also using `Telemetry` for metrics. The `SupportTools` module aggregates the entire collection and exposes the top level commands.
+
+```mermaid
+graph TD
+    Logging --> Telemetry
+    Logging --> SharePointTools
+    Logging --> ServiceDeskTools
+    Logging --> PerformanceTools
+    Telemetry --> ServiceDeskTools
+    SharePointTools --> ConfigManagementTools
+    ServiceDeskTools --> ConfigManagementTools
+    ConfigManagementTools --> SupportTools
+    SharePointTools --> IncidentResponseTools
+    ServiceDeskTools --> IncidentResponseTools
+    IncidentResponseTools --> SupportTools
+    Telemetry --> IncidentResponseTools
+    Telemetry --> ConfigManagementTools
+```
+
+This diagram is a simplified view but highlights how foundational modules feed into higher level functionality.
+
