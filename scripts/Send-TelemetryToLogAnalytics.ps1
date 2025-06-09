@@ -11,6 +11,8 @@
 .PARAMETER Vault
     Secret vault name to pull WorkspaceId and WorkspaceKey from when they are
     not provided.
+.PARAMETER LogPath
+    Optional path to the telemetry log file.
 .EXAMPLE
     ./Send-TelemetryToLogAnalytics.ps1 -WorkspaceId "<id>" -WorkspaceKey "<key>"
 .EXAMPLE
@@ -24,7 +26,9 @@ param(
 
     [string]$WorkspaceKey,
 
-    [string]$Vault
+    [string]$Vault,
+
+    [string]$LogPath
 )
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
@@ -65,7 +69,9 @@ if (-not $WorkspaceId -or -not $WorkspaceKey) {
 }
 
 # Determine telemetry log path
-if ($env:ST_TELEMETRY_PATH) {
+if ($PSBoundParameters.ContainsKey('LogPath')) {
+    $logPath = $LogPath
+} elseif ($env:ST_TELEMETRY_PATH) {
     $logPath = $env:ST_TELEMETRY_PATH
 } else {
     $profile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
