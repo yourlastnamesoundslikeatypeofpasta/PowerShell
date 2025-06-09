@@ -18,7 +18,13 @@ param(
     [string]$Scope = 'CurrentUser'
 )
 
-$modules = @('Logging','SharePointTools','ServiceDeskTools','SupportTools')
+$modules = @(
+    'Logging',
+    'Telemetry',
+    'SharePointTools',
+    'ServiceDeskTools',
+    'SupportTools'
+)
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
