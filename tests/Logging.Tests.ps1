@@ -157,4 +157,29 @@ Describe 'Logging Module' {
             Remove-Item $logFile* -ErrorAction SilentlyContinue
         }
     }
+
+    Context 'ST_LOG_LEVEL filtering' {
+        It 'skips messages below configured level' {
+            Mock Write-Host {} -ModuleName Logging
+            try {
+                $env:ST_LOG_LEVEL = 'ERROR'
+                Write-STStatus 'warn' -Level WARN
+                Assert-MockCalled Write-Host -ModuleName Logging -Times 0
+            } finally {
+                Remove-Item env:ST_LOG_LEVEL -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'writes messages at or above configured level' {
+            Mock Write-Host {} -ModuleName Logging
+            try {
+                $env:ST_LOG_LEVEL = 'WARN'
+                Write-STStatus 'warn' -Level WARN
+                Write-STStatus 'err' -Level ERROR
+                Assert-MockCalled Write-Host -ModuleName Logging -Times 2
+            } finally {
+                Remove-Item env:ST_LOG_LEVEL -ErrorAction SilentlyContinue
+            }
+        }
+    }
 }

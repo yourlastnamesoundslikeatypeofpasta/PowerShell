@@ -178,6 +178,14 @@ function Write-STStatus {
         [switch]$Log
     )
 
+    $levelMap = @{ INFO = 1; SUCCESS = 1; SUB = 1; FINAL = 1; WARN = 2; ERROR = 3; FATAL = 3 }
+    if ($env:ST_LOG_LEVEL) {
+        $configured = $env:ST_LOG_LEVEL.ToUpper()
+        if ($levelMap.ContainsKey($configured)) {
+            if ($levelMap[$Level] -lt $levelMap[$configured]) { return }
+        }
+    }
+
     switch ($Level) {
         'SUCCESS' { $prefix = '[+]'; $color = 'Green' }
         'ERROR'   { $prefix = '[-]'; $color = 'Red' }
