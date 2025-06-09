@@ -197,4 +197,17 @@ Describe 'Logging Module' {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
+
+    Safe-It 'forwards logs using ST_LOG_FORWARD_URI' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            $env:ST_LOG_FORWARD_URI = 'https://example.com/forward'
+            Mock Invoke-RestMethod {}
+            Write-STLog -Message 'test' -Structured -Path $temp
+            Assert-MockCalled Invoke-RestMethod -Times 1 -ParameterFilter { $Uri -eq $env:ST_LOG_FORWARD_URI }
+        } finally {
+            Remove-Item env:ST_LOG_FORWARD_URI -ErrorAction SilentlyContinue
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
 }
