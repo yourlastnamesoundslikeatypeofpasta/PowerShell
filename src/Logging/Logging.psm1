@@ -28,6 +28,9 @@ function Write-STLog {
         [hashtable]$Metadata,
         [Parameter(Mandatory = $false)]
         [switch]$Structured,
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$ForwardUri,
         [Parameter(Mandatory = $true, ParameterSetName = 'Metric')]
         [ValidateNotNullOrEmpty()]
         [string]$Metric,
@@ -60,6 +63,7 @@ function Write-STLog {
         $logDir = Join-Path $userProfile 'SupportToolsLogs'
         $logFile = Join-Path $logDir 'supporttools.log'
     }
+    if (-not $ForwardUri -and $env:ST_LOG_FORWARD_URI) { $ForwardUri = $env:ST_LOG_FORWARD_URI }
     Write-STDebug "Logging to $logFile"
     $dir = Split-Path -Path $logFile -Parent
     if (-not (Test-Path $dir)) {
@@ -109,7 +113,15 @@ function Write-STLog {
             message   = $Message
         }
         if ($Metadata) { foreach ($k in $Metadata.Keys) { $entry[$k] = $Metadata[$k] } }
-        ($entry | ConvertTo-Json -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
+        $json = $entry | ConvertTo-Json -Compress
+        $json | Out-File -FilePath $logFile -Append -Encoding utf8
+        if ($ForwardUri) {
+            try {
+                Invoke-RestMethod -Uri $ForwardUri -Method Post -Body $json -ContentType 'application/json' | Out-Null
+            } catch {
+                Write-STDebug "Failed to forward log to $ForwardUri: $_"
+            }
+        }
     } else {
         "$timestamp [$module] [$user] [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
     }

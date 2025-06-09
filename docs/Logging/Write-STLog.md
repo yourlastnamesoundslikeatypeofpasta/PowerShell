@@ -14,7 +14,7 @@ Writes a message or metric to the SupportTools log.
 
 ```
 Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-ProgressAction <ActionPreference>]
-[[-Metadata] <Hashtable>] [-Structured]
+[[-Metadata] <Hashtable>] [-Structured] [-ForwardUri <String>]
 [[-Metric] <String>] [[-Value] <Double>]
 [<CommonParameters>]
 ```
@@ -34,6 +34,12 @@ PS C:\> $sw.Stop()
 PS C:\> Write-STLog -Metric 'Duration' -Value $sw.Elapsed.TotalSeconds
 ```
 Records how long the task took in seconds using a structured log entry.
+
+### Example 2
+```powershell
+PS C:\> Write-STLog -Message 'Job started' -Structured -ForwardUri 'https://log.example.com/ingest'
+```
+Forwards the structured entry to the specified HTTP endpoint.
 
 ## PARAMETERS
 
@@ -108,6 +114,20 @@ Aliases:
 Required: False
 Position: Named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ForwardUri
+HTTP endpoint to send structured log entries. Ignored when `-Structured` is not used.
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
