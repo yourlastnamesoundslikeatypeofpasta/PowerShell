@@ -32,10 +32,11 @@ function Export-ITReport {
     )
     begin {
         $items = @()
+        $osBuild = (Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber)
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     }
     process {
-        $items += $Data
+        $items += ($Data | Add-Member -NotePropertyName OsBuild -NotePropertyValue $osBuild -PassThru)
     }
     end {
         try {
