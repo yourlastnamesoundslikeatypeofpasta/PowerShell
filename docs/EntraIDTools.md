@@ -7,8 +7,9 @@ Import-Module ./src/EntraIDTools/EntraIDTools.psd1
 ```
 
 This module depends on the **MSAL.PS** module which provides the `Get-MsalToken`
-command used for authentication. Install the dependency from the PowerShell
-Gallery first:
+command used for authentication. Tokens are stored in MSAL's persistent cache so
+you won't need to reauthenticate for each command. Install the dependency from
+the PowerShell Gallery first:
 
 ```powershell
 Install-Module MSAL.PS

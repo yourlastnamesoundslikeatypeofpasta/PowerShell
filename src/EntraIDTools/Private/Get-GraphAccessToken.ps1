@@ -1,7 +1,7 @@
 function Get-GraphAccessToken {
     <#
     .SYNOPSIS
-        Retrieves and caches a Microsoft Graph access token.
+        Retrieves a Microsoft Graph access token.
     #>
     [CmdletBinding()]
     param(
@@ -11,9 +11,7 @@ function Get-GraphAccessToken {
         [ValidateNotNullOrEmpty()]
         [string]$ClientId,
         [ValidateNotNullOrEmpty()]
-        [string]$ClientSecret,
-        [ValidateNotNullOrEmpty()]
-        [string]$CachePath = "$env:USERPROFILE/.graphToken.json"
+        [string]$ClientSecret
     )
 
     if (-not $TenantId)     { $TenantId     = $env:GRAPH_TENANT_ID }
@@ -22,22 +20,17 @@ function Get-GraphAccessToken {
 
     if (-not $TenantId) { throw 'TenantId is required. Provide -TenantId or set GRAPH_TENANT_ID.' }
     if (-not $ClientId) { throw 'ClientId is required. Provide -ClientId or set GRAPH_CLIENT_ID.' }
-    if (Test-Path $CachePath) {
-        try {
-            $cache = Get-Content $CachePath | ConvertFrom-Json
-            $expiry = [datetime]$cache.expiresOn
-            if ($expiry -gt (Get-Date).AddMinutes(5)) {
-                return $cache.accessToken
-            }
-        } catch {}
+
+    $params = @{ TenantId = $TenantId; ClientId = $ClientId; Scopes = 'https://graph.microsoft.com/.default'; Silent = $true }
+    if ($ClientSecret) { $params.ClientSecret = $ClientSecret }
+
+    try {
+        $tokenResponse = Get-MsalToken @params -ErrorAction Stop
+    } catch {
+        $params.Remove('Silent')
+        if (-not $ClientSecret) { $params.DeviceCode = $true }
+        $tokenResponse = Get-MsalToken @params
     }
 
-    $params = @{ TenantId = $TenantId; ClientId = $ClientId; Scopes = 'https://graph.microsoft.com/.default' }
-    if ($ClientSecret) { $params.ClientSecret = $ClientSecret }
-    else { $params.DeviceCode = $true }
-
-    $tokenResponse = Get-MsalToken @params
-    $cache = @{ accessToken = $tokenResponse.AccessToken; expiresOn = $tokenResponse.ExpiresOn }
-    $cache | ConvertTo-Json | Out-File -FilePath $CachePath -Encoding utf8
     return $tokenResponse.AccessToken
 }
