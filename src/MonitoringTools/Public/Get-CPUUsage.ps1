@@ -13,7 +13,7 @@ function Get-CPUUsage {
 
     if (-not $PSCmdlet.ShouldProcess('CPU usage')) { return }
 
-    $computer = if ($env:COMPUTERNAME) { $env:COMPUTERNAME } else { $env:HOSTNAME }
+    $computer = Get-STComputerName
     $timestamp = (Get-Date).ToString('o')
     $cpu = $null
     if ($IsWindows -and (Get-Command Get-Counter -ErrorAction SilentlyContinue)) {

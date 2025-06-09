@@ -9,7 +9,7 @@ function Get-SystemHealth {
     [CmdletBinding(SupportsShouldProcess=$true)]
     param()
 
-    $computer = if ($env:COMPUTERNAME) { $env:COMPUTERNAME } else { $env:HOSTNAME }
+    $computer = Get-STComputerName
     $timestamp = (Get-Date).ToString('o')
 
     $cpu = Get-CPUUsage
