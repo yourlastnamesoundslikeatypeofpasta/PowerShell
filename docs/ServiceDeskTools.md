@@ -11,6 +11,7 @@ Commands for interacting with the Service Desk ticketing API. **ServiceDeskTools
 | `New-SDTicket` | Create a new incident | `New-SDTicket -Subject "Printer issue" -Description "Cannot print" -RequesterEmail 'jane.doe@example.com'` |
 | `Set-SDTicket` | Update an existing incident | `Set-SDTicket -Id 42 -Fields @{ status = 'Resolved' }` |
 | `Search-SDTicket` | Search incidents by keyword | `Search-SDTicket -Query 'printer'` |
+| `Add-SDTicketComment` | Add a comment to an incident | `Add-SDTicketComment -Id 42 -Comment 'Investigating'` |
 | `Set-SDTicketBulk` | Apply updates to multiple incidents | `Set-SDTicketBulk -Id 1,2,3 -Fields @{ status='Closed' }` |
 | `Link-SDTicketToSPTask` | Add a related SharePoint task link | `Link-SDTicketToSPTask -TicketId 42 -TaskUrl 'https://contoso.sharepoint.com/tasks/1'` |
 | `Submit-Ticket` | Create a Service Desk incident with minimal parameters | `Submit-Ticket -Subject 'Alert' -Description 'Issue detected' -RequesterEmail 'ops@example.com'` |

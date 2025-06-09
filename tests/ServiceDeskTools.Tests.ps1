@@ -7,7 +7,7 @@ Describe 'ServiceDeskTools Module' {
     Context 'Exported commands' {
         $expected = @(
             'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
-            'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask'
+            'Search-SDTicket','Add-SDTicketComment','Set-SDTicketBulk','Link-SDTicketToSPTask'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -55,6 +55,17 @@ Describe 'ServiceDeskTools Module' {
                 $Method -eq 'GET' -and $Path -eq '/incidents.json?search=error'
             } -Times 1
         }
+        It 'Add-SDTicketComment calls Invoke-SDRequest' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Add-SDTicketComment -Id 5 -Comment 'c'
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $Method -eq 'POST' -and $Path -eq '/incidents/5/comments.json' -and $Body.comment.body -eq 'c'
+            } -Times 1
+        }
+        It 'Add-SDTicketComment propagates errors' {
+            Mock Invoke-SDRequest { throw 'fail' } -ModuleName ServiceDeskTools
+            { Add-SDTicketComment -Id 6 -Comment 'x' } | Should -Throw
+        }
         It 'Set-SDTicketBulk calls Set-SDTicket for each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
             Set-SDTicketBulk -Id 10,11 -Fields @{status='Closed'}
@@ -94,6 +105,12 @@ Describe 'ServiceDeskTools Module' {
             Mock Write-STLog {} -ModuleName ServiceDeskTools
             Search-SDTicket -Query 'fail'
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Search-SDTicket fail' } -Times 1
+        }
+        It 'Add-SDTicketComment logs the request' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Mock Write-STLog {} -ModuleName ServiceDeskTools
+            Add-SDTicketComment -Id 4 -Comment 'msg'
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Add-SDTicketComment 4' } -Times 1
         }
         It 'Set-SDTicketBulk logs each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
