@@ -71,6 +71,10 @@ function Sync-SupportTools {
 
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
         $result = 'Success'
+        if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+            Write-STStatus -Message 'Git is required but was not found in PATH.' -Level WARN
+            throw 'Git is required but was not found in PATH.'
+        }
         if (Test-Path (Join-Path $InstallPath '.git')) {
             git -C $InstallPath pull
         }
