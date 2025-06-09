@@ -16,5 +16,6 @@ Import-Module ./src/MonitoringTools/MonitoringTools.psd1
 | `Get-EventLogSummary` | Counts recent error and warning events and logs a summary. | `Get-EventLogSummary -LogName System` |
 | `Get-SystemHealth` | Summarises CPU, disk and event log data and records the snapshot. | `Get-SystemHealth` |
 | `Start-HealthMonitor` | Periodically log system health metrics. | `Start-HealthMonitor -IntervalSeconds 60` |
+| `Stop-HealthMonitor`  | Signal a running monitor to exit. | `Stop-HealthMonitor` |
 
 See [MonitoringTools/Start-HealthMonitor.md](MonitoringTools/Start-HealthMonitor.md) for full command help.
