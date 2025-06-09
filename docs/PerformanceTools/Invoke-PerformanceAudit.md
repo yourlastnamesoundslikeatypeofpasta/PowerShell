@@ -16,7 +16,7 @@ Invoke-PerformanceAudit [-CpuThreshold <Int>] [-MemoryThreshold <Int>] [-DiskThr
 ```
 
 ## DESCRIPTION
-`Invoke-PerformanceAudit` is exported by the `PerformanceTools` module.  The command executes the bundled `Invoke-PerformanceAudit.ps1` script to collect system counters and produce a short performance report. If any metric exceeds the specified threshold values an alert is written to the log. When `-CreateTicket` is supplied a Service Desk ticket is created using `ServiceDeskTools`.
+`Invoke-PerformanceAudit` is exported by the `PerformanceTools` module.  The command executes the bundled `Invoke-PerformanceAudit.ps1` script to collect system counters and produce a short performance report. On Windows it uses `Get-Counter` to retrieve metrics. On other platforms CPU, disk and network counters are skipped with a warning unless platform tools such as `ps` and `df` are available. If any metric exceeds the specified threshold values an alert is written to the log. When `-CreateTicket` is supplied a Service Desk ticket is created using `ServiceDeskTools`.
 
 ## EXAMPLES
 ### Example 1
