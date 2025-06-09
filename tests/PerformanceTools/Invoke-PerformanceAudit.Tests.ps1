@@ -29,6 +29,15 @@ Describe 'Invoke-PerformanceAudit.ps1 script' {
         Assert-MockCalled Send-STMetric -ParameterFilter { $MetricName -eq 'PerformanceAuditDuration' } -Times 1
     }
 
+    Safe-It 'returns CPU and disk usage data' {
+        $result = & $ScriptPath -CpuThreshold 100 -MemoryThreshold 100 -DiskThreshold 100 -NetworkThreshold 100 -RequesterEmail 'user@example.com'
+        $result | Should -Not -BeNull
+        $result.CpuSamples.Count | Should -Be 3
+        $result.DiskSamples.Count | Should -Be 3
+        $result.CpuPercent | Should -BeGreaterOrEqual 0
+        $result.DiskPercent | Should -BeGreaterOrEqual 0
+    }
+
     Safe-It 'creates a ticket when thresholds exceeded' {
         & $ScriptPath -CpuThreshold 0 -MemoryThreshold 0 -DiskThreshold 0 -NetworkThreshold 0 -CreateTicket -RequesterEmail 'user@example.com' | Out-Null
         Assert-MockCalled Write-STStatus -ParameterFilter { $Message -eq 'Performance thresholds exceeded:' } -Times 1
