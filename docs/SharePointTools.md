@@ -20,7 +20,7 @@ All functions emit short, high contrast messages following the style in [ModuleS
 
 | Command | Description | Key Parameters | Example |
 |---------|-------------|---------------|---------|
-| `Save-SPToolsSettings` | Persist the current configuration to disk. | none | `Save-SPToolsSettings` |
+| `Save-SPToolsSettings` | Persist the current configuration to disk. | `[Path]` | `Save-SPToolsSettings -Path ./mysettings.psd1` |
 | `Get-SPToolsSettings` | Return the loaded configuration. | none | `Get-SPToolsSettings` |
 | `Test-SPToolsPrereqs` | Verify PnP.PowerShell dependency. Use `-Install` to install. | `[Install]` | `Test-SPToolsPrereqs -Install` |
 | `Get-SPToolsSiteUrl` | Retrieve a site URL by friendly name. | `SiteName` | `Get-SPToolsSiteUrl -SiteName HR` |
