@@ -19,6 +19,14 @@ have commands automatically wrap API calls with `Invoke-ChaosTest`. Set
 `CHAOSTOOLS_ENABLED` to `0` or `False` to bypass delays and failures when calling
 `Invoke-ChaosTest` directly.
 
+```powershell
+$env:ST_CHAOS_MODE = '1'       # enable automatic chaos in other modules
+$env:CHAOSTOOLS_ENABLED = '0'  # bypass chaos in Invoke-ChaosTest
+```
+
+`ST_CHAOS_MODE` instructs modules to inject chaos automatically. Setting
+`CHAOSTOOLS_ENABLED` to `0` disables chaos effects when `Invoke-ChaosTest` is run explicitly.
+
 See [ChaosTools/Invoke-ChaosTest.md](ChaosTools/Invoke-ChaosTest.md) for full
 command documentation.
 
