@@ -8,4 +8,5 @@
         OutputFormat = 'JaCoCo'
         OutputPath = 'coverage.xml'
     }
+    TestDrive = @{ Enabled = $false }
 }
