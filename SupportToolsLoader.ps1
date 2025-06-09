@@ -12,8 +12,17 @@
     . ./SupportToolsLoader.ps1
 #>
 
-if (-not $script:SupportToolsLoaderLoaded) {
-    $script:SupportToolsLoaderLoaded = $true
+function Import-SupportToolsModules {
+    [CmdletBinding()]
+    param(
+        [string]$Path = (Join-Path $PSScriptRoot 'src'),
+        [string[]]$Exclude = @(),
+        [switch]$Force
+    )
+
+    if (-not $script:SupportToolsLoaderLoaded) {
+        $script:SupportToolsLoaderLoaded = $true
+    }
 
     Import-Module (Join-Path $PSScriptRoot 'src/OutTools/OutTools.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
@@ -24,25 +33,26 @@ if (-not $script:SupportToolsLoaderLoaded) {
         }
     }
 
-    $repoRoot = $PSScriptRoot
-    $srcPath  = Join-Path $repoRoot 'src'
-    if (-not (Test-Path $srcPath)) {
-        Write-Warning "Source folder '$srcPath' not found."
+    if (-not (Test-Path $Path)) {
+        Out-STStatus -Message "Source folder '$Path' not found. Ensure the repository is cloned correctly." -Level ERROR -Log
         return
     }
 
-    # Track loaded modules using a growable list
+    if (-not $Force -and $script:SupportToolsModuleFiles) {
+        $moduleFiles = $script:SupportToolsModuleFiles
+    } else {
+        $moduleFiles = Get-ChildItem -Path $Path -Recurse -Filter *.psd1 -File | Sort-Object FullName
+        $script:SupportToolsModuleFiles = $moduleFiles
+    }
+
     $loadedModules = [System.Collections.Generic.List[object]]::new()
 
-    # Find all module manifests under src
-    $moduleFiles = Get-ChildItem -Path $srcPath -Recurse -Filter *.psd1 -File | Sort-Object FullName
-
     foreach ($moduleFile in $moduleFiles) {
+        $name = Split-Path $moduleFile.FullName -LeafBase
+        if ($Exclude -contains $name) { continue }
         try {
-            $name = Split-Path $moduleFile.FullName -LeafBase
             if (-not (Get-Module -Name $name)) {
                 Import-Module $moduleFile.FullName -Force -ErrorAction Stop -DisableNameChecking
-                # Add the module name without reallocating arrays
                 $loadedModules.Add($name)
                 Write-LoaderLog "Loaded module $name"
                 $bannerFunc = "Show-$name`Banner"
@@ -51,11 +61,16 @@ if (-not $script:SupportToolsLoaderLoaded) {
                 }
             }
         } catch {
-            Write-Warning "Failed to import module from $($moduleFile.FullName): $($_.Exception.Message)"
+            Out-STStatus -Message "Failed to import module from $($moduleFile.FullName): $($_.Exception.Message)" -Level ERROR
+            Write-STLog -Message "Module import failed: $($moduleFile.FullName) - $($_.Exception.Message)" -Level Error
         }
     }
 
     if ($loadedModules.Count -gt 0) {
         Write-LoaderLog "Modules loaded: $($loadedModules -join ', ')"
     }
+}
+
+if ($MyInvocation.InvocationName -eq '.') {
+    Import-SupportToolsModules
 }
