@@ -20,18 +20,23 @@ jobs:
         with:
           modules-to-cache: PSScriptAnalyzer, ConvertToSARIF
       - name: Run PSScriptAnalyzer
+        id: analyze
+        continue-on-error: true
         shell: pwsh
         run: |
           Import-Module PSScriptAnalyzer
           Import-Module ConvertToSARIF
           $results = Invoke-ScriptAnalyzer -Path . -Recurse -Severity Warning,Error
           $results | ConvertTo-SARIF -FilePath PSScriptAnalyzerResults.sarif
-          if ($results.Count -gt 0) {
-            Write-Error 'PSScriptAnalyzer found issues.'
-            exit 1
-          }
+          echo "count=$($results.Count)" >> $env:GITHUB_OUTPUT
       - name: Upload lint results
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: PSScriptAnalyzerResults
           path: PSScriptAnalyzerResults.sarif
+      - name: Fail if lint issues
+        if: steps.analyze.outputs.count -gt '0'
+        run: |
+          echo "::error ::PSScriptAnalyzer found issues."
+          exit 1
