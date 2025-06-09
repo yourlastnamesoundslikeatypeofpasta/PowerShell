@@ -42,28 +42,29 @@ function New-STDashboard {
         $logLines = if (Test-Path $LogPath) { Get-Content $LogPath -Tail $LogLines } else { @() }
         $metrics  = if (Test-Path $TelemetryLogPath) { Get-STTelemetryMetrics -LogPath $TelemetryLogPath } else { @() }
 
-        $html = @()
-        $html += '<html><head><title>Support Tools Dashboard</title></head><body>'
-        $html += '<h1>Support Tools Dashboard</h1>'
-        $html += '<h2>Recent Log Entries</h2>'
+        # Build HTML using a growable list to avoid += inside loops
+        $html = [System.Collections.Generic.List[string]]::new()
+        $html.Add('<html><head><title>Support Tools Dashboard</title></head><body>')
+        $html.Add('<h1>Support Tools Dashboard</h1>')
+        $html.Add('<h2>Recent Log Entries</h2>')
         if ($logLines.Count -gt 0) {
-            $html += '<pre>'
-            $html += ($logLines | ForEach-Object { $_ -replace '<','&lt;' -replace '>','&gt;' }) -join "`n"
-            $html += '</pre>'
+            $html.Add('<pre>')
+            $html.Add(($logLines | ForEach-Object { $_ -replace '<','&lt;' -replace '>','&gt;' }) -join "`n")
+            $html.Add('</pre>')
         } else {
-            $html += '<p>No log entries found.</p>'
+            $html.Add('<p>No log entries found.</p>')
         }
-        $html += '<h2>Telemetry Metrics</h2>'
+        $html.Add('<h2>Telemetry Metrics</h2>')
         if ($metrics.Count -gt 0) {
-            $html += '<table border="1"><tr><th>Script</th><th>Executions</th><th>Successes</th><th>Failures</th><th>AverageSeconds</th><th>LastRun</th></tr>'
+            $html.Add('<table border="1"><tr><th>Script</th><th>Executions</th><th>Successes</th><th>Failures</th><th>AverageSeconds</th><th>LastRun</th></tr>')
             foreach ($m in $metrics) {
-                $html += "<tr><td>$($m.Script)</td><td>$($m.Executions)</td><td>$($m.Successes)</td><td>$($m.Failures)</td><td>$($m.AverageSeconds)</td><td>$($m.LastRun)</td></tr>"
+                $html.Add("<tr><td>$($m.Script)</td><td>$($m.Executions)</td><td>$($m.Successes)</td><td>$($m.Failures)</td><td>$($m.AverageSeconds)</td><td>$($m.LastRun)</td></tr>")
             }
-            $html += '</table>'
+            $html.Add('</table>')
         } else {
-            $html += '<p>No telemetry metrics found.</p>'
+            $html.Add('<p>No telemetry metrics found.</p>')
         }
-        $html += '</body></html>'
+        $html.Add('</body></html>')
 
         $html -join "`n" | Out-File -FilePath $OutputPath -Encoding utf8
         Write-STStatus "Dashboard saved to $OutputPath" -Level SUCCESS

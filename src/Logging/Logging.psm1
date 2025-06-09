@@ -192,8 +192,8 @@ function Write-STRichLog {
     if ($PSBoundParameters.ContainsKey('User'))     { $entry.user = Sanitize-STMessage -Message $User }
     if ($PSBoundParameters.ContainsKey('Duration')) { $entry.duration = $Duration.ToString() }
     if ($PSBoundParameters.ContainsKey('Details'))  {
-        $entry.details = @()
-        foreach ($d in $Details) { $entry.details += Sanitize-STMessage -Message $d }
+        # Map details via pipeline to avoid using += in a loop
+        $entry.details = $Details | ForEach-Object { Sanitize-STMessage -Message $_ }
     }
 
     ($entry | ConvertTo-Json -Depth 5 -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8

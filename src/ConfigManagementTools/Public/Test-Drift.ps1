@@ -20,27 +20,28 @@ function Test-Drift {
     process {
         Assert-ParameterNotNull $BaselinePath 'BaselinePath'
         $baseline = Get-STConfig -Path $BaselinePath
-        $drift = @()
+        # Use a List to avoid array recreation in multiple loops
+        $drift = [System.Collections.Generic.List[object]]::new()
 
         if ($baseline.timezone) {
             $currentTz = (Get-TimeZone).Id
             if ($currentTz -ne $baseline.timezone) {
-                $drift += [pscustomobject]@{
+                $drift.Add([pscustomobject]@{
                     Setting  = 'Timezone'
                     Expected = $baseline.timezone
                     Actual   = $currentTz
-                }
+                })
             }
         }
 
         if ($baseline.hostname) {
             $currentHost = if ($env:COMPUTERNAME) { $env:COMPUTERNAME } else { $env:HOSTNAME }
             if ($currentHost -ne $baseline.hostname) {
-                $drift += [pscustomobject]@{
+                $drift.Add([pscustomobject]@{
                     Setting  = 'Hostname'
                     Expected = $baseline.hostname
                     Actual   = $currentHost
-                }
+                })
             }
         }
 
@@ -53,11 +54,11 @@ function Test-Drift {
                     $status = 'Missing'
                 }
                 if ($status -ne $expected) {
-                    $drift += [pscustomobject]@{
+                    $drift.Add([pscustomobject]@{
                         Setting  = "Service:$name"
                         Expected = $expected
                         Actual   = $status
-                    }
+                    })
                 }
             }
         }

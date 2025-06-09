@@ -31,12 +31,14 @@ function Export-ITReport {
         [string]$TranscriptPath
     )
     begin {
-        $items = @()
+        # Collect pipeline objects in a growable list
+        $items = [System.Collections.Generic.List[object]]::new()
         $osBuild = (Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber)
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     }
     process {
-        $items += ($Data | Add-Member -NotePropertyName OsBuild -NotePropertyValue $osBuild -PassThru)
+        # Add each augmented object without reallocating an array
+        $items.Add($Data | Add-Member -NotePropertyName OsBuild -NotePropertyValue $osBuild -PassThru)
     }
     end {
         try {

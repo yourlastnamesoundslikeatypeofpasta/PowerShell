@@ -28,7 +28,12 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -
 Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -Force -ErrorAction SilentlyContinue
 Import-Module (Join-Path $PSScriptRoot '..' 'src/EntraIDTools/EntraIDTools.psd1') -Force -ErrorAction SilentlyContinue
 
-if (Test-Path $StatePath) { $processed = Get-Content $StatePath | ConvertFrom-Json } else { $processed = @() }
+if (Test-Path $StatePath) {
+    # Use a growable list instead of repeatedly resizing an array
+    $processed = [System.Collections.Generic.List[object]](Get-Content $StatePath | ConvertFrom-Json)
+} else {
+    $processed = [System.Collections.Generic.List[object]]::new()
+}
 
 while ($true) {
     Write-STStatus -Message 'Searching for termination tickets...' -Level INFO -Log
@@ -42,7 +47,8 @@ while ($true) {
         if ($upn) {
             Write-STStatus "Disabling user $upn (ticket $($t.Id))" -Level INFO -Log
             Disable-GraphUser -UserPrincipalName $upn -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
-            $processed += $t.Id
+            # Add ID to list without recreating the array
+            $processed.Add($t.Id)
         } else {
             Write-STStatus "Ticket $($t.Id) missing user info" -Level WARN -Log
         }
