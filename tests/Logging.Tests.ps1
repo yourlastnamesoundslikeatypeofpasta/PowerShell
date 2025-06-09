@@ -197,4 +197,17 @@ Describe 'Logging Module' {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
+
+    Safe-It 'sanitizes long random strings in logs' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            $value = -join ((48..57)+(65..90)+(97..122) | Get-Random -Count 25 | ForEach-Object { [char]$_ })
+            Write-STLog -Message $value -Path $temp
+            $content = Get-Content $temp
+            $content | Should -Not -Match $value
+            $content | Should -Match '\[REDACTED\]'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
 }
