@@ -21,12 +21,10 @@ This short guide shows the basic steps to start using the modules in this reposi
    ```
 5. **Install from internal repository (optional)**
    ```powershell
-   ./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
+   ./scripts/Install-SupportTools.ps1
    ```
-   The script attempts to download `Logging`, `Telemetry`, `SharePointTools`,
-   `ServiceDeskTools` and the specified version of `SupportTools` from the
-   gallery. If the gallery is unavailable it automatically imports the modules
-   from the `src` folder instead.
+   The script imports `Logging`, `Telemetry`, `SharePointTools`,
+   `ServiceDeskTools` and `SupportTools` from the `src` folder.
 6. **Import the modules**
    ```powershell
    Import-Module ./src/SupportTools/SupportTools.psd1

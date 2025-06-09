@@ -13,11 +13,11 @@ Publish the resulting `.nupkg` to your Chocolatey or PowerShell Gallery reposito
 Once published, install the entire suite on a fresh system using the helper script:
 
 ```powershell
-# Pin SupportTools to a specific version
-./scripts/Install-SupportTools.ps1 -SupportToolsVersion 1.3.0
+# Load the modules directly from source
+./scripts/Install-SupportTools.ps1
 ```
 
-The script downloads `Logging`, `Telemetry`, `SharePointTools`, `ServiceDeskTools` and the specified version of `SupportTools` from the gallery. If the gallery can't be reached it imports the local copies from `src` instead.
+The script imports `Logging`, `Telemetry`, `SharePointTools`, `ServiceDeskTools` and `SupportTools` from the `src` directory.
 
 ## Signing Scripts
 
