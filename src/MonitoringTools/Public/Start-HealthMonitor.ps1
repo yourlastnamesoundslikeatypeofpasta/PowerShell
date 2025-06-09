@@ -16,7 +16,9 @@ function Start-HealthMonitor {
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
+        [ValidateRange(0,[int]::MaxValue)]
         [int]$IntervalSeconds = 60,
+        [ValidateRange(0,[int]::MaxValue)]
         [int]$Count = 0,
         [string]$LogPath
     )
@@ -26,6 +28,8 @@ function Start-HealthMonitor {
     }
 
     if (-not $PSCmdlet.ShouldProcess('system health monitoring')) { return }
+
+    $script:StopHealthMonitor = $false
 
     try {
         $collected = 0
