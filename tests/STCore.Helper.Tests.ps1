@@ -39,6 +39,18 @@ Describe 'STCore Helper Functions' {
             $cfg | Should -BeOfType 'hashtable'
             $cfg.Count | Should -Be 0
         }
+
+        Safe-It 'returns empty for corrupt JSON file' {
+            $path = Join-Path $TestDrive 'bad.json'
+            Set-Content -Path $path -Value '{ this is not json'
+            try {
+                $cfg = Get-STConfig -Path $path
+                $cfg | Should -BeOfType 'hashtable'
+                $cfg.Count | Should -Be 0
+            } finally {
+                Remove-Item $path -ErrorAction SilentlyContinue
+            }
+        }
     }
 
     Context 'Write-STDebug' {
@@ -49,7 +61,7 @@ Describe 'STCore Helper Functions' {
                 try {
                     $env:ST_DEBUG = '1'
                     Write-STDebug 'msg'
-                    Remove-Item env:ST_DEBUG
+                    Remove-Item env:ST_DEBUG -ErrorAction SilentlyContinue
                     Write-STDebug 'msg'
                     Assert-MockCalled Write-STStatus -Times 1 -ParameterFilter { $Message -eq '[DEBUG] msg' }
                     Assert-MockCalled Write-STLog -Times 1 -ParameterFilter { $Message -eq '[DEBUG] msg' }
@@ -111,6 +123,21 @@ Describe 'STCore Helper Functions' {
                 $result.ok | Should -Be 1
                 Assert-MockCalled Invoke-RestMethod -Times 2
                 Assert-MockCalled Start-Sleep -Times 1
+            }
+        }
+
+        Safe-It 'throws STErrorObject on client error' {
+            InModuleScope STCore {
+                Mock Write-STLog {}
+                $ex = [System.Net.WebException]::new('not found')
+                $resp = [pscustomobject]@{ StatusCode = [System.Net.HttpStatusCode]::NotFound; Headers = @{} }
+                $ex | Add-Member -NotePropertyName Response -NotePropertyValue $resp -Force
+                Mock Invoke-RestMethod { throw $ex }
+                try { Invoke-STRequest -Method GET -Uri 'https://example.com' } catch { $err = $_ }
+                $err | Should -BeOfType 'System.Management.Automation.ErrorRecord'
+                $err.TargetObject | Should -BeOfType 'pscustomobject'
+                $err.TargetObject.Category | Should -Be 'HTTP'
+                $err.TargetObject.Message | Should -Match 'HTTP 404'
             }
         }
 
