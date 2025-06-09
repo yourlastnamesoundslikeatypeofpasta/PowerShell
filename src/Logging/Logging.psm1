@@ -204,34 +204,32 @@ function Write-STRichLog {
 function Write-STStatus {
     [CmdletBinding(PositionalBinding=$false)]
     param(
-        [Parameter(Mandatory = $true)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Message,
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$Message,
         [ValidateSet('INFO','SUCCESS','ERROR','WARN','SUB','FINAL','FATAL')]
-        [ValidateNotNullOrEmpty()]
         [string]$Level = 'INFO',
-        [Parameter(Mandatory = $false)]
         [switch]$Log
     )
 
-    $levelTable = @{ INFO = 1; WARN = 2; ERROR = 3 }
-    $msgTable   = @{ INFO = 1; SUCCESS = 1; SUB = 1; FINAL = 1; WARN = 2; ERROR = 3; FATAL = 3 }
-    $envLevel   = $env:ST_LOG_LEVEL
-    $envValue   = if ($envLevel) { $levelTable[$envLevel.ToUpper()] } else { 1 }
-    if (-not $envValue) { $envValue = 1 }
-    $msgValue   = $msgTable[$Level]
-    if ($msgValue -lt $envValue) { return }
-
-    switch ($Level) {
-        'SUCCESS' { $prefix = '[+]'; $color = 'Green' }
-        'ERROR'   { $prefix = '[-]'; $color = 'Red' }
-        'WARN'    { $prefix = '[!]'; $color = 'Yellow' }
-        'SUB'     { $prefix = '[>]'; $color = 'DarkCyan' }
-        'FINAL'   { $prefix = '[✔]'; $color = 'Green' }
-        'FATAL'   { $prefix = '[✘]'; $color = 'Red' }
-        default   { $prefix = '[*]'; $color = 'Cyan' }
+    $levelMap = @{ INFO = 1; WARN = 2; ERROR = 3 }
+    $config = @{
+        INFO    = @{ Prefix='[*]'; Color='Cyan';    Severity=1 }
+        SUCCESS = @{ Prefix='[+]'; Color='Green';   Severity=1 }
+        SUB     = @{ Prefix='[>]'; Color='DarkCyan';Severity=1 }
+        FINAL   = @{ Prefix='[✔]'; Color='Green';   Severity=1 }
+        WARN    = @{ Prefix='[!]'; Color='Yellow';  Severity=2 }
+        ERROR   = @{ Prefix='[-]'; Color='Red';     Severity=3 }
+        FATAL   = @{ Prefix='[✘]'; Color='Red';     Severity=3 }
     }
+
+    $envLevel = $env:ST_LOG_LEVEL
+    $envSeverity = if ($envLevel) { $levelMap[$envLevel.ToUpper()] } else { 1 }
+    if (-not $envSeverity) { $envSeverity = 1 }
+
+    $settings = $config[$Level]
+    if ($settings.Severity -lt $envSeverity) { return }
+
+    $prefix = $settings.Prefix
+    $color  = $settings.Color
 
     Write-Host "$prefix $Message" -ForegroundColor $color
     if ($Log) { Write-STLog -Message "$prefix $Message" }
