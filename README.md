@@ -37,6 +37,25 @@ This repository packages a collection of scripts into reusable modules.
   * `MicrosoftPlaces` for the `Invoke-CompanyPlaceManagement` command.
 * Several scripts assume **tenant administrator permissions** to connect to the target SharePoint or Exchange Online environment. Review each script's notes and ensure you have the required access before running them.
 
+## First-Time Install 🚀
+
+For a brand new environment clone the repo and run the helper scripts to set up dependencies and install the modules:
+
+```powershell
+git clone https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git
+cd PowerShell
+./scripts/Install-ModuleDependencies.ps1
+./scripts/Install-SupportTools.ps1
+```
+
+`Install-SupportTools.ps1` pulls the latest module versions from your internal feed when available and falls back to importing them from the `src` folder. Next run the SharePoint configuration script if you plan to use those commands:
+
+```powershell
+./scripts/Test-SPToolsPrereqs.ps1 -Install
+./scripts/Configure-SharePointTools.ps1 -ClientId <appId> -TenantId <tenantId> -CertPath <path>
+```
+
+
 ## Installation 📦
 
 Install the modules from your internal repository:
