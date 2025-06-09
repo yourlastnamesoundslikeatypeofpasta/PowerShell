@@ -292,5 +292,28 @@ Describe 'STPlatform Module' {
                 foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
             }
         }
+
+        Safe-It 'records failure when Connect-MgGraph throws' {
+            InModuleScope STPlatform {
+                Mock Connect-MgGraph { throw 'boom' }
+                Mock Write-STLog {}
+                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { $env:$n = $n.ToLower() }
+                $log = Join-Path ([IO.Path]::GetTempPath()) ([IO.Path]::GetRandomFileName())
+                try {
+                    $env:ST_ENABLE_TELEMETRY = '1'
+                    $env:ST_TELEMETRY_PATH = $log
+                    { Connect-EntraID } | Should -Throw
+                    Assert-MockCalled Write-STLog -Times 1 -ParameterFilter { $Level -eq 'ERROR' -and $Message -like 'Connect-EntraID failed:*' }
+                    (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
+                    $json = Get-Content $log | ConvertFrom-Json
+                    $json.Details.Result | Should -Be 'Failure'
+                } finally {
+                    Remove-Item $log -ErrorAction SilentlyContinue
+                    Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
+                    Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
+                    foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                }
+            }
+        }
     }
 }
