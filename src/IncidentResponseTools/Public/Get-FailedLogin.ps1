@@ -25,6 +25,7 @@ function Get-FailedLogin {
         [object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('failed login data')) { return }
         Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "Get-FailedLogins.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }
