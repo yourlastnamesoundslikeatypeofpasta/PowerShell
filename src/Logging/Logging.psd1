@@ -5,5 +5,6 @@
     Author = 'Contoso'
     Description = 'Provides centralized logging utilities for all modules.'
     PrivateData = @{ PSData = @{ Tags = @('PowerShell','Logging','Internal') } }
-    FunctionsToExport = @('Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing','Sanitize-STMessage')
+    # Export every function so new helpers are automatically available
+    FunctionsToExport = @('*')
 }

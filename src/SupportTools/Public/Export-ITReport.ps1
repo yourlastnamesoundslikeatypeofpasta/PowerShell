@@ -40,7 +40,8 @@ function Export-ITReport {
     begin {
         # Collect pipeline objects in a growable list
         $items = [System.Collections.Generic.List[object]]::new()
-        $osBuild = (Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber)
+        $os = Get-CimInstance -ClassName Win32_OperatingSystem
+        $osBuild = $os.BuildNumber
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     }
     process {
