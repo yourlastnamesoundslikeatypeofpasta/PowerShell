@@ -75,7 +75,7 @@ Describe 'STPlatform Module' {
     }
 
 
-    It 'loads missing secrets when some variables exist' {
+    Safe-It 'loads missing secrets when some variables exist' {
         InModuleScope STPlatform {
             Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
             Mock Connect-MgGraph {}
@@ -113,7 +113,7 @@ Describe 'STPlatform Module' {
         }
     }
 
-    It 'logs secret retrieval with Write-STStatus' {
+    Safe-It 'logs secret retrieval with Write-STStatus' {
         InModuleScope STPlatform {
             Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
             Mock Connect-MgGraph {}
