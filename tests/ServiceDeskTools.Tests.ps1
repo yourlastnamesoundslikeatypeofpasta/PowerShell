@@ -229,4 +229,49 @@ Describe 'ServiceDeskTools Module' {
             Assert-MockCalled Invoke-SDRequest -Times 0 -ModuleName ServiceDeskTools
         }
     }
+
+    Context 'Rate limiting and chaos mode' {
+        It 'pauses when SD_RATE_LIMIT_PER_MINUTE reached' {
+            InModuleScope ServiceDeskTools {
+                $env:SD_API_TOKEN = 't'
+                $env:SD_RATE_LIMIT_PER_MINUTE = '2'
+                $dates = @(
+                    [datetime]'2023-01-01T00:00:00Z',
+                    [datetime]'2023-01-01T00:00:30Z',
+                    [datetime]'2023-01-01T00:00:40Z'
+                )
+                $i = 0
+                Mock Get-Date { $dates[$i++] } -ModuleName ServiceDeskTools
+                Mock Start-Sleep {} -ModuleName ServiceDeskTools
+                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+
+                Invoke-SDRequest -Method 'GET' -Path '/one'
+                Invoke-SDRequest -Method 'GET' -Path '/two'
+                Invoke-SDRequest -Method 'GET' -Path '/three'
+
+                Assert-MockCalled Start-Sleep -ModuleName ServiceDeskTools -Times 1
+
+                Remove-Item env:SD_API_TOKEN
+                Remove-Item env:SD_RATE_LIMIT_PER_MINUTE
+            }
+        }
+
+        It 'honors ST_CHAOS_MODE with simulated failures' {
+            InModuleScope ServiceDeskTools {
+                $env:SD_API_TOKEN = 't'
+                $env:ST_CHAOS_MODE = '1'
+                $random = @(1000, 5)
+                $r = 0
+                Mock Get-Random { $random[$r++] } -ModuleName ServiceDeskTools
+                Mock Start-Sleep {} -ModuleName ServiceDeskTools
+
+                { Invoke-SDRequest -Method 'GET' -Path '/fail' } | Should -Throw 'ChaosMode:'
+
+                Assert-MockCalled Start-Sleep -ModuleName ServiceDeskTools -ParameterFilter { $Milliseconds -eq 1000 } -Times 1
+
+                Remove-Item env:SD_API_TOKEN
+                Remove-Item env:ST_CHAOS_MODE
+            }
+        }
+    }
 }
