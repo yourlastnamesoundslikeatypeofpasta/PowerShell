@@ -23,3 +23,7 @@ See [ChaosTools/Invoke-ChaosTest.md](ChaosTools/Invoke-ChaosTest.md) for full
 command documentation.
 
 Use these tools to validate that your automation gracefully handles transient failures.
+
+Chaos tests write log entries using the [Rich Log Format](Logging/RichLogFormat.md).
+Enabling telemetry (`ST_ENABLE_TELEMETRY=1`) can help track chaos test results.
+Summarize captured metrics with [Telemetry/Get-STTelemetryMetrics.md](Telemetry/Get-STTelemetryMetrics.md).
