@@ -27,6 +27,11 @@ if ($result -is [System.Management.Automation.ErrorRecord]) {
 }
 ```
 
+### Logging
+
+All functions write logs to `%USERPROFILE%\SupportToolsLogs\supporttools.log` unless `$env:ST_LOG_PATH` is set.
+Set `ST_LOG_STRUCTURED=1` to automatically emit structured entries. See [RichLogFormat.md](Logging/RichLogFormat.md) for the JSON schema example.
+
 ## Available Commands
 
 The table below lists each command and the script it invokes. Arguments not listed are forwarded to the underlying script unchanged.
