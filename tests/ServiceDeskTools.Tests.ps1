@@ -7,7 +7,8 @@ Describe 'ServiceDeskTools Module' {
     Context 'Exported commands' {
         $expected = @(
             'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
-            'Search-SDTicket','Get-ServiceDeskAsset','Set-SDTicketBulk','Link-SDTicketToSPTask'
+            'Search-SDTicket','Get-ServiceDeskAsset','Set-SDTicketBulk','Link-SDTicketToSPTask',
+            'Get-ServiceDeskStats'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -75,6 +76,19 @@ Describe 'ServiceDeskTools Module' {
                 $Id -eq 12 -and $Fields.sharepoint_task_url -eq 'https://contoso/tasks/1'
             } -Times 1
         }
+        It 'Get-ServiceDeskStats calls Invoke-SDRequest and returns counts' {
+            Mock Invoke-SDRequest { @(
+                @{ state='open' },
+                @{ state='closed' },
+                @{ state='open' }
+            ) } -ModuleName ServiceDeskTools
+            $stats = Get-ServiceDeskStats -StartDate '2024-01-01' -EndDate '2024-01-31'
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $Method -eq 'GET' -and $Path -eq '/incidents.json?created_after=2024-01-01&created_before=2024-01-31'
+            } -Times 1
+            $stats.open  | Should -Be 2
+            $stats.closed | Should -Be 1
+        }
     }
 
     Context 'Logging' {
@@ -130,6 +144,12 @@ Describe 'ServiceDeskTools Module' {
             } -Times 1
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Submit-Ticket S' } -Times 1
         }
+        It 'Get-ServiceDeskStats logs the request' {
+            Mock Invoke-SDRequest { @() } -ModuleName ServiceDeskTools
+            Mock Write-STLog {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskStats -StartDate '2024-01-01' -EndDate '2024-01-02'
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -like 'Get-ServiceDeskStats*' } -Times 1
+        }
     }
 
     Context 'Invoke-SDRequest behavior' {
@@ -175,6 +195,21 @@ Describe 'ServiceDeskTools Module' {
                 } -Times 1
                 Remove-Item env:SD_API_TOKEN
             }
+        }
+    }
+
+    Context 'Telemetry' {
+        It 'writes success telemetry' {
+            Mock Invoke-SDRequest { @() } -ModuleName ServiceDeskTools
+            Mock Write-STTelemetryEvent {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskStats -StartDate '2024-01-01' -EndDate '2024-01-02'
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName ServiceDeskTools -Times 1 -ParameterFilter { $Result -eq 'Success' }
+        }
+        It 'writes failure telemetry' {
+            Mock Invoke-SDRequest { throw 'bad' } -ModuleName ServiceDeskTools
+            Mock Write-STTelemetryEvent {} -ModuleName ServiceDeskTools
+            { Get-ServiceDeskStats -StartDate '2024-01-01' -EndDate '2024-01-02' } | Should -Throw
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName ServiceDeskTools -Times 1 -ParameterFilter { $Result -eq 'Failure' }
         }
     }
 

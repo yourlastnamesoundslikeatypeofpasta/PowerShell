@@ -14,6 +14,7 @@ Commands for interacting with the Service Desk ticketing API. **ServiceDeskTools
 | `Get-ServiceDeskAsset` | Retrieve an asset by ID | `Get-ServiceDeskAsset -Id 99` |
 | `Set-SDTicketBulk` | Apply updates to multiple incidents | `Set-SDTicketBulk -Id 1,2,3 -Fields @{ status='Closed' }` |
 | `Link-SDTicketToSPTask` | Add a related SharePoint task link | `Link-SDTicketToSPTask -TicketId 42 -TaskUrl 'https://contoso.sharepoint.com/tasks/1'` |
+| `Get-ServiceDeskStats` | Count incidents by status for a date range | `Get-ServiceDeskStats -StartDate '2024-01-01' -EndDate '2024-01-31'` |
 | `Submit-Ticket` | Create a Service Desk incident with minimal parameters | `Submit-Ticket -Subject 'Alert' -Description 'Issue detected' -RequesterEmail 'ops@example.com'` |
 
 `SD_API_TOKEN` must be set in the environment. Optionally set `SD_BASE_URI` if your Service Desk API uses a custom URL.
