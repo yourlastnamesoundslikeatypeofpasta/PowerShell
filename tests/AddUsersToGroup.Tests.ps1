@@ -1,9 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'AddUsersToGroup Script' {
     BeforeAll {
-        if (Get-PSDrive -Name TestDrive -ErrorAction SilentlyContinue) {
-            Remove-PSDrive -Name TestDrive -Force
-        }
         function Install-Module {}
         function Import-Module {}
         function Connect-MgGraph {}
