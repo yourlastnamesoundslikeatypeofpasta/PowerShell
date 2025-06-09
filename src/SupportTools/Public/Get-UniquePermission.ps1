@@ -25,7 +25,12 @@ function Get-UniquePermission {
         [object]$Config
     )
     process {
-        $output = Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "Get-UniquePermissions.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        try {
+            $output = Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "Get-UniquePermissions.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        } catch {
+            Write-Error $_.Exception.Message
+            throw
+        }
         return [pscustomobject]@{
             Script = 'Get-UniquePermissions.ps1'
             Result = $output

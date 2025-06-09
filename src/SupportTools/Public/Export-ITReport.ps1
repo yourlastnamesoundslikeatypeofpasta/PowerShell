@@ -65,6 +65,9 @@ function Export-ITReport {
                 OutputPath = $OutputPath
                 Format     = $Format
             }
+        } catch {
+            Write-Error $_.Exception.Message
+            throw
         } finally {
             if ($TranscriptPath) { Stop-Transcript | Out-Null }
         }
