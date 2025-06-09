@@ -3,10 +3,14 @@
 Describe 'EntraIDTools Module' {
     Initialize-TestDrive
     BeforeAll {
-        if (-not (Get-Module -ListAvailable -Name 'MSAL.PS')) {
-            try { Install-Module -Name 'MSAL.PS' -Scope CurrentUser -Force } catch {}
+        $msal = Get-Module -ListAvailable -Name 'MSAL.PS'
+        if ($msal) {
+            Import-Module MSAL.PS -ErrorAction SilentlyContinue
+        } else {
+            Mock Get-MsalToken {
+                [pscustomobject]@{ AccessToken = 'mock'; ExpiresOn = (Get-Date).AddMinutes(30) }
+            }
         }
-        Import-Module MSAL.PS -ErrorAction SilentlyContinue
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
         Import-Module $PSScriptRoot/../src/EntraIDTools/EntraIDTools.psd1 -Force
