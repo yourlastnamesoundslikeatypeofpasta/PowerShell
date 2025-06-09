@@ -55,4 +55,14 @@ Describe 'Logging UI Functions' {
         $banner.Module | Should -Be 'Logging'
         $banner.Version | Should -Not -BeNullOrEmpty
     }
+
+    Safe-It 'filters messages below ST_LOG_LEVEL' {
+        try {
+            $env:ST_LOG_LEVEL = 'WARN'
+            { Write-STStatus -Message 'info hidden' -Level INFO } | Should -BeNullOrEmpty
+            { Write-STStatus -Message 'show warn' -Level WARN } | Should -Output '[!] show warn'
+        } finally {
+            Remove-Item env:ST_LOG_LEVEL -ErrorAction SilentlyContinue
+        }
+    }
 }

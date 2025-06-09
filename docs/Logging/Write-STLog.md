@@ -22,7 +22,7 @@ Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-Progres
 ## DESCRIPTION
 Records log messages in a consistent format. Logs are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` or `$env:ST_LOG_PATH` if set.
 Set `ST_LOG_STRUCTURED=1` or use `-Structured` to output JSON lines. The structure is described in [RichLogFormat.md](./RichLogFormat.md).
-`ST_LOG_LEVEL` sets the minimum severity to record and `ST_LOG_ENCRYPT=1` encrypts the log file using the current user's context.
+`ST_LOG_LEVEL` sets the minimum severity to record (INFO, WARN or ERROR) and `ST_LOG_ENCRYPT=1` encrypts the log file using the current user's context.
 
 ## EXAMPLES
 
