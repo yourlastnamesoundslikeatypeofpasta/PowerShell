@@ -57,29 +57,74 @@ try {
     Write-STDivider -Title 'PERFORMANCE AUDIT' -Style heavy
 
     # CPU usage
-    $cpuSamples = Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 1 -MaxSamples 3
-    $cpuSampleValues = $cpuSamples.CounterSamples | Select-Object -ExpandProperty CookedValue
-    $cpuUsage = [math]::Round(($cpuSampleValues | Measure-Object -Average).Average,2)
+    if ($IsWindows -and (Get-Command Get-Counter -ErrorAction SilentlyContinue)) {
+        $cpuSamples = Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 1 -MaxSamples 3
+        $cpuSampleValues = $cpuSamples.CounterSamples | Select-Object -ExpandProperty CookedValue
+        $cpuUsage = [math]::Round(($cpuSampleValues | Measure-Object -Average).Average,2)
+    } elseif (-not $IsWindows -and (Get-Command ps -ErrorAction SilentlyContinue)) {
+        $cpuSampleValues = ps -A -o %cpu | Select-Object -Skip 1 | ForEach-Object { $_ -as [double] }
+        if ($cpuSampleValues) {
+            $cpuUsage = [math]::Round(($cpuSampleValues | Measure-Object -Average).Average,2)
+        } else {
+            $cpuUsage = $null
+            Write-STStatus -Message 'Unable to read CPU usage from ps.' -Level WARN -Log
+        }
+    } else {
+        $cpuUsage = $null
+        $cpuSampleValues = @()
+        Write-STStatus -Message 'CPU metrics skipped: required tools not found.' -Level WARN -Log
+    }
     Write-STLog -Metric 'CPUPercent' -Value $cpuUsage -Structured
     Send-STMetric -MetricName 'CPUPercent' -Category 'Audit' -Value $cpuUsage
 
     # Memory usage
-    $os = Get-CimInstance -ClassName Win32_OperatingSystem
-    $memUsedPct = [math]::Round((($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / $os.TotalVisibleMemorySize) * 100,2)
+    if ($IsWindows) {
+        $os = Get-CimInstance -ClassName Win32_OperatingSystem
+        $memUsedPct = [math]::Round((($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / $os.TotalVisibleMemorySize) * 100,2)
+    } elseif (Test-Path '/proc/meminfo') {
+        $memInfo = Get-Content /proc/meminfo
+        $total = ($memInfo | Where-Object { $_ -match '^MemTotal:' }) -replace '\D+', ''
+        $avail = ($memInfo | Where-Object { $_ -match '^MemAvailable:' }) -replace '\D+', ''
+        $memUsedPct = [math]::Round(((($total - $avail) / $total) * 100),2)
+    } else {
+        $memUsedPct = $null
+        Write-STStatus -Message 'Memory metrics skipped: unsupported platform.' -Level WARN -Log
+    }
     Write-STLog -Metric 'MemoryPercent' -Value $memUsedPct -Structured
     Send-STMetric -MetricName 'MemoryPercent' -Category 'Audit' -Value $memUsedPct
 
     # Disk utilisation
-    $diskSamples = Get-Counter '\PhysicalDisk(_Total)\% Disk Time' -SampleInterval 1 -MaxSamples 3
-    $diskSampleValues = $diskSamples.CounterSamples | Select-Object -ExpandProperty CookedValue
-    $diskUsage = [math]::Round(($diskSampleValues | Measure-Object -Average).Average,2)
+    if ($IsWindows -and (Get-Command Get-Counter -ErrorAction SilentlyContinue)) {
+        $diskSamples = Get-Counter '\PhysicalDisk(_Total)\% Disk Time' -SampleInterval 1 -MaxSamples 3
+        $diskSampleValues = $diskSamples.CounterSamples | Select-Object -ExpandProperty CookedValue
+        $diskUsage = [math]::Round(($diskSampleValues | Measure-Object -Average).Average,2)
+    } elseif (-not $IsWindows -and (Get-Command df -ErrorAction SilentlyContinue)) {
+        $diskLine = df -P --total | Select-String '^total' | ForEach-Object { $_.ToString() }
+        if ($diskLine) {
+            $diskUsage = [double]($diskLine -split '\s+')[4].TrimEnd('%')
+            $diskSampleValues = @($diskUsage)
+        } else {
+            $diskUsage = $null
+            $diskSampleValues = @()
+            Write-STStatus -Message 'Unable to read disk usage from df.' -Level WARN -Log
+        }
+    } else {
+        $diskUsage = $null
+        $diskSampleValues = @()
+        Write-STStatus -Message 'Disk metrics skipped: required tools not found.' -Level WARN -Log
+    }
     Write-STLog -Metric 'DiskPercent' -Value $diskUsage -Structured
     Send-STMetric -MetricName 'DiskPercent' -Category 'Audit' -Value $diskUsage
 
     # Network usage (Mbps)
-    $netSamples = Get-Counter '\Network Interface(*)\Bytes Total/sec' -SampleInterval 1 -MaxSamples 3
-    $netBytes = ($netSamples.CounterSamples | Measure-Object -Property CookedValue -Sum).Sum / $netSamples.CounterSamples.Count
-    $netMbps = [math]::Round(($netBytes * 8) / 1MB,2)
+    if ($IsWindows -and (Get-Command Get-Counter -ErrorAction SilentlyContinue)) {
+        $netSamples = Get-Counter '\Network Interface(*)\Bytes Total/sec' -SampleInterval 1 -MaxSamples 3
+        $netBytes = ($netSamples.CounterSamples | Measure-Object -Property CookedValue -Sum).Sum / $netSamples.CounterSamples.Count
+        $netMbps = [math]::Round(($netBytes * 8) / 1MB,2)
+    } else {
+        $netMbps = $null
+        Write-STStatus -Message 'Network metrics skipped on non-Windows.' -Level WARN -Log
+    }
     Write-STLog -Metric 'NetworkMbps' -Value $netMbps -Structured
     Send-STMetric -MetricName 'NetworkMbps' -Category 'Audit' -Value $netMbps
 

@@ -11,7 +11,7 @@ Import-Module ./src/MonitoringTools/MonitoringTools.psd1
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `Get-CPUUsage` | Returns the current CPU utilisation and writes a structured log. | `Get-CPUUsage` |
+| `Get-CPUUsage` | Returns the current CPU utilisation and writes a structured log. Uses `Get-Counter` on Windows and `ps` otherwise. | `Get-CPUUsage` |
 | `Get-DiskSpaceInfo` | Lists disk free space and logs the details. | `Get-DiskSpaceInfo` |
 | `Get-EventLogSummary` | Counts recent error and warning events and logs a summary. | `Get-EventLogSummary -LogName System` |
 | `Get-SystemHealth` | Summarises CPU, disk and event log data and records the snapshot. | `Get-SystemHealth` |
