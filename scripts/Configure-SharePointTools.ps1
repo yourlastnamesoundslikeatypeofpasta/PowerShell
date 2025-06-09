@@ -1,8 +1,22 @@
+<#
+.SYNOPSIS
+Configure SharePoint application settings.
+
+.EXAMPLE
+./Configure-SharePointTools.ps1
+Prompts for values interactively.
+
+.EXAMPLE
+./Configure-SharePointTools.ps1 -NoPrompt
+Uses existing configuration without prompting.
+#>
+
 param(
     [string]$ClientId,
     [string]$TenantId,
     [string]$CertPath,
-    [hashtable]$Sites
+    [hashtable]$Sites,
+    [switch]$NoPrompt
 )
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
@@ -22,7 +36,7 @@ if (-not $settings.ContainsKey('Sites')) { $settings.Sites = @{} }
 
 if ($PSBoundParameters.ContainsKey('ClientId')) {
     $settings.ClientId = $ClientId
-} else {
+} elseif (-not $NoPrompt) {
     Write-STStatus -Message 'Enter SharePoint application settings. Leave blank to keep existing values.' -Level INFO
     $clientId = Read-Host "Client ID (current: $($settings.ClientId))"
     if ($clientId) { $settings.ClientId = $clientId }
@@ -30,15 +44,15 @@ if ($PSBoundParameters.ContainsKey('ClientId')) {
 
 if ($PSBoundParameters.ContainsKey('TenantId')) {
     $settings.TenantId = $TenantId
-} else {
+} elseif (-not $NoPrompt) {
     $tenantId = Read-Host "Tenant ID (current: $($settings.TenantId))"
     if ($tenantId) { $settings.TenantId = $tenantId }
 }
 
 if ($PSBoundParameters.ContainsKey('CertPath')) {
     $settings.CertPath = $CertPath
-} else {
-    if ($IsWindows) {
+} elseif (-not $NoPrompt) {
+    if ($IsWindows -and -not $NoPrompt) {
         try {
             Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
             $dialog = New-Object System.Windows.Forms.OpenFileDialog
@@ -53,7 +67,7 @@ if ($PSBoundParameters.ContainsKey('CertPath')) {
             $certPath = Read-Host "Certificate Path (current: $($settings.CertPath))"
             if ($certPath) { $settings.CertPath = $certPath }
         }
-    } else {
+    } elseif (-not $NoPrompt) {
         $certPath = Read-Host "Certificate Path (current: $($settings.CertPath))"
         if ($certPath) { $settings.CertPath = $certPath }
     }
@@ -65,14 +79,16 @@ if ($PSBoundParameters.ContainsKey('Sites')) {
 } else {
     $currentSites = if ($settings.Sites.Count) { $settings.Sites.Keys -join ', ' } else { 'none' }
     Write-STStatus "Current sites: $currentSites" -Level INFO
-    $siteInput = Read-Host 'Enter site pairs as Name=Url (comma separated) or leave blank to skip'
-    if ($siteInput) {
-        foreach ($pair in ($siteInput -split ',')) {
-            $parts = $pair -split '=',2
-            if ($parts.Count -eq 2) {
-                $name = $parts[0].Trim()
-                $url  = $parts[1].Trim()
-                if ($name -and $url) { $settings.Sites[$name] = $url }
+    if (-not $NoPrompt) {
+        $siteInput = Read-Host 'Enter site pairs as Name=Url (comma separated) or leave blank to skip'
+        if ($siteInput) {
+            foreach ($pair in ($siteInput -split ',')) {
+                $parts = $pair -split '=',2
+                if ($parts.Count -eq 2) {
+                    $name = $parts[0].Trim()
+                    $url  = $parts[1].Trim()
+                    if ($name -and $url) { $settings.Sites[$name] = $url }
+                }
             }
         }
     }

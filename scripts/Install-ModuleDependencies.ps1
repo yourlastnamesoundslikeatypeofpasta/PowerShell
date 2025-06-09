@@ -4,7 +4,18 @@
 .DESCRIPTION
     Verifies that common dependencies used by the modules in this repository are installed.
     Prompts to install from the PowerShell Gallery when a module is missing.
+# .EXAMPLE
+# ./Install-ModuleDependencies.ps1
+# Prompts to install any missing modules.
+#
+# .EXAMPLE
+# ./Install-ModuleDependencies.ps1 -Force
+# Installs missing modules without prompting.
 #>
+
+param(
+    [switch]$Force
+)
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
@@ -18,8 +29,8 @@ $requiredModules = @{
 foreach ($name in $requiredModules.Keys) {
     if (-not (Get-Module -ListAvailable -Name $name)) {
         Write-STStatus -Message "Module '$name' not found. Required for $($requiredModules[$name])." -Level WARN
-        $install = Read-Host "Install $name from PSGallery? (Y/N)"
-        if ($install -match '^[Yy]') {
+        $install = $Force -or ((Read-Host "Install $name from PSGallery? (Y/N)") -match '^[Yy]')
+        if ($install) {
             try {
                 Install-Module -Name $name -Scope CurrentUser -Force -ErrorAction Stop
                 Write-STStatus -Message "Installed $name" -Level SUCCESS

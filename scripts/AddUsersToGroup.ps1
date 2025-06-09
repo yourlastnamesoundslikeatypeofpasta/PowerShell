@@ -27,6 +27,10 @@ This script requires Microsoft Graph API permissions and assumes the user has th
 .EXAMPLE
     .\AddUsersToGroup.ps1 -CsvPath users.csv -GroupName "Target Group"
 This example runs the script with explicit parameters to process the provided CSV file and add the listed users to the specified Microsoft 365 group.
+
+.EXAMPLE
+    .\AddUsersToGroup.ps1 -CsvPath users.csv -GroupName "Target Group" -NoPrompt
+Runs without any interactive prompts.
 #>
 
 [CmdletBinding(SupportsShouldProcess=$true)]
@@ -40,7 +44,9 @@ param(
 
     [Parameter()]
     [ValidateSet('Entra','AD')]
-    [string]$Cloud = 'Entra'
+    [string]$Cloud = 'Entra',
+
+    [switch]$NoPrompt
 )
 
 . $PSScriptRoot/Common.ps1
@@ -66,6 +72,8 @@ if ($Cloud -eq 'Entra') {
 }
 
 function Get-CSVFilePath {
+    if ($NoPrompt) { return $CsvPath }
+
     Write-STStatus -Message 'Select CSV from file dialog...' -Level SUB
     # Open file dialog to get CSV path
     $openFileDialog = New-Object Microsoft.Win32.OpenFileDialog
@@ -73,12 +81,10 @@ function Get-CSVFilePath {
     $openFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*"
     $dialogResult = $openFileDialog.ShowDialog()
 
-    if ($dialogResult -eq "True")
-    {
+    if ($dialogResult -eq "True") {
         $filePath = Get-ChildItem -Path $openFileDialog.FileName
         return $filePath
-    }
-    else {
+    } else {
         Write-STStatus -Message 'No file selected' -Level SUB
         return $null
     }
@@ -118,6 +124,8 @@ function Get-Group {
         return $grp
     }
 
+    if ($NoPrompt) { throw 'GroupName is required when -NoPrompt is used.' }
+
     $allGroupNames = Get-GroupNames | Sort-Object -Property DisplayName
     $index = 0
     foreach ($group in $allGroupNames) {
@@ -125,6 +133,7 @@ function Get-Group {
         $index++
     }
 
+    if ($NoPrompt) { throw 'GroupName is required when -NoPrompt is used.' }
     $groupSelection = Read-Host -Prompt "Select a group"
 
     try {
@@ -197,7 +206,10 @@ function Start-Main {
     }
 
     # Import the CSV file with UPN header
-    if (-not $CsvPath) { $CsvPath = Get-CSVFilePath }
+    if (-not $CsvPath) {
+        if ($NoPrompt) { throw 'CsvPath is required when -NoPrompt is used.' }
+        $CsvPath = Get-CSVFilePath
+    }
     $filePath = $CsvPath
     $file = Import-Csv $filePath
     $users = $file.UPN

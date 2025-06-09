@@ -7,7 +7,16 @@
     scripts without memorizing each filename.
 .EXAMPLE
     ./ScriptLauncher.ps1
+    Starts the interactive menu.
+
+.EXAMPLE
+    ./ScriptLauncher.ps1 -NoPrompt
+    Runs the first script without prompting.
 #>
+
+param(
+    [switch]$NoPrompt
+)
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
@@ -33,17 +42,21 @@ function Show-Menu {
     Write-STStatus -Message 'Q. Quit' -Level INFO
 }
 
-while ($true) {
-    Show-Menu
-    $choice = Read-Host 'Select an option'
-    if ($choice -match '^[Qq]$') { break }
-    $index = [int]$choice - 1
-    if ($index -ge 0 -and $index -lt $scriptFiles.Count) {
-        & $scriptFiles[$index].Path
-    } else {
-        Write-STStatus -Message 'Invalid choice. Try again.' -Level WARN
+if ($NoPrompt) {
+    if ($scriptFiles.Count) { & $scriptFiles[0].Path }
+} else {
+    while ($true) {
+        Show-Menu
+        $choice = Read-Host 'Select an option'
+        if ($choice -match '^[Qq]$') { break }
+        $index = [int]$choice - 1
+        if ($index -ge 0 -and $index -lt $scriptFiles.Count) {
+            & $scriptFiles[$index].Path
+        } else {
+            Write-STStatus -Message 'Invalid choice. Try again.' -Level WARN
+        }
+        Write-STStatus -Message '' -Level INFO
     }
-    Write-STStatus -Message '' -Level INFO
 }
 
 Write-STClosing

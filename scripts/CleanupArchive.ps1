@@ -22,19 +22,24 @@ The name of the document library to be processed.
 .NOTES
 This script requires tenant admin access and assumes the user has the necessary permissions to connect to the SharePoint site and access the specified library. It is intended for use in scenarios where large numbers of files and folders need to be managed and cleaned up efficiently.
 
-.EXAMPLE
-.\CleanUpArchive.ps1
-This example runs the script, connecting to the predefined SharePoint site and processing the 'Shared Documents' library to delete all items within the 'zzz_Archive_Production' folder.
+# .EXAMPLE
+# .\CleanupArchive.ps1
+# Runs the script and prompts before deleting items from the archive.
+#
+# .EXAMPLE
+# .\CleanupArchive.ps1 -Commit -Force
+# Deletes archived items without prompting for confirmation.
 #>
 
 param(
     [string]$SiteUrl = 'SITEURL',
     [string]$Libraries = 'Shared Documents',
     [string]$SnapshotPath = (Join-Path $PSScriptRoot 'preDeleteLog.json'),
-    [switch]$Commit
+    [switch]$Commit,
+    [switch]$Force
 )
 
-if ($Commit) {
+if ($Commit -and -not $Force) {
     $response = Read-Host 'This will permanently delete items from the archive. Continue? (y/N)'
     if ($response -notmatch '^[Yy]$') {
         Write-STStatus -Message 'Operation cancelled.' -Level WARN

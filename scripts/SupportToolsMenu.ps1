@@ -7,6 +7,11 @@
     SupportTools function.
 .EXAMPLE
     ./SupportToolsMenu.ps1
+    Opens the interactive menu.
+
+.EXAMPLE
+    ./SupportToolsMenu.ps1 -NoPrompt
+    Runs the first menu option automatically.
 #>
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
@@ -14,7 +19,8 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/SupportTools/SupportTools.psd1'
 
 param(
     [ValidateSet('Helpdesk','Site Admin')]
-    [string]$UserRole = 'Helpdesk'
+    [string]$UserRole = 'Helpdesk',
+    [switch]$NoPrompt
 )
 
 $Menu = @(
@@ -44,17 +50,21 @@ function Show-Menu {
     Write-STStatus -Message 'Q. Quit' -Level INFO
 }
 
-while ($true) {
-    Show-Menu
-    $choice = Read-Host 'Select an option'
-    if ($choice -match '^[Qq]$') { break }
-    $index = [int]$choice - 1
-    if ($index -ge 0 -and $index -lt $Menu.Count) {
-        & $Menu[$index].Action
-    } else {
-        Write-STStatus -Message 'Invalid choice. Try again.' -Level WARN
+if ($NoPrompt) {
+    if ($Menu.Count) { & $Menu[0].Action }
+} else {
+    while ($true) {
+        Show-Menu
+        $choice = Read-Host 'Select an option'
+        if ($choice -match '^[Qq]$') { break }
+        $index = [int]$choice - 1
+        if ($index -ge 0 -and $index -lt $Menu.Count) {
+            & $Menu[$index].Action
+        } else {
+            Write-STStatus -Message 'Invalid choice. Try again.' -Level WARN
+        }
+        Write-STStatus -Message '' -Level INFO
     }
-    Write-STStatus -Message '' -Level INFO
 }
 
 Write-STClosing
