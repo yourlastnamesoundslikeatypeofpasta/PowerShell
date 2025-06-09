@@ -11,11 +11,13 @@ function Start-HealthMonitor {
     .PARAMETER Count
         Number of samples to collect before exiting. 0 runs indefinitely.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [int]$IntervalSeconds = 60,
         [int]$Count = 0
     )
+
+    if (-not $PSCmdlet.ShouldProcess('system health monitoring')) { return }
 
     try {
         $collected = 0

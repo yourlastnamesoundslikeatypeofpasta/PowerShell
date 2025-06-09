@@ -24,6 +24,7 @@ function Update-Sysmon {
         [object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('Sysmon update')) { return }
         Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "Update-Sysmon.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

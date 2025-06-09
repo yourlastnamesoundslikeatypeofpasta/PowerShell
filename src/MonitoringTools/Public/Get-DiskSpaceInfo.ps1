@@ -13,6 +13,8 @@ function Get-DiskSpaceInfo {
         [string]$TranscriptPath
     )
 
+    if (-not $PSCmdlet.ShouldProcess('disk space information')) { return }
+
     $computer = if ($env:COMPUTERNAME) { $env:COMPUTERNAME } else { $env:HOSTNAME }
     $timestamp = (Get-Date).ToString('o')
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
@@ -29,7 +31,7 @@ function Get-DiskSpaceInfo {
                 }
             }
         } else {
-            Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Free -ne $null } | ForEach-Object {
+            Get-PSDrive -PSProvider FileSystem | Where-Object { $null -ne $_.Free } | ForEach-Object {
                 $info += [pscustomobject]@{
                     Drive       = $_.Root
                     SizeGB      = [math]::Round($_.Used/1GB + $_.Free/1GB,2)

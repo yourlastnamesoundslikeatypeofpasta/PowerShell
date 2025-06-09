@@ -25,6 +25,7 @@ function Search-Indicators {
         [object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('indicator search')) { return }
         $arguments = @('-IndicatorList', $IndicatorList)
         Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Search-Indicators.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
