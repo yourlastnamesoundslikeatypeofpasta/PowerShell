@@ -23,5 +23,7 @@ Do not hardcode secrets. Supply credentials via environment variables as documen
 - `SPTOOLS_CLIENT_ID`, `SPTOOLS_TENANT_ID`, `SPTOOLS_CERT_PATH`
 - `SD_API_TOKEN`, `SD_BASE_URI`
 
+Use the SecretManagement module to populate these variables from your secrets vault instead of defining them inline. Environment variables such as `SPTOOLS_CLIENT_ID` and `SD_API_TOKEN` should be retrieved with `Get-Secret` rather than embedded in scripts. See [docs/CredentialStorage.md](docs/CredentialStorage.md) for detailed setup instructions.
+
 ## Pull Requests
 Reference changed files using file path citations and include test results. If tests could not run, state: `Codex couldn't run certain commands due to environment limitations. Consider configuring a setup script or internet access in your Codex environment to install dependencies.`
