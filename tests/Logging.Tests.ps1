@@ -157,4 +157,19 @@ Describe 'Logging Module' {
             Remove-Item $logFile* -ErrorAction SilentlyContinue
         }
     }
+
+    It 'honors ST_LOG_MAX_BYTES for rotation' {
+        $logFile = Join-Path $TestDrive 'envrotate.log'
+        $env:ST_LOG_MAX_BYTES = 20
+        try {
+            for ($i = 0; $i -lt 3; $i++) {
+                Write-STLog -Message "entry $i" -Path $logFile -MaxFiles 2
+            }
+            Test-Path ($logFile + '.1') | Should -Be $true
+            Test-Path ($logFile + '.2') | Should -Be $true
+        } finally {
+            Remove-Item $logFile* -ErrorAction SilentlyContinue
+            Remove-Item env:ST_LOG_MAX_BYTES -ErrorAction SilentlyContinue
+        }
+    }
 }
