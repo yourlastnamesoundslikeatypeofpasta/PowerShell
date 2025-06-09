@@ -201,7 +201,7 @@ Describe 'ServiceDeskTools Module' {
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
             }
         }
-        It 'throws when token missing from env and vault' {
+        Safe-It 'throws when SD_API_TOKEN cannot be loaded from vault' {
             InModuleScope ServiceDeskTools {
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
                 Mock Get-Secret { $null }
