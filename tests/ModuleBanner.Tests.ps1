@@ -21,13 +21,13 @@ Describe 'Module Banner Functions' {
         }
     }
 
-    foreach ($case in $Cases) {
-        It "returns correct banner for $($case.Name)" {
-            $sb = [scriptblock]::Create($case.Function)
-            $result = $case.ModuleObject.NewBoundScriptBlock($sb).Invoke()
-            $manifest = Import-PowerShellDataFile $case.Psd1
-            $result.Module  | Should -Be $case.Name
-            $result.Version | Should -Be $manifest.ModuleVersion
-        }
+    It 'returns correct banner for <Name> and exports <Function>' -ForEach $Cases {
+        param($case)
+        $sb = [scriptblock]::Create($case.Function)
+        $result = $case.ModuleObject.NewBoundScriptBlock($sb).Invoke()
+        $manifest = Import-PowerShellDataFile $case.Psd1
+        $result.Module  | Should -Be $case.Name
+        $result.Version | Should -Be $manifest.ModuleVersion
+        Get-Command -Module $case.Name -Name $case.Function | Should -Not -BeNullOrEmpty
     }
 }
