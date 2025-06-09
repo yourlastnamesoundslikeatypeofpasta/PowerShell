@@ -428,10 +428,6 @@ function Invoke-ArchiveCleanup {
         [string]$LibraryName = 'Shared Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
         [Alias('TenantID','tenantId')]
-        [Alias('TenantID','tenantId')]
-        [Alias('TenantID','tenantId')]
-        [Alias('TenantID','tenantId')]
-        [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
         [string]$TranscriptPath,
