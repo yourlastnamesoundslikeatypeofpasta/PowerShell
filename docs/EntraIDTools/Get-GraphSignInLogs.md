@@ -12,7 +12,7 @@ Retrieves user sign-in events from the Microsoft Graph audit logs.
 
 ## SYNTAX
 ```powershell
-Get-GraphSignInLogs [-UserPrincipalName <String>] [-StartTime <DateTime>] [-EndTime <DateTime>] [-TenantId] <String> [-ClientId] <String> [-ClientSecret <String>] [<CommonParameters>]
+Get-GraphSignInLogs [-UserPrincipalName <String>] [-StartTime <DateTime>] [-EndTime <DateTime>] [-TenantId] <String> [-ClientId] <String> [-ClientSecret <String>] [-DeviceLogin] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,7 +24,7 @@ Activity is logged and telemetry is recorded.
 
 ### Example 1
 ```powershell
-PS C:\> Get-GraphSignInLogs -UserPrincipalName user@contoso.com -StartTime (Get-Date).AddDays(-1) -TenantId <tenant-id> -ClientId <app-id>
+PS C:\> Get-GraphSignInLogs -UserPrincipalName user@contoso.com -StartTime (Get-Date).AddDays(-1) -TenantId <tenant-id> -ClientId <app-id> -DeviceLogin
 ```
 Retrieves sign-in events for the specified user from the last day.
 
@@ -47,6 +47,9 @@ Application (client) ID used for Microsoft Graph authentication.
 
 ### -ClientSecret
 Optional client secret for app-only authentication.
+
+### -DeviceLogin
+Use device code authentication instead of a client secret.
 
 ### CommonParameters
 This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`.
