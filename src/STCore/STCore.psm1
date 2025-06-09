@@ -173,7 +173,7 @@ function Invoke-STRequest {
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest'
+Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Get-STConfigValue','Invoke-STRequest'
 
 function Show-STCoreBanner {
     <#
