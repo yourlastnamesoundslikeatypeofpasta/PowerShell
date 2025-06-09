@@ -1,3 +1,4 @@
+. $PSScriptRoot/TestHelpers.ps1
 Describe 'Install-ModuleDependencies script' {
     BeforeEach {
         function Get-Module {}
@@ -8,7 +9,7 @@ Describe 'Install-ModuleDependencies script' {
         Mock Read-Host { 'Y' }
     }
 
-    It 'installs all modules from the nuspec when missing' {
+    Safe-It 'installs all modules from the nuspec when missing' {
         & $PSScriptRoot/../scripts/Install-ModuleDependencies.ps1
         $nuspec = [xml](Get-Content "$PSScriptRoot/../SupportTools.nuspec")
         $modules = $nuspec.package.metadata.dependencies.dependency | ForEach-Object { $_.id }
