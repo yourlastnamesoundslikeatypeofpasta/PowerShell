@@ -13,7 +13,7 @@ Collects system information, uploads it to SharePoint and creates a Service Desk
 ## SYNTAX
 
 ```
-Submit-SystemInfoTicket [-SiteName] <String> [-RequesterEmail] <String> [[-Subject] <String>] [[-Description] <String>] [[-LibraryName] <String>] [[-FolderPath] <String>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Submit-SystemInfoTicket [-SiteName] <String> [-RequesterEmail] <String> [[-Subject] <String>] [[-Description] <String>] [[-LibraryName] <String>] [[-FolderPath] <String>] [[-TranscriptPath] <String>] [[-SmtpServer] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -49,6 +49,9 @@ Optional folder path within the library.
 
 ### -TranscriptPath
 Optional transcript output path.
+
+### -SmtpServer
+SMTP server used to send the summary email.
 
 ### -ProgressAction
 Specifies how progress is displayed.
