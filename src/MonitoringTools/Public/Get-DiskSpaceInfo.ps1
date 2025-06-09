@@ -15,7 +15,7 @@ function Get-DiskSpaceInfo {
 
     if (-not $PSCmdlet.ShouldProcess('disk space information')) { return }
 
-    $computer = if ($env:COMPUTERNAME) { $env:COMPUTERNAME } else { $env:HOSTNAME }
+    $computer = Get-STComputerName
     $timestamp = (Get-Date).ToString('o')
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     try {

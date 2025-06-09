@@ -14,7 +14,7 @@ function Get-EventLogSummary {
         [int]$LastHours = 24
     )
 
-    $computer = if ($env:COMPUTERNAME) { $env:COMPUTERNAME } else { $env:HOSTNAME }
+    $computer = Get-STComputerName
     $timestamp = (Get-Date).ToString('o')
     $summary = @()
     if (Get-Command Get-WinEvent -ErrorAction SilentlyContinue) {
