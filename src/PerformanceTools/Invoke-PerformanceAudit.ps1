@@ -58,7 +58,8 @@ try {
 
     # CPU usage
     $cpuSamples = Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 1 -MaxSamples 3
-    $cpuUsage = [math]::Round(($cpuSamples.CounterSamples | Measure-Object -Property CookedValue -Average).Average,2)
+    $cpuSampleValues = $cpuSamples.CounterSamples | Select-Object -ExpandProperty CookedValue
+    $cpuUsage = [math]::Round(($cpuSampleValues | Measure-Object -Average).Average,2)
     Write-STLog -Metric 'CPUPercent' -Value $cpuUsage -Structured
     Send-STMetric -MetricName 'CPUPercent' -Category 'Audit' -Value $cpuUsage
 
@@ -70,7 +71,8 @@ try {
 
     # Disk utilisation
     $diskSamples = Get-Counter '\PhysicalDisk(_Total)\% Disk Time' -SampleInterval 1 -MaxSamples 3
-    $diskUsage = [math]::Round(($diskSamples.CounterSamples | Measure-Object -Property CookedValue -Average).Average,2)
+    $diskSampleValues = $diskSamples.CounterSamples | Select-Object -ExpandProperty CookedValue
+    $diskUsage = [math]::Round(($diskSampleValues | Measure-Object -Average).Average,2)
     Write-STLog -Metric 'DiskPercent' -Value $diskUsage -Structured
     Send-STMetric -MetricName 'DiskPercent' -Category 'Audit' -Value $diskUsage
 
@@ -87,8 +89,10 @@ try {
 
     $report = [pscustomobject]@{
         CpuPercent     = $cpuUsage
+        CpuSamples     = $cpuSampleValues
         MemoryPercent  = $memUsedPct
         DiskPercent    = $diskUsage
+        DiskSamples    = $diskSampleValues
         NetworkMbps    = $netMbps
         Uptime         = $uptime
     }
