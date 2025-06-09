@@ -19,4 +19,16 @@ Describe 'Get-SystemHealth function' {
         $result.DiskInfo | Should -Be $disk
         $result.EventLogSummary | Should -Be $events
     }
+
+    Safe-It 'does not query health when -WhatIf specified' {
+        Mock Get-CPUUsage {} -ModuleName MonitoringTools
+        Mock Get-DiskSpaceInfo {} -ModuleName MonitoringTools
+        Mock Get-EventLogSummary {} -ModuleName MonitoringTools
+
+        Get-SystemHealth -WhatIf
+
+        Assert-MockCalled Get-CPUUsage -Times 0 -ModuleName MonitoringTools
+        Assert-MockCalled Get-DiskSpaceInfo -Times 0 -ModuleName MonitoringTools
+        Assert-MockCalled Get-EventLogSummary -Times 0 -ModuleName MonitoringTools
+    }
 }
