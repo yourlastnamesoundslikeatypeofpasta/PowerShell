@@ -23,4 +23,21 @@ Describe 'New-STDashboard function' {
             Remove-Item $log,$tlog,$out -ErrorAction SilentlyContinue
         }
     }
+
+    Safe-It 'respects LogLines parameter' {
+        $log = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString() + '.log')
+        $tlog = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString() + '.jsonl')
+        $out = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString() + '.html')
+        try {
+            1..5 | ForEach-Object { "line$_" } | Set-Content -Path $log
+            @{Timestamp='2024-01-01T00:00:00Z'; Script='test.ps1'; Result='Success'; Duration=1} |
+                ConvertTo-Json -Compress | Set-Content -Path $tlog
+            New-STDashboard -LogPath $log -TelemetryLogPath $tlog -OutputPath $out -LogLines 3 | Out-Null
+            $content = Get-Content $out -Raw
+            $content | Should -Match 'line3'
+            $content | Should -Not -Match 'line2'
+        } finally {
+            Remove-Item $log,$tlog,$out -ErrorAction SilentlyContinue
+        }
+    }
 }

@@ -14,6 +14,8 @@ function New-STDashboard {
     .PARAMETER OutputPath
         Optional path for the resulting HTML file. A timestamped file is created
         in the current directory when omitted.
+    .PARAMETER LogLines
+        Number of log file lines to display. Defaults to 20.
     .EXAMPLE
         New-STDashboard -LogPath log.txt -TelemetryLogPath telemetry.jsonl
     #>
@@ -21,7 +23,8 @@ function New-STDashboard {
     param(
         [string]$LogPath,
         [string]$TelemetryLogPath,
-        [string]$OutputPath
+        [string]$OutputPath,
+        [int]$LogLines = 20
     )
     try {
         if (-not $OutputPath) {
@@ -36,7 +39,7 @@ function New-STDashboard {
             else { $TelemetryLogPath = Join-Path $HOME 'SupportToolsTelemetry/telemetry.jsonl' }
         }
 
-        $logLines = if (Test-Path $LogPath) { Get-Content $LogPath -Tail 20 } else { @() }
+        $logLines = if (Test-Path $LogPath) { Get-Content $LogPath -Tail $LogLines } else { @() }
         $metrics  = if (Test-Path $TelemetryLogPath) { Get-STTelemetryMetrics -LogPath $TelemetryLogPath } else { @() }
 
         $html = @()
