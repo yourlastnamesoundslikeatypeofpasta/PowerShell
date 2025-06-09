@@ -40,6 +40,8 @@ $env:SD_BASE_URI       = Get-Secret SD_BASE_URI -AsPlainText
 $env:SD_ASSET_BASE_URI = Get-Secret SD_ASSET_BASE_URI -AsPlainText
 ```
 
+These environment variables remain in your PowerShell session until removed. Once the modules complete, run `Remove-Item env:VAR_NAME` for each sensitive entry. Keeping them only as long as needed reduces the risk of exposure.
+
 With the variables set, you can import the modules and run the commands normally.
 
 This workflow keeps credentials encrypted within the SecretStore and prevents accidental exposure in scripts or source control.
