@@ -13,7 +13,7 @@ Removes sharing links from the IBCCentralFiles site.
 ## SYNTAX
 
 ```
-Invoke-IBCCentralFilesSharingLinkCleanup [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Invoke-IBCCentralFilesSharingLinkCleanup [-NoTelemetry] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,21 @@ PS C:\> Invoke-IBCCentralFilesSharingLinkCleanup
 Demonstrates typical usage of Invoke-IBCCentralFilesSharingLinkCleanup.
 
 ## PARAMETERS
+
+### -NoTelemetry
+Suppress telemetry events for this run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -ProgressAction
 Specifies how progress is displayed.

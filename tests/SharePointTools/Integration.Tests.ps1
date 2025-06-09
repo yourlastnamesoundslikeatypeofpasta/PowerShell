@@ -73,6 +73,27 @@ Describe 'SharePointTools Integration Functions' {
                 Assert-MockCalled Export-Csv -ModuleName SharePointTools -Times 1
             }
         }
+        Safe-It 'suppresses telemetry with NoTelemetry' {
+            InModuleScope SharePointTools {
+                function Connect-PnPOnline {}
+                function Get-PnPFolder {}
+                function Get-PnPFolderInFolder {}
+                function Get-PnPFolderItem {}
+                function Get-PnPProperty {}
+                function Export-Csv {}
+                Mock Connect-PnPOnline {}
+                Mock Get-PnPFolder { 'root' }
+                Mock Get-PnPFolderInFolder { @([pscustomobject]@{ Name='Marketing' }) }
+                $file = New-Object PSObject -Property @{ ServerRelativePath='/f'; Name='f'; Length=1 }
+                $file | Add-Member -MemberType ScriptMethod -Name GetType -Value { @{ Name='File' } } -Force
+                Mock Get-PnPFolderItem { @($file) }
+                Mock Get-PnPProperty { @(1,2) }
+                Mock Export-Csv {} -ModuleName SharePointTools
+                Mock Write-STTelemetryEvent {} -ModuleName SharePointTools
+                Invoke-FileVersionCleanup -SiteName 'A' -SiteUrl 'https://c' -ReportPath 'r.csv' -NoTelemetry
+                Assert-MockCalled Write-STTelemetryEvent -ModuleName SharePointTools -Times 0
+            }
+        }
     }
 
     Context 'Invoke-SharingLinkCleanup' {
@@ -97,6 +118,30 @@ Describe 'SharePointTools Integration Functions' {
                 Mock Stop-Transcript {}
                 Invoke-SharingLinkCleanup -SiteName 'A' -SiteUrl 'https://c' -FolderName 'f' -Confirm:$false
                 Assert-MockCalled Remove-PnPFileSharingLink -Times 1
+            }
+        }
+        Safe-It 'suppresses telemetry with NoTelemetry' {
+            InModuleScope SharePointTools {
+                function Connect-PnPOnline {}
+                function Get-PnPFolderItem {}
+                function Get-PnPFileSharingLink {}
+                function Remove-PnPFileSharingLink {}
+                function Get-PnPFolderSharingLink {}
+                function Remove-PnPFolderSharingLink {}
+                function Start-Transcript {}
+                function Stop-Transcript {}
+                function Disconnect-PnPOnline {}
+                Mock Connect-PnPOnline {}
+                Mock Get-PnPFolderItem { @([pscustomobject]@{ ServerRelativeUrl='/f'; Name='f' }) }
+                Mock Get-PnPFileSharingLink { @{ Link = @{ WebUrl='u' } } }
+                Mock Remove-PnPFileSharingLink {}
+                Mock Get-PnPFolderSharingLink {}
+                Mock Remove-PnPFolderSharingLink {}
+                Mock Start-Transcript {}
+                Mock Stop-Transcript {}
+                Mock Write-STTelemetryEvent {} -ModuleName SharePointTools
+                Invoke-SharingLinkCleanup -SiteName 'A' -SiteUrl 'https://c' -FolderName 'f' -NoTelemetry -Confirm:$false
+                Assert-MockCalled Write-STTelemetryEvent -ModuleName SharePointTools -Times 0
             }
         }
     }

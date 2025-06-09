@@ -13,7 +13,7 @@ Removes archive items from the YF site.
 ## SYNTAX
 
 ```
-Invoke-YFArchiveCleanup [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Invoke-YFArchiveCleanup [-NoTelemetry] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,21 @@ PS C:\> Invoke-YFArchiveCleanup
 Demonstrates typical usage of Invoke-YFArchiveCleanup.
 
 ## PARAMETERS
+
+### -NoTelemetry
+Suppress telemetry events for this run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -ProgressAction
 Specifies how progress is displayed.

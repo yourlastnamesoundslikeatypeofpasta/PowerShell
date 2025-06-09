@@ -116,7 +116,8 @@ function Connect-SPToolsOnline {
         [Parameter(Mandatory, ParameterSetName='Secret')]
         [string]$ClientSecret,
         [Parameter(ParameterSetName='Device')][switch]$DeviceLogin,
-        [int]$RetryCount = 3
+        [int]$RetryCount = 3,
+        [switch]$NoTelemetry
     )
 
     if (-not $DeviceLogin -and (-not $ClientId -or -not $TenantId)) {
@@ -154,7 +155,9 @@ function Connect-SPToolsOnline {
         }
     }
     $sw.Stop()
-    Send-SPToolsTelemetryEvent -Command 'Connect-SPToolsOnline' -Result $result -Duration $sw.Elapsed
+    if (-not $NoTelemetry) {
+        Send-SPToolsTelemetryEvent -Command 'Connect-SPToolsOnline' -Result $result -Duration $sw.Elapsed
+    }
 }
 
 function Invoke-SPPnPCommand {
@@ -366,9 +369,9 @@ function Invoke-YFArchiveCleanup {
         Invoke-YFArchiveCleanup
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
-    param()
+    param([switch]$NoTelemetry)
 
-    Invoke-ArchiveCleanup -SiteName 'YF'
+    Invoke-ArchiveCleanup -SiteName 'YF' -NoTelemetry:$NoTelemetry
 }
 
 function Invoke-IBCCentralFilesArchiveCleanup {
@@ -379,9 +382,9 @@ function Invoke-IBCCentralFilesArchiveCleanup {
         Invoke-IBCCentralFilesArchiveCleanup
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
-    param()
+    param([switch]$NoTelemetry)
 
-    Invoke-ArchiveCleanup -SiteName 'IBCCentralFiles'
+    Invoke-ArchiveCleanup -SiteName 'IBCCentralFiles' -NoTelemetry:$NoTelemetry
 }
 
 function Invoke-MexCentralFilesArchiveCleanup {
@@ -392,9 +395,9 @@ function Invoke-MexCentralFilesArchiveCleanup {
         Invoke-MexCentralFilesArchiveCleanup
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
-    param()
+    param([switch]$NoTelemetry)
 
-    Invoke-ArchiveCleanup -SiteName 'MexCentralFiles'
+    Invoke-ArchiveCleanup -SiteName 'MexCentralFiles' -NoTelemetry:$NoTelemetry
 }
 
 <#
@@ -423,12 +426,13 @@ function Invoke-ArchiveCleanup {
         [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
+        [switch]$NoTelemetry
     )
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
-    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath -NoTelemetry:$NoTelemetry
 
     if (-not $TranscriptPath) {
         $TranscriptPath = "$env:USERPROFILE/SHAREPOINT_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
@@ -509,9 +513,9 @@ function Invoke-YFFileVersionCleanup {
         Invoke-YFFileVersionCleanup
     #>
     [CmdletBinding()]
-    param()
+    param([switch]$NoTelemetry)
 
-    Invoke-FileVersionCleanup -SiteName 'YF'
+    Invoke-FileVersionCleanup -SiteName 'YF' -NoTelemetry:$NoTelemetry
 }
 
 function Invoke-IBCCentralFilesFileVersionCleanup {
@@ -522,9 +526,9 @@ function Invoke-IBCCentralFilesFileVersionCleanup {
         Invoke-IBCCentralFilesFileVersionCleanup
     #>
     [CmdletBinding()]
-    param()
+    param([switch]$NoTelemetry)
 
-    Invoke-FileVersionCleanup -SiteName 'IBCCentralFiles'
+    Invoke-FileVersionCleanup -SiteName 'IBCCentralFiles' -NoTelemetry:$NoTelemetry
 }
 
 function Invoke-MexCentralFilesFileVersionCleanup {
@@ -535,9 +539,9 @@ function Invoke-MexCentralFilesFileVersionCleanup {
         Invoke-MexCentralFilesFileVersionCleanup
     #>
     [CmdletBinding()]
-    param()
+    param([switch]$NoTelemetry)
 
-    Invoke-FileVersionCleanup -SiteName 'MexCentralFiles'
+    Invoke-FileVersionCleanup -SiteName 'MexCentralFiles' -NoTelemetry:$NoTelemetry
 }
 
 <#
@@ -561,12 +565,13 @@ function Invoke-FileVersionCleanup {
         [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
-        [string]$ReportPath = 'exportedReport.csv'
+        [string]$ReportPath = 'exportedReport.csv',
+        [switch]$NoTelemetry
     )
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
-    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath -NoTelemetry:$NoTelemetry
 
     $rootFolder = Invoke-SPPnPCommand { Get-PnPFolder -ListRootFolder $LibraryName } 'Failed to get root folder'
     $subFolders = Invoke-SPPnPCommand { $rootFolder | Get-PnPFolderInFolder } 'Failed to enumerate folders'
@@ -618,12 +623,13 @@ function Invoke-SharingLinkCleanup {
         [Alias('TenantID','tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
-        [string]$TranscriptPath
+        [string]$TranscriptPath,
+        [switch]$NoTelemetry
     )
 
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
 
-    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
+    Connect-SPToolsOnline -Url $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath -NoTelemetry:$NoTelemetry
 
     if (-not $TranscriptPath) {
         $TranscriptPath = "$env:USERPROFILE/SHAREPOINT_LINK_CLEANUP_${SiteName}_$(Get-Date -Format yyyyMMdd_HHmmss).log"
@@ -686,9 +692,9 @@ function Invoke-YFSharingLinkCleanup {
         Invoke-YFSharingLinkCleanup
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
-    param()
+    param([switch]$NoTelemetry)
 
-    Invoke-SharingLinkCleanup -SiteName 'YF'
+    Invoke-SharingLinkCleanup -SiteName 'YF' -NoTelemetry:$NoTelemetry
 }
 
 function Invoke-IBCCentralFilesSharingLinkCleanup {
@@ -699,9 +705,9 @@ function Invoke-IBCCentralFilesSharingLinkCleanup {
         Invoke-IBCCentralFilesSharingLinkCleanup
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
-    param()
+    param([switch]$NoTelemetry)
 
-    Invoke-SharingLinkCleanup -SiteName 'IBCCentralFiles'
+    Invoke-SharingLinkCleanup -SiteName 'IBCCentralFiles' -NoTelemetry:$NoTelemetry
 }
 
 function Invoke-MexCentralFilesSharingLinkCleanup {
@@ -712,9 +718,9 @@ function Invoke-MexCentralFilesSharingLinkCleanup {
         Invoke-MexCentralFilesSharingLinkCleanup
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
-    param()
+    param([switch]$NoTelemetry)
 
-    Invoke-SharingLinkCleanup -SiteName 'MexCentralFiles'
+    Invoke-SharingLinkCleanup -SiteName 'MexCentralFiles' -NoTelemetry:$NoTelemetry
 }
 
 

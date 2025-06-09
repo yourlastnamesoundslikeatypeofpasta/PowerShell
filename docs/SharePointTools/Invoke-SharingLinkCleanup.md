@@ -15,7 +15,7 @@ Removes sharing links from a SharePoint library.
 ```
 Invoke-SharingLinkCleanup [-SiteName] <String> [[-SiteUrl] <String>] [[-LibraryName] <String>]
  [[-FolderName] <String>] [[-ClientId] <String>] [[-TenantId] <String>] [[-CertPath] <String>]
- [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [[-TranscriptPath] <String>] [-NoTelemetry] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -147,6 +147,21 @@ Aliases:
 
 Required: False
 Position: 8
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NoTelemetry
+Suppress telemetry events for this run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
