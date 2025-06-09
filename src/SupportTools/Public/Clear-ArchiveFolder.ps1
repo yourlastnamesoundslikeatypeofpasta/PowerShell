@@ -2,9 +2,42 @@ function Clear-ArchiveFolder {
     <#
     .SYNOPSIS
         Removes files and folders from the archived SharePoint directory.
+
     .DESCRIPTION
-        This function wraps the CleanupArchive.ps1 script in the scripts folder.
-        All parameters are forwarded to that script.
+        Wraps the `CleanupArchive.ps1` script located in the `scripts` folder.
+        All parameters are forwarded allowing you to control the cleanup
+        behaviour.
+
+    .PARAMETER Arguments
+        Additional parameters passed directly to `CleanupArchive.ps1`.
+
+    .PARAMETER TranscriptPath
+        Optional path for a transcript log of the operation.
+
+    .PARAMETER Simulate
+        Perform a dry run without deleting any items.
+
+    .PARAMETER Explain
+        Display the help for `CleanupArchive.ps1` instead of executing it.
+
+    .PARAMETER Logger
+        Optional instance of the Logging module used for output.
+
+    .PARAMETER TelemetryClient
+        Optional telemetry client used to record metrics.
+
+    .PARAMETER Config
+        Optional configuration object injected into the script.
+
+    .EXAMPLE
+        Clear-ArchiveFolder -Arguments @('-SiteUrl','https://contoso.sharepoint.com/sites/archive') -Simulate
+
+        Runs the cleanup script against the specified SharePoint site in dry
+        run mode.
+
+    .NOTES
+        Requires SharePoint administrator permissions and the PnP.PowerShell
+        module.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(

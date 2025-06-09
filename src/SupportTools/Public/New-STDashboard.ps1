@@ -18,6 +18,12 @@ function New-STDashboard {
         Number of log file lines to display. Defaults to 20.
     .EXAMPLE
         New-STDashboard -LogPath log.txt -TelemetryLogPath telemetry.jsonl
+
+        Creates a dashboard from the specified log and telemetry files.
+
+    .NOTES
+        The dashboard is written with UTF8 encoding and overwrites the output
+        file if it already exists.
     #>
     [CmdletBinding()]
     param(

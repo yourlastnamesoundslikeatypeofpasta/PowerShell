@@ -2,8 +2,38 @@ function New-SPUsageReport {
     <#
     .SYNOPSIS
         Generate library usage CSV reports and create Service Desk tickets when limits are exceeded.
+
     .DESCRIPTION
-        This is a wrapper for the Generate-SPUsageReport.ps1 script in the scripts folder.
+        Wraps the `Generate-SPUsageReport.ps1` script in the `scripts` folder and forwards all parameters.
+
+    .PARAMETER Arguments
+        Additional parameters forwarded to `Generate-SPUsageReport.ps1`.
+
+    .PARAMETER TranscriptPath
+        Optional path for a transcript log.
+
+    .PARAMETER Simulate
+        Perform a dry run without taking action.
+
+    .PARAMETER Explain
+        Display the help for `Generate-SPUsageReport.ps1`.
+
+    .PARAMETER Logger
+        Optional instance of the Logging module used for output.
+
+    .PARAMETER TelemetryClient
+        Optional telemetry client used to record metrics.
+
+    .PARAMETER Config
+        Optional configuration object injected into the script.
+
+    .EXAMPLE
+        New-SPUsageReport -Arguments @('-SiteUrl','https://contoso.sharepoint.com/sites/files')
+
+        Generates a usage report for the specified site collection.
+
+    .NOTES
+        Requires the PnP.PowerShell module and Service Desk API access when ticket creation is enabled.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(

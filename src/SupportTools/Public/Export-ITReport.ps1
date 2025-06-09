@@ -19,6 +19,13 @@ function Export-ITReport {
         Optional path to a transcript log file.
     .EXAMPLE
         Get-FailedLogin | Export-ITReport -Format CSV -OutputPath report.csv
+        
+        Exports the failed login objects as a CSV report saved to
+        `report.csv`.
+
+    .NOTES
+        The output is written using `UTF8` encoding. Existing files are
+        overwritten.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(

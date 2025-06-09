@@ -2,9 +2,39 @@ function Get-UniquePermission {
     <#
     .SYNOPSIS
         Returns items with unique permissions in a SharePoint site.
+
     .DESCRIPTION
-        Calls the Get-UniquePermissions.ps1 script contained in the scripts
-        directory and outputs its results.
+        Wraps the `Get-UniquePermissions.ps1` script located in the `scripts`
+        directory and outputs the results.
+
+    .PARAMETER Arguments
+        Additional parameters forwarded to `Get-UniquePermissions.ps1`.
+
+    .PARAMETER TranscriptPath
+        Optional path for a transcript log.
+
+    .PARAMETER Simulate
+        Perform a dry run without making changes.
+
+    .PARAMETER Explain
+        Display the help for `Get-UniquePermissions.ps1`.
+
+    .PARAMETER Logger
+        Optional instance of the Logging module used for output.
+
+    .PARAMETER TelemetryClient
+        Optional telemetry client used to record metrics.
+
+    .PARAMETER Config
+        Optional configuration object injected into the script.
+
+    .EXAMPLE
+        Get-UniquePermission -Arguments @('-SiteUrl','https://contoso.sharepoint.com/sites/team')
+
+        Lists items with broken inheritance in the specified site collection.
+
+    .NOTES
+        Requires the PnP.PowerShell module and SharePoint administrative rights.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(

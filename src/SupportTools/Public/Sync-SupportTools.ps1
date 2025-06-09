@@ -9,6 +9,23 @@ function Sync-SupportTools {
         URL of the git repository to sync.
     .PARAMETER InstallPath
         Directory to clone or update the repository.
+    .PARAMETER TranscriptPath
+        Optional path for a transcript log of the synchronization.
+    .PARAMETER Explain
+        Display the full help for this command.
+    .PARAMETER Logger
+        Optional instance of the Logging module used for output.
+    .PARAMETER TelemetryClient
+        Optional telemetry client used to record metrics.
+    .PARAMETER Config
+        Optional configuration object injected into the script.
+    .EXAMPLE
+        Sync-SupportTools -RepositoryUrl https://git.example.com/SupportTools.git -InstallPath ~/SupportTools
+
+        Clones the repository if needed and imports the module manifests from the `src` directory.
+
+    .NOTES
+        Git must be installed and available on the system PATH.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
