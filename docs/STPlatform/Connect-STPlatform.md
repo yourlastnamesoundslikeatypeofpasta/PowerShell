@@ -62,4 +62,7 @@ the list of imported modules and the outcome of connection attempts. These
 values appear in the Details field of the `Connect-STPlatform` metric as
 `Modules` and `Connections`.
 
+Use **Connect-EntraID** when you only need to authenticate to Microsoft Graph.
+
 ## RELATED LINKS
+[Connect-EntraID](Connect-EntraID)

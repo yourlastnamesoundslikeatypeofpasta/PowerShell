@@ -10,6 +10,14 @@ Describe 'STPlatform Module' {
         (Get-Command -Module STPlatform).Name | Should -Contain 'Connect-STPlatform'
     }
 
+    Safe-It 'exports Connect-EntraID' {
+        (Get-Command -Module STPlatform).Name | Should -Contain 'Connect-EntraID'
+    }
+
+    Safe-It 'Connect-EntraID includes Vault parameter' {
+        (Get-Command Connect-EntraID).Parameters.Keys | Should -Contain 'Vault'
+    }
+
     Safe-It 'includes Vault parameter' {
         (Get-Command Connect-STPlatform).Parameters.Keys | Should -Contain 'Vault'
     }
@@ -217,6 +225,40 @@ Describe 'STPlatform Module' {
                     Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
                     Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
                 }
+            }
+        }
+    }
+
+    Context 'Connect-EntraID' {
+        Safe-It 'connects using environment variables' {
+            InModuleScope STPlatform {
+                Mock Connect-MgGraph {}
+                $env:GRAPH_TENANT_ID = 'tidEnv'
+                $env:GRAPH_CLIENT_ID = 'cidEnv'
+                $env:GRAPH_CLIENT_SECRET = 'secEnv'
+                Connect-EntraID -Scopes 'User.Read'
+                Assert-MockCalled Connect-MgGraph -Times 1 -ParameterFilter { $TenantId -eq 'tidEnv' -and $ClientId -eq 'cidEnv' -and $ClientSecret -eq 'secEnv' -and $Scopes -eq 'User.Read' }
+                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+            }
+        }
+
+        Safe-It 'loads GRAPH variables from vault' {
+            InModuleScope STPlatform {
+                Mock Connect-MgGraph {}
+                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                Mock Get-Secret {
+                    switch ($Name) {
+                        'GRAPH_TENANT_ID'     { 'tid' }
+                        'GRAPH_CLIENT_ID'     { 'cid' }
+                        'GRAPH_CLIENT_SECRET' { 'sec' }
+                    }
+                }
+                Connect-EntraID -Vault GraphVault
+                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') {
+                    Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n -and $Vault -eq 'GraphVault' } -Times 1
+                }
+                Assert-MockCalled Connect-MgGraph -Times 1 -ParameterFilter { $TenantId -eq 'tid' -and $ClientId -eq 'cid' -and $ClientSecret -eq 'sec' }
+                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
             }
         }
     }

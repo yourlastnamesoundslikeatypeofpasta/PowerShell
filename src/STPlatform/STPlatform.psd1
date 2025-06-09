@@ -5,5 +5,5 @@
     Author = 'Contoso'
     Description = 'Platform initialization utilities.'
     RequiredModules = @('Logging','Telemetry')
-    FunctionsToExport = @('Connect-STPlatform')
+    FunctionsToExport = @('Connect-STPlatform','Connect-EntraID')
 }
