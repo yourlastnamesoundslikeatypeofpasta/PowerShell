@@ -67,19 +67,19 @@ function Set-SharedMailboxAutoReply {
             return
         }
 
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-        $sw = [System.Diagnostics.Stopwatch]::StartNew()
-        $result = 'Success'
-        Write-STStatus -Message 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
-        if ($Simulate) {
-            Write-STStatus -Message 'Simulation mode active - auto-reply settings will not be changed.' -Level WARN -Log
-            $mock = [pscustomobject]@{
-                MailboxIdentity = $MailboxIdentity
-                Simulated       = $true
-                Timestamp       = Get-Date
+        Use-STTranscript -Path $TranscriptPath -ScriptBlock {
+            $sw = [System.Diagnostics.Stopwatch]::StartNew()
+            $result = 'Success'
+            Write-STStatus -Message 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log
+            if ($Simulate) {
+                Write-STStatus -Message 'Simulation mode active - auto-reply settings will not be changed.' -Level WARN -Log
+                $mock = [pscustomobject]@{
+                    MailboxIdentity = $MailboxIdentity
+                    Simulated       = $true
+                    Timestamp       = Get-Date
+                }
+                return $mock
             }
-            return $mock
-        }
 
     if ([string]::IsNullOrWhiteSpace($ExternalMessage)) {
         $ExternalMessage = $InternalMessage
@@ -121,15 +121,15 @@ function Set-SharedMailboxAutoReply {
 
         Disconnect-ExchangeOnline -Confirm:$false
 
-        Write-STStatus -Message 'Auto-reply configuration complete' -Level FINAL -Log
-        return $result
+            Write-STStatus -Message 'Auto-reply configuration complete' -Level FINAL -Log
+            return $result
+        }
     } catch {
         Write-STStatus "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Log
         Write-STLog -Message "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'Exchange'
     } finally {
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
         Disconnect-ExchangeOnline -Confirm:$false | Out-Null
         $sw.Stop()
         Send-STMetric -MetricName 'Set-SharedMailboxAutoReply' -Category 'Remediation' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }

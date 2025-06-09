@@ -44,16 +44,13 @@ if ($CreateTicket) {
     Import-Module (Join-Path $moduleRoot 'ServiceDeskTools/ServiceDeskTools.psd1') -Force -ErrorAction SilentlyContinue
 }
 
-if ($TranscriptPath) {
-    Start-Transcript -Path $TranscriptPath -Append | Out-Null
-}
+Use-STTranscript -Path $TranscriptPath -ScriptBlock {
+    $scriptName = Split-Path -Leaf $PSCommandPath
+    $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+    $result = 'Success'
+    $alerts = @()
 
-$scriptName = Split-Path -Leaf $PSCommandPath
-$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-$result = 'Success'
-$alerts = @()
-
-try {
+    try {
     Write-STDivider -Title 'PERFORMANCE AUDIT' -Style heavy
 
     # CPU usage
@@ -130,6 +127,6 @@ try {
     $opId = [guid]::NewGuid().ToString()
     Write-STTelemetryEvent -ScriptName $scriptName -Result $result -Duration $stopwatch.Elapsed -Category 'Audit' -OperationId $opId
     Send-STMetric -MetricName 'PerformanceAuditDuration' -Category 'Audit' -Value $stopwatch.Elapsed.TotalSeconds -Details @{ Result = $result; OperationId = $opId }
-    if ($TranscriptPath) { Stop-Transcript | Out-Null }
     Write-STClosing
+}
 }

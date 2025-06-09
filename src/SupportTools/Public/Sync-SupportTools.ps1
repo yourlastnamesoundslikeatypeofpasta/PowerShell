@@ -32,7 +32,7 @@ function Sync-SupportTools {
     )
 
     try {
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        Use-STTranscript -Path $TranscriptPath -ScriptBlock {
         if ($Logger) {
             Import-Module $Logger -Force -ErrorAction SilentlyContinue
         } else {
@@ -73,13 +73,13 @@ function Sync-SupportTools {
             InstallPath   = $InstallPath
             Result        = 'Success'
         }
+        }
     } catch {
         Write-STStatus "Sync-SupportTools failed: $_" -Level ERROR -Log
         Write-STLog -Message "Sync-SupportTools failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
         return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     } finally {
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
         $sw.Stop()
         Send-STMetric -MetricName 'Sync-SupportTools' -Category 'Deployment' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
     }

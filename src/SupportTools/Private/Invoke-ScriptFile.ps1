@@ -72,30 +72,27 @@ function Invoke-ScriptFile {
         return $mock
     }
 
-    if ($TranscriptPath) {
-        Start-Transcript -Path $TranscriptPath -Append | Out-Null
-    }
-
-    $sw = [System.Diagnostics.Stopwatch]::StartNew()
-    $result = 'Success'
-    $oldPref = $ErrorActionPreference
-    $ErrorActionPreference = 'Stop'
-    try {
-        & $Path @Args
-    } catch {
-        Write-Error "Execution of '$Name' failed: $_"
-        Write-STLog -Message "Execution of '$Name' failed: $_" -Level 'ERROR' -Structured -Metadata @{ version = $moduleVersion; script = $Name }
-        $result = 'Failure'
-        throw
-    } finally {
-        $ErrorActionPreference = $oldPref
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
-        $sw.Stop()
-        $duration = $sw.Elapsed
-        Write-STLog -Metric 'Duration' -Value $duration.TotalSeconds
-        $opId = [guid]::NewGuid().ToString()
-        Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $duration -Category 'General' -OperationId $opId
-        Send-STMetric -MetricName 'ExecutionSeconds' -Category 'General' -Value $duration.TotalSeconds -Details @{ Script = $Name; Result = $result; OperationId = $opId }
+    Use-STTranscript -Path $TranscriptPath -ScriptBlock {
+        $sw = [System.Diagnostics.Stopwatch]::StartNew()
+        $result = 'Success'
+        $oldPref = $ErrorActionPreference
+        $ErrorActionPreference = 'Stop'
+        try {
+            & $Path @Args
+        } catch {
+            Write-Error "Execution of '$Name' failed: $_"
+            Write-STLog -Message "Execution of '$Name' failed: $_" -Level 'ERROR' -Structured -Metadata @{ version = $moduleVersion; script = $Name }
+            $result = 'Failure'
+            throw
+        } finally {
+            $ErrorActionPreference = $oldPref
+            $sw.Stop()
+            $duration = $sw.Elapsed
+            Write-STLog -Metric 'Duration' -Value $duration.TotalSeconds
+            $opId = [guid]::NewGuid().ToString()
+            Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $duration -Category 'General' -OperationId $opId
+            Send-STMetric -MetricName 'ExecutionSeconds' -Category 'General' -Value $duration.TotalSeconds -Details @{ Script = $Name; Result = $result; OperationId = $opId }
+        }
     }
     Write-STStatus "COMPLETED $Name" -Level FINAL -Log
 }

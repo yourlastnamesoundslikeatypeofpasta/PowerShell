@@ -161,7 +161,23 @@ function Invoke-STRequest {
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest'
+function Use-STTranscript {
+    [CmdletBinding()]
+    param(
+        [string]$Path,
+        [Parameter(Mandatory)]
+        [scriptblock]$ScriptBlock
+    )
+
+    if ($Path) { Start-Transcript -Path $Path -Append | Out-Null }
+    try {
+        & $ScriptBlock
+    } finally {
+        if ($Path) { Stop-Transcript | Out-Null }
+    }
+}
+
+Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest','Use-STTranscript'
 
 function Show-STCoreBanner {
     <#

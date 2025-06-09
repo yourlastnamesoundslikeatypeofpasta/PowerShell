@@ -33,13 +33,12 @@ function Export-ITReport {
     begin {
         $items = @()
         $osBuild = (Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber)
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     }
     process {
         $items += ($Data | Add-Member -NotePropertyName OsBuild -NotePropertyValue $osBuild -PassThru)
     }
     end {
-        try {
+        Use-STTranscript -Path $TranscriptPath -ScriptBlock {
             Assert-ParameterNotNull $Format 'Format'
             if (-not $OutputPath) {
                 $ext = switch ($Format) {
@@ -65,8 +64,6 @@ function Export-ITReport {
                 OutputPath = $OutputPath
                 Format     = $Format
             }
-        } finally {
-            if ($TranscriptPath) { Stop-Transcript | Out-Null }
         }
     }
 }

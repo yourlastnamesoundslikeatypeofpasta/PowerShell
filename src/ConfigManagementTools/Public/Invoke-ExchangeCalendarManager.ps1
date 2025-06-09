@@ -45,16 +45,16 @@ function Invoke-ExchangeCalendarManager {
             return
         }
 
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-        Write-STStatus -Message 'ExchangeCalendarManager launched' -Level SUCCESS -Log
-        if ($Simulate) {
-            Write-STStatus -Message 'Simulation mode active - no Exchange operations will occur.' -Level WARN -Log
-            $mock = [pscustomobject]@{
-                Simulated = $true
-                Timestamp = Get-Date
+        Use-STTranscript -Path $TranscriptPath -ScriptBlock {
+            Write-STStatus -Message 'ExchangeCalendarManager launched' -Level SUCCESS -Log
+            if ($Simulate) {
+                Write-STStatus -Message 'Simulation mode active - no Exchange operations will occur.' -Level WARN -Log
+                $mock = [pscustomobject]@{
+                    Simulated = $true
+                    Timestamp = Get-Date
+                }
+                return $mock
             }
-            return $mock
-        }
 
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         throw 'This function requires PowerShell 7 or higher.'
@@ -119,14 +119,14 @@ function Invoke-ExchangeCalendarManager {
         }
     }
 
-        Write-STStatus -Message 'ExchangeCalendarManager finished' -Level FINAL -Log
+            Write-STStatus -Message 'ExchangeCalendarManager finished' -Level FINAL -Log
+        }
     } catch {
         Write-STStatus "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR -Log
         Write-STLog -Message "Invoke-ExchangeCalendarManager failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'Exchange'
     } finally {
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
         Disconnect-ExchangeOnline -Confirm:$false | Out-Null
         $sw.Stop()
         Send-STMetric -MetricName 'Invoke-ExchangeCalendarManager' -Category 'Remediation' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }

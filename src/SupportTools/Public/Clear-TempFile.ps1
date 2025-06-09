@@ -13,9 +13,7 @@ function Clear-TempFile {
         [string]$TranscriptPath
     )
 
-    try {
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-
+    Use-STTranscript -Path $TranscriptPath -ScriptBlock {
         $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '../../..')
         Write-STStatus -Message 'Cleaning temporary files...' -Level INFO
         $tmpFiles  = Get-ChildItem -Path $repoRoot -Recurse -Include '*.tmp' -File -ErrorAction SilentlyContinue
@@ -27,7 +25,5 @@ function Clear-TempFile {
             RemovedTmpFileCount = $tmpFiles.Count
             RemovedLogFileCount = $logFiles.Count
         }
-    } finally {
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
 }

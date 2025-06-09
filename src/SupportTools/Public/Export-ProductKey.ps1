@@ -18,9 +18,7 @@ function Export-ProductKey {
         [string]$TranscriptPath
     )
 
-    try {
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-
+    Use-STTranscript -Path $TranscriptPath -ScriptBlock {
         $key = (Get-CimInstance -ClassName SoftwareLicensingService | Select-Object -ExpandProperty OA3xOriginalProductKey)
         if (-not $key) {
             Write-STStatus -Message 'Product key not found.' -Level WARN
@@ -33,7 +31,5 @@ function Export-ProductKey {
             ProductKey = $key
             OutputPath = $OutputPath
         }
-    } finally {
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
 }

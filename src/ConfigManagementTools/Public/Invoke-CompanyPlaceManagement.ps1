@@ -80,18 +80,18 @@ function Invoke-CompanyPlaceManagement {
             return
         }
 
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-        Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
-        if ($Simulate) {
-            Write-STStatus -Message 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log
-            $mock = [pscustomobject]@{
-                Action      = $Action
-                DisplayName = $DisplayName
-                Simulated   = $true
-                Timestamp   = Get-Date
+        Use-STTranscript -Path $TranscriptPath -ScriptBlock {
+            Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
+            if ($Simulate) {
+                Write-STStatus -Message 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log
+                $mock = [pscustomobject]@{
+                    Action      = $Action
+                    DisplayName = $DisplayName
+                    Simulated   = $true
+                    Timestamp   = Get-Date
+                }
+                return $mock
             }
-            return $mock
-        }
         if (-not (Get-Command Get-PlaceV3 -ErrorAction SilentlyContinue)) {
             try {
                 Import-Module MicrosoftPlaces -ErrorAction Stop
@@ -148,14 +148,14 @@ function Invoke-CompanyPlaceManagement {
             }
         }
 
-        Write-STStatus -Message 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
+            Write-STStatus -Message 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
+        }
     } catch {
         Write-STStatus "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Log
         Write-STLog -Message "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'SharePoint'
     } finally {
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
         $sw.Stop()
         Send-STMetric -MetricName 'Invoke-CompanyPlaceManagement' -Category 'Deployment' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }
     }

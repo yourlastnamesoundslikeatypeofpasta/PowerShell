@@ -13,20 +13,18 @@ function Start-Countdown {
         [string]$TranscriptPath
     )
 
-    try {
-        if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
-
-        foreach ($num in 10..1) {
-            Write-STStatus $num -Level INFO
-            Start-Sleep -Seconds 1
+    Use-STTranscript -Path $TranscriptPath -ScriptBlock {
+        try {
+            foreach ($num in 10..1) {
+                Write-STStatus $num -Level INFO
+                Start-Sleep -Seconds 1
+            }
+            return [pscustomobject]@{
+                CountdownFrom = 10
+                Completed     = $true
+            }
+        } catch {
+            return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
         }
-        return [pscustomobject]@{
-            CountdownFrom = 10
-            Completed     = $true
-        }
-    } catch {
-        return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
-    } finally {
-        if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
 }
