@@ -201,7 +201,7 @@ Describe 'ServiceDeskTools Module' {
                 (Get-Command Invoke-SDRequest).Parameters.Keys | Should -Contain 'Vault'
             }
         }
-        It 'loads token from vault when variable missing' {
+        Safe-It 'loads token from vault when variable missing' {
             InModuleScope ServiceDeskTools {
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
                 Mock Get-Secret { 'fromvault' }
@@ -213,7 +213,7 @@ Describe 'ServiceDeskTools Module' {
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
             }
         }
-        It 'passes Vault to Get-Secret when specified' {
+        Safe-It 'passes Vault to Get-Secret when specified' {
             InModuleScope ServiceDeskTools {
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
                 Mock Get-Secret { 'vaultvalue' }
@@ -230,7 +230,7 @@ Describe 'ServiceDeskTools Module' {
                 { Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json' } | Should -Throw
             }
         }
-        It 'throws an ErrorRecord when token cleared and vault missing' {
+        Safe-It 'throws an ErrorRecord when token cleared and vault missing' {
             InModuleScope ServiceDeskTools {
                 $env:SD_API_TOKEN = 't'
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
@@ -303,7 +303,7 @@ Describe 'ServiceDeskTools Module' {
             }
         }
 
-        It 'uses retry helper for requests' {
+        Safe-It 'uses retry helper for requests' {
             InModuleScope ServiceDeskTools {
                 $env:SD_API_TOKEN = 't'
                 Mock Write-STLog {} -ModuleName ServiceDeskTools
