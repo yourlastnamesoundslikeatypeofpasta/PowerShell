@@ -55,6 +55,7 @@ function Connect-STPlatform {
             'OnPrem' { @('ActiveDirectory','ExchangePowerShell') }
         }
         $connectionResults = @{}
+        $moduleResults     = @{}
         foreach ($m in $modules) {
             if (-not (Get-Module -ListAvailable -Name $m)) {
                 if ($InstallMissing) {
@@ -65,6 +66,14 @@ function Connect-STPlatform {
                 }
             }
             Import-Module $m -Force -ErrorAction SilentlyContinue
+            if ($?) {
+                $moduleResults[$m] = 'Success'
+            } else {
+                $moduleResults[$m] = 'Failure'
+                if (-not $InstallMissing) {
+                    Write-STStatus "Failed to import $m" -Level ERROR -Log
+                }
+            }
         }
 
         switch ($Mode) {
@@ -121,6 +130,6 @@ function Connect-STPlatform {
         throw
     } finally {
         $sw.Stop()
-        Send-STMetric -MetricName 'Connect-STPlatform' -Category 'Setup' -Value $sw.Elapsed.TotalSeconds -Details @{ Mode = $Mode; Result = $result; Modules = $modules; Connections = $connectionResults }
+        Send-STMetric -MetricName 'Connect-STPlatform' -Category 'Setup' -Value $sw.Elapsed.TotalSeconds -Details @{ Mode = $Mode; Result = $result; Modules = $modules; Connections = $connectionResults; ModuleResults = $moduleResults }
     }
 }
