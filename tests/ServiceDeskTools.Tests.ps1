@@ -175,7 +175,9 @@ Describe 'ServiceDeskTools Module' {
         It 'throws when SD_API_TOKEN is missing' {
             InModuleScope ServiceDeskTools {
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Mock Get-STSecret { $null }
                 { Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json' } | Should -Throw
+                Assert-MockCalled Get-STSecret -ParameterFilter { $Name -eq 'SD_API_TOKEN' -and $AsPlainText } -Times 1
             }
         }
         It 'uses default base URI when SD_BASE_URI not set' {

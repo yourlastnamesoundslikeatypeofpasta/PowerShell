@@ -16,9 +16,9 @@ Describe 'STPlatform Module' {
     It 'loads secrets when variables missing' {
         InModuleScope STPlatform {
             Remove-Item env:SPTOOLS_CLIENT_ID -ErrorAction SilentlyContinue
-            Mock Get-Secret { 'fromvault' }
+            Mock Get-STSecret { 'fromvault' }
             Connect-STPlatform -Mode Cloud -Vault 'Test'
-            Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq 'SPTOOLS_CLIENT_ID' -and $Vault -eq 'Test' } -Times 1
+            Assert-MockCalled Get-STSecret -ParameterFilter { $Name -eq 'SPTOOLS_CLIENT_ID' -and $Vault -eq 'Test' -and $AsPlainText } -Times 1
             $env:SPTOOLS_CLIENT_ID | Should -Be 'fromvault'
             Remove-Item env:SPTOOLS_CLIENT_ID -ErrorAction SilentlyContinue
         }
@@ -29,7 +29,7 @@ Describe 'STPlatform Module' {
             $names = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
             foreach ($n in $names) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
 
-            Mock Get-Secret {
+            Mock Get-STSecret {
                 switch ($Name) {
                     'SPTOOLS_CLIENT_ID'   { 'cid' }
                     'SPTOOLS_TENANT_ID'  { 'tenant' }
@@ -42,7 +42,7 @@ Describe 'STPlatform Module' {
             Connect-STPlatform -Mode Cloud -Vault TestVault
 
             foreach ($n in $names) {
-                Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n -and $Vault -eq 'TestVault' } -Times 1
+                Assert-MockCalled Get-STSecret -ParameterFilter { $Name -eq $n -and $Vault -eq 'TestVault' -and $AsPlainText } -Times 1
             }
             $env:SPTOOLS_CLIENT_ID  | Should -Be 'cid'
             $env:SPTOOLS_TENANT_ID | Should -Be 'tenant'

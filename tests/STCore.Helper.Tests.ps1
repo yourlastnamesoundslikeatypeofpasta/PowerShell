@@ -141,4 +141,22 @@ Describe 'STCore Helper Functions' {
             }
         }
     }
+
+    Context 'Get-STSecret' {
+        It 'returns environment value when present' {
+            InModuleScope STCore {
+                $env:MY_SECRET = 'envval'
+                Get-STSecret -Name 'MY_SECRET' -AsPlainText | Should -Be 'envval'
+                Remove-Item env:MY_SECRET -ErrorAction SilentlyContinue
+            }
+        }
+        It 'falls back to Get-Secret when missing' {
+            InModuleScope STCore {
+                Remove-Item env:MY_SECRET -ErrorAction SilentlyContinue
+                Mock Get-Secret { 'vaultval' }
+                Get-STSecret -Name 'MY_SECRET' -Vault Test -AsPlainText | Should -Be 'vaultval'
+                Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq 'MY_SECRET' -and $Vault -eq 'Test' -and $AsPlainText } -Times 1
+            }
+        }
+    }
 }

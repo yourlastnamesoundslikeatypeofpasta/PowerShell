@@ -32,9 +32,9 @@ function Connect-STPlatform {
         $requiredVars = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
         foreach ($name in $requiredVars) {
             if (-not $env:$name) {
-                $getParams = @{ Name = $name; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
-                if ($PSBoundParameters.ContainsKey('Vault')) { $getParams.Vault = $Vault }
-                $val = Get-Secret @getParams
+                $params = @{ Name = $name; AsPlainText = $true }
+                if ($PSBoundParameters.ContainsKey('Vault')) { $params.Vault = $Vault }
+                $val = Get-STSecret @params
                 if ($val) {
                     $env:$name = $val
                     Write-STStatus "Loaded $name from vault" -Level SUB -Log

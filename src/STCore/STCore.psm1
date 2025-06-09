@@ -161,7 +161,27 @@ function Invoke-STRequest {
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest'
+function Get-STSecret {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [string]$Vault,
+        [switch]$AsPlainText
+    )
+
+    if ($env:$Name) { return $env:$Name }
+
+    if (Get-Command Get-Secret -ErrorAction SilentlyContinue) {
+        $params = @{ Name = $Name; ErrorAction = 'SilentlyContinue' }
+        if ($PSBoundParameters.ContainsKey('Vault')) { $params.Vault = $Vault }
+        if ($AsPlainText) { $params.AsPlainText = $true }
+        try { return Get-Secret @params } catch { Write-STDebug "Get-Secret failed for $Name: $_" }
+    }
+
+    return $null
+}
+
+Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest','Get-STSecret'
 
 function Show-STCoreBanner {
     <#

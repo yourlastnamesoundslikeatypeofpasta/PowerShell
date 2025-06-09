@@ -12,8 +12,8 @@ function Invoke-SDRequest {
 
     $baseUri = if ($BaseUri) { $BaseUri } else { $env:SD_BASE_URI }
     if (-not $baseUri) { $baseUri = 'https://api.samanage.com' }
-    $token = $env:SD_API_TOKEN
-    if (-not $token) { throw 'SD_API_TOKEN environment variable must be set.' }
+    $token = Get-STSecret -Name 'SD_API_TOKEN' -AsPlainText
+    if (-not $token) { throw 'SD_API_TOKEN environment variable or secret is required.' }
 
     if (-not $ChaosMode) { $ChaosMode = [bool]$env:ST_CHAOS_MODE }
     if ($ChaosMode) {
