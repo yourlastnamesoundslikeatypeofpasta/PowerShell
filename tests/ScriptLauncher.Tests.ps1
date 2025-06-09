@@ -2,9 +2,6 @@
 Describe 'ScriptLauncher' {
     Initialize-TestDrive
     Safe-It 'executes first script once and loops until quit' {
-        if (Get-PSDrive -Name TestDrive -ErrorAction SilentlyContinue) {
-            Remove-PSDrive -Name TestDrive -Force
-        }
         $tempDir = Join-Path $TestDrive 'scripts'
         New-Item -ItemType Directory -Path $tempDir | Out-Null
         try {
