@@ -46,7 +46,7 @@ function Export-ITReport {
     }
     process {
         # Add each augmented object without reallocating an array
-        $items.Add( $Data | Add-Member -NotePropertyName OsBuild -NotePropertyValue $osBuild -PassThru )
+        $items.Add( ($Data | Add-Member -NotePropertyName OsBuild -NotePropertyValue $osBuild -PassThru) )
     }
     end {
         try {

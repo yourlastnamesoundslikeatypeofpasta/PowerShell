@@ -24,10 +24,10 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -
 
 $modules = @(
     'Telemetry',
-    'IncidentResponseTools',
     'SharePointTools',
     'ServiceDeskTools',
-    'SupportTools'
+    'SupportTools',
+    'IncidentResponseTools'
 )
 
 Show-STPrompt -Command './scripts/Install-SupportTools.ps1'
