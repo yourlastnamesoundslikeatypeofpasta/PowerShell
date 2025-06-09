@@ -48,6 +48,7 @@ function Connect-STPlatform {
             'Hybrid' { @('Microsoft.Graph','ExchangeOnlineManagement','ActiveDirectory') }
             'OnPrem' { @('ActiveDirectory','ExchangePowerShell') }
         }
+        $connectionResults = @{}
         foreach ($m in $modules) {
             if (-not (Get-Module -ListAvailable -Name $m)) {
                 if ($InstallMissing) {
@@ -62,16 +63,46 @@ function Connect-STPlatform {
 
         switch ($Mode) {
             'Cloud' {
-                Connect-MgGraph -Scopes 'User.Read.All','Group.ReadWrite.All' -NoWelcome
-                Connect-ExchangeOnline -ErrorAction Stop
+                try {
+                    Connect-MgGraph -Scopes 'User.Read.All','Group.ReadWrite.All' -NoWelcome
+                    $connectionResults.Graph = 'Success'
+                } catch {
+                    $connectionResults.Graph = 'Failure'
+                    throw
+                }
+                try {
+                    Connect-ExchangeOnline -ErrorAction Stop
+                    $connectionResults.ExchangeOnline = 'Success'
+                } catch {
+                    $connectionResults.ExchangeOnline = 'Failure'
+                    throw
+                }
             }
             'Hybrid' {
-                Connect-MgGraph -Scopes 'User.Read.All','Group.ReadWrite.All' -NoWelcome
-                Connect-ExchangeOnline -ErrorAction Stop
+                try {
+                    Connect-MgGraph -Scopes 'User.Read.All','Group.ReadWrite.All' -NoWelcome
+                    $connectionResults.Graph = 'Success'
+                } catch {
+                    $connectionResults.Graph = 'Failure'
+                    throw
+                }
+                try {
+                    Connect-ExchangeOnline -ErrorAction Stop
+                    $connectionResults.ExchangeOnline = 'Success'
+                } catch {
+                    $connectionResults.ExchangeOnline = 'Failure'
+                    throw
+                }
             }
             'OnPrem' {
                 if (Get-Command Connect-ExchangeServer -ErrorAction SilentlyContinue) {
-                    Connect-ExchangeServer -Auto
+                    try {
+                        Connect-ExchangeServer -Auto
+                        $connectionResults.ExchangeOnPrem = 'Success'
+                    } catch {
+                        $connectionResults.ExchangeOnPrem = 'Failure'
+                        throw
+                    }
                 }
             }
         }
@@ -84,6 +115,6 @@ function Connect-STPlatform {
         throw
     } finally {
         $sw.Stop()
-        Send-STMetric -MetricName 'Connect-STPlatform' -Category 'Setup' -Value $sw.Elapsed.TotalSeconds -Details @{ Mode = $Mode; Result = $result }
+        Send-STMetric -MetricName 'Connect-STPlatform' -Category 'Setup' -Value $sw.Elapsed.TotalSeconds -Details @{ Mode = $Mode; Result = $result; Modules = $modules; Connections = $connectionResults }
     }
 }

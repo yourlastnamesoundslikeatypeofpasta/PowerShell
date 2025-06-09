@@ -57,5 +57,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ## NOTES
+When telemetry is enabled via `$env:ST_ENABLE_TELEMETRY = '1'`, each run records
+the list of imported modules and the outcome of connection attempts. These
+values appear in the Details field of the `Connect-STPlatform` metric as
+`Modules` and `Connections`.
 
 ## RELATED LINKS

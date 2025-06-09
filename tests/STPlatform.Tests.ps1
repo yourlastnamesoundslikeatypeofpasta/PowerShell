@@ -127,7 +127,11 @@ Describe 'STPlatform Module' {
                     Assert-MockCalled Connect-ExchangeOnline -Times 1
                     Assert-MockCalled Install-Module -Times 2
                     (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
-                    (Get-Content $log | ConvertFrom-Json).MetricName | Should -Be 'Connect-STPlatform'
+                    $json = Get-Content $log | ConvertFrom-Json
+                    $json.MetricName | Should -Be 'Connect-STPlatform'
+                    $json.Details.Modules | Should -Be @('Microsoft.Graph','ExchangeOnlineManagement')
+                    $json.Details.Connections.Graph | Should -Be 'Success'
+                    $json.Details.Connections.ExchangeOnline | Should -Be 'Success'
                 } finally {
                     Remove-Item $log -ErrorAction SilentlyContinue
                     Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
@@ -158,7 +162,11 @@ Describe 'STPlatform Module' {
                     Assert-MockCalled Connect-ExchangeOnline -Times 1
                     Assert-MockCalled Install-Module -Times 3
                     (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
-                    (Get-Content $log | ConvertFrom-Json).MetricName | Should -Be 'Connect-STPlatform'
+                    $json = Get-Content $log | ConvertFrom-Json
+                    $json.MetricName | Should -Be 'Connect-STPlatform'
+                    $json.Details.Modules | Should -Be @('Microsoft.Graph','ExchangeOnlineManagement','ActiveDirectory')
+                    $json.Details.Connections.Graph | Should -Be 'Success'
+                    $json.Details.Connections.ExchangeOnline | Should -Be 'Success'
                 } finally {
                     Remove-Item $log -ErrorAction SilentlyContinue
                     Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
@@ -188,7 +196,10 @@ Describe 'STPlatform Module' {
                     Assert-MockCalled Connect-ExchangeServer -Times 1 -ParameterFilter { $Auto }
                     Assert-MockCalled Install-Module -Times 2
                     (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
-                    (Get-Content $log | ConvertFrom-Json).MetricName | Should -Be 'Connect-STPlatform'
+                    $json = Get-Content $log | ConvertFrom-Json
+                    $json.MetricName | Should -Be 'Connect-STPlatform'
+                    $json.Details.Modules | Should -Be @('ActiveDirectory','ExchangePowerShell')
+                    $json.Details.Connections.ExchangeOnPrem | Should -Be 'Success'
                 } finally {
                     Remove-Item $log -ErrorAction SilentlyContinue
                     Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
