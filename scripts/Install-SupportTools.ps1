@@ -20,7 +20,7 @@ param(
 )
 
 # Load Logging first so status functions are available
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
+# Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
 $modules = @(
     'Telemetry',
@@ -30,17 +30,17 @@ $modules = @(
     'IncidentResponseTools'
 )
 
-Show-STPrompt -Command './scripts/Install-SupportTools.ps1'
+Write-Host '$ ./scripts/Install-SupportTools.ps1'
 
 foreach ($module in $modules) {
     $localPath = Join-Path $PSScriptRoot '..' 'src' $module "$module.psd1"
     if (Test-Path $localPath) {
-        Write-STStatus -Message "Importing $module..." -Level INFO
+        Write-Host "Importing $module..."
         Import-Module $localPath -Force -DisableNameChecking
-        Write-STStatus -Message "Imported $module from $localPath" -Level SUCCESS
+        Write-Host "Imported $module from $localPath"
     } else {
-        Write-STStatus -Message "Could not find $module in src" -Level ERROR
+        Write-Host "Could not find $module in src"
     }
 }
 
-Write-STClosing 'Module import complete'
+Write-Host 'Module import complete'
