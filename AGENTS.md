@@ -18,6 +18,14 @@ If the environment prevents running these tests, mention this in the PR using th
 - Enable telemetry only when `ST_ENABLE_TELEMETRY` is set. Summarize with `Get-STTelemetryMetrics`.
 - Chaos testing can be triggered with the `-ChaosMode` switch or by setting `ST_CHAOS_MODE=1`.
 
+## Logging & Telemetry Variables
+
+| Variable | Description |
+|----------|-------------|
+| `ST_LOG_PATH` | Custom log file location. Defaults to `~/SupportToolsLogs/supporttools.log`. See [RichLogFormat.md](docs/Logging/RichLogFormat.md) |
+| `ST_LOG_STRUCTURED` | Set to `1` to automatically write JSON events when calling `Write-STLog`. Details in [RichLogFormat.md](docs/Logging/RichLogFormat.md) |
+| `ST_ENABLE_TELEMETRY` | Set to `1` to record telemetry events. Summarize results with [Get-STTelemetryMetrics.md](docs/Telemetry/Get-STTelemetryMetrics.md) |
+
 ## Credentials
 Do not hardcode secrets. Supply credentials via environment variables as documented:
 - `SPTOOLS_CLIENT_ID`, `SPTOOLS_TENANT_ID`, `SPTOOLS_CERT_PATH`
