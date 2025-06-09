@@ -49,7 +49,7 @@ Describe 'STCore Helper Functions' {
                 try {
                     $env:ST_DEBUG = '1'
                     Write-STDebug 'msg'
-                    Remove-Item env:ST_DEBUG
+                    Remove-Item env:ST_DEBUG -ErrorAction SilentlyContinue
                     Write-STDebug 'msg'
                     Assert-MockCalled Write-STStatus -Times 1 -ParameterFilter { $Message -eq '[DEBUG] msg' }
                     Assert-MockCalled Write-STLog -Times 1 -ParameterFilter { $Message -eq '[DEBUG] msg' }

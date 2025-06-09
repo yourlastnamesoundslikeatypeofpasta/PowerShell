@@ -19,6 +19,26 @@ Describe 'Logging UI Functions' {
         }
     }
 
+    Safe-It 'uses USER and HOSTNAME when USERNAME or COMPUTERNAME unset' {
+        $oldUser = $env:USER
+        $oldHost = $env:HOSTNAME
+        $oldUname = $env:USERNAME
+        $oldCname = $env:COMPUTERNAME
+        try {
+            $env:USER = 'tester2'
+            $env:HOSTNAME = 'demo2'
+            Remove-Item env:USERNAME -ErrorAction SilentlyContinue
+            Remove-Item env:COMPUTERNAME -ErrorAction SilentlyContinue
+            { Show-STPrompt -Command './script.ps1' -Path '/tmp' } |
+                Should -Output '┌──(tester2@demo2)-[/tmp]','└─$ ./script.ps1'
+        } finally {
+            if ($null -ne $oldUser) { $env:USER = $oldUser } else { Remove-Item env:USER -ErrorAction SilentlyContinue }
+            if ($null -ne $oldHost) { $env:HOSTNAME = $oldHost } else { Remove-Item env:HOSTNAME -ErrorAction SilentlyContinue }
+            if ($null -ne $oldUname) { $env:USERNAME = $oldUname } else { Remove-Item env:USERNAME -ErrorAction SilentlyContinue }
+            if ($null -ne $oldCname) { $env:COMPUTERNAME = $oldCname } else { Remove-Item env:COMPUTERNAME -ErrorAction SilentlyContinue }
+        }
+    }
+
     Safe-It 'renders dividers for light and heavy styles' {
         function Get-ExpectedDivider($title, $style) {
             $char = if ($style -eq 'heavy') { '═' } else { '─' }
@@ -48,7 +68,8 @@ Describe 'Logging UI Functions' {
     }
 
     Safe-It 'prints closing banner with custom message' {
-        { Write-STClosing -Message 'Done' } | Should -Output '┌──[ Done ]──────────────'
+        $expected = "┌──[ Done ]" + ('─' * 14)
+        { Write-STClosing -Message 'Done' } | Should -Output $expected
     }
 
     Safe-It 'returns module name and version' {

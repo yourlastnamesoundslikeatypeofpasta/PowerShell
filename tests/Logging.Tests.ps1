@@ -23,7 +23,7 @@ Describe 'Logging Module' {
             (Get-Content $temp) | Should -Match 'env test'
         } finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
-            Remove-Item env:ST_LOG_PATH
+            Remove-Item env:ST_LOG_PATH -ErrorAction SilentlyContinue
         }
     }
 
