@@ -2,6 +2,10 @@ function Get-GraphAccessToken {
     <#
     .SYNOPSIS
         Retrieves and caches a Microsoft Graph access token.
+
+    .PARAMETER DeviceLogin
+        Authenticate interactively using a device code instead of a client
+        secret.
     #>
     [CmdletBinding()]
     param(
@@ -12,6 +16,7 @@ function Get-GraphAccessToken {
         [string]$ClientId,
         [ValidateNotNullOrEmpty()]
         [string]$ClientSecret,
+        [switch]$DeviceLogin,
         [ValidateNotNullOrEmpty()]
         [string]$CachePath = "$env:USERPROFILE/.graphToken.json"
     )
@@ -33,7 +38,7 @@ function Get-GraphAccessToken {
     }
 
     $params = @{ TenantId = $TenantId; ClientId = $ClientId; Scopes = 'https://graph.microsoft.com/.default' }
-    if ($ClientSecret) { $params.ClientSecret = $ClientSecret }
+    if ($ClientSecret -and -not $DeviceLogin) { $params.ClientSecret = $ClientSecret }
     else { $params.DeviceCode = $true }
 
     $tokenResponse = Get-MsalToken @params
