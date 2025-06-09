@@ -29,6 +29,13 @@ Describe 'ServiceDeskTools Module' {
             Get-SDTicketHistory -Id 1
             Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter { $Method -eq 'GET' -and $Path -eq '/incidents/1/audits.json' } -Times 1
         }
+        It 'Get-SDTicketHistory passes ChaosMode' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Get-SDTicketHistory -Id 1 -ChaosMode
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $ChaosMode -eq $true -and $Method -eq 'GET' -and $Path -eq '/incidents/1/audits.json'
+            } -Times 1
+        }
         It 'New-SDTicket calls Invoke-SDRequest' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
             New-SDTicket -Subject 'S' -Description 'D' -RequesterEmail 'a@b.com'
@@ -58,6 +65,15 @@ Describe 'ServiceDeskTools Module' {
                 $Body.comment.body -eq 'c'
             } -Times 1
         }
+        It 'Add-SDTicketComment passes ChaosMode' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Add-SDTicketComment -Id 5 -Comment 'c' -ChaosMode
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $ChaosMode -eq $true -and
+                $Method -eq 'POST' -and
+                $Path -eq '/incidents/5/comments.json'
+            } -Times 1
+        }
         It 'Search-SDTicket calls Invoke-SDRequest' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
             Search-SDTicket -Query 'error'
@@ -70,6 +86,13 @@ Describe 'ServiceDeskTools Module' {
             Get-ServiceDeskAsset -Id 4
             Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
                 $Method -eq 'GET' -and $Path -eq '/assets/4.json'
+            } -Times 1
+        }
+        It 'Get-ServiceDeskAsset passes ChaosMode' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskAsset -Id 4 -ChaosMode
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $ChaosMode -eq $true -and $Method -eq 'GET' -and $Path -eq '/assets/4.json'
             } -Times 1
         }
         It 'Set-SDTicketBulk calls Set-SDTicket for each id' {
