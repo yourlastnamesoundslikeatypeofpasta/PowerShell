@@ -15,7 +15,7 @@
 if (-not $script:SupportToolsLoaderLoaded) {
     $script:SupportToolsLoaderLoaded = $true
 
-    Import-Module (Join-Path $PSScriptRoot 'src/OutTools/OutTools.psd1') -Force -ErrorAction SilentlyContinue
+    Import-Module (Join-Path $PSScriptRoot 'src/OutTools/OutTools.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
     function Write-LoaderLog {
         param([string]$Message)
@@ -40,7 +40,7 @@ if (-not $script:SupportToolsLoaderLoaded) {
         try {
             $name = Split-Path $moduleFile.FullName -LeafBase
             if (-not (Get-Module -Name $name)) {
-                Import-Module $moduleFile.FullName -Force -ErrorAction Stop
+                Import-Module $moduleFile.FullName -Force -ErrorAction Stop -DisableNameChecking
                 $loadedModules += $name
                 Write-LoaderLog "Loaded module $name"
                 $bannerFunc = "Show-$name`Banner"

@@ -1,7 +1,7 @@
 $coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
 $loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
-Import-Module $coreModule -Force -ErrorAction SilentlyContinue
-Import-Module $loggingModule -Force -ErrorAction SilentlyContinue
+Import-Module $coreModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
+Import-Module $loggingModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
 $PublicDir = Join-Path $PSScriptRoot 'Public'
 Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }

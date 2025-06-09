@@ -3,7 +3,7 @@
 # Load configuration values if available
 $repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
 $coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
-Import-Module $coreModule -Force -ErrorAction SilentlyContinue
+Import-Module $coreModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
 $settingsFile = Join-Path $repoRoot 'config/SharePointToolsSettings.psd1'
 $SharePointToolsSettings = Get-STConfig -Path $settingsFile
 if (-not $SharePointToolsSettings) { $SharePointToolsSettings = @{} }
@@ -13,9 +13,9 @@ if (-not $SharePointToolsSettings.ContainsKey('CertPath')) { $SharePointToolsSet
 if (-not $SharePointToolsSettings.ContainsKey('Sites')) { $SharePointToolsSettings.Sites = @{} }
 
 $loggingModule = Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -ChildPath 'Logging/Logging.psd1'
-Import-Module $loggingModule -Force -ErrorAction SilentlyContinue
+Import-Module $loggingModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
 $telemetryModule = Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -ChildPath 'Telemetry/Telemetry.psd1'
-Import-Module $telemetryModule -Force -ErrorAction SilentlyContinue
+Import-Module $telemetryModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
 # Load additional public commands
 $publicDir = Join-Path $PSScriptRoot 'Public'

@@ -3,7 +3,7 @@ Param(
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
-Import-Module (Join-Path $root 'src/Logging/Logging.psd1') -Force
+Import-Module (Join-Path $root 'src/Logging/Logging.psd1') -Force -DisableNameChecking
 if (-not $Version) {
     $Version = (Import-PowerShellDataFile (Join-Path $root 'src/SupportTools/SupportTools.psd1')).ModuleVersion
 }

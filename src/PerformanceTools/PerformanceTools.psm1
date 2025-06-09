@@ -1,7 +1,7 @@
 $coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
-Import-Module $coreModule -Force -ErrorAction SilentlyContinue
+Import-Module $coreModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
 $loggingModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'Logging/Logging.psd1'
-Import-Module $loggingModule -Force -ErrorAction SilentlyContinue
+Import-Module $loggingModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
 function Measure-STCommand {
     <#
