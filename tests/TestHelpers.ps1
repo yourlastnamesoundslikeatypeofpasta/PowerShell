@@ -19,3 +19,16 @@ function Safe-It {
     }
 }
 
+BeforeEach {
+    if (Get-PSDrive -Name TestDrive -ErrorAction SilentlyContinue) {
+        Remove-PSDrive -Name TestDrive -Force
+    }
+    New-PSDrive -Name TestDrive -PSProvider FileSystem -Root $TestRoot | Out-Null
+}
+
+AfterEach {
+    if (Get-PSDrive -Name TestDrive -ErrorAction SilentlyContinue) {
+        Remove-PSDrive -Name TestDrive -Force
+    }
+}
+
