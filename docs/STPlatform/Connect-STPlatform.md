@@ -68,4 +68,7 @@ values appear in the Details field of the `Connect-STPlatform` metric as
 Use `-ChaosMode` or set `ST_CHAOS_MODE=1` to randomly delay or fail the initial
 connection check for testing resilience.
 
+Use **Connect-EntraID** when you only need to authenticate to Microsoft Graph.
+
 ## RELATED LINKS
+[Connect-EntraID](Connect-EntraID)
