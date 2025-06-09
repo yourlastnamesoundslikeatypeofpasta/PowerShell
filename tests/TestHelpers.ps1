@@ -18,3 +18,12 @@ function Safe-It {
         }
     }
 }
+
+if (-not $script:TestDriveCleanupAdded) {
+    AfterEach {
+        if (Get-PSDrive -Name TestDrive -ErrorAction SilentlyContinue) {
+            Remove-PSDrive -Name TestDrive -Force -ErrorAction SilentlyContinue
+        }
+    }
+    $script:TestDriveCleanupAdded = $true
+}
