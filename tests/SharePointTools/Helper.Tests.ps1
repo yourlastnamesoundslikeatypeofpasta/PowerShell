@@ -28,4 +28,29 @@ Describe 'SharePointTools helper functions' {
             Assert-MockCalled Register-ArgumentCompleter -Times 2
         }
     }
+
+    Safe-It 'Save-SPToolsSettings uses default path when none specified' {
+        InModuleScope SharePointTools {
+            $temp = [System.IO.Path]::GetTempFileName()
+            $script:settingsFile = $temp
+            $SharePointToolsSettings = @{ A = 1 }
+            Mock Out-File {}
+            Mock Write-SPToolsHacker {}
+            Save-SPToolsSettings
+            Assert-MockCalled Out-File -Times 1 -ParameterFilter { $FilePath -eq $temp }
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
+
+    Safe-It 'Save-SPToolsSettings accepts custom path' {
+        InModuleScope SharePointTools {
+            $temp = [System.IO.Path]::GetTempFileName()
+            $SharePointToolsSettings = @{ A = 1 }
+            Mock Out-File {}
+            Mock Write-SPToolsHacker {}
+            Save-SPToolsSettings -Path $temp
+            Assert-MockCalled Out-File -Times 1 -ParameterFilter { $FilePath -eq $temp }
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
 }
