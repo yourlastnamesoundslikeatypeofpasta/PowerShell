@@ -21,10 +21,7 @@ function Add-SDTicketComment {
         [switch]$Explain
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
+    if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
     Write-STLog -Message "Add-SDTicketComment $Id"
     $body = @{ comment = @{ body = $Comment } }

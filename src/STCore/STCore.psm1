@@ -161,7 +161,20 @@ function Invoke-STRequest {
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest'
+function Show-STHelpWhenExplain {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false)]
+        [switch]$Explain
+    )
+    if ($Explain) {
+        Get-Help $MyInvocation.PSCommandPath -Full
+        return $true
+    }
+    return $false
+}
+
+Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest','Show-STHelpWhenExplain'
 
 function Show-STCoreBanner {
     <#

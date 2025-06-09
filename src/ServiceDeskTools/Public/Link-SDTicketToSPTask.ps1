@@ -26,10 +26,7 @@ function Link-SDTicketToSPTask {
         [switch]$Explain
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
+    if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
     Write-STLog -Message "Link-SDTicketToSPTask $TicketId $TaskUrl" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     $fields = @{ $FieldName = $TaskUrl }

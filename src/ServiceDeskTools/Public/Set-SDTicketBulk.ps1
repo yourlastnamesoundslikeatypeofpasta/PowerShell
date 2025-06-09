@@ -21,10 +21,7 @@ function Set-SDTicketBulk {
         [switch]$Explain
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
+    if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
     foreach ($ticketId in $Id) {
         Write-STLog -Message "Set-SDTicketBulk $ticketId" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')

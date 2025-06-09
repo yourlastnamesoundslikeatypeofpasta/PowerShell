@@ -29,10 +29,7 @@ function Get-ServiceDeskStats {
         [switch]$Explain
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
+    if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = 'Success'

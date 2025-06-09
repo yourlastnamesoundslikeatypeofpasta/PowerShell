@@ -16,10 +16,7 @@ function Get-ServiceDeskAsset {
         [switch]$Explain
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
+    if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
     Write-STLog -Message "Get-ServiceDeskAsset $Id"
     if ($PSCmdlet.ShouldProcess("asset $Id", 'Get')) {

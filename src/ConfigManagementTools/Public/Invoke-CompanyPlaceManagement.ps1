@@ -75,10 +75,7 @@ function Invoke-CompanyPlaceManagement {
             Import-Module $Config -Force -ErrorAction SilentlyContinue
         }
 
-        if ($Explain) {
-            Get-Help $MyInvocation.PSCommandPath -Full
-            return
-        }
+        if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
         Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log

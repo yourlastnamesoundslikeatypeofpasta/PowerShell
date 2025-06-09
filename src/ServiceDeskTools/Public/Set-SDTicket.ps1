@@ -21,10 +21,7 @@ function Set-SDTicket {
         [switch]$Explain
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
+    if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
     Write-STLog -Message "Set-SDTicket $Id" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     $body = @{ incident = $Fields }

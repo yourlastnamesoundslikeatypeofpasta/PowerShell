@@ -26,10 +26,7 @@ function New-SDTicket {
         [switch]$Explain
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
+    if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
     Write-STLog -Message "New-SDTicket $Subject" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     $body = @{ incident = @{ name = $Subject; description = $Description; requester_email = $RequesterEmail } }

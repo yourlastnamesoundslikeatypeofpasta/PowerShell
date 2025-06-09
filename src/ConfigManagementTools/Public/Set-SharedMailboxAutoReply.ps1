@@ -62,10 +62,7 @@ function Set-SharedMailboxAutoReply {
             Import-Module $Config -Force -ErrorAction SilentlyContinue
         }
 
-        if ($Explain) {
-            Get-Help $MyInvocation.PSCommandPath -Full
-            return
-        }
+        if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
         $sw = [System.Diagnostics.Stopwatch]::StartNew()

@@ -18,10 +18,7 @@ function Search-SDTicket {
         [switch]$Explain
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
+    if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
     Write-STLog -Message "Search-SDTicket $Query" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     $encoded = [uri]::EscapeDataString($Query)

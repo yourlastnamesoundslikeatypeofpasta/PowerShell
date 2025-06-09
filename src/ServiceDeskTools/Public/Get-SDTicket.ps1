@@ -18,10 +18,7 @@ function Get-SDTicket {
         [switch]$Explain
     )
 
-    if ($Explain) {
-        Get-Help $MyInvocation.PSCommandPath -Full
-        return
-    }
+    if (Show-STHelpWhenExplain -Explain:$Explain) { return }
 
     Write-STLog -Message "Get-SDTicket $Id" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     if ($PSCmdlet.ShouldProcess("ticket $Id", 'Get')) {
