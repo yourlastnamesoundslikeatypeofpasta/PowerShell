@@ -11,6 +11,21 @@ if ($SupportToolsConfig.maintenanceMode) {
     exit 1
 }
 
+function Sanitize-STMessage {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Message
+    )
+    $result = $Message
+    $result = $result -replace '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}', '[REDACTED]'
+    $result = $result -replace '(?i)(token|secret|password|apikey|api[_-]?key|access[-_]?key)\s*(=|:)\s*\S+', '$1$2[REDACTED]'
+    $result = $result -replace '(?i)bearer\s+[A-Za-z0-9._-]+', '[REDACTED]'
+    $result = $result -replace '\b[A-Fa-f0-9]{32,}\b', '[REDACTED]'
+    return $result
+}
+
 function Write-STLog {
     [CmdletBinding(DefaultParameterSetName='Message')]
     param(
@@ -48,6 +63,7 @@ function Write-STLog {
         $Message = $Metric
         if (-not $Structured) { $Structured = $true }
     }
+    $Message = Sanitize-STMessage -Message $Message
     if (-not $Structured -and $env:ST_LOG_STRUCTURED -eq '1') {
         $Structured = $true
     }
@@ -160,6 +176,15 @@ function Write-STRichLog {
     if ($PSBoundParameters.ContainsKey('User'))     { $entry.user = $User }
     if ($PSBoundParameters.ContainsKey('Duration')) { $entry.duration = $Duration.ToString() }
     if ($PSBoundParameters.ContainsKey('Details'))  { $entry.details  = $Details }
+
+    foreach ($k in $entry.Keys) {
+        $val = $entry[$k]
+        if ($val -is [string]) {
+            $entry[$k] = Sanitize-STMessage -Message $val
+        } elseif ($val -is [System.Collections.IEnumerable] -and $val -notis [string]) {
+            $entry[$k] = $val | ForEach-Object { if ($_ -is [string]) { Sanitize-STMessage -Message $_ } else { $_ } }
+        }
+    }
 
     ($entry | ConvertTo-Json -Depth 5 -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
 }

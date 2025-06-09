@@ -157,4 +157,22 @@ Describe 'Logging Module' {
             Remove-Item $logFile* -ErrorAction SilentlyContinue
         }
     }
+
+    It 'sanitizes emails and secrets in messages' {
+        $temp = [System.IO.Path]::GetTempFileName()
+        try {
+            $msg = 'contact user@example.com token=abcdef1234567890abcdef1234567890'
+            Write-STLog -Message $msg -Path $temp
+            $content = Get-Content $temp
+            $content | Should -Not -Match 'user@example.com'
+            $content | Should -Not -Match 'abcdef1234567890'
+            $content | Should -Match '\[REDACTED\]'
+        } finally {
+            Remove-Item $temp -ErrorAction SilentlyContinue
+        }
+    }
+
+    It 'exposes Sanitize-STMessage for direct use' {
+        Sanitize-STMessage 'send to admin@example.com secret=shh' | Should -Be 'send to [REDACTED] secret=[REDACTED]'
+    }
 }
