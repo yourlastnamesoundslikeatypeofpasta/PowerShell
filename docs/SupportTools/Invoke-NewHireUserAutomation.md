@@ -41,3 +41,6 @@ None
 ## OUTPUTS
 None
 
+## ALIASES
+NewHire-Automation
+
