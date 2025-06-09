@@ -1,5 +1,6 @@
 . $PSScriptRoot/../TestHelpers.ps1
 Describe 'Invoke-NewHireUserAutomation function' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SupportTools/SupportTools.psd1 -Force

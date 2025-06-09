@@ -1,6 +1,7 @@
 . $PSScriptRoot/../TestHelpers.ps1
 
 Describe 'IncidentResponseTools public functions' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/IncidentResponseTools/IncidentResponseTools.psd1 -Force

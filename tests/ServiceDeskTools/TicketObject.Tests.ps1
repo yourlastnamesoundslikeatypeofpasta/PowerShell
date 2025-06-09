@@ -1,6 +1,7 @@
 . $PSScriptRoot/../TestHelpers.ps1
 
 Describe 'TicketObject class' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/ServiceDeskTools/TicketObject.psm1 -Force
     }
@@ -44,6 +45,7 @@ Describe 'TicketObject class' {
 }
 
 Describe 'Ticket ID argument completer' {
+    Initialize-TestDrive
     Safe-It 'registers completer for Id parameters' {
         Mock Register-ArgumentCompleter {}
         Import-Module $PSScriptRoot/../../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force

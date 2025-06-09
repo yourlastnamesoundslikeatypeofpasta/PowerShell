@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'Standalone Scripts' {
+    Initialize-TestDrive
     Safe-It 'generates maintenance task XML without registering' {
         $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         New-Item -ItemType Directory -Path $tempDir | Out-Null

@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'Ensure-TestCoverage script' {
+    Initialize-TestDrive
     $repoRoot = Resolve-Path "$PSScriptRoot/.."
     $publicDir = Join-Path $repoRoot 'src/SupportTools/Public'
     $tempFile = Join-Path $publicDir 'Temp-TestFunction.ps1'

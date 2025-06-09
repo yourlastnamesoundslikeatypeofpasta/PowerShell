@@ -1,5 +1,6 @@
 . $PSScriptRoot/../TestHelpers.ps1
 Describe 'Submit-SystemInfoTicket.ps1 script' {
+    Initialize-TestDrive
     BeforeAll {
         $ScriptPath = Join-Path $PSScriptRoot/../.. 'scripts/Submit-SystemInfoTicket.ps1'
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force

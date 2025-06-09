@@ -1,6 +1,7 @@
 . $PSScriptRoot/TestHelpers.ps1
 
 Describe 'Install-SupportTools script' {
+    Initialize-TestDrive
     BeforeEach {
         function Import-Module {}
         Mock Import-Module {}

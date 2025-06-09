@@ -1,5 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'Telemetry Opt-In' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
@@ -81,6 +82,7 @@ Describe 'Telemetry Opt-In' {
 }
 
 Describe 'Telemetry Metrics Summary' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
@@ -153,6 +155,7 @@ Describe 'Telemetry Metrics Summary' {
 }
 
 Describe 'Telemetry Banner' {
+    Initialize-TestDrive
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
     }
