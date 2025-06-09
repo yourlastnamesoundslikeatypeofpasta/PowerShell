@@ -18,7 +18,7 @@ param(
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 Import-Module (Join-Path $repoRoot 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
-Show-STPrompt './scripts/Sign-RepositoryFiles.ps1'
+Show-STPrompt -Command './scripts/Sign-RepositoryFiles.ps1'
 
 if (-not $CertificatePath) {
     Write-STStatus 'Code signing certificate path not specified.' -Level ERROR

@@ -30,7 +30,7 @@ $modules = @(
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
-Show-STPrompt './scripts/Install-SupportTools.ps1'
+Show-STPrompt -Command './scripts/Install-SupportTools.ps1'
 
 foreach ($module in $modules) {
     $localPath = Join-Path $PSScriptRoot '..' 'src' $module "$module.psd1"
