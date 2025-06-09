@@ -27,9 +27,9 @@ Generates a report and opens a ticket if thresholds are exceeded.
 
 #### Example Output
 ```text
-CpuPercent MemoryPercent DiskPercent NetworkMbps Uptime
---------- ------------ ----------- ----------- ------
-42        55           12          1.2          1:23:45
+CpuPercent CpuSamples MemoryPercent DiskPercent DiskSamples NetworkMbps Uptime
+--------- ---------- ------------ ----------- ----------- ----------- ------
+42        {10,10,10} 55           12          {10,10,10} 1.2          1:23:45
 ```
 
 ## PARAMETERS
@@ -58,7 +58,7 @@ Optional path for a transcript log.
 None
 
 ## OUTPUTS
-A custom object with the properties `CpuPercent`, `MemoryPercent`, `DiskPercent`, `NetworkMbps` and `Uptime`. When a ticket is created a `TicketId` property is included.
+A custom object with the properties `CpuPercent`, `CpuSamples`, `MemoryPercent`, `DiskPercent`, `DiskSamples`, `NetworkMbps` and `Uptime`. When a ticket is created a `TicketId` property is included.
 
 ## NOTES
 ## RELATED LINKS
