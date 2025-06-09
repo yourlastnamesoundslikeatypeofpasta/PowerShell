@@ -1,6 +1,8 @@
 # ChaosTools Module
 
 Provides helpers for chaos testing and fault injection.
+Commands follow the logging conventions described in
+[ModuleStyleGuide.md](ModuleStyleGuide.md).
 Import the module with its manifest:
 
 ```powershell
