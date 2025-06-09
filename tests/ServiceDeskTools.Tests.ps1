@@ -8,7 +8,7 @@ Describe 'ServiceDeskTools Module' {
         $expected = @(
             'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
             'Add-SDTicketComment','Search-SDTicket','Get-ServiceDeskAsset',
-            'Set-SDTicketBulk','Link-SDTicketToSPTask'
+            'Set-SDTicketBulk','Link-SDTicketToSPTask','Export-SDConfig'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
