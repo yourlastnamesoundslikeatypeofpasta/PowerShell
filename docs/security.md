@@ -23,7 +23,7 @@ This document summarizes the key security aspects of the PowerShell modules cont
 
 - Commands call `Write-STLog` which writes to `$env:ST_LOG_PATH` or `~/SupportToolsLogs/supporttools.log`.
 - Structured events can be recorded via `Write-STRichLog` and `Write-STTelemetryEvent` in `~/SupportToolsTelemetry/telemetry.jsonl` when telemetry is enabled.
-- Scripts like `Submit-SystemInfoTicket` optionally start a transcript log file for additional auditing.
+- Scripts like `New-SystemInfoTicket` optionally start a transcript log file for additional auditing.
 - Actions performed through SharePoint or Exchange are also captured in their respective tenant audit logs when enabled.
 
 ## Risks of Misuse

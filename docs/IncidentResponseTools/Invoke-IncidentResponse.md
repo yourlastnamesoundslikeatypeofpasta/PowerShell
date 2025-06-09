@@ -20,4 +20,4 @@ Invoke-IncidentResponse [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [
 Wraps the `Invoke-IncidentResponse.ps1` script. The command gathers recent event logs,
 process details, network connections and other information into a timestamped folder.
 If unsigned processes are found running from temporary directories a ticket is created
-via `Submit-Ticket` in the ServiceDeskTools module.
+via `New-SimpleTicket` in the ServiceDeskTools module.

@@ -13,7 +13,7 @@
         'Invoke-IncidentResponse',
         'Invoke-RemoteAudit',
         'Invoke-FullSystemAudit',
-        'Submit-SystemInfoTicket',
+        'New-SystemInfoTicket',
         'Update-Sysmon',
         'Search-Indicators'
     )

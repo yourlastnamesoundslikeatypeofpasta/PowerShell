@@ -44,7 +44,8 @@ function Invoke-FullSystemAudit {
         $summary = [ordered]@{}
         $errors  = @()
 
-        function Run-Step {
+        # Original name: Run-Step
+        function Invoke-Step {
             param(
                 [string]$Name,
                 [scriptblock]$Action
@@ -69,12 +70,12 @@ function Invoke-FullSystemAudit {
             return $out
         }
 
-        $summary.CommonSystemInfo = Run-Step 'Get-CommonSystemInfo' { Get-CommonSystemInfo }
-        $summary.SPUsageReport    = Run-Step 'Generate-SPUsageReport' {
+        $summary.CommonSystemInfo = Invoke-Step 'Get-CommonSystemInfo' { Get-CommonSystemInfo }
+        $summary.SPUsageReport    = Invoke-Step 'Generate-SPUsageReport' {
             Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Generate-SPUsageReport.ps1' -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         }
-        $summary.FailedLogin      = Run-Step 'Get-FailedLogin' { Get-FailedLogin }
-        $summary.PerformanceAudit = Run-Step 'Invoke-PerformanceAudit' {
+        $summary.FailedLogin      = Invoke-Step 'Get-FailedLogin' { Get-FailedLogin }
+        $summary.PerformanceAudit = Invoke-Step 'Invoke-PerformanceAudit' {
             Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Invoke-PerformanceAudit.ps1' -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         }
 

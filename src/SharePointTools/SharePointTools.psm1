@@ -1007,12 +1007,13 @@ function Get-SPPermissionsReport {
     $report
 }
 
-function Clean-SPVersionHistory {
+# Original name: Clean-SPVersionHistory
+function Clear-SPVersionHistory {
     <#
     .SYNOPSIS
         Deletes old document versions from a library.
     .EXAMPLE
-        Clean-SPVersionHistory -SiteUrl 'https://contoso.sharepoint.com'
+        Clear-SPVersionHistory -SiteUrl 'https://contoso.sharepoint.com'
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
@@ -1235,12 +1236,13 @@ function Get-SPToolsFileReport {
     Write-SPToolsHacker 'File report complete'
     $report
 }
-function List-OneDriveUsage {
+# Original name: List-OneDriveUsage
+function Get-OneDriveUsage {
     <#
     .SYNOPSIS
         Lists usage information for all OneDrive sites.
     .EXAMPLE
-        List-OneDriveUsage -AdminUrl 'https://contoso-admin.sharepoint.com'
+        Get-OneDriveUsage -AdminUrl 'https://contoso-admin.sharepoint.com'
     #>
     [CmdletBinding()]
     param(
@@ -1270,7 +1272,7 @@ function List-OneDriveUsage {
     Write-SPToolsHacker 'Report complete'
     $report
 }
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Out-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','Select-SPToolsFolder','List-OneDriveUsage','Test-SPToolsPrereqs','Test-SPToolsSiteAdmin','Invoke-SPSiteAudit' -Variable 'SharePointToolsSettings'
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Out-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clear-SPVersionHistory','Find-OrphanedSPFiles','Select-SPToolsFolder','Get-OneDriveUsage','Test-SPToolsPrereqs','Test-SPToolsSiteAdmin','Invoke-SPSiteAudit' -Variable 'SharePointToolsSettings'
 
 function Register-SPToolsCompleters {
     <#

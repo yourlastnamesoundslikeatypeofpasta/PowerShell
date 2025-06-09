@@ -25,8 +25,8 @@ Describe 'EntraIDTools Module' {
         Safe-It 'Exports Get-GraphSignInLogs' {
             (Get-Command -Module EntraIDTools).Name | Should -Contain 'Get-GraphSignInLogs'
         }
-        Safe-It 'Exports Watch-GraphSignIns' {
-            (Get-Command -Module EntraIDTools).Name | Should -Contain 'Watch-GraphSignIns'
+        Safe-It 'Exports Monitor-GraphSignIn' {
+            (Get-Command -Module EntraIDTools).Name | Should -Contain 'Monitor-GraphSignIn'
         }
     }
 
@@ -71,7 +71,7 @@ Describe 'EntraIDTools Module' {
         Safe-It 'Creates tickets for risky sign-ins' {
             Mock Get-GraphSignInLogs { @(@{ userPrincipalName='u'; createdDateTime=(Get-Date); ipAddress='1.2.3.4'; riskLevelAggregated='high' }) } -ModuleName EntraIDTools
             Mock New-SDTicket {} -ModuleName EntraIDTools
-            Watch-GraphSignIns -TenantId 'tid' -ClientId 'cid' -RequesterEmail 'r@contoso.com'
+            Monitor-GraphSignIn -TenantId 'tid' -ClientId 'cid' -RequesterEmail 'r@contoso.com'
             Assert-MockCalled New-SDTicket -ModuleName EntraIDTools -Times 1
         }
     }

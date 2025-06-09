@@ -1,4 +1,5 @@
-function Link-SDTicketToSPTask {
+# Original name: Link-SDTicketToSPTask
+function Join-SDTicketToSPTask {
     <#
     .SYNOPSIS
         Associates a Service Desk incident with a SharePoint task.
@@ -31,9 +32,9 @@ function Link-SDTicketToSPTask {
         return
     }
 
-    Write-STLog -Message "Link-SDTicketToSPTask $TicketId $TaskUrl" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+    Write-STLog -Message "Join-SDTicketToSPTask $TicketId $TaskUrl" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     $fields = @{ $FieldName = $TaskUrl }
-    if ($PSCmdlet.ShouldProcess("ticket $TicketId", 'Link to SP task')) {
+    if ($PSCmdlet.ShouldProcess("ticket $TicketId", 'Join to SP task')) {
         Set-SDTicket -Id $TicketId -Fields $fields -ChaosMode:$ChaosMode
     }
 }

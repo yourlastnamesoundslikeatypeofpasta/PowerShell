@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Clean-SPVersionHistory
+# Clear-SPVersionHistory
 
 ## SYNOPSIS
 See DESCRIPTION section.
@@ -13,7 +13,7 @@ See DESCRIPTION section.
 ## SYNTAX
 
 ```
-Clean-SPVersionHistory [-SiteUrl] <String> [[-LibraryName] <String>] [[-KeepVersions] <Int32>]
+Clear-SPVersionHistory [-SiteUrl] <String> [[-LibraryName] <String>] [[-KeepVersions] <Int32>]
  [[-ClientId] <String>] [[-TenantId] <String>] [[-CertPath] <String>] [-ProgressAction <ActionPreference>]
  [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
@@ -25,10 +25,10 @@ Deletes old document versions from a library.
 
 ### Example 1
 ```powershell
-PS C:\> Clean-SPVersionHistory -? # replace with actual parameters
+PS C:\> Clear-SPVersionHistory -? # replace with actual parameters
 ```
 
-Demonstrates typical usage of Clean-SPVersionHistory.
+Demonstrates typical usage of Clear-SPVersionHistory.
 
 ## PARAMETERS
 

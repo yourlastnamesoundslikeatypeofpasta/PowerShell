@@ -5,13 +5,13 @@ online version:
 schema: 2.0.0
 ---
 
-# Watch-GraphSignIns
+# Monitor-GraphSignIn
 
 Monitor sign-in logs and create Service Desk tickets for risky events.
 
 ## SYNTAX
 ```powershell
-Watch-GraphSignIns [-UserPrincipalName <String>] [-StartTime <DateTime>] [-EndTime <DateTime>]
+Monitor-GraphSignIn [-UserPrincipalName <String>] [-StartTime <DateTime>] [-EndTime <DateTime>]
  [-TenantId] <String> [-ClientId] <String> [-ClientSecret <String>] [-RequesterEmail] <String>
  [-Threshold <String>] [-ChaosMode] [<CommonParameters>]
 ```
@@ -23,7 +23,7 @@ meets or exceeds `-Threshold` trigger ticket creation. Use `-ChaosMode` or set
 
 ## EXAMPLE
 ```powershell
-PS C:\> Watch-GraphSignIns -TenantId <tenant> -ClientId <app> -RequesterEmail 'admin@example.com'
+PS C:\> Monitor-GraphSignIn -TenantId <tenant> -ClientId <app> -RequesterEmail 'admin@example.com'
 ```
 Retrieves the last hour of sign-ins and opens Service Desk tickets for any high risk events.
 

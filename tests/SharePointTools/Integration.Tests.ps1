@@ -213,7 +213,7 @@ Describe 'SharePointTools Integration Functions' {
         }
     }
 
-    Context 'Clean-SPVersionHistory' {
+    Context 'Clear-SPVersionHistory' {
         Safe-It 'invokes version cleanup when versions exceed threshold' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
@@ -228,7 +228,7 @@ Describe 'SharePointTools Integration Functions' {
                 Mock Get-PnPListItem { @( @{ } ) }
                 Mock Get-PnPProperty { @( $ver,$ver,$ver,$ver,$ver,$ver ) }
                 Mock Invoke-PnPQuery {}
-                Clean-SPVersionHistory -SiteUrl 'https://c' -KeepVersions 3 -Confirm:$false
+                Clear-SPVersionHistory -SiteUrl 'https://c' -KeepVersions 3 -Confirm:$false
                 Assert-MockCalled Invoke-PnPQuery -Times 1
             }
         }
@@ -291,7 +291,7 @@ Describe 'SharePointTools Integration Functions' {
         }
     }
 
-    Context 'List-OneDriveUsage' {
+    Context 'Get-OneDriveUsage' {
         Safe-It 'reports tenant site usage' {
             InModuleScope SharePointTools {
                 function Connect-PnPOnline {}
@@ -301,7 +301,7 @@ Describe 'SharePointTools Integration Functions' {
                 Mock Disconnect-PnPOnline {}
                 $site = [pscustomobject]@{ Template='SPSPERS'; Url='https://u'; Owner='o'; StorageUsageCurrent=1GB }
                 Mock Get-PnPTenantSite { @($site) }
-                $r = List-OneDriveUsage -AdminUrl 'https://admin'
+                $r = Get-OneDriveUsage -AdminUrl 'https://admin'
                 $r[0].Url | Should -Be 'https://u'
                 $r[0].StorageGB | Should -Be 1
             }

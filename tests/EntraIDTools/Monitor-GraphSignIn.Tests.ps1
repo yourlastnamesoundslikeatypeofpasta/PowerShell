@@ -1,6 +1,6 @@
 . $PSScriptRoot/../TestHelpers.ps1
 
-Describe 'Watch-GraphSignIns batch output' {
+Describe 'Monitor-GraphSignIn batch output' {
     BeforeAll {
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/Telemetry/Telemetry.psd1 -Force
@@ -19,7 +19,7 @@ Describe 'Watch-GraphSignIns batch output' {
                 else { @() }
             } -ModuleName EntraIDTools
 
-            $result = Watch-GraphSignIns -TenantId 'tid' -ClientId 'cid' -RequesterEmail 'r@test' -Count 2 -IntervalSeconds 0
+            $result = Monitor-GraphSignIn -TenantId 'tid' -ClientId 'cid' -RequesterEmail 'r@test' -Count 2 -IntervalSeconds 0
 
             $result.Count | Should -Be 10
             $script:calls | Should -Be 2

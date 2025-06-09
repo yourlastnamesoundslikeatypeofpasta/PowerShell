@@ -7,7 +7,7 @@
     connections, local administrators, services and startup items.
     Results are saved to a timestamped folder. If unsigned processes
     executing from temporary directories are detected, the script
-    triggers Submit-Ticket from the ServiceDeskTools module.
+    triggers New-SimpleTicket from the ServiceDeskTools module.
 .PARAMETER OutputDirectory
     Directory to store collected data. Defaults to a folder in TEMP.
 .PARAMETER RequesterEmail
@@ -87,7 +87,7 @@ try {
         $desc = "Unsigned processes found in temp locations on $env:COMPUTERNAME.`n`n" +
                  ($highRisk | Format-Table Name,Path -AutoSize | Out-String) +
                  "`nReport folder: $OutputDirectory"
-        Submit-Ticket -Subject "Incident Response - $env:COMPUTERNAME" -Description $desc -RequesterEmail $RequesterEmail | Out-Null
+        New-SimpleTicket -Subject "Incident Response - $env:COMPUTERNAME" -Description $desc -RequesterEmail $RequesterEmail | Out-Null
     }
 
     Write-STStatus "Incident response data saved to $OutputDirectory" -Level SUCCESS -Log

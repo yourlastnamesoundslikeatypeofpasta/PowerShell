@@ -32,11 +32,11 @@
         'Get-SPToolsPreservationHoldReport',
         'Get-SPToolsAllPreservationHoldReports',
         'Get-SPPermissionsReport',
-        'Clean-SPVersionHistory',
+        'Clear-SPVersionHistory',
         'Find-OrphanedSPFiles',
         'Get-SPToolsFileReport',
         'Select-SPToolsFolder',
-        'List-OneDriveUsage',
+        'Get-OneDriveUsage',
         'Test-SPToolsPrereqs',
         'Test-SPToolsSiteAdmin',
         'Invoke-SPSiteAudit'

@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Link-SDTicketToSPTask
+# Join-SDTicketToSPTask
 
 ## SYNOPSIS
 Associates a Service Desk incident with a SharePoint task.
@@ -13,7 +13,7 @@ Associates a Service Desk incident with a SharePoint task.
 ## SYNTAX
 
 ```
-Link-SDTicketToSPTask [-TicketId] <Int32> [-TaskUrl] <String> [-FieldName <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Join-SDTicketToSPTask [-TicketId] <Int32> [-TaskUrl] <String> [-FieldName <String>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION

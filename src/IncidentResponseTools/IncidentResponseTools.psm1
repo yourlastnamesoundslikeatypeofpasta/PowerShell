@@ -10,7 +10,7 @@ Import-Module $telemetryModule -Force -ErrorAction SilentlyContinue -DisableName
 Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 
-Export-ModuleMember -Function 'Get-CommonSystemInfo','Get-FailedLogin','Get-NetworkShare','Invoke-IncidentResponse','Invoke-RemoteAudit','Invoke-FullSystemAudit','Submit-SystemInfoTicket','Update-Sysmon','Search-Indicators'
+Export-ModuleMember -Function 'Get-CommonSystemInfo','Get-FailedLogin','Get-NetworkShare','Invoke-IncidentResponse','Invoke-RemoteAudit','Invoke-FullSystemAudit','New-SystemInfoTicket','Update-Sysmon','Search-Indicators'
 
 function Show-IncidentResponseToolsBanner {
     [CmdletBinding()]

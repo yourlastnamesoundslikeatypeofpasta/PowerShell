@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# List-OneDriveUsage
+# Get-OneDriveUsage
 
 ## SYNOPSIS
 See DESCRIPTION section.
@@ -13,7 +13,7 @@ See DESCRIPTION section.
 ## SYNTAX
 
 ```
-List-OneDriveUsage [-AdminUrl] <String> [[-ClientId] <String>] [[-TenantId] <String>] [[-CertPath] <String>]
+Get-OneDriveUsage [-AdminUrl] <String> [[-ClientId] <String>] [[-TenantId] <String>] [[-CertPath] <String>]
  [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
@@ -24,10 +24,10 @@ Lists storage usage details for each OneDrive site.
 
 ### Example 1
 ```powershell
-PS C:\> List-OneDriveUsage -? # replace with actual parameters
+PS C:\> Get-OneDriveUsage -? # replace with actual parameters
 ```
 
-Demonstrates typical usage of List-OneDriveUsage.
+Demonstrates typical usage of Get-OneDriveUsage.
 
 ## PARAMETERS
 

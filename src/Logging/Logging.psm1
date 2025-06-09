@@ -11,7 +11,8 @@ if ($SupportToolsConfig.maintenanceMode) {
     exit 1
 }
 
-function Sanitize-STMessage {
+# Original name: Sanitize-STMessage
+function Protect-STMessage {
     [CmdletBinding(PositionalBinding=$false)]
     param(
         [Parameter(Mandatory)][string]$Message
@@ -66,7 +67,7 @@ function Write-STLog {
         $Message = $Metric
         if (-not $Structured) { $Structured = $true }
     }
-    $Message = Sanitize-STMessage -Message $Message
+    $Message = Protect-STMessage -Message $Message
     if (-not $Structured -and $env:ST_LOG_STRUCTURED -eq '1') {
         $Structured = $true
     }
@@ -189,11 +190,11 @@ function Write-STRichLog {
         tool      = $Tool
         status    = $Status
     }
-    if ($PSBoundParameters.ContainsKey('User'))     { $entry.user = Sanitize-STMessage -Message $User }
+    if ($PSBoundParameters.ContainsKey('User'))     { $entry.user = Protect-STMessage -Message $User }
     if ($PSBoundParameters.ContainsKey('Duration')) { $entry.duration = $Duration.ToString() }
     if ($PSBoundParameters.ContainsKey('Details'))  {
         $entry.details = @()
-        foreach ($d in $Details) { $entry.details += Sanitize-STMessage -Message $d }
+        foreach ($d in $Details) { $entry.details += Protect-STMessage -Message $d }
     }
 
     ($entry | ConvertTo-Json -Depth 5 -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
@@ -295,7 +296,7 @@ function Write-STClosing {
     Write-Host "┌──[ $Message ]──────────────" -ForegroundColor DarkGray
 }
 
-Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing','Sanitize-STMessage'
+Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing','Protect-STMessage'
 
 function Show-LoggingBanner {
     <#

@@ -11,7 +11,7 @@ Describe 'IncidentResponseTools public functions' {
         'Get-NetworkShare'      = 'Get-NetworkShares.ps1'
         'Invoke-IncidentResponse' = 'Invoke-IncidentResponse.ps1'
         'Search-Indicators'     = 'Search-Indicators.ps1'
-        'Submit-SystemInfoTicket' = 'Submit-SystemInfoTicket.ps1'
+        'New-SystemInfoTicket' = 'New-SystemInfoTicket.ps1'
         'Update-Sysmon'         = 'Update-Sysmon.ps1'
     }
 
@@ -20,7 +20,7 @@ Describe 'IncidentResponseTools public functions' {
         InModuleScope IncidentResponseTools {
             Mock Invoke-ScriptFile {} -ModuleName IncidentResponseTools
             switch ($case.Key) {
-                'Submit-SystemInfoTicket' { & $case.Key -SiteName 'A' -RequesterEmail 'r@c.com' }
+                'New-SystemInfoTicket' { & $case.Key -SiteName 'A' -RequesterEmail 'r@c.com' }
                 default { & $case.Key }
             }
             Assert-MockCalled Invoke-ScriptFile -ModuleName IncidentResponseTools -Times 1 -ParameterFilter { $Name -eq $case.Value }
@@ -32,7 +32,7 @@ Describe 'IncidentResponseTools public functions' {
         InModuleScope IncidentResponseTools {
             Mock Invoke-ScriptFile { throw 'fail' } -ModuleName IncidentResponseTools
             switch ($case.Key) {
-                'Submit-SystemInfoTicket' { { & $case.Key -SiteName 'A' -RequesterEmail 'r@c.com' } | Should -Throw }
+                'New-SystemInfoTicket' { { & $case.Key -SiteName 'A' -RequesterEmail 'r@c.com' } | Should -Throw }
                 default { { & $case.Key } | Should -Throw }
             }
         }

@@ -1,4 +1,5 @@
-function Watch-GraphSignIns {
+# Original name: Watch-GraphSignIns
+function Monitor-GraphSignIn {
     <#
     .SYNOPSIS
         Monitor sign-in logs and create Service Desk tickets when risky events are detected.
@@ -25,7 +26,7 @@ function Watch-GraphSignIns {
     .PARAMETER ChaosMode
         Enable chaos testing during ticket creation.
     .EXAMPLE
-        Watch-GraphSignIns -TenantId <tenant> -ClientId <app> -RequesterEmail 'admin@example.com'
+        Monitor-GraphSignIn -TenantId <tenant> -ClientId <app> -RequesterEmail 'admin@example.com'
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
@@ -48,7 +49,7 @@ function Watch-GraphSignIns {
     if ($Explain) { Get-Help $MyInvocation.PSCommandPath -Full; return }
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
-    Write-STLog -Message 'Watch-GraphSignIns' -Structured -Metadata @{ threshold=$Threshold }
+    Write-STLog -Message 'Monitor-GraphSignIn' -Structured -Metadata @{ threshold=$Threshold }
     $result = 'Success'
     try {
         $logs = Get-GraphSignInLogs -UserPrincipalName $UserPrincipalName -StartTime $StartTime -EndTime $EndTime -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
@@ -68,10 +69,10 @@ function Watch-GraphSignIns {
         return $logs
     } catch {
         $result = 'Failure'
-        Write-STLog -Message "Watch-GraphSignIns failed: $_" -Level ERROR
+        Write-STLog -Message "Monitor-GraphSignIn failed: $_" -Level ERROR
         throw
     } finally {
         $sw.Stop()
-        Write-STTelemetryEvent -ScriptName 'Watch-GraphSignIns' -Result $result -Duration $sw.Elapsed
+        Write-STTelemetryEvent -ScriptName 'Monitor-GraphSignIn' -Result $result -Duration $sw.Elapsed
     }
 }

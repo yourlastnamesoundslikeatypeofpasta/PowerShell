@@ -10,7 +10,7 @@ Describe 'ServiceDeskTools Module' {
         $expected = @(
             'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
             'Add-SDTicketComment','Search-SDTicket','Get-ServiceDeskAsset',
-            'Get-SDUser','Set-SDTicketBulk','Link-SDTicketToSPTask','Export-SDConfig'
+            'Get-SDUser','Set-SDTicketBulk','Join-SDTicketToSPTask','Export-SDConfig'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -117,9 +117,9 @@ Describe 'ServiceDeskTools Module' {
             Assert-MockCalled Set-SDTicket -ModuleName ServiceDeskTools -ParameterFilter { $Id -eq 10 } -Times 1
             Assert-MockCalled Set-SDTicket -ModuleName ServiceDeskTools -ParameterFilter { $Id -eq 11 } -Times 1
         }
-        Safe-It 'Link-SDTicketToSPTask calls Set-SDTicket' {
+        Safe-It 'Join-SDTicketToSPTask calls Set-SDTicket' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
-            Link-SDTicketToSPTask -TicketId 12 -TaskUrl 'https://contoso/tasks/1'
+            Join-SDTicketToSPTask -TicketId 12 -TaskUrl 'https://contoso/tasks/1'
             Assert-MockCalled Set-SDTicket -ModuleName ServiceDeskTools -ParameterFilter {
                 $Id -eq 12 -and $Fields.sharepoint_task_url -eq 'https://contoso/tasks/1'
             } -Times 1
@@ -176,20 +176,20 @@ Describe 'ServiceDeskTools Module' {
             Add-SDTicketComment -Id 8 -Comment 'c'
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Add-SDTicketComment 8' } -Times 1
         }
-        Safe-It 'Link-SDTicketToSPTask logs the update' {
+        Safe-It 'Join-SDTicketToSPTask logs the update' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
             Mock Write-STLog {} -ModuleName ServiceDeskTools
-            Link-SDTicketToSPTask -TicketId 9 -TaskUrl 'https://contoso/tasks/9'
-            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Link-SDTicketToSPTask 9 https://contoso/tasks/9' } -Times 1
+            Join-SDTicketToSPTask -TicketId 9 -TaskUrl 'https://contoso/tasks/9'
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Join-SDTicketToSPTask 9 https://contoso/tasks/9' } -Times 1
         }
-        Safe-It 'Submit-Ticket calls New-SDTicket and logs the action' {
+        Safe-It 'New-SimpleTicket calls New-SDTicket and logs the action' {
             Mock New-SDTicket {} -ModuleName ServiceDeskTools
             Mock Write-STLog {} -ModuleName ServiceDeskTools
-            Submit-Ticket -Subject 'S' -Description 'D' -RequesterEmail 'a@b.com'
+            New-SimpleTicket -Subject 'S' -Description 'D' -RequesterEmail 'a@b.com'
             Assert-MockCalled New-SDTicket -ModuleName ServiceDeskTools -ParameterFilter {
                 $Subject -eq 'S' -and $Description -eq 'D' -and $RequesterEmail -eq 'a@b.com'
             } -Times 1
-            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Submit-Ticket S' } -Times 1
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'New-SimpleTicket S' } -Times 1
         }
     }
 

@@ -1,4 +1,5 @@
-function Schedule-MaintenancePlan {
+# Original name: Schedule-MaintenancePlan
+function Register-MaintenancePlan {
     <#
     .SYNOPSIS
         Schedule execution of a maintenance plan.
@@ -12,7 +13,7 @@ function Schedule-MaintenancePlan {
     .PARAMETER Name
         Name for the scheduled task or cron job.
     .EXAMPLE
-        Schedule-MaintenancePlan -PlanPath plan.json -Cron '0 3 * * 0' -Name Weekly
+        Register-MaintenancePlan -PlanPath plan.json -Cron '0 3 * * 0' -Name Weekly
     #>
     [CmdletBinding()]
     param(

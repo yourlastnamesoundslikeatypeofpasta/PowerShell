@@ -6,5 +6,5 @@
     Description = 'Create and manage maintenance plans.'
     RequiredModules = @('Logging')
     PrivateData = @{ PSData = @{ Tags = @('PowerShell','Maintenance','Internal') } }
-    FunctionsToExport = @('New-MaintenancePlan','Export-MaintenancePlan','Import-MaintenancePlan','Invoke-MaintenancePlan','Schedule-MaintenancePlan','Show-MaintenancePlan')
+    FunctionsToExport = @('New-MaintenancePlan','Export-MaintenancePlan','Import-MaintenancePlan','Invoke-MaintenancePlan','Register-MaintenancePlan','Show-MaintenancePlan')
 }

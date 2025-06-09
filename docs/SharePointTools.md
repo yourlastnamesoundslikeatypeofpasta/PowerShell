@@ -47,11 +47,11 @@ All functions emit short, high contrast messages following the style in [ModuleS
 | `Get-SPToolsPreservationHoldReport` | Report Preservation Hold Library size. | `SiteName`, `[SiteUrl]`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `Get-SPToolsPreservationHoldReport -SiteName HR` |
 | `Get-SPToolsAllPreservationHoldReports` | Run `Get-SPToolsPreservationHoldReport` for all sites. | none | `Get-SPToolsAllPreservationHoldReports` |
 | `Get-SPPermissionsReport` | List role assignments for a site or folder. | `SiteUrl`, `[FolderUrl]`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `Get-SPPermissionsReport -SiteUrl https://contoso.sharepoint.com/sites/hr` |
-| `Clean-SPVersionHistory` | Trim file versions beyond a limit. | `SiteUrl`, `[LibraryName]`, `[KeepVersions]`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `Clean-SPVersionHistory -SiteUrl https://contoso.sharepoint.com/sites/hr -KeepVersions 5` |
+| `Clear-SPVersionHistory` | Trim file versions beyond a limit. | `SiteUrl`, `[LibraryName]`, `[KeepVersions]`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `Clear-SPVersionHistory -SiteUrl https://contoso.sharepoint.com/sites/hr -KeepVersions 5` |
 | `Find-OrphanedSPFiles` | Locate files not modified for a period. | `SiteUrl`, `[LibraryName]`, `[Days]`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `Find-OrphanedSPFiles -SiteUrl https://contoso.sharepoint.com/sites/hr -Days 90` |
 | `Get-SPToolsFileReport` | Export file metadata from a library. | `SiteName`, `[SiteUrl]`, `[LibraryName]`, `[ClientId]`, `[TenantId]`, `[CertPath]`, `[ReportPath]` | `Get-SPToolsFileReport -SiteName HR -ReportPath files.csv` |
 | `Select-SPToolsFolder` | Recursively choose a library folder. | `SiteName`, `[SiteUrl]`, `[LibraryName]`, `[Filter]` | `Select-SPToolsFolder -SiteName HR` |
-| `List-OneDriveUsage` | Report OneDrive storage use across the tenant. | `AdminUrl`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `List-OneDriveUsage -AdminUrl https://contoso-admin.sharepoint.com` |
+| `Get-OneDriveUsage` | Report OneDrive storage use across the tenant. | `AdminUrl`, `[ClientId]`, `[TenantId]`, `[CertPath]` | `Get-OneDriveUsage -AdminUrl https://contoso-admin.sharepoint.com` |
 
 
 ## Example Scenarios

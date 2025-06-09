@@ -16,8 +16,8 @@ Commands for interacting with the Service Desk ticketing API. **ServiceDeskTools
 | `Get-ServiceDeskRelationship` | Retrieve asset relationships | `Get-ServiceDeskRelationship -AssetId 99 -Type 'component'` |
 | `Get-ServiceDeskStats` | Summarize incidents by status | `Get-ServiceDeskStats -StartDate (Get-Date).AddDays(-1) -EndDate (Get-Date)` |
 | `Set-SDTicketBulk` | Apply updates to multiple incidents | `Set-SDTicketBulk -Id 1,2,3 -Fields @{ status='Closed' }` |
-| `Link-SDTicketToSPTask` | Add a related SharePoint task link | `Link-SDTicketToSPTask -TicketId 42 -TaskUrl 'https://contoso.sharepoint.com/tasks/1'` |
-| `Submit-Ticket` | Create a Service Desk incident with minimal parameters | `Submit-Ticket -Subject 'Alert' -Description 'Issue detected' -RequesterEmail 'ops@example.com'` |
+| `Join-SDTicketToSPTask` | Add a related SharePoint task link | `Join-SDTicketToSPTask -TicketId 42 -TaskUrl 'https://contoso.sharepoint.com/tasks/1'` |
+| `New-SimpleTicket` | Create a Service Desk incident with minimal parameters | `New-SimpleTicket -Subject 'Alert' -Description 'Issue detected' -RequesterEmail 'ops@example.com'` |
 | `Export-SDConfig` | Output current Service Desk configuration to JSON | `Export-SDConfig -Path ./sdconfig.json` |
 
 `SD_API_TOKEN` must be set in the environment. Optionally set `SD_BASE_URI` if your Service Desk API uses a custom URL. Use `SD_ASSET_BASE_URI` when assets are hosted on a separate endpoint.

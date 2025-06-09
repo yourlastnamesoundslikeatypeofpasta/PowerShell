@@ -1,4 +1,5 @@
-function Submit-Ticket {
+# Original name: Submit-Ticket
+function New-SimpleTicket {
     <#
     .SYNOPSIS
         Creates a basic Service Desk incident.
@@ -27,7 +28,7 @@ function Submit-Ticket {
         return
     }
 
-    Write-STLog -Message "Submit-Ticket $Subject" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+    Write-STLog -Message "New-SimpleTicket $Subject" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
     if ($PSCmdlet.ShouldProcess("ticket $Subject", 'Create')) {
         New-SDTicket -Subject $Subject -Description $Description -RequesterEmail $RequesterEmail -ChaosMode:$ChaosMode
     }

@@ -1,7 +1,7 @@
 . $PSScriptRoot/../TestHelpers.ps1
-Describe 'Submit-SystemInfoTicket.ps1 script' {
+Describe 'New-SystemInfoTicket.ps1 script' {
     BeforeAll {
-        $ScriptPath = Join-Path $PSScriptRoot/../.. 'scripts/Submit-SystemInfoTicket.ps1'
+        $ScriptPath = Join-Path $PSScriptRoot/../.. 'scripts/New-SystemInfoTicket.ps1'
         Import-Module $PSScriptRoot/../../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../../src/IncidentResponseTools/IncidentResponseTools.psd1 -Force
         Import-Module $PSScriptRoot/../../src/SharePointTools/SharePointTools.psd1 -Force

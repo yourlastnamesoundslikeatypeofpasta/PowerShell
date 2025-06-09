@@ -1,4 +1,5 @@
-function Submit-SystemInfoTicket {
+# Original name: Submit-SystemInfoTicket
+function New-SystemInfoTicket {
     <#
     .SYNOPSIS
         Collect system info, upload it to SharePoint, and create a Service Desk ticket.
