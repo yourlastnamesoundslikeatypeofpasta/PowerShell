@@ -171,6 +171,7 @@ function Get-UserID {
 }
 
 function Start-Main {
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [string]$CsvPath,
         [string]$GroupName,
