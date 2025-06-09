@@ -15,6 +15,7 @@ The key guides are:
 - [Get-FunctionDependencyGraph](./Get-FunctionDependencyGraph.md) – generate a visual map of function calls in a script.
 - [Local Mock API](./LocalMockApi.md) – run a lightweight HTTP server for offline tests.
 - [Testing Guidelines](./TestingGuidelines.md) – conventions for writing robust Pester tests.
+- [Test Improvement Tasks](./TestingTasks.md) – outstanding work to expand coverage.
 - [Stewardship](./Stewardship.md) – how to maintain and hand off the project.
 - [Roadmap](./Roadmap.md) – upcoming features and goals.
 
