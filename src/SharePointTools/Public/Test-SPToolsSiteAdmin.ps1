@@ -31,7 +31,7 @@ function Test-SPToolsSiteAdmin {
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = 'Success'
-    Write-STLog -Message "Test-SPToolsSiteAdmin $SiteUrl" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+    Write-STLog -Message "Test-SPToolsSiteAdmin $SiteUrl"
 
     try {
         Write-STStatus 'Checking HTTP response' -Level INFO
@@ -40,7 +40,7 @@ function Test-SPToolsSiteAdmin {
         Write-STStatus "HTTP status: $status" -Level SUB
     } catch {
         $result = 'Failure'
-        Write-STLog -Message "HTTP check failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STLog -Message "HTTP check failed: $_" -Level ERROR
         throw
     }
 
@@ -52,13 +52,13 @@ function Test-SPToolsSiteAdmin {
         Write-STStatus "Site admin: $isAdmin" -Level SUB
     } catch {
         $result = 'Failure'
-        Write-STLog -Message "Admin rights check failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STLog -Message "Admin rights check failed: $_" -Level ERROR
         throw
     } finally {
         Disconnect-PnPOnline -ErrorAction SilentlyContinue
         $sw.Stop()
         Write-STTelemetryEvent -ScriptName 'Test-SPToolsSiteAdmin' -Result $result -Duration $sw.Elapsed -Category 'SharePointTools'
-        Write-STLog -Message 'Test-SPToolsSiteAdmin result' -Structured:$($env:ST_LOG_STRUCTURED -eq '1') -Metadata @{ url = $SiteUrl; status = $status; isAdmin = $isAdmin }
+        Write-STLog -Message 'Test-SPToolsSiteAdmin result' -Metadata @{ url = $SiteUrl; status = $status; isAdmin = $isAdmin }
     }
 
     [pscustomobject]@{

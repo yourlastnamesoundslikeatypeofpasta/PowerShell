@@ -15,17 +15,17 @@ function Invoke-SDRestWithRetry {
             } else {
                 $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers
             }
-            Write-STLog -Message "SUCCESS $Method $Uri" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+            Write-STLog -Message "SUCCESS $Method $Uri"
             return $response
         } catch [System.Net.WebException],[Microsoft.PowerShell.Commands.HttpResponseException] {
             $status = $_.Exception.Response.StatusCode.value__
             $msg    = $_.Exception.Message
-            Write-STLog -Message "HTTP $status $msg" -Level 'ERROR' -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+            Write-STLog -Message "HTTP $status $msg" -Level 'ERROR'
             if ($status -eq 429 -or ($status -ge 500 -and $status -lt 600)) {
                 if ($attempt -lt $maxRetries) {
                     $retryAfter = $_.Exception.Response.Headers['Retry-After']
                     if ($retryAfter) { $delay = [int]$retryAfter } else { $delay = [math]::Pow(2, $attempt) }
-                    Write-STLog -Message "Retry $attempt in $delay sec" -Level WARN -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+                    Write-STLog -Message "Retry $attempt in $delay sec" -Level WARN
                     Write-Verbose "Retrying in $delay seconds"
                     Start-Sleep -Seconds $delay
                     $attempt++
@@ -35,7 +35,7 @@ function Invoke-SDRestWithRetry {
             $errorObj = New-STErrorObject -Message "HTTP $status $msg" -Category 'HTTP'
             throw $errorObj
         } catch {
-            Write-STLog -Message "ERROR $Method $Uri :: $_" -Level 'ERROR' -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+            Write-STLog -Message "ERROR $Method $Uri :: $_" -Level 'ERROR'
             throw
         }
     }

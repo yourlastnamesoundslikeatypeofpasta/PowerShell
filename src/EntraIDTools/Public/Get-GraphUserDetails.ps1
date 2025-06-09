@@ -116,7 +116,7 @@ function Get-GraphUserDetails {
         return $details
     } catch {
         $result = 'Failure'
-        Write-STLog -Message "Get-GraphUserDetails failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STLog -Message "Get-GraphUserDetails failed: $_" -Level ERROR
         throw
     } finally {
         $sw.Stop()

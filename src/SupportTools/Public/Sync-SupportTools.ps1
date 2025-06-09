@@ -75,7 +75,7 @@ function Sync-SupportTools {
         }
     } catch {
         Write-STStatus "Sync-SupportTools failed: $_" -Level ERROR -Log
-        Write-STLog -Message "Sync-SupportTools failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STLog -Message "Sync-SupportTools failed: $_" -Level ERROR
         $result = 'Failure'
         return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     } finally {
