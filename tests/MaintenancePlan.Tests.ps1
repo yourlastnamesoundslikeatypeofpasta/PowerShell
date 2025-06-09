@@ -35,6 +35,11 @@ Describe 'MaintenancePlan Module' {
         }
     }
 
+    Safe-It 'shows plan summary' {
+        $plan = New-MaintenancePlan -Name Demo -Steps @('step1','step2') -Schedule 'Daily'
+        { Show-MaintenancePlan -Plan $plan } | Should -Not -Throw
+    }
+
     Safe-It 'builds scheduled task command on Windows' {
         InModuleScope MaintenancePlan {
             Set-Variable -Name IsWindows -Value $true -Scope Script -Force
