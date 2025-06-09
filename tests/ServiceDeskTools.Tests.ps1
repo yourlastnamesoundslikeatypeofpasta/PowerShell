@@ -178,6 +178,18 @@ Describe 'ServiceDeskTools Module' {
                 { Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json' } | Should -Throw
             }
         }
+        It 'throws when SD_API_TOKEN cannot be loaded from vault' {
+            InModuleScope ServiceDeskTools {
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Import-Module $PSScriptRoot/../src/STPlatform/STPlatform.psd1 -Force
+                InModuleScope STPlatform {
+                    Mock Get-Secret { $null }
+                    Connect-STPlatform -Mode Cloud -Vault 'TestVault'
+                }
+                try { Invoke-SDRequest -Method 'GET' -Path '/incidents/99.json' } catch { $err = $_ }
+                $err | Should -BeOfType 'System.Management.Automation.ErrorRecord'
+            }
+        }
         It 'uses default base URI when SD_BASE_URI not set' {
             InModuleScope ServiceDeskTools {
                 $env:SD_API_TOKEN = 't'
