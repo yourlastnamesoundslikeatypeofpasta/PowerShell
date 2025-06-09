@@ -160,7 +160,7 @@ Describe 'Logging Module' {
         }
     }
 
-    It 'honors ST_LOG_MAX_BYTES for rotation' {
+    Safe-It 'honors ST_LOG_MAX_BYTES for rotation' {
         $logFile = Join-Path $TestDrive 'envrotate.log'
         $env:ST_LOG_MAX_BYTES = 20
         try {
