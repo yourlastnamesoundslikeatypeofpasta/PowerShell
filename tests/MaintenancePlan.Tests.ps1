@@ -63,4 +63,27 @@ Describe 'MaintenancePlan Module' {
             $entry | Should -Match '/tmp/p.json'
         }
     }
+
+    Safe-It 'Import-MaintenancePlan throws when file missing' {
+        { Import-MaintenancePlan -Path '/no/plan.json' } | Should -Throw 'File not found'
+    }
+
+    Safe-It 'Export-MaintenancePlan errors when directory missing' {
+        $plan = New-MaintenancePlan -Name Demo -Steps @('echo hi')
+        $dir  = Join-Path ([IO.Path]::GetTempPath()) ([IO.Path]::GetRandomFileName())
+        $path = Join-Path $dir 'plan.json'
+        { $plan | Export-MaintenancePlan -Path $path } | Should -Throw
+    }
+
+    Safe-It 'Schedule-MaintenancePlan throws on invalid cron' {
+        InModuleScope MaintenancePlan {
+            Set-Variable -Name IsWindows -Value $true -Scope Script -Force
+            { Schedule-MaintenancePlan -PlanPath '/tmp/p.json' -Cron 'bad' -Name 'MP' } | Should -Throw 'Cron expression'
+        }
+    }
+
+    Safe-It 'Invoke-MaintenancePlan errors when script file missing' {
+        $plan = New-MaintenancePlan -Name Demo -Steps @('/tmp/nosuch.ps1')
+        { Invoke-MaintenancePlan -Plan $plan } | Should -Throw '/tmp/nosuch.ps1'
+    }
 }
