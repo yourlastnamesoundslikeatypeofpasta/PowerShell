@@ -21,6 +21,15 @@ Write-STBlock -Data @{ 'User'='svc-backend'; 'Domain'='corp.local'; 'IP'='10.10.
 Write-STClosing
 ```
 
+## Banners with Color
+
+`Out-STBanner` accepts a `-Color` parameter to emit the banner title using ANSI
+color codes. Pass any standard console color name.
+
+```powershell
+Out-STBanner -Info (Show-LoggingBanner) -Color Red
+```
+
 All messages can also be logged to `%USERPROFILE%\SupportToolsLogs\supporttools.log` or `$env:ST_LOG_PATH`.
 Use the `-Log` switch or `-Path` parameter of `Write-STLog` to override the location.
 Use the `-Structured` parameter or set `ST_LOG_STRUCTURED=1` to output JSON lines with extra metadata.
