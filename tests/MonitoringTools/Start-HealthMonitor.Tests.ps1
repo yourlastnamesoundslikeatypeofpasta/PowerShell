@@ -23,4 +23,18 @@ Describe 'Start-HealthMonitor and Stop-HealthMonitor' {
             Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -Times 3
         }
     }
+
+    Safe-It 'honors ST_HEALTH_INTERVAL when IntervalSeconds not specified' {
+        InModuleScope MonitoringTools {
+            $env:ST_HEALTH_INTERVAL = 5
+            Mock Write-STRichLog {} -ModuleName MonitoringTools
+            Mock Get-SystemHealth { @{ CpuPercent = 0 } } -ModuleName MonitoringTools
+            Mock Start-Sleep {} -ModuleName MonitoringTools
+
+            Start-HealthMonitor -Count 1
+
+            Assert-MockCalled Start-Sleep -ModuleName MonitoringTools -ParameterFilter { $Seconds -eq 5 } -Times 1
+            Remove-Item Env:ST_HEALTH_INTERVAL
+        }
+    }
 }

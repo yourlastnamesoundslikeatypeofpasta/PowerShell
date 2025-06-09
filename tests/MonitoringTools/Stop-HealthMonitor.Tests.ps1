@@ -23,4 +23,22 @@ Describe 'Stop-HealthMonitor function' {
             $script:StopHealthMonitor | Should -BeFalse
         }
     }
+
+    Safe-It 'stops logging when called mid-loop' {
+        InModuleScope MonitoringTools {
+            $script:calls = 0
+            $script:StopHealthMonitor = $false
+            Mock Write-STRichLog {} -ModuleName MonitoringTools
+            Mock Start-Sleep {} -ModuleName MonitoringTools
+            Mock Get-SystemHealth {
+                $script:calls++
+                if ($script:calls -eq 2) { Stop-HealthMonitor }
+                @{ CpuPercent = 0 }
+            } -ModuleName MonitoringTools
+
+            Start-HealthMonitor -IntervalSeconds 0 -Count 5
+
+            Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -Times 2
+        }
+    }
 }
