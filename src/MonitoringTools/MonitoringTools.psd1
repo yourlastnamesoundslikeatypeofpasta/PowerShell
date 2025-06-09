@@ -6,5 +6,5 @@
     Description = 'Commands for collecting system monitoring data.'
     RequiredModules = @('Logging','Telemetry')
     PrivateData = @{ PSData = @{ Tags = @('PowerShell','Monitoring','Internal') } }
-    FunctionsToExport = @('Get-CPUUsage','Get-DiskSpaceInfo','Get-EventLogSummary','Get-SystemHealth','Start-HealthMonitor')
+    FunctionsToExport = @('Get-CPUUsage','Get-DiskSpaceInfo','Get-EventLogSummary','Get-SystemHealth','Start-HealthMonitor','Stop-HealthMonitor')
 }

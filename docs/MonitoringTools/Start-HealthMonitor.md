@@ -16,7 +16,7 @@ Start-HealthMonitor [[-IntervalSeconds] <Int32>] [[-Count] <Int32>] [<CommonPara
 ```
 
 ## DESCRIPTION
-`Start-HealthMonitor` calls `Get-SystemHealth` on a recurring interval and writes each result using `Write-STRichLog`. Set `Count` to limit the number of samples; otherwise the command runs until cancelled.
+`Start-HealthMonitor` calls `Get-SystemHealth` on a recurring interval and writes each result using `Write-STRichLog`. Set `Count` to limit the number of samples; otherwise the command runs until `Stop-HealthMonitor` is called.
 
 ## EXAMPLES
 ### Example 1
@@ -41,3 +41,4 @@ None. This command writes structured log entries but does not return data.
 
 ## RELATED LINKS
 `Get-SystemHealth`
+`Stop-HealthMonitor`

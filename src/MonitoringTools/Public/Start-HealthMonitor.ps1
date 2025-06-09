@@ -21,14 +21,13 @@ function Start-HealthMonitor {
 
     try {
         $collected = 0
-        while ($true) {
+        while (-not $script:StopHealthMonitor -and ($Count -eq 0 -or $collected -lt $Count)) {
             $start = Get-Date
             $health = Get-SystemHealth
             $json = $health | ConvertTo-Json -Compress
             Write-STRichLog -Tool 'HealthMonitor' -Status 'sample' -Details $json
 
             $collected++
-            if ($Count -gt 0 -and $collected -ge $Count) { break }
 
             $elapsed = (Get-Date) - $start
             $sleep = $IntervalSeconds - [int][math]::Floor($elapsed.TotalSeconds)
