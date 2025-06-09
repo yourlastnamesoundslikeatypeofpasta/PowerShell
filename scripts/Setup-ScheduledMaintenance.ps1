@@ -17,6 +17,7 @@ param(
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 function New-MaintenanceTaskXml {
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$TaskName,
         [Parameter(Mandatory)][string]$ScriptPath,

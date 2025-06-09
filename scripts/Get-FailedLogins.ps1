@@ -1,6 +1,7 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 function Get-FailedLogins {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Get failed login attempts from a system.    

@@ -12,8 +12,10 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 function Main {
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string]$FontFolder
     )
 
@@ -28,8 +30,10 @@ function Main {
 }
 
 function Get-Fonts {
-
+    [CmdletBinding()]
     param (
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string]
         $FontFolder
     )
@@ -40,7 +44,10 @@ function Get-Fonts {
 }
 
 function Install-Fonts {
+    [CmdletBinding()]
     param (
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [array]
         $Fonts
     )

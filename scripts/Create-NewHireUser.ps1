@@ -25,12 +25,18 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskToo
 if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
 function Get-NewHireTickets {
+    [CmdletBinding()]
+    param()
     Write-STStatus -Message 'Searching Service Desk for new hire tickets...' -Level INFO -Log
     Search-SDTicket -Query 'new hire'
 }
 
 function Get-UserDetailsFromTicket {
-    param([object]$Ticket)
+    [CmdletBinding()]
+    param([
+        Parameter(Mandatory)
+        ValidateNotNullOrEmpty()
+        object]$Ticket)
     $json = $Ticket.RawJson | ConvertFrom-Json
     [pscustomobject]@{
         FirstName        = $json.custom_fields.firstName
@@ -40,7 +46,11 @@ function Get-UserDetailsFromTicket {
 }
 
 function Create-EntraUser {
-    param([object]$Details)
+    [CmdletBinding()]
+    param([
+        Parameter(Mandatory)
+        ValidateNotNullOrEmpty()
+        object]$Details)
     if (-not (Get-Module -ListAvailable -Name Microsoft.Graph.Users)) {
         Install-Module Microsoft.Graph.Users -Scope CurrentUser -Force | Out-Null
     }
@@ -59,6 +69,7 @@ function Create-EntraUser {
 }
 
 function Start-Main {
+    [CmdletBinding()]
     param([int]$PollMinutes,[switch]$Once)
     while ($true) {
         $tickets = Get-NewHireTickets

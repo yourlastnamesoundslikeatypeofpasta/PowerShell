@@ -16,6 +16,8 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 function MSStoreAppInstallerUpdate {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
         Opens the Microsoft Store page for the App Installer.
@@ -36,6 +38,8 @@ function MSStoreAppInstallerUpdate {
 
 
 function Install-Chrome {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
         Installs the Google Chrome browser using winget.
@@ -56,6 +60,8 @@ function Install-Chrome {
 
 
 function Install-AdobeAcrobatReader {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
         Installs Adobe Acrobat Reader via winget.
@@ -76,6 +82,8 @@ function Install-AdobeAcrobatReader {
 
 
 function Install-ExcelMobile {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
         Installs the Excel Mobile application via winget.
@@ -97,6 +105,8 @@ function Install-ExcelMobile {
 
 
 function Enable-NetFramework {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
         Enables the .NET Framework 3.5 feature.
@@ -115,6 +125,8 @@ function Enable-NetFramework {
 
 
 function Get-ComputerName {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
         Prompts the user for a computer name until the value is confirmed.
@@ -144,6 +156,8 @@ function Get-ComputerName {
 
 
 function Get-DriveLetter {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
         Returns the drive letter containing installation media.
@@ -165,6 +179,7 @@ function Get-DriveLetter {
 
 
 function Get-AgentPath {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Retrieves the installation path for a specified agent.
@@ -178,6 +193,8 @@ function Get-AgentPath {
         System.String
     #>
     param (
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string]$Agent,
         [switch]$USB,
         [switch]$Local
@@ -224,6 +241,7 @@ function Get-AgentPath {
 }
 
 function Install-[REDACTED] {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Copies a license key to the clipboard and launches the installer.
@@ -254,6 +272,7 @@ function Install-[REDACTED] {
 
 
 function Install-[REDACTED] {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Launches the [REDACTED] installer from USB media.
@@ -264,6 +283,7 @@ function Install-[REDACTED] {
 }
 
 function Install-[REDACTED] {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Installs Sysmon using predefined arguments.
@@ -275,6 +295,7 @@ function Install-[REDACTED] {
 }
 
 function Install-[REDACTED] {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Launches the ManageEngine agent installer.
@@ -285,6 +306,7 @@ function Install-[REDACTED] {
 }
 
 function Copy-Files {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Copies administration shortcuts from installation media to the public desktop.
@@ -332,6 +354,8 @@ function Copy-Files {
 
 
 function Set-PowerPlan {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
         Configures the system power plan for performance.
@@ -375,6 +399,8 @@ function Set-PowerPlan {
 }
 
 function Main {
+    [CmdletBinding()]
+    param()
     <#
     .SYNOPSIS
         Executes the full post-installation workflow.

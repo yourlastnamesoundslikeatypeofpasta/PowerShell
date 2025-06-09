@@ -12,7 +12,8 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 function Get-ScriptInfo {
-    param([string]$Path)
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$Path)
     $lines = Get-Content $Path -First 10
     $synopsis = $lines | Where-Object { $_ -match '\.SYNOPSIS' } |
         ForEach-Object { ($_ -replace '.*\.SYNOPSIS', '').Trim() }
@@ -25,6 +26,8 @@ $scriptFiles = Get-ChildItem -Path $PSScriptRoot -Filter '*.ps1' |
     ForEach-Object { Get-ScriptInfo $_.FullName }
 
 function Show-Menu {
+    [CmdletBinding()]
+    param()
     Write-STDivider -Title 'Available Scripts' -Style light
     for ($i = 0; $i -lt $scriptFiles.Count; $i++) {
         $num = $i + 1

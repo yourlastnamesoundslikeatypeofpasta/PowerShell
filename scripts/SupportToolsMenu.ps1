@@ -36,6 +36,8 @@ if ($UserRole -eq 'Site Admin') {
 }
 
 function Show-Menu {
+    [CmdletBinding()]
+    param()
     Write-STDivider -Title 'SupportTools Menu' -Style heavy
     for ($i = 0; $i -lt $Menu.Count; $i++) {
         $num = $i + 1

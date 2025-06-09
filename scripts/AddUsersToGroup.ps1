@@ -66,6 +66,8 @@ if ($Cloud -eq 'Entra') {
 }
 
 function Get-CSVFilePath {
+    [CmdletBinding()]
+    param()
     Write-STStatus -Message 'Select CSV from file dialog...' -Level SUB
     # Open file dialog to get CSV path
     $openFileDialog = New-Object Microsoft.Win32.OpenFileDialog
@@ -85,11 +87,15 @@ function Get-CSVFilePath {
 }
 
 function Get-GroupNames {
+    [CmdletBinding()]
+    param()
     $allGroups = Get-MgGroup -All | select DisplayName, Id
     return $allGroups
 }
 
 function Connect-MicrosoftGraph {
+    [CmdletBinding()]
+    param()
     # Connect to Microsoft Graph API
     Write-STStatus -Message 'Connecting to Microsoft Graph...' -Level INFO
     $scopes = 'User.Read.All','Group.ReadWrite.All','Directory.ReadWrite.All'
@@ -107,6 +113,7 @@ function Connect-MicrosoftGraph {
 }
 
 function Get-Group {
+    [CmdletBinding()]
     param(
         [string]$GroupName
     )
@@ -139,7 +146,10 @@ function Get-Group {
 }
 
 function Get-GroupExistingMembers {
+    [CmdletBinding()]
     param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [object]
         $Group
     )
@@ -156,7 +166,10 @@ function Get-GroupExistingMembers {
 }
 
 function Get-UserID {
+    [CmdletBinding()]
     param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string]
         $UserPrincipalName
     )

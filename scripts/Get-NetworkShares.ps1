@@ -2,6 +2,7 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 function Get-NetworkShares {
+    [CmdletBinding()]
     <#
     .SYNOPSIS
         Get network shares from a computer

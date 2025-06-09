@@ -12,6 +12,8 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 function Main {
+    [CmdletBinding()]
+    param()
 
     # get the correct drive letter
     $driveLetters = @("D", "E", "F", "G")
