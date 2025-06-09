@@ -14,6 +14,14 @@ Register the built‑in SecretStore as the default vault:
 Register-SecretVault -Name LocalStore -ModuleName Microsoft.PowerShell.SecretStore -DefaultVault
 ```
 
+The SecretStore vault starts out locked. In unattended scenarios configure it to avoid prompting:
+
+```powershell
+Set-SecretStoreConfiguration -Scope CurrentUser -Authentication None -Interaction None
+```
+
+If you secured the store with a password, unlock it first using `Unlock-SecretStore`.
+
 ## Save secrets
 
 Store the required application values and API tokens as secrets. Use the same names as the environment variables expected by the modules:
