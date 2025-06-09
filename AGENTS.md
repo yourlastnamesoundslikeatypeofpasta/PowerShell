@@ -25,3 +25,13 @@ Do not hardcode secrets. Supply credentials via environment variables as documen
 
 ## Pull Requests
 Reference changed files using file path citations and include test results. If tests could not run, state: `Codex couldn't run certain commands due to environment limitations. Consider configuring a setup script or internet access in your Codex environment to install dependencies.`
+## Pull Request Template
+Use this template in your PR descriptions. Always cite changed files and add the standard test disclaimer when tests cannot be run.
+
+```markdown
+### Summary
+
+### File Citations
+
+### Test Results
+```
