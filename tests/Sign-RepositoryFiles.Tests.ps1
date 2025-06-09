@@ -25,7 +25,8 @@ Describe 'Sign-RepositoryFiles script' {
         try {
             & $PSScriptRoot/../scripts/Sign-RepositoryFiles.ps1 -CertificatePath $certPath
             Assert-MockCalled Set-AuthenticodeSignature -ParameterFilter { $FilePath -eq $target } -Times 1
-        } finally {
+        }
+        finally {
             Remove-Item $certPath -ErrorAction SilentlyContinue
         }
     }

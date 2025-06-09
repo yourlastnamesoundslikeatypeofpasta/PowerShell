@@ -16,7 +16,8 @@ Describe 'STCore Helper Functions' {
             try {
                 $cfg = Get-STConfig -Path $path
                 $cfg.x | Should -Be 42
-            } finally {
+            }
+            finally {
                 Remove-Item $path -ErrorAction SilentlyContinue
             }
         }
@@ -27,7 +28,8 @@ Describe 'STCore Helper Functions' {
             try {
                 $cfg = Get-STConfig -Path $path
                 $cfg.y | Should -Be 99
-            } finally {
+            }
+            finally {
                 Remove-Item $path -ErrorAction SilentlyContinue
             }
         }
@@ -52,7 +54,8 @@ Describe 'STCore Helper Functions' {
                     Write-STDebug 'msg'
                     Assert-MockCalled Write-STStatus -Times 1 -ParameterFilter { $Message -eq '[DEBUG] msg' }
                     Assert-MockCalled Write-STLog -Times 1 -ParameterFilter { $Message -eq '[DEBUG] msg' }
-                } finally {
+                }
+                finally {
                     Remove-Item env:ST_DEBUG -ErrorAction SilentlyContinue
                 }
             }
@@ -102,7 +105,8 @@ Describe 'STCore Helper Functions' {
                         $resp = [pscustomobject]@{ StatusCode = [System.Net.HttpStatusCode]::InternalServerError; Headers = @{} }
                         $ex | Add-Member -NotePropertyName Response -NotePropertyValue $resp -Force
                         throw $ex
-                    } else {
+                    }
+                    else {
                         @{ ok = 1 }
                     }
                 }
@@ -117,7 +121,7 @@ Describe 'STCore Helper Functions' {
             InModuleScope STCore {
                 Mock Write-STLog {}
                 Mock Start-Sleep {}
-                Mock Get-Random { param($Minimum,$Maximum) if ($Maximum -eq 1500) { return 600 } else { return 5 } }
+                Mock Get-Random { param($Minimum, $Maximum) if ($Maximum -eq 1500) { return 600 } else { return 5 } }
                 Mock Invoke-RestMethod {}
                 { Invoke-STRequest -Method GET -Uri 'https://example.com' -ChaosMode } | Should -Throw '*ChaosMode*'
                 Assert-MockCalled Invoke-RestMethod -Times 0
@@ -129,12 +133,13 @@ Describe 'STCore Helper Functions' {
             InModuleScope STCore {
                 Mock Write-STLog {}
                 Mock Start-Sleep {}
-                Mock Get-Random { param($Minimum,$Maximum) if ($Maximum -eq 1500) { return 500 } else { return 12 } }
+                Mock Get-Random { param($Minimum, $Maximum) if ($Maximum -eq 1500) { return 500 } else { return 12 } }
                 Mock Invoke-RestMethod {}
                 try {
                     $env:ST_CHAOS_MODE = '1'
                     { Invoke-STRequest -Method GET -Uri 'https://example.com' } | Should -Throw '*ChaosMode*'
-                } finally {
+                }
+                finally {
                     Remove-Item env:ST_CHAOS_MODE -ErrorAction SilentlyContinue
                 }
                 Assert-MockCalled Invoke-RestMethod -Times 0

@@ -6,11 +6,11 @@ function Get-EventLogSummary {
         Returns counts of Error and Warning events from the specified log within the last N hours.
         A structured log entry summarising the results is written.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [ValidateNotNullOrEmpty()]
         [string]$LogName = 'System',
-        [ValidateRange(1,720)]
+        [ValidateRange(1, 720)]
         [int]$LastHours = 24
     )
 
@@ -20,16 +20,18 @@ function Get-EventLogSummary {
     if (Get-Command Get-WinEvent -ErrorAction SilentlyContinue) {
         $events = Get-WinEvent -FilterHashtable @{ LogName = $LogName; StartTime = (Get-Date).AddHours(-$LastHours) }
         $summary = $events |
-            Where-Object { $_.LevelDisplayName -in @('Error','Warning') } |
+            Where-Object { $_.LevelDisplayName -in @('Error', 'Warning') } |
             Group-Object LevelDisplayName |
             Select-Object Name, Count
-    } elseif (Get-Command Get-EventLog -ErrorAction SilentlyContinue) {
+    }
+    elseif (Get-Command Get-EventLog -ErrorAction SilentlyContinue) {
         $events = Get-EventLog -LogName $LogName -After (Get-Date).AddHours(-$LastHours)
         $summary = $events |
-            Where-Object { $_.EntryType -in 'Error','Warning' } |
+            Where-Object { $_.EntryType -in 'Error', 'Warning' } |
             Group-Object EntryType |
             Select-Object Name, Count
-    } else {
+    }
+    else {
         Write-Warning 'Event log cmdlets are not available.'
     }
     if (-not $summary) { $summary = @() }

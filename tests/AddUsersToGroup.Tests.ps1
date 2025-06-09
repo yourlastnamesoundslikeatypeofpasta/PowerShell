@@ -26,11 +26,11 @@ Describe 'AddUsersToGroup Script' {
         Mock Connect-MgGraph {}
         Mock Disconnect-MgGraph {}
         Mock Get-MgContext { @{ Account = 'test' } }
-        Mock Get-Group { [pscustomobject]@{ Id='1'; DisplayName='Group' } }
+        Mock Get-Group { [pscustomobject]@{ Id = '1'; DisplayName = 'Group' } }
         Mock Get-GroupExistingMembers { @('existing@contoso.com') }
         Mock Get-CSVFilePath { 'dummy.csv' }
-        Mock Import-Csv { @([pscustomobject]@{ UPN='user1@contoso.com' }, [pscustomobject]@{ UPN='existing@contoso.com' }) }
-        Mock Get-UserID { param($UserPrincipalName) [pscustomobject]@{ UserPrincipalName=$UserPrincipalName; DisplayName='User'; Id='id' } }
+        Mock Import-Csv { @([pscustomobject]@{ UPN = 'user1@contoso.com' }, [pscustomobject]@{ UPN = 'existing@contoso.com' }) }
+        Mock Get-UserID { param($UserPrincipalName) [pscustomobject]@{ UserPrincipalName = $UserPrincipalName; DisplayName = 'User'; Id = 'id' } }
         Mock New-MgGroupMember {}
         Mock Add-ADGroupMember {}
         Mock Get-ADGroup {}

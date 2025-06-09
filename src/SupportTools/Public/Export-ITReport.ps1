@@ -20,12 +20,12 @@ function Export-ITReport {
     .EXAMPLE
         Get-FailedLogin | Export-ITReport -Format CSV -OutputPath report.csv
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory, ValueFromPipeline)]
         [psobject]$Data,
         [Parameter(Mandatory)]
-        [ValidateSet('HTML','CSV','JSON')]
+        [ValidateSet('HTML', 'CSV', 'JSON')]
         [string]$Format,
         [string]$OutputPath,
         [string]$TranscriptPath
@@ -44,7 +44,7 @@ function Export-ITReport {
             if (-not $OutputPath) {
                 $ext = switch ($Format) {
                     'HTML' { 'html' }
-                    'CSV'  { 'csv' }
+                    'CSV' { 'csv' }
                     'JSON' { 'json' }
                 }
                 $OutputPath = Join-Path (Get-Location) "ITReport_$((Get-Date).ToString('yyyyMMdd_HHmmss')).$ext"
@@ -65,7 +65,8 @@ function Export-ITReport {
                 OutputPath = $OutputPath
                 Format     = $Format
             }
-        } finally {
+        }
+        finally {
             if ($TranscriptPath) { Stop-Transcript | Out-Null }
         }
     }

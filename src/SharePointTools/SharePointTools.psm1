@@ -32,7 +32,8 @@ if ($env:SPTOOLS_CERT_PATH) { $SharePointToolsSettings.CertPath = $env:SPTOOLS_C
 # Load required module once at module scope
 try {
     Import-Module PnP.PowerShell -ErrorAction Stop
-} catch {
+}
+catch {
     Write-STStatus -Message 'PnP.PowerShell module not found. SharePoint functions may not work until it is installed.' -Level WARN
 }
 
@@ -52,20 +53,20 @@ function Write-SPToolsHacker {
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$Message,
-        [ValidateSet('INFO','SUCCESS','ERROR','WARN','SUB','FINAL','FATAL')]
+        [ValidateSet('INFO', 'SUCCESS', 'ERROR', 'WARN', 'SUB', 'FINAL', 'FATAL')]
         [string]$Level = 'INFO',
         [hashtable]$Metadata
     )
     process {
         Write-STStatus -Message $Message -Level $Level -Log
-        if ($Level -in @('SUCCESS','ERROR','WARN','FATAL')) {
+        if ($Level -in @('SUCCESS', 'ERROR', 'WARN', 'FATAL')) {
             $meta = @{ tool = 'SharePointTools'; level = $Level }
             if ($Metadata) { foreach ($k in $Metadata.Keys) { $meta[$k] = $Metadata[$k] } }
             switch ($Level) {
                 'ERROR' { $logLevel = 'ERROR' }
                 'FATAL' { $logLevel = 'ERROR' }
-                'WARN'  { $logLevel = 'WARN'  }
-                default { $logLevel = 'INFO'  }
+                'WARN' { $logLevel = 'WARN' }
+                default { $logLevel = 'INFO' }
             }
             Write-STLog -Message $Message -Level $logLevel -Structured -Metadata $meta
         }
@@ -81,7 +82,8 @@ function Send-SPToolsTelemetryEvent {
     )
     try {
         Write-STTelemetryEvent -ScriptName $Command -Result $Result -Duration $Duration -Category "SharePointTools"
-    } catch {}
+    }
+    catch {}
 }
 
 
@@ -107,21 +109,21 @@ function Connect-SPToolsOnline {
     .PARAMETER RetryCount
         Number of connection attempts before failing.
     #>
-    [CmdletBinding(DefaultParameterSetName='Certificate')]
+    [CmdletBinding(DefaultParameterSetName = 'Certificate')]
     param(
         [Parameter(Mandatory)][string]$Url,
-        [Parameter(Mandatory, ParameterSetName='Certificate')]
-        [Parameter(Mandatory, ParameterSetName='Secret')]
+        [Parameter(Mandatory, ParameterSetName = 'Certificate')]
+        [Parameter(Mandatory, ParameterSetName = 'Secret')]
         [string]$ClientId,
-        [Parameter(Mandatory, ParameterSetName='Certificate')]
-        [Parameter(Mandatory, ParameterSetName='Secret')]
-        [Alias('TenantID','tenantId')]
+        [Parameter(Mandatory, ParameterSetName = 'Certificate')]
+        [Parameter(Mandatory, ParameterSetName = 'Secret')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId,
-        [Parameter(Mandatory, ParameterSetName='Certificate')]
+        [Parameter(Mandatory, ParameterSetName = 'Certificate')]
         [string]$CertPath,
-        [Parameter(Mandatory, ParameterSetName='Secret')]
+        [Parameter(Mandatory, ParameterSetName = 'Secret')]
         [string]$ClientSecret,
-        [Parameter(ParameterSetName='Device')][switch]$DeviceLogin,
+        [Parameter(ParameterSetName = 'Device')][switch]$DeviceLogin,
         [int]$RetryCount = 3,
         [switch]$NoTelemetry
     )
@@ -149,7 +151,8 @@ function Connect-SPToolsOnline {
             }
             Write-STStatus -Message 'PnP connection established' -Level SUCCESS
             break
-        } catch {
+        }
+        catch {
             Write-STStatus "Connection failed: $($_.Exception.Message)" -Level WARN
             $result = 'Failure'
             if ($attempt -ge $RetryCount) {
@@ -182,7 +185,8 @@ function Invoke-SPPnPCommand {
     )
     try {
         & $ScriptBlock
-    } catch {
+    }
+    catch {
         Write-STStatus "${ErrorMessage}: $($_.Exception.Message)" -Level ERROR
         throw
     }
@@ -195,7 +199,7 @@ function Save-SPToolsSettings {
     .EXAMPLE
         Save-SPToolsSettings
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [string]$Path = $settingsFile
     )
@@ -229,13 +233,16 @@ function Test-SPToolsPrereqs {
                 try {
                     Install-Module -Name 'PnP.PowerShell' -Scope CurrentUser -Force -ErrorAction Stop
                     Write-SPToolsHacker 'Installed PnP.PowerShell' -Level SUCCESS
-                } catch {
+                }
+                catch {
                     Write-SPToolsHacker "Failed to install PnP.PowerShell: $($_.Exception.Message)" -Level ERROR
                 }
-            } else {
+            }
+            else {
                 Write-SPToolsHacker "Run 'Test-SPToolsPrereqs -Install' to install." -Level SUB
             }
-        } else {
+        }
+        else {
             Write-SPToolsHacker 'PnP.PowerShell module present.' -Level SUCCESS
         }
     }
@@ -292,7 +299,7 @@ function Add-SPToolsSite {
     .EXAMPLE
         Add-SPToolsSite -Name 'Contoso' -Url 'https://contoso.sharepoint.com'
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
@@ -322,7 +329,7 @@ function Set-SPToolsSite {
     .EXAMPLE
         Set-SPToolsSite -Name 'Contoso' -Url 'https://contoso.sharepoint.com'
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
@@ -350,7 +357,7 @@ function Remove-SPToolsSite {
     .EXAMPLE
         Remove-SPToolsSite -Name 'Contoso'
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
@@ -374,7 +381,7 @@ function Invoke-YFArchiveCleanup {
     .EXAMPLE
         Invoke-YFArchiveCleanup
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param([switch]$NoTelemetry)
 
     Invoke-ArchiveCleanup -SiteName 'YF' -NoTelemetry:$NoTelemetry
@@ -387,7 +394,7 @@ function Invoke-IBCCentralFilesArchiveCleanup {
     .EXAMPLE
         Invoke-IBCCentralFilesArchiveCleanup
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param([switch]$NoTelemetry)
 
     Invoke-ArchiveCleanup -SiteName 'IBCCentralFiles' -NoTelemetry:$NoTelemetry
@@ -400,7 +407,7 @@ function Invoke-MexCentralFilesArchiveCleanup {
     .EXAMPLE
         Invoke-MexCentralFilesArchiveCleanup
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param([switch]$NoTelemetry)
 
     Invoke-ArchiveCleanup -SiteName 'MexCentralFiles' -NoTelemetry:$NoTelemetry
@@ -415,7 +422,7 @@ function Invoke-MexCentralFilesArchiveCleanup {
     Invoke-ArchiveCleanup -SiteName 'Finance'
 #>
 function Invoke-ArchiveCleanup {
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
@@ -425,11 +432,11 @@ function Invoke-ArchiveCleanup {
         [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Shared Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
-        [Alias('TenantID','tenantId')]
-        [Alias('TenantID','tenantId')]
-        [Alias('TenantID','tenantId')]
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
+        [Alias('TenantID', 'tenantId')]
+        [Alias('TenantID', 'tenantId')]
+        [Alias('TenantID', 'tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
         [string]$TranscriptPath,
@@ -448,7 +455,7 @@ function Invoke-ArchiveCleanup {
     Write-STStatus "[+] Scanning target: $SiteName" -Level INFO
     $items = Invoke-SPPnPCommand { Get-PnPListItem -List $LibraryName -PageSize 5000 } 'Failed to retrieve list items'
 
-    $files   = $items | Where-Object { $_.FileSystemObjectType -eq 'File' }
+    $files = $items | Where-Object { $_.FileSystemObjectType -eq 'File' }
     $folders = $items | Where-Object { $_.FileSystemObjectType -eq 'Folder' }
 
     $archivedFiles = $files | Where-Object { $_.FieldValues.FileRef -match 'zzz_Archive' }
@@ -465,49 +472,51 @@ function Invoke-ArchiveCleanup {
                 Write-STStatus "-- Deleting file: $filePath" -Level SUB
                 Remove-PnPFile -ServerRelativeUrl $filePath -Force -ErrorAction Stop
                 $filesDeleted++
-            } catch {
+            }
+            catch {
                 Write-STStatus "[!] FILE DELETE FAIL: $filePath :: $_" -Level WARN
             }
         }
 
-    $archivedFoldersSorted = $archivedFolders | Sort-Object {
-        ($_.FieldValues.FileRef -split '/').Count
-    } -Descending
+        $archivedFoldersSorted = $archivedFolders | Sort-Object {
+            ($_.FieldValues.FileRef -split '/').Count
+        } -Descending
 
-    Write-STStatus "[>] Initiating folder cleanup (leaf-first)" -Level INFO
-    foreach ($folder in $archivedFoldersSorted) {
-        $folderPath = $folder.FieldValues.FileDirRef
-        $folderName = $folder.FieldValues.FileLeafRef
-        $fullPath = "$folderPath/$folderName"
+        Write-STStatus "[>] Initiating folder cleanup (leaf-first)" -Level INFO
+        foreach ($folder in $archivedFoldersSorted) {
+            $folderPath = $folder.FieldValues.FileDirRef
+            $folderName = $folder.FieldValues.FileLeafRef
+            $fullPath = "$folderPath/$folderName"
 
-        $relativePath = $fullPath -replace '^.*?Shared Documents/?', ''
-        $folderDepth = ($relativePath -split '/').Count
-        if ($folderDepth -le 1) {
-            Write-STStatus "-- Skipping root-level folder: $fullPath" -Level WARN
-            continue
+            $relativePath = $fullPath -replace '^.*?Shared Documents/?', ''
+            $folderDepth = ($relativePath -split '/').Count
+            if ($folderDepth -le 1) {
+                Write-STStatus "-- Skipping root-level folder: $fullPath" -Level WARN
+                continue
+            }
+
+            try {
+                Write-STStatus "-- Deleting folder: $fullPath" -Level SUB
+                Remove-PnPFolder -Name $folderName -Folder $folderPath -Force -ErrorAction Stop
+                $foldersDeleted++
+            }
+            catch {
+                Write-STStatus "[!] FOLDER DELETE FAIL: $fullPath :: $_" -Level WARN
+            }
         }
-
-        try {
-            Write-STStatus "-- Deleting folder: $fullPath" -Level SUB
-            Remove-PnPFolder -Name $folderName -Folder $folderPath -Force -ErrorAction Stop
-            $foldersDeleted++
-        } catch {
-            Write-STStatus "[!] FOLDER DELETE FAIL: $fullPath :: $_" -Level WARN
-        }
-    }
 
     }
 
     Stop-Transcript
 
     [pscustomobject]@{
-        SiteName           = $SiteName
-        ItemsScanned       = $items.Count
-        ArchivedFilesFound = $archivedFiles.Count
+        SiteName             = $SiteName
+        ItemsScanned         = $items.Count
+        ArchivedFilesFound   = $archivedFiles.Count
         ArchivedFoldersFound = $archivedFolders.Count
-        FilesDeleted       = $filesDeleted
-        FoldersDeleted     = $foldersDeleted
-        LogPath            = $TranscriptPath
+        FilesDeleted         = $filesDeleted
+        FoldersDeleted       = $foldersDeleted
+        LogPath              = $TranscriptPath
     }
 }
 
@@ -568,7 +577,7 @@ function Invoke-FileVersionCleanup {
         [ValidateNotNullOrEmpty()]
         [string]$LibraryName = 'Shared Documents',
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
         [string]$ReportPath = 'exportedReport.csv',
@@ -615,7 +624,7 @@ function Invoke-FileVersionCleanup {
     Invoke-SharingLinkCleanup -SiteName 'Finance'
 #>
 function Invoke-SharingLinkCleanup {
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
@@ -626,7 +635,7 @@ function Invoke-SharingLinkCleanup {
         [string]$LibraryName = 'Shared Documents',
         [string]$FolderName,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath,
         [string]$TranscriptPath,
@@ -644,9 +653,10 @@ function Invoke-SharingLinkCleanup {
 
     if (-not $FolderName) {
         $targetFolder = Select-SPToolsFolder -SiteUrl $SiteUrl -LibraryName $LibraryName
-    } else {
+    }
+    else {
         $allFolders = Invoke-SPPnPCommand { Get-PnPFolderItem -List $LibraryName -ItemType Folder -Recursive } 'Failed to list folders'
-        $targetFolder = $allFolders | Where-Object Name -eq $FolderName | Select-Object -First 1
+        $targetFolder = $allFolders | Where-Object Name -EQ $FolderName | Select-Object -First 1
         if (-not $targetFolder) { throw "Folder '$FolderName' not found." }
     }
 
@@ -663,7 +673,8 @@ function Invoke-SharingLinkCleanup {
                     $removed.Add($item.ServerRelativeUrl)
                     Write-STStatus "Removed file link: $($item.ServerRelativeUrl)" -Level WARN
                 }
-            } catch {
+            }
+            catch {
                 try {
                     $folderLink = (Get-PnPFolderSharingLink -Folder $item.ServerRelativeUrl -ErrorAction Stop).Link.WebUrl
                     if ($folderLink) {
@@ -671,7 +682,8 @@ function Invoke-SharingLinkCleanup {
                         $removed.Add($item.ServerRelativeUrl)
                         Write-STStatus "Removed folder link: $($item.ServerRelativeUrl)" -Level WARN
                     }
-                } catch {
+                }
+                catch {
                     # ignore if no links exist
                 }
             }
@@ -681,7 +693,8 @@ function Invoke-SharingLinkCleanup {
     if ($removed.Count) {
         Write-STStatus -Message 'Sharing links removed from the following items:' -Level WARN
         $removed | ForEach-Object { Write-STStatus $_ -Level WARN }
-    } else {
+    }
+    else {
         Write-STStatus -Message 'No sharing links found.' -Level SUCCESS
     }
 
@@ -697,7 +710,7 @@ function Invoke-YFSharingLinkCleanup {
     .EXAMPLE
         Invoke-YFSharingLinkCleanup
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param([switch]$NoTelemetry)
 
     Invoke-SharingLinkCleanup -SiteName 'YF' -NoTelemetry:$NoTelemetry
@@ -710,7 +723,7 @@ function Invoke-IBCCentralFilesSharingLinkCleanup {
     .EXAMPLE
         Invoke-IBCCentralFilesSharingLinkCleanup
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param([switch]$NoTelemetry)
 
     Invoke-SharingLinkCleanup -SiteName 'IBCCentralFiles' -NoTelemetry:$NoTelemetry
@@ -723,7 +736,7 @@ function Invoke-MexCentralFilesSharingLinkCleanup {
     .EXAMPLE
         Invoke-MexCentralFilesSharingLinkCleanup
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param([switch]$NoTelemetry)
 
     Invoke-SharingLinkCleanup -SiteName 'MexCentralFiles' -NoTelemetry:$NoTelemetry
@@ -749,7 +762,7 @@ function Get-SPToolsLibraryReport {
         [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -799,7 +812,7 @@ function Out-SPToolsLibraryReport {
         [pscustomobject]$InputObject
     )
     process {
-        $InputObject | Format-Table SiteName,LibraryName,ItemCount,LastModified
+        $InputObject | Format-Table SiteName, LibraryName, ItemCount, LastModified
     }
 }
 
@@ -820,7 +833,7 @@ function Get-SPToolsRecycleBinReport {
         [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -852,7 +865,7 @@ function Clear-SPToolsRecycleBin {
     .EXAMPLE
         Clear-SPToolsRecycleBin -SiteName 'Finance' -SecondStage
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidatePattern('^[A-Za-z0-9_-]+$')]
@@ -861,7 +874,7 @@ function Clear-SPToolsRecycleBin {
         [string]$SiteUrl,
         [switch]$SecondStage,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -875,11 +888,13 @@ function Clear-SPToolsRecycleBin {
         try {
             if ($SecondStage) {
                 Clear-PnPRecycleBinItem -SecondStage -Force
-            } else {
+            }
+            else {
                 Clear-PnPRecycleBinItem -FirstStage -Force
             }
             Write-STStatus -Message 'Recycle bin cleared' -Level SUCCESS
-        } catch {
+        }
+        catch {
             Write-STStatus "Failed to clear recycle bin: $($_.Exception.Message)" -Level ERROR
         }
     }
@@ -920,7 +935,7 @@ function Get-SPToolsPreservationHoldReport {
         [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -977,7 +992,7 @@ function Get-SPPermissionsReport {
         [string]$SiteUrl,
         [string]$FolderUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -987,7 +1002,8 @@ function Get-SPPermissionsReport {
 
     if ($FolderUrl) {
         $target = Invoke-SPPnPCommand { Get-PnPFolder -Url $FolderUrl } 'Failed to get folder'
-    } else {
+    }
+    else {
         $target = Invoke-SPPnPCommand { Get-PnPSite } 'Failed to get site'
     }
 
@@ -1014,7 +1030,7 @@ function Clean-SPVersionHistory {
     .EXAMPLE
         Clean-SPVersionHistory -SiteUrl 'https://contoso.sharepoint.com'
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateScript({ $_ -match '^https?://' })]
@@ -1024,7 +1040,7 @@ function Clean-SPVersionHistory {
         [ValidateRange(1, [int]::MaxValue)]
         [int]$KeepVersions = 5,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -1120,7 +1136,7 @@ function Select-SPToolsFolder {
         $needsDisconnect = $true
     }
 
-    $list  = Invoke-SPPnPCommand { Get-PnPList -Identity $LibraryName -ErrorAction Stop } 'Failed to retrieve list'
+    $list = Invoke-SPPnPCommand { Get-PnPList -Identity $LibraryName -ErrorAction Stop } 'Failed to retrieve list'
     $items = Invoke-SPPnPCommand { Get-PnPFolderItem -List $list -ItemType Folder -Recursive } 'Failed to list folders'
     $rootPath = $list.RootFolder.ServerRelativeUrl
 
@@ -1188,35 +1204,35 @@ function Get-SPToolsFileReport {
         try {
             $field = $file.FieldValues
             $obj = [pscustomobject]@{
-                FileName             = $field['FileLeafRef']
-                FileType             = $field['File_x0020_Type']
-                FileSizeBytes        = [int64]$field['File_x0020_Size']
-                CreatedDate          = [datetime]$field['Created_x0020_Date']
-                LastModifiedDate     = [datetime]$field['Last_x0020_Modified']
-                CreatedBy            = $field['Created_x0020_By']
-                ModifiedBy           = $field['Modified_x0020_By']
-                FilePath             = $field['FileRef']
-                DirectoryPath        = $field['FileDirRef']
-                UniqueId             = $field['UniqueId']
-                ParentUniqueId       = $field['ParentUniqueId']
-                SharePointItemId     = $field['ID']
-                ContentTypeId        = $field['ContentTypeId']
-                ComplianceAssetId    = $field['ComplianceAssetId']
-                VirusScanStatus      = $field['_VirusStatus']
-                RansomwareMetadata   = $field['_RansomwareAnomalyMetaInfo']
-                IsCurrentVersion     = $field['_IsCurrentVersion']
-                CreatedDisplayDate   = [datetime]$field['Created']
-                ModifiedDisplayDate  = [datetime]$field['Modified']
-                VersionString        = $field['_UIVersionString']
-                VersionNumber        = $field['_UIVersion']
-                DocGUID              = $field['GUID']
-                LastScanDate         = [datetime]$field['SMLastModifiedDate']
-                StorageStreamSize    = [int64]$field['SMTotalFileStreamSize']
-                MigrationId          = $field['MigrationWizId']
-                MigrationVersion     = $field['MigrationWizIdVersion']
-                OrderIndex           = $field['Order']
-                StreamHash           = $field['StreamHash']
-                ConcurrencyNumber    = $field['DocConcurrencyNumber']
+                FileName            = $field['FileLeafRef']
+                FileType            = $field['File_x0020_Type']
+                FileSizeBytes       = [int64]$field['File_x0020_Size']
+                CreatedDate         = [datetime]$field['Created_x0020_Date']
+                LastModifiedDate    = [datetime]$field['Last_x0020_Modified']
+                CreatedBy           = $field['Created_x0020_By']
+                ModifiedBy          = $field['Modified_x0020_By']
+                FilePath            = $field['FileRef']
+                DirectoryPath       = $field['FileDirRef']
+                UniqueId            = $field['UniqueId']
+                ParentUniqueId      = $field['ParentUniqueId']
+                SharePointItemId    = $field['ID']
+                ContentTypeId       = $field['ContentTypeId']
+                ComplianceAssetId   = $field['ComplianceAssetId']
+                VirusScanStatus     = $field['_VirusStatus']
+                RansomwareMetadata  = $field['_RansomwareAnomalyMetaInfo']
+                IsCurrentVersion    = $field['_IsCurrentVersion']
+                CreatedDisplayDate  = [datetime]$field['Created']
+                ModifiedDisplayDate = [datetime]$field['Modified']
+                VersionString       = $field['_UIVersionString']
+                VersionNumber       = $field['_UIVersion']
+                DocGUID             = $field['GUID']
+                LastScanDate        = [datetime]$field['SMLastModifiedDate']
+                StorageStreamSize   = [int64]$field['SMTotalFileStreamSize']
+                MigrationId         = $field['MigrationWizId']
+                MigrationVersion    = $field['MigrationWizIdVersion']
+                OrderIndex          = $field['Order']
+                StreamHash          = $field['StreamHash']
+                ConcurrencyNumber   = $field['DocConcurrencyNumber']
             }
             $report.Add($obj)
         }
@@ -1270,7 +1286,7 @@ function List-OneDriveUsage {
     Write-SPToolsHacker 'Report complete'
     $report
 }
-Export-ModuleMember -Function 'Invoke-YFArchiveCleanup','Invoke-IBCCentralFilesArchiveCleanup','Invoke-MexCentralFilesArchiveCleanup','Invoke-ArchiveCleanup','Invoke-YFFileVersionCleanup','Invoke-IBCCentralFilesFileVersionCleanup','Invoke-MexCentralFilesFileVersionCleanup','Invoke-FileVersionCleanup','Invoke-SharingLinkCleanup','Invoke-YFSharingLinkCleanup','Invoke-IBCCentralFilesSharingLinkCleanup','Invoke-MexCentralFilesSharingLinkCleanup','Get-SPToolsSettings','Get-SPToolsSiteUrl','Add-SPToolsSite','Set-SPToolsSite','Remove-SPToolsSite','Get-SPToolsLibraryReport','Get-SPToolsAllLibraryReports','Out-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Get-SPToolsPreservationHoldReport','Get-SPToolsAllPreservationHoldReports','Get-SPPermissionsReport','Clean-SPVersionHistory','Find-OrphanedSPFiles','Select-SPToolsFolder','List-OneDriveUsage','Test-SPToolsPrereqs','Test-SPToolsSiteAdmin','Invoke-SPSiteAudit' -Variable 'SharePointToolsSettings'
+Export-ModuleMember -Function 'Invoke-YFArchiveCleanup', 'Invoke-IBCCentralFilesArchiveCleanup', 'Invoke-MexCentralFilesArchiveCleanup', 'Invoke-ArchiveCleanup', 'Invoke-YFFileVersionCleanup', 'Invoke-IBCCentralFilesFileVersionCleanup', 'Invoke-MexCentralFilesFileVersionCleanup', 'Invoke-FileVersionCleanup', 'Invoke-SharingLinkCleanup', 'Invoke-YFSharingLinkCleanup', 'Invoke-IBCCentralFilesSharingLinkCleanup', 'Invoke-MexCentralFilesSharingLinkCleanup', 'Get-SPToolsSettings', 'Get-SPToolsSiteUrl', 'Add-SPToolsSite', 'Set-SPToolsSite', 'Remove-SPToolsSite', 'Get-SPToolsLibraryReport', 'Get-SPToolsAllLibraryReports', 'Out-SPToolsLibraryReport', 'Get-SPToolsRecycleBinReport', 'Clear-SPToolsRecycleBin', 'Get-SPToolsAllRecycleBinReports', 'Get-SPToolsFileReport', 'Get-SPToolsPreservationHoldReport', 'Get-SPToolsAllPreservationHoldReports', 'Get-SPPermissionsReport', 'Clean-SPVersionHistory', 'Find-OrphanedSPFiles', 'Select-SPToolsFolder', 'List-OneDriveUsage', 'Test-SPToolsPrereqs', 'Test-SPToolsSiteAdmin', 'Invoke-SPSiteAudit' -Variable 'SharePointToolsSettings'
 
 function Register-SPToolsCompleters {
     <#
@@ -1281,17 +1297,17 @@ function Register-SPToolsCompleters {
     #>
     [CmdletBinding()]
     param()
-    $siteCmds = 'Get-SPToolsSiteUrl','Get-SPToolsLibraryReport','Get-SPToolsRecycleBinReport','Clear-SPToolsRecycleBin','Get-SPToolsPreservationHoldReport','Get-SPToolsAllLibraryReports','Get-SPToolsAllRecycleBinReports','Get-SPToolsFileReport','Select-SPToolsFolder'
+    $siteCmds = 'Get-SPToolsSiteUrl', 'Get-SPToolsLibraryReport', 'Get-SPToolsRecycleBinReport', 'Clear-SPToolsRecycleBin', 'Get-SPToolsPreservationHoldReport', 'Get-SPToolsAllLibraryReports', 'Get-SPToolsAllRecycleBinReports', 'Get-SPToolsFileReport', 'Select-SPToolsFolder'
     Register-ArgumentCompleter -CommandName $siteCmds -ParameterName SiteName -ScriptBlock {
-        param($commandName,$parameterName,$wordToComplete)
+        param($commandName, $parameterName, $wordToComplete)
         $SharePointToolsSettings.Sites.Keys | Where-Object { $_ -like "$wordToComplete*" } |
-            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_,$_, 'ParameterValue', $_) }
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
     }
-    $nameCmds = 'Set-SPToolsSite','Remove-SPToolsSite','Add-SPToolsSite'
+    $nameCmds = 'Set-SPToolsSite', 'Remove-SPToolsSite', 'Add-SPToolsSite'
     Register-ArgumentCompleter -CommandName $nameCmds -ParameterName Name -ScriptBlock {
-        param($commandName,$parameterName,$wordToComplete)
+        param($commandName, $parameterName, $wordToComplete)
         $SharePointToolsSettings.Sites.Keys | Where-Object { $_ -like "$wordToComplete*" } |
-            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_,$_, 'ParameterValue', $_) }
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
     }
 }
 

@@ -22,7 +22,8 @@ if (-not $settings.ContainsKey('Sites')) { $settings.Sites = @{} }
 
 if ($PSBoundParameters.ContainsKey('ClientId')) {
     $settings.ClientId = $ClientId
-} else {
+}
+else {
     Write-STStatus -Message 'Enter SharePoint application settings. Leave blank to keep existing values.' -Level INFO
     $clientId = Read-Host "Client ID (current: $($settings.ClientId))"
     if ($clientId) { $settings.ClientId = $clientId }
@@ -30,30 +31,34 @@ if ($PSBoundParameters.ContainsKey('ClientId')) {
 
 if ($PSBoundParameters.ContainsKey('TenantId')) {
     $settings.TenantId = $TenantId
-} else {
+}
+else {
     $tenantId = Read-Host "Tenant ID (current: $($settings.TenantId))"
     if ($tenantId) { $settings.TenantId = $tenantId }
 }
 
 if ($PSBoundParameters.ContainsKey('CertPath')) {
     $settings.CertPath = $CertPath
-} else {
+}
+else {
     if ($IsWindows) {
         try {
             Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
             $dialog = New-Object System.Windows.Forms.OpenFileDialog
-            $dialog.Title  = 'Select certificate file'
+            $dialog.Title = 'Select certificate file'
             $dialog.Filter = 'PFX files (*.pfx)|*.pfx|All files (*.*)|*.*'
             $dialog.FileName = $settings.CertPath
             Write-STStatus -Message 'Select certificate file or press Cancel to keep the current value.' -Level INFO
             if ($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
                 $settings.CertPath = $dialog.FileName
             }
-        } catch {
+        }
+        catch {
             $certPath = Read-Host "Certificate Path (current: $($settings.CertPath))"
             if ($certPath) { $settings.CertPath = $certPath }
         }
-    } else {
+    }
+    else {
         $certPath = Read-Host "Certificate Path (current: $($settings.CertPath))"
         if ($certPath) { $settings.CertPath = $certPath }
     }
@@ -62,16 +67,17 @@ if ($PSBoundParameters.ContainsKey('CertPath')) {
 # Configure SharePoint sites
 if ($PSBoundParameters.ContainsKey('Sites')) {
     foreach ($key in $Sites.Keys) { $settings.Sites[$key] = $Sites[$key] }
-} else {
+}
+else {
     $currentSites = if ($settings.Sites.Count) { $settings.Sites.Keys -join ', ' } else { 'none' }
     Write-STStatus "Current sites: $currentSites" -Level INFO
     $siteInput = Read-Host 'Enter site pairs as Name=Url (comma separated) or leave blank to skip'
     if ($siteInput) {
         foreach ($pair in ($siteInput -split ',')) {
-            $parts = $pair -split '=',2
+            $parts = $pair -split '=', 2
             if ($parts.Count -eq 2) {
                 $name = $parts[0].Trim()
-                $url  = $parts[1].Trim()
+                $url = $parts[1].Trim()
                 if ($name -and $url) { $settings.Sites[$name] = $url }
             }
         }

@@ -27,7 +27,7 @@ function Watch-GraphSignIns {
     .EXAMPLE
         Watch-GraphSignIns -TenantId <tenant> -ClientId <app> -RequesterEmail 'admin@example.com'
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [string]$UserPrincipalName,
         [datetime]$StartTime = (Get-Date).AddHours(-1),
@@ -39,7 +39,7 @@ function Watch-GraphSignIns {
         [string]$ClientSecret,
         [Parameter(Mandatory)]
         [string]$RequesterEmail,
-        [ValidateSet('Low','Medium','High')]
+        [ValidateSet('Low', 'Medium', 'High')]
         [string]$Threshold = 'High',
         [switch]$ChaosMode,
         [switch]$Explain
@@ -48,7 +48,7 @@ function Watch-GraphSignIns {
     if ($Explain) { Get-Help $MyInvocation.PSCommandPath -Full; return }
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
-    Write-STLog -Message 'Watch-GraphSignIns' -Structured -Metadata @{ threshold=$Threshold }
+    Write-STLog -Message 'Watch-GraphSignIns' -Structured -Metadata @{ threshold = $Threshold }
     $result = 'Success'
     try {
         $logs = Get-GraphSignInLogs -UserPrincipalName $UserPrincipalName -StartTime $StartTime -EndTime $EndTime -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
@@ -66,11 +66,13 @@ function Watch-GraphSignIns {
             }
         }
         return $logs
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STLog -Message "Watch-GraphSignIns failed: $_" -Level ERROR
         throw
-    } finally {
+    }
+    finally {
         $sw.Stop()
         Write-STTelemetryEvent -ScriptName 'Watch-GraphSignIns' -Result $result -Duration $sw.Elapsed
     }

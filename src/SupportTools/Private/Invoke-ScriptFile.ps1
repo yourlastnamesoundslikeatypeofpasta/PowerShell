@@ -11,7 +11,7 @@ function Invoke-ScriptFile {
     param(
         [Parameter(Mandatory)]
         [string]$Name,
-        [Parameter(ValueFromRemainingArguments=$true)]
+        [Parameter(ValueFromRemainingArguments = $true)]
         [object[]]$Args,
         [object]$Logger,
         [object]$TelemetryClient,
@@ -25,19 +25,22 @@ function Invoke-ScriptFile {
     $manifest = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'SupportTools.psd1'
     $moduleVersion = try {
         (Import-PowerShellDataFile $manifest).ModuleVersion
-    } catch {
+    }
+    catch {
         'unknown'
     }
 
     if ($Logger) {
         Import-Module $Logger -Force -ErrorAction SilentlyContinue
-    } elseif ($loggingModule) {
+    }
+    elseif ($loggingModule) {
         Import-Module $loggingModule -Force -ErrorAction SilentlyContinue
     }
 
     if ($TelemetryClient) {
         Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
-    } elseif ($telemetryModule) {
+    }
+    elseif ($telemetryModule) {
         Import-Module $telemetryModule -Force -ErrorAction SilentlyContinue
     }
 
@@ -45,9 +48,9 @@ function Invoke-ScriptFile {
         Import-Module $Config -Force -ErrorAction SilentlyContinue
     }
     $Path = Join-Path $PSScriptRoot '..' |
-            Join-Path -ChildPath '..' |
-            Join-Path -ChildPath '..' |
-            Join-Path -ChildPath "scripts/$Name"
+        Join-Path -ChildPath '..' |
+        Join-Path -ChildPath '..' |
+        Join-Path -ChildPath "scripts/$Name"
     if (-not (Test-Path $Path)) { throw "Script '$Name' not found." }
 
     if ($Explain) {
@@ -82,12 +85,14 @@ function Invoke-ScriptFile {
     $ErrorActionPreference = 'Stop'
     try {
         & $Path @Args
-    } catch {
+    }
+    catch {
         Write-Error "Execution of '$Name' failed: $_"
         Write-STLog -Message "Execution of '$Name' failed: $_" -Level 'ERROR' -Structured -Metadata @{ version = $moduleVersion; script = $Name }
         $result = 'Failure'
         throw
-    } finally {
+    }
+    finally {
         $ErrorActionPreference = $oldPref
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
         $sw.Stop()

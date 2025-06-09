@@ -5,14 +5,14 @@ function Get-GraphGroupDetails {
     .DESCRIPTION
         Queries Graph for the group's basic info and membership. Activity is logged and telemetry is recorded.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$GroupId,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -21,7 +21,7 @@ function Get-GraphGroupDetails {
         [ValidateNotNullOrEmpty()]
         [string]$ClientSecret,
         [Parameter()]
-        [ValidateSet('Entra','AD')]
+        [ValidateSet('Entra', 'AD')]
         [string]$Cloud = 'Entra'
     )
 
@@ -45,7 +45,8 @@ function Get-GraphGroupDetails {
                 Description = $group.description
                 Members     = ($members.value.displayName -join ',')
             }
-        } else {
+        }
+        else {
             Import-Module ActiveDirectory -ErrorAction Stop
             $group = Get-ADGroup -Identity $GroupId -ErrorAction Stop
             $members = Get-ADGroupMember -Identity $GroupId | Get-ADUser | Select-Object -ExpandProperty Name
@@ -56,11 +57,13 @@ function Get-GraphGroupDetails {
                 Members     = ($members -join ',')
             }
         }
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STLog -Message "Get-GraphGroupDetails failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         throw
-    } finally {
+    }
+    finally {
         $sw.Stop()
         Write-STTelemetryEvent -ScriptName 'Get-GraphGroupDetails' -Result $result -Duration $sw.Elapsed
     }

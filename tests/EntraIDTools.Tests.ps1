@@ -33,7 +33,7 @@ Describe 'EntraIDTools Module' {
     Context 'Logging and telemetry' {
         Safe-It 'Logs requests and writes telemetry' {
             Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
-            Mock Invoke-STRequest { @{ id='1'; displayName='User'; userPrincipalName='u' } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Invoke-STRequest { @{ id = '1'; displayName = 'User'; userPrincipalName = 'u' } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
             Mock Write-STLog {} -ModuleName EntraIDTools
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             Get-GraphUserDetails -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid'
@@ -43,7 +43,7 @@ Describe 'EntraIDTools Module' {
 
         Safe-It 'Logs group requests and writes telemetry' {
             Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
-            Mock Invoke-STRequest { @{ displayName='G'; description='D'; value=@(@{displayName='U'}) } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Invoke-STRequest { @{ displayName = 'G'; description = 'D'; value = @(@{displayName = 'U' }) } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
             Mock Write-STLog {} -ModuleName EntraIDTools
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid'
@@ -51,8 +51,8 @@ Describe 'EntraIDTools Module' {
             Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1
         }
         Safe-It 'Logs hybrid requests and writes telemetry' {
-            Mock Get-GraphUserDetails { @{ UserPrincipalName='u'; DisplayName='User'; Licenses='L'; Groups='G'; LastSignIn='t' } } -ModuleName EntraIDTools
-            Mock Get-ADUser { [pscustomobject]@{ SamAccountName='sam'; Enabled=$true } } -ModuleName EntraIDTools
+            Mock Get-GraphUserDetails { @{ UserPrincipalName = 'u'; DisplayName = 'User'; Licenses = 'L'; Groups = 'G'; LastSignIn = 't' } } -ModuleName EntraIDTools
+            Mock Get-ADUser { [pscustomobject]@{ SamAccountName = 'sam'; Enabled = $true } } -ModuleName EntraIDTools
             Mock Write-STLog {} -ModuleName EntraIDTools
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             Get-UserInfoHybrid -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid'
@@ -61,7 +61,7 @@ Describe 'EntraIDTools Module' {
         }
         Safe-It 'Logs sign-in log requests and writes telemetry' {
             Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
-            Mock Invoke-RestMethod { @{ value=@(@{id='1'}) } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+            Mock Invoke-RestMethod { @{ value = @(@{id = '1' }) } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
             Mock Write-STLog {} -ModuleName EntraIDTools
             Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
             Get-GraphSignInLogs -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid'
@@ -69,7 +69,7 @@ Describe 'EntraIDTools Module' {
             Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1
         }
         Safe-It 'Creates tickets for risky sign-ins' {
-            Mock Get-GraphSignInLogs { @(@{ userPrincipalName='u'; createdDateTime=(Get-Date); ipAddress='1.2.3.4'; riskLevelAggregated='high' }) } -ModuleName EntraIDTools
+            Mock Get-GraphSignInLogs { @(@{ userPrincipalName = 'u'; createdDateTime = (Get-Date); ipAddress = '1.2.3.4'; riskLevelAggregated = 'high' }) } -ModuleName EntraIDTools
             Mock New-SDTicket {} -ModuleName EntraIDTools
             Watch-GraphSignIns -TenantId 'tid' -ClientId 'cid' -RequesterEmail 'r@contoso.com'
             Assert-MockCalled New-SDTicket -ModuleName EntraIDTools -Times 1
@@ -78,13 +78,13 @@ Describe 'EntraIDTools Module' {
 
     Context 'Cloud parameter' {
         Safe-It 'uses AD for user details when Cloud is AD' {
-            Mock Get-ADUser { @{ UserPrincipalName='u'; Name='User'; MemberOf=@(); LastLogonDate=(Get-Date) } } -ModuleName EntraIDTools
+            Mock Get-ADUser { @{ UserPrincipalName = 'u'; Name = 'User'; MemberOf = @(); LastLogonDate = (Get-Date) } } -ModuleName EntraIDTools
             $res = Get-GraphUserDetails -UserPrincipalName 'u' -TenantId 'tid' -ClientId 'cid' -Cloud 'AD'
             Assert-MockCalled Get-ADUser -ModuleName EntraIDTools -Times 1
         }
         Safe-It 'uses AD for group details when Cloud is AD' {
-            Mock Get-ADGroup { @{ Name='G'; Description='D' } } -ModuleName EntraIDTools
-            Mock Get-ADGroupMember { @{Name='User'} } -ModuleName EntraIDTools
+            Mock Get-ADGroup { @{ Name = 'G'; Description = 'D' } } -ModuleName EntraIDTools
+            Mock Get-ADGroupMember { @{Name = 'User' } } -ModuleName EntraIDTools
             $res = Get-GraphGroupDetails -GroupId 'gid' -TenantId 'tid' -ClientId 'cid' -Cloud 'AD'
             Assert-MockCalled Get-ADGroup -ModuleName EntraIDTools -Times 1
         }
@@ -96,10 +96,11 @@ Describe 'EntraIDTools Module' {
             $env:GRAPH_CLIENT_ID = 'cidEnv'
             $env:GRAPH_CLIENT_SECRET = 'secEnv'
             try {
-                function Get-MsalToken { @{ AccessToken='tok'; ExpiresOn=(Get-Date).AddMinutes(30) } }
+                function Get-MsalToken { @{ AccessToken = 'tok'; ExpiresOn = (Get-Date).AddMinutes(30) } }
                 $token = Get-GraphAccessToken
                 $token | Should -Be 'tok'
-            } finally {
+            }
+            finally {
                 Remove-Item env:GRAPH_TENANT_ID -ErrorAction SilentlyContinue
                 Remove-Item env:GRAPH_CLIENT_ID -ErrorAction SilentlyContinue
                 Remove-Item env:GRAPH_CLIENT_SECRET -ErrorAction SilentlyContinue
@@ -111,7 +112,7 @@ Describe 'EntraIDTools Module' {
             function Get-MsalToken {
                 param([switch]$DeviceCode)
                 $script:deviceUsed = $DeviceCode.IsPresent
-                @{ AccessToken='tok'; ExpiresOn=(Get-Date).AddMinutes(30) }
+                @{ AccessToken = 'tok'; ExpiresOn = (Get-Date).AddMinutes(30) }
             }
             $token = Get-GraphAccessToken -TenantId 'tid' -ClientId 'cid' -ClientSecret 'sec' -DeviceLogin
             $token | Should -Be 'tok'

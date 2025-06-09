@@ -6,7 +6,7 @@ Describe 'Get-SPToolsSiteUrl function' {
     }
     Safe-It 'returns the matching URL' {
         InModuleScope SharePointTools {
-            $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A='https://a'; B='https://b' } })
+            $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A = 'https://a'; B = 'https://b' } })
             Mock Write-SPToolsHacker {}
             Get-SPToolsSiteUrl -SiteName 'A' | Should -Be 'https://a'
         }
@@ -23,7 +23,7 @@ Describe 'Get-SPToolsSiteUrl function' {
 
     Safe-It 'throws when site is missing' {
         InModuleScope SharePointTools {
-            $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A='https://a' } })
+            $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A = 'https://a' } })
             Mock Write-SPToolsHacker {}
             { Get-SPToolsSiteUrl -SiteName 'C' } | Should -Throw
         }
@@ -31,7 +31,7 @@ Describe 'Get-SPToolsSiteUrl function' {
 
     Safe-It 'logs lookup messages' {
         InModuleScope SharePointTools {
-            $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A='https://a' } })
+            $ExecutionContext.SessionState.PSVariable.Set('SharePointToolsSettings', @{ Sites = @{ A = 'https://a' } })
             Mock Write-SPToolsHacker {}
             Get-SPToolsSiteUrl -SiteName 'A' | Out-Null
             Assert-MockCalled Write-SPToolsHacker -Times 1 -ParameterFilter { $Message -eq 'Looking up A' }

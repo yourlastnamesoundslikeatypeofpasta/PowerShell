@@ -5,7 +5,7 @@ function Submit-SystemInfoTicket {
     .DESCRIPTION
         Wraps the Submit-SystemInfoTicket.ps1 script in the scripts folder with the supplied parameters.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -44,11 +44,11 @@ function Submit-SystemInfoTicket {
     )
     process {
         $arguments = @('-SiteName', $SiteName, '-RequesterEmail', $RequesterEmail)
-        if ($PSBoundParameters.ContainsKey('Subject'))     { $arguments += @('-Subject', $Subject) }
+        if ($PSBoundParameters.ContainsKey('Subject')) { $arguments += @('-Subject', $Subject) }
         if ($PSBoundParameters.ContainsKey('Description')) { $arguments += @('-Description', $Description) }
         if ($PSBoundParameters.ContainsKey('LibraryName')) { $arguments += @('-LibraryName', $LibraryName) }
-        if ($PSBoundParameters.ContainsKey('FolderPath'))  { $arguments += @('-FolderPath', $FolderPath) }
-        if ($PSBoundParameters.ContainsKey('SmtpServer'))  { $arguments += @('-SmtpServer', $SmtpServer) }
+        if ($PSBoundParameters.ContainsKey('FolderPath')) { $arguments += @('-FolderPath', $FolderPath) }
+        if ($PSBoundParameters.ContainsKey('SmtpServer')) { $arguments += @('-SmtpServer', $SmtpServer) }
         Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Submit-SystemInfoTicket.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }

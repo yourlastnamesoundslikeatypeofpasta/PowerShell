@@ -5,27 +5,27 @@ function Invoke-NewHireUserAutomation {
     .DESCRIPTION
         Wraps the Create-NewHireUser.ps1 script in the scripts folder with the provided parameters.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
-        [Parameter(Mandatory=$false)]
-        [ValidateRange(1,60)]
+        [Parameter(Mandatory = $false)]
+        [ValidateRange(1, 60)]
         [int]$PollMinutes = 5,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [switch]$Once,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$TranscriptPath,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [switch]$Simulate,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [switch]$Explain,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [ValidateNotNull()]
         [object]$Logger,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [ValidateNotNull()]
         [object]$TelemetryClient,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [ValidateNotNull()]
         [object]$Config
     )
@@ -35,7 +35,8 @@ function Invoke-NewHireUserAutomation {
             if ($Once) { $args += '-Once' }
             if ($PSBoundParameters.ContainsKey('TranscriptPath')) { $args += '-TranscriptPath'; $args += $TranscriptPath }
             Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Create-NewHireUser.ps1' -Args $args -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
-        } catch {
+        }
+        catch {
             return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
         }
     }

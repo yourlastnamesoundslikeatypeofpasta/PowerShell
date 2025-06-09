@@ -5,14 +5,14 @@ function Get-SDTicketHistory {
     .PARAMETER Id
         Incident ID to retrieve history for.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [int]$Id,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [switch]$ChaosMode,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [switch]$Explain
     )
 
@@ -38,7 +38,8 @@ Register-ArgumentCompleter -CommandName Get-SDTicketHistory -ParameterName Id -S
             ForEach-Object {
                 [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
             }
-    } catch {
+    }
+    catch {
         # ignore completion errors
     }
 }

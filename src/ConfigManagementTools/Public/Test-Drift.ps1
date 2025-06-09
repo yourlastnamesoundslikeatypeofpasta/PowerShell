@@ -11,7 +11,7 @@ function Test-Drift {
     .EXAMPLE
         Test-Drift -BaselinePath './baseline.json'
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
@@ -49,7 +49,8 @@ function Test-Drift {
                 $expected = $baseline.services[$name]
                 try {
                     $status = (Get-Service -Name $name).Status
-                } catch {
+                }
+                catch {
                     $status = 'Missing'
                 }
                 if ($status -ne $expected) {
@@ -64,7 +65,8 @@ function Test-Drift {
 
         if ($drift.Count -eq 0) {
             Write-STStatus -Message 'System matches baseline configuration.' -Level SUCCESS
-        } else {
+        }
+        else {
             Write-STStatus -Message 'Configuration drift detected.' -Level WARN
             foreach ($item in $drift) {
                 Write-STStatus "$($item.Setting) Expected: $($item.Expected) Actual: $($item.Actual)" -Level SUB

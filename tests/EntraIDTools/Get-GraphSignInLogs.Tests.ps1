@@ -10,7 +10,7 @@ Describe 'Get-GraphSignInLogs request' {
 
     Safe-It 'targets auditLogs/signIns and records telemetry' {
         Mock Get-GraphAccessToken { 'token' } -ModuleName EntraIDTools
-        Mock Invoke-STRequest { @{ value=@() } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
+        Mock Invoke-STRequest { @{ value = @() } } -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' }
         Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
 
         Get-GraphSignInLogs -TenantId 'tid' -ClientId 'cid'

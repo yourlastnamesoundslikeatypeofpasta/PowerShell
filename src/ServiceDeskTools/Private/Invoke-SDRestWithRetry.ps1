@@ -12,14 +12,16 @@ function Invoke-SDRestWithRetry {
         try {
             if ($null -ne $Body) {
                 $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers -Body $Body -ContentType 'application/json'
-            } else {
+            }
+            else {
                 $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers
             }
             Write-STLog -Message "SUCCESS $Method $Uri" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             return $response
-        } catch [System.Net.WebException],[Microsoft.PowerShell.Commands.HttpResponseException] {
+        }
+        catch [System.Net.WebException], [Microsoft.PowerShell.Commands.HttpResponseException] {
             $status = $_.Exception.Response.StatusCode.value__
-            $msg    = $_.Exception.Message
+            $msg = $_.Exception.Message
             Write-STLog -Message "HTTP $status $msg" -Level 'ERROR' -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             if ($status -eq 429 -or ($status -ge 500 -and $status -lt 600)) {
                 if ($attempt -lt $maxRetries) {
@@ -34,7 +36,8 @@ function Invoke-SDRestWithRetry {
             }
             $errorObj = New-STErrorObject -Message "HTTP $status $msg" -Category 'HTTP'
             throw $errorObj
-        } catch {
+        }
+        catch {
             Write-STLog -Message "ERROR $Method $Uri :: $_" -Level 'ERROR' -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             throw
         }

@@ -47,7 +47,8 @@ if (-not $WorkspaceId) {
     if ($val) {
         $WorkspaceId = $val
         Write-STStatus 'Loaded WorkspaceId from vault' -Level SUB -Log
-    } else {
+    }
+    else {
         Write-STStatus 'WorkspaceId not found in vault' -Level WARN -Log
     }
 }
@@ -58,7 +59,8 @@ if (-not $WorkspaceKey) {
     if ($val) {
         $WorkspaceKey = $val
         Write-STStatus 'Loaded WorkspaceKey from vault' -Level SUB -Log
-    } else {
+    }
+    else {
         Write-STStatus 'WorkspaceKey not found in vault' -Level WARN -Log
     }
 }
@@ -71,9 +73,11 @@ if (-not $WorkspaceId -or -not $WorkspaceKey) {
 # Determine telemetry log path
 if ($PSBoundParameters.ContainsKey('LogPath')) {
     $logPath = $LogPath
-} elseif ($env:ST_TELEMETRY_PATH) {
+}
+elseif ($env:ST_TELEMETRY_PATH) {
     $logPath = $env:ST_TELEMETRY_PATH
-} else {
+}
+else {
     $profile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
     $logPath = Join-Path $profile 'SupportToolsTelemetry/telemetry.jsonl'
 }
@@ -92,21 +96,21 @@ if (-not $events) {
 }
 
 $logType = 'SupportToolsTelemetry'
-$apiVer  = '2016-04-01'
-$date    = (Get-Date).ToUniversalTime().ToString('r')
-$body    = $events | ConvertTo-Json -Depth 5
-$bytes   = [Text.Encoding]::UTF8.GetBytes($body)
+$apiVer = '2016-04-01'
+$date = (Get-Date).ToUniversalTime().ToString('r')
+$body = $events | ConvertTo-Json -Depth 5
+$bytes = [Text.Encoding]::UTF8.GetBytes($body)
 $stringToSign = "POST`n$($bytes.Length)`napplication/json`nx-ms-date:$date`n/api/logs"
 $keyBytes = [Convert]::FromBase64String($WorkspaceKey)
 $hmac = [System.Security.Cryptography.HMACSHA256]::new($keyBytes)
 $signature = [Convert]::ToBase64String($hmac.ComputeHash([Text.Encoding]::UTF8.GetBytes($stringToSign)))
 $auth = "SharedKey $WorkspaceId:$signature"
-$uri  = "https://$WorkspaceId.ods.opinsights.azure.com/api/logs?api-version=$apiVer"
+$uri = "https://$WorkspaceId.ods.opinsights.azure.com/api/logs?api-version=$apiVer"
 
 $headers = @{ 
-    'Authorization' = $auth
-    'Log-Type' = $logType
-    'x-ms-date' = $date
+    'Authorization'        = $auth
+    'Log-Type'             = $logType
+    'x-ms-date'            = $date
     'time-generated-field' = 'Timestamp'
 }
 
@@ -118,12 +122,12 @@ Write-STDivider -Title 'TELEMETRY SUMMARY'
 $summary = Get-STTelemetryMetrics -LogPath $logPath
 foreach ($m in $summary) {
     Write-STBlock -Data @{
-        Script = $m.Script
-        Executions = $m.Executions
-        Successes = $m.Successes
-        Failures = $m.Failures
+        Script         = $m.Script
+        Executions     = $m.Executions
+        Successes      = $m.Successes
+        Failures       = $m.Failures
         AverageSeconds = $m.AverageSeconds
-        LastRun = $m.LastRun
+        LastRun        = $m.LastRun
     }
 }
 Write-STClosing

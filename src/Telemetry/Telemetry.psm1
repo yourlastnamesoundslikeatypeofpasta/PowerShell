@@ -19,7 +19,8 @@ function Send-STMetric {
     $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
     if ($env:ST_TELEMETRY_PATH) {
         $logFile = $env:ST_TELEMETRY_PATH
-    } else {
+    }
+    else {
         $dir = Join-Path $userProfile 'SupportToolsTelemetry'
         $logFile = Join-Path $dir 'telemetry.jsonl'
     }
@@ -58,7 +59,8 @@ function Write-STTelemetryEvent {
     $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
     if ($env:ST_TELEMETRY_PATH) {
         $logFile = $env:ST_TELEMETRY_PATH
-    } else {
+    }
+    else {
         $dir = Join-Path $userProfile 'SupportToolsTelemetry'
         $logFile = Join-Path $dir 'telemetry.jsonl'
     }
@@ -107,8 +109,8 @@ function Get-STTelemetryMetrics {
         [pscustomobject]@{
             Script         = $group.Name
             Executions     = $group.Count
-            Successes      = ($group.Group | Where-Object Result -eq 'Success').Count
-            Failures       = ($group.Group | Where-Object Result -eq 'Failure').Count
+            Successes      = ($group.Group | Where-Object Result -EQ 'Success').Count
+            Failures       = ($group.Group | Where-Object Result -EQ 'Failure').Count
             AverageSeconds = [math]::Round($avg, 2)
             LastRun        = ($group.Group | Sort-Object Timestamp -Descending | Select-Object -First 1).Timestamp
         }
@@ -124,7 +126,7 @@ function Get-STTelemetryMetrics {
         }
         & sqlite3 $SqlitePath "CREATE TABLE IF NOT EXISTS metrics (Script TEXT PRIMARY KEY, Executions INTEGER, Successes INTEGER, Failures INTEGER, AverageSeconds REAL, LastRun TEXT);"
         foreach ($m in $metrics) {
-            $script = $m.Script -replace "'","''"
+            $script = $m.Script -replace "'", "''"
             $sql = "INSERT OR REPLACE INTO metrics (Script,Executions,Successes,Failures,AverageSeconds,LastRun) VALUES ('$script',$($m.Executions),$($m.Successes),$($m.Failures),$($m.AverageSeconds),'$($m.LastRun)');"
             & sqlite3 $SqlitePath $sql
         }
@@ -133,7 +135,7 @@ function Get-STTelemetryMetrics {
     return $metrics
 }
 
-Export-ModuleMember -Function 'Write-STTelemetryEvent','Get-STTelemetryMetrics','Send-STMetric'
+Export-ModuleMember -Function 'Write-STTelemetryEvent', 'Get-STTelemetryMetrics', 'Send-STMetric'
 
 function Show-TelemetryBanner {
     <#

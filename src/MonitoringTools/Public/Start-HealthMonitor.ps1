@@ -14,7 +14,7 @@ function Start-HealthMonitor {
         Optional path for the rich log file. Defaults to $env:ST_LOG_PATH or
         ~/SupportToolsLogs/supporttools.log.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [int]$IntervalSeconds = 60,
         [int]$Count = 0,
@@ -35,7 +35,8 @@ function Start-HealthMonitor {
             $json = $health | ConvertTo-Json -Compress
             if ($PSBoundParameters.ContainsKey('LogPath')) {
                 Write-STRichLog -Tool 'HealthMonitor' -Status 'sample' -Details $json -Path $LogPath
-            } else {
+            }
+            else {
                 Write-STRichLog -Tool 'HealthMonitor' -Status 'sample' -Details $json
             }
 
@@ -45,7 +46,8 @@ function Start-HealthMonitor {
             $sleep = $IntervalSeconds - [int][math]::Floor($elapsed.TotalSeconds)
             if ($sleep -gt 0) { Start-Sleep -Seconds $sleep }
         }
-    } catch {
+    }
+    catch {
         return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     }
 }

@@ -13,7 +13,7 @@ Describe 'STCore Error Helpers' {
     Safe-It 'New-STErrorObject returns PSCustomObject with Timestamp, Category and Message' {
         $obj = New-STErrorObject -Message 'fail' -Category 'Test'
         $obj | Should -BeOfType 'pscustomobject'
-        @('Timestamp','Category','Message') | ForEach-Object { $obj.PSObject.Properties.Name | Should -Contain $_ }
+        @('Timestamp', 'Category', 'Message') | ForEach-Object { $obj.PSObject.Properties.Name | Should -Contain $_ }
         $obj.Category | Should -Be 'Test'
         $obj.Message | Should -Be 'fail'
     }

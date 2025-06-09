@@ -17,7 +17,8 @@ Describe 'SupportTools command behaviors' {
             $result.RemovedLogFileCount | Should -BeGreaterOrEqual 1
             Test-Path $tmp | Should -BeFalse
             Test-Path $log | Should -BeFalse
-        } finally {
+        }
+        finally {
             Remove-Item $dir -Recurse -Force -ErrorAction SilentlyContinue
         }
     }
@@ -25,36 +26,38 @@ Describe 'SupportTools command behaviors' {
     Safe-It 'Convert-ExcelToCsv passes correct path to Excel' {
         InModuleScope SupportTools {
             Mock Import-Csv { @() } -ModuleName SupportTools
-            function New-Object { param([string]$ComObject)
+            function New-Object {
+                param([string]$ComObject)
                 [pscustomobject]@{
                     Workbooks = [pscustomobject]@{
                         Open = { param($p)
                             [pscustomobject]@{
-                                Worksheets = @( [pscustomobject]@{ SaveAs = { param($path,$fmt) $script:csvPath = $path } } )
-                                Close = { param($s) }
+                                Worksheets = @( [pscustomobject]@{ SaveAs = { param($path, $fmt) $script:csvPath = $path } } )
+                                Close      = { param($s) }
                             }
                         }
                     }
-                    Quit = {}
+                    Quit      = {}
                 }
             }
             $file = Join-Path $TestDrive 'book.xlsx'
             Set-Content -Path $file -Value ''
             $null = Convert-ExcelToCsv -XlsxFilePath $file
-            $expected = $file -replace '\\.xlsx$','.csv'
+            $expected = $file -replace '\\.xlsx$', '.csv'
             $script:csvPath | Should -Be $expected
         }
     }
 
     Safe-It 'Export-ProductKey writes key to file' {
         InModuleScope SupportTools {
-            Mock Get-CimInstance { [pscustomobject]@{ OA3xOriginalProductKey='AAAAA-BBBBB-CCCCC-DDDDD' } }
+            Mock Get-CimInstance { [pscustomobject]@{ OA3xOriginalProductKey = 'AAAAA-BBBBB-CCCCC-DDDDD' } }
             $out = Join-Path $TestDrive 'key.txt'
             try {
                 $res = Export-ProductKey -OutputPath $out
                 (Get-Content $out) | Should -Be 'AAAAA-BBBBB-CCCCC-DDDDD'
                 $res.ProductKey | Should -Be 'AAAAA-BBBBB-CCCCC-DDDDD'
-            } finally {
+            }
+            finally {
                 Remove-Item $out -ErrorAction SilentlyContinue
             }
         }
@@ -64,7 +67,7 @@ Describe 'SupportTools command behaviors' {
         Safe-It 'accepts pipeline input and forwards arguments' {
             InModuleScope SupportTools {
                 Mock Invoke-ScriptFile {} -ModuleName SupportTools
-                'arg1','arg2' | Get-UniquePermission
+                'arg1', 'arg2' | Get-UniquePermission
                 Assert-MockCalled Invoke-ScriptFile -ModuleName SupportTools -Times 2
             }
         }

@@ -9,7 +9,7 @@ function Invoke-GroupMembershipCleanup {
     .PARAMETER GroupName
         Name of the Microsoft 365 group to modify.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
@@ -27,7 +27,7 @@ function Invoke-GroupMembershipCleanup {
         [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
         [Parameter(Mandatory = $false)]
-        [ValidateSet('Entra','AD')]
+        [ValidateSet('Entra', 'AD')]
         [string]$Cloud = 'Entra',
         [Parameter(Mandatory = $false)]
         [object]$Config

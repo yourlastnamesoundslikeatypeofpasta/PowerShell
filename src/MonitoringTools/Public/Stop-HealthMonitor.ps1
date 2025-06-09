@@ -6,7 +6,7 @@ function Stop-HealthMonitor {
         Sets a script-scoped flag consumed by Start-HealthMonitor so that the
         monitoring loop exits on the next iteration.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param()
 
     if (-not $PSCmdlet.ShouldProcess('stop health monitor')) { return }

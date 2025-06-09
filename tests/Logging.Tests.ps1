@@ -9,7 +9,8 @@ Describe 'Logging Module' {
         try {
             Write-STLog -Message 'path test' -Path $temp
             (Get-Content $temp) | Should -Match 'path test'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
@@ -20,7 +21,8 @@ Describe 'Logging Module' {
             $env:ST_LOG_PATH = $temp
             Write-STLog -Message 'env test'
             (Get-Content $temp) | Should -Match 'env test'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
             Remove-Item env:ST_LOG_PATH
         }
@@ -38,7 +40,8 @@ Describe 'Logging Module' {
             Write-STLog -Message 'default test'
             $expected = Join-Path $tempDir 'SupportToolsLogs/supporttools.log'
             (Get-Content $expected) | Should -Match 'default test'
-        } finally {
+        }
+        finally {
             if ($null -ne $oldHome) { $env:HOME = $oldHome } else { Remove-Item env:HOME -ErrorAction SilentlyContinue }
             if ($null -ne $oldUser) { $env:USERPROFILE = $oldUser } else { Remove-Item env:USERPROFILE -ErrorAction SilentlyContinue }
             Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
@@ -51,7 +54,8 @@ Describe 'Logging Module' {
         try {
             Write-STLog -Message 'dir create test' -Path $logPath
             Test-Path $logPath | Should -Be $true
-        } finally {
+        }
+        finally {
             Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
         }
     }
@@ -62,7 +66,8 @@ Describe 'Logging Module' {
             Write-STLog -Message 'format test' -Level WARN -Path $temp
             $content = Get-Content $temp
             $content | Should -Match '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \[WARN\] format test$'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
@@ -70,12 +75,13 @@ Describe 'Logging Module' {
     Safe-It 'writes structured log entries when requested' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
-            Write-STLog -Message 'json test' -Path $temp -Structured -Metadata @{action='test'}
+            Write-STLog -Message 'json test' -Path $temp -Structured -Metadata @{action = 'test' }
             $json = Get-Content $temp | ConvertFrom-Json
             $json.message | Should -Be 'json test'
             $json.level | Should -Be 'INFO'
             $json.action | Should -Be 'test'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
@@ -88,7 +94,8 @@ Describe 'Logging Module' {
             $json = Get-Content $temp | ConvertFrom-Json
             $json.message | Should -Be 'env json test'
             $json.level | Should -Be 'INFO'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
             Remove-Item env:ST_LOG_STRUCTURED -ErrorAction SilentlyContinue
         }
@@ -103,7 +110,8 @@ Describe 'Logging Module' {
             Out-STBanner -Info @{ Module = 'TestMod' }
             $json = Get-Content $temp | ConvertFrom-Json
             $json.message | Should -Be 'TestMod module loaded'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
             Remove-Item env:ST_LOG_STRUCTURED -ErrorAction SilentlyContinue
             Remove-Item env:ST_LOG_PATH -ErrorAction SilentlyContinue
@@ -114,7 +122,8 @@ Describe 'Logging Module' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
             { Write-STLog -Message 'bad level' -Level INVALID -Path $temp } | Should -Throw
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
@@ -130,7 +139,8 @@ Describe 'Logging Module' {
             $json.duration | Should -Be '00:00:05'
             $json.details | Should -Contain 'ok'
             $json.timestamp.ToString('o') | Should -Match '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
@@ -142,7 +152,8 @@ Describe 'Logging Module' {
             $json = Get-Content $temp | ConvertFrom-Json
             $json.metric | Should -Be 'Duration'
             $json.value  | Should -Be 2.5
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
@@ -154,7 +165,8 @@ Describe 'Logging Module' {
             Write-STLog -Message 'rotate check' -Path $logFile -MaxSizeMB 0.00001 -MaxFiles 2
             Test-Path ($logFile + '.1') | Should -Be $true
             (Get-Content $logFile) | Should -Match 'rotate check'
-        } finally {
+        }
+        finally {
             Remove-Item $logFile* -ErrorAction SilentlyContinue
         }
     }
@@ -168,7 +180,8 @@ Describe 'Logging Module' {
             }
             Test-Path ($logFile + '.1') | Should -Be $true
             Test-Path ($logFile + '.2') | Should -Be $true
-        } finally {
+        }
+        finally {
             Remove-Item $logFile* -ErrorAction SilentlyContinue
             Remove-Item env:ST_LOG_MAX_BYTES -ErrorAction SilentlyContinue
         }
@@ -181,7 +194,8 @@ Describe 'Logging Module' {
             $content = Get-Content $temp
             $content | Should -Not -Match 'admin@example.com'
             $content | Should -Match '\[REDACTED\]'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
@@ -193,7 +207,8 @@ Describe 'Logging Module' {
             $content = Get-Content $temp
             $content | Should -Not -Match 'abc123def456ghi789jkl'
             $content | Should -Match 'token=\[REDACTED\]'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
@@ -201,12 +216,13 @@ Describe 'Logging Module' {
     Safe-It 'sanitizes long random strings in logs' {
         $temp = [System.IO.Path]::GetTempFileName()
         try {
-            $value = -join ((48..57)+(65..90)+(97..122) | Get-Random -Count 25 | ForEach-Object { [char]$_ })
+            $value = -join ((48..57) + (65..90) + (97..122) | Get-Random -Count 25 | ForEach-Object { [char]$_ })
             Write-STLog -Message $value -Path $temp
             $content = Get-Content $temp
             $content | Should -Not -Match $value
             $content | Should -Match '\[REDACTED\]'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
@@ -217,7 +233,8 @@ Describe 'Logging Module' {
             $env:ST_LOG_FORWARD_URI = 'https://example.com/forward'
             Write-STLog -Message 'test'
             Assert-MockCalled Invoke-RestMethod -ModuleName Logging -Times 1 -ParameterFilter { $Uri -eq 'https://example.com/forward' }
-        } finally {
+        }
+        finally {
             Remove-Item env:ST_LOG_FORWARD_URI -ErrorAction SilentlyContinue
         }
     }

@@ -7,12 +7,12 @@ Describe 'IncidentResponseTools public functions' {
     }
 
     $wrappers = @{
-        'Get-FailedLogin'       = 'Get-FailedLogins.ps1'
-        'Get-NetworkShare'      = 'Get-NetworkShares.ps1'
+        'Get-FailedLogin'         = 'Get-FailedLogins.ps1'
+        'Get-NetworkShare'        = 'Get-NetworkShares.ps1'
         'Invoke-IncidentResponse' = 'Invoke-IncidentResponse.ps1'
-        'Search-Indicators'     = 'Search-Indicators.ps1'
+        'Search-Indicators'       = 'Search-Indicators.ps1'
         'Submit-SystemInfoTicket' = 'Submit-SystemInfoTicket.ps1'
-        'Update-Sysmon'         = 'Update-Sysmon.ps1'
+        'Update-Sysmon'           = 'Update-Sysmon.ps1'
     }
 
     Safe-It 'calls Invoke-ScriptFile' -ForEach $wrappers.GetEnumerator() {
@@ -41,13 +41,13 @@ Describe 'IncidentResponseTools public functions' {
     Context 'Get-CommonSystemInfo' {
         Safe-It 'returns system info when CIM available' {
             InModuleScope IncidentResponseTools {
-                Mock Get-Command { @{ Name='Get-CimInstance' } } -ParameterFilter { $Name -eq 'Get-CimInstance' }
+                Mock Get-Command { @{ Name = 'Get-CimInstance' } } -ParameterFilter { $Name -eq 'Get-CimInstance' }
                 Mock Get-Command { $null } -ParameterFilter { $Name -eq 'Get-WmiObject' }
                 Mock Get-CimInstance {
                     switch ($ClassName) {
-                        'Win32_OperatingSystem' { [pscustomobject]@{ CSName='PC'; Caption='OS'; BuildNumber='1'; TotalVisibleMemorySize=2048 } }
-                        'Win32_Processor'       { [pscustomobject]@{ Name='CPU' } }
-                        'Win32_LogicalDisk'     { @([pscustomobject]@{ DeviceID='C:'; Size=100GB; FreeSpace=50GB }) }
+                        'Win32_OperatingSystem' { [pscustomobject]@{ CSName = 'PC'; Caption = 'OS'; BuildNumber = '1'; TotalVisibleMemorySize = 2048 } }
+                        'Win32_Processor' { [pscustomobject]@{ Name = 'CPU' } }
+                        'Win32_LogicalDisk' { @([pscustomobject]@{ DeviceID = 'C:'; Size = 100GB; FreeSpace = 50GB }) }
                         default { @() }
                     }
                 }
@@ -60,7 +60,7 @@ Describe 'IncidentResponseTools public functions' {
         }
         Safe-It 'returns error object on failure' {
             InModuleScope IncidentResponseTools {
-                Mock Get-Command { @{ Name='Get-CimInstance' } } -ParameterFilter { $Name -eq 'Get-CimInstance' }
+                Mock Get-Command { @{ Name = 'Get-CimInstance' } } -ParameterFilter { $Name -eq 'Get-CimInstance' }
                 Mock Get-CimInstance { throw 'bad' }
                 Mock Write-STStatus {}
                 Mock Write-STLog {}
@@ -74,7 +74,7 @@ Describe 'IncidentResponseTools public functions' {
     Context 'Invoke-RemoteAudit' {
         Safe-It 'collects info from computers' {
             InModuleScope IncidentResponseTools {
-                Mock Invoke-Command { [pscustomobject]@{ ComputerName=$ComputerName; Info='i' } }
+                Mock Invoke-Command { [pscustomobject]@{ ComputerName = $ComputerName; Info = 'i' } }
                 $r = Invoke-RemoteAudit -ComputerName 'PC1'
                 $r.Success | Should -BeTrue
                 $r.Info | Should -Be 'i'

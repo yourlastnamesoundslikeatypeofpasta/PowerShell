@@ -10,7 +10,7 @@ function Get-ServiceDeskRelationship {
     .PARAMETER Type
         Optional relationship type to filter results.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter()] [int]$AssetId,
         [Parameter()] [string]$Type,

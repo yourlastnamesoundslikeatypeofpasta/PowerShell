@@ -8,7 +8,7 @@ Import-Module $telemetryModule -Force -ErrorAction SilentlyContinue -DisableName
 Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 
-Export-ModuleMember -Function 'Get-GraphUserDetails','Get-GraphGroupDetails','Get-UserInfoHybrid','Disable-GraphUser','Get-GraphSignInLogs','Get-GraphRiskySignIns','Watch-GraphSignIns'
+Export-ModuleMember -Function 'Get-GraphUserDetails', 'Get-GraphGroupDetails', 'Get-UserInfoHybrid', 'Disable-GraphUser', 'Get-GraphSignInLogs', 'Get-GraphRiskySignIns', 'Watch-GraphSignIns'
 
 function Show-EntraIDToolsBanner {
     <#

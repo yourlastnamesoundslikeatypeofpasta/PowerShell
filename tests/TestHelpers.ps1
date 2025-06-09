@@ -10,7 +10,8 @@ function Safe-It {
         param($case)
         try {
             if ($PSBoundParameters.ContainsKey('ForEach')) { & $ScriptBlock $case } else { & $ScriptBlock }
-        } catch {
+        }
+        catch {
             $err = $_
             $line = $err.InvocationInfo.ScriptLineNumber
             $msg = $err.Exception.Message

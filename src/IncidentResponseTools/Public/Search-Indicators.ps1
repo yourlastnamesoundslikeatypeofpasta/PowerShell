@@ -5,23 +5,23 @@ function Search-Indicators {
     .DESCRIPTION
         Calls the Search-Indicators.ps1 script with the supplied indicator list.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$IndicatorList,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$TranscriptPath,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [switch]$Simulate,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [switch]$Explain,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [object]$Logger,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [object]$Config
     )
     process {

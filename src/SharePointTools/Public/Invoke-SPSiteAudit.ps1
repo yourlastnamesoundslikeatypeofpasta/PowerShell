@@ -20,7 +20,7 @@ function Invoke-SPSiteAudit {
         [ValidateScript({ $_ -match '^https?://' })]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -28,9 +28,9 @@ function Invoke-SPSiteAudit {
     if (-not $SiteUrl) { $SiteUrl = Get-SPToolsSiteUrl -SiteName $SiteName }
     Write-SPToolsHacker "Site audit: $SiteName"
 
-    $library   = Get-SPToolsLibraryReport -SiteName $SiteName -SiteUrl $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
-    $recycle   = Get-SPToolsRecycleBinReport -SiteName $SiteName -SiteUrl $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
-    $hold      = Get-SPToolsPreservationHoldReport -SiteName $SiteName -SiteUrl $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
+    $library = Get-SPToolsLibraryReport -SiteName $SiteName -SiteUrl $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
+    $recycle = Get-SPToolsRecycleBinReport -SiteName $SiteName -SiteUrl $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
+    $hold = Get-SPToolsPreservationHoldReport -SiteName $SiteName -SiteUrl $SiteUrl -ClientId $ClientId -TenantId $TenantId -CertPath $CertPath
 
     Write-SPToolsHacker 'Audit complete'
 

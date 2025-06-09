@@ -10,7 +10,7 @@ function Get-GraphAccessToken {
     [CmdletBinding()]
     param(
         [ValidateNotNullOrEmpty()]
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId,
         [ValidateNotNullOrEmpty()]
         [string]$ClientId,
@@ -19,8 +19,8 @@ function Get-GraphAccessToken {
         [switch]$DeviceLogin
     )
 
-    if (-not $TenantId)     { $TenantId     = $env:GRAPH_TENANT_ID }
-    if (-not $ClientId)     { $ClientId     = $env:GRAPH_CLIENT_ID }
+    if (-not $TenantId) { $TenantId = $env:GRAPH_TENANT_ID }
+    if (-not $ClientId) { $ClientId = $env:GRAPH_CLIENT_ID }
     if (-not $ClientSecret) { $ClientSecret = $env:GRAPH_CLIENT_SECRET }
 
     if (-not $TenantId) { throw 'TenantId is required. Provide -TenantId or set GRAPH_TENANT_ID.' }
@@ -31,10 +31,12 @@ function Get-GraphAccessToken {
 
     try {
         $tokenResponse = Get-MsalToken @params -Silent
-    } catch {
+    }
+    catch {
         if ($DeviceLogin -or -not $ClientSecret) {
             $tokenResponse = Get-MsalToken @params -DeviceCode
-        } else {
+        }
+        else {
             $tokenResponse = Get-MsalToken @params
         }
     }

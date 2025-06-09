@@ -46,9 +46,11 @@ if ($env:ST_ENABLE_TELEMETRY -ne '1') {
 
 if ($LogPath) {
     $path = $LogPath
-} elseif ($env:ST_TELEMETRY_PATH) {
+}
+elseif ($env:ST_TELEMETRY_PATH) {
     $path = $env:ST_TELEMETRY_PATH
-} else {
+}
+else {
     $profile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
     $path = Join-Path $profile 'SupportToolsTelemetry/telemetry.jsonl'
 }

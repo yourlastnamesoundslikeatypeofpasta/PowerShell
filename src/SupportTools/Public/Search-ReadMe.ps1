@@ -6,7 +6,7 @@ function Search-ReadMe {
         Recursively searches the C drive for files containing 'readme' in
         the name and returns the file objects found.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
@@ -19,9 +19,11 @@ function Search-ReadMe {
         $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction SilentlyContinue
         Write-STStatus "Found $($results.Count) file(s)." -Level SUCCESS
         return $results
-    } catch {
+    }
+    catch {
         return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
-    } finally {
+    }
+    finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
 }

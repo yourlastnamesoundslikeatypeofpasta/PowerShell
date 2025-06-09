@@ -6,7 +6,7 @@ function Search-SDTicket {
     .PARAMETER Query
         Text used to search incident subjects and descriptions.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     [OutputType([TicketObject[]])]
     param(
         [Parameter(Mandatory = $true)]

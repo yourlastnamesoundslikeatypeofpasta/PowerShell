@@ -45,16 +45,16 @@ Describe 'STPlatform Module' {
             Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
             Mock Connect-MgGraph {}
             Mock Connect-ExchangeOnline {}
-            $names = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
+            $names = 'SPTOOLS_CLIENT_ID', 'SPTOOLS_TENANT_ID', 'SPTOOLS_CERT_PATH', 'SD_API_TOKEN', 'SD_BASE_URI'
             foreach ($n in $names) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
 
             Mock Get-Secret {
                 switch ($Name) {
-                    'SPTOOLS_CLIENT_ID'   { 'cid' }
-                    'SPTOOLS_TENANT_ID'  { 'tenant' }
-                    'SPTOOLS_CERT_PATH'  { 'cert' }
-                    'SD_API_TOKEN'       { 'token' }
-                    'SD_BASE_URI'        { 'uri' }
+                    'SPTOOLS_CLIENT_ID' { 'cid' }
+                    'SPTOOLS_TENANT_ID' { 'tenant' }
+                    'SPTOOLS_CERT_PATH' { 'cert' }
+                    'SD_API_TOKEN' { 'token' }
+                    'SD_BASE_URI' { 'uri' }
                 }
             }
 
@@ -79,26 +79,26 @@ Describe 'STPlatform Module' {
             Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
             Mock Connect-MgGraph {}
             Mock Connect-ExchangeOnline {}
-            $names = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
+            $names = 'SPTOOLS_CLIENT_ID', 'SPTOOLS_TENANT_ID', 'SPTOOLS_CERT_PATH', 'SD_API_TOKEN', 'SD_BASE_URI'
             $env:SPTOOLS_CLIENT_ID = 'existing'
             $env:SD_BASE_URI = 'uri-env'
-            foreach ($n in $names | Where-Object { $_ -notin 'SPTOOLS_CLIENT_ID','SD_BASE_URI' }) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+            foreach ($n in $names | Where-Object { $_ -notin 'SPTOOLS_CLIENT_ID', 'SD_BASE_URI' }) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
 
             Mock Get-Secret {
                 switch ($Name) {
                     'SPTOOLS_TENANT_ID' { 'tenant' }
                     'SPTOOLS_CERT_PATH' { 'cert' }
-                    'SD_API_TOKEN'      { 'token' }
+                    'SD_API_TOKEN' { 'token' }
                 }
             }
             Mock Write-STStatus {}
 
             Connect-STPlatform -Mode Cloud -Vault CustomVault
 
-            foreach ($n in 'SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN') {
+            foreach ($n in 'SPTOOLS_TENANT_ID', 'SPTOOLS_CERT_PATH', 'SD_API_TOKEN') {
                 Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n -and $Vault -eq 'CustomVault' } -Times 1
             }
-            foreach ($n in 'SPTOOLS_CLIENT_ID','SD_BASE_URI') {
+            foreach ($n in 'SPTOOLS_CLIENT_ID', 'SD_BASE_URI') {
                 Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n } -Times 0
             }
 
@@ -147,7 +147,8 @@ Describe 'STPlatform Module' {
                 try {
                     $env:ST_CHAOS_MODE = '1'
                     Connect-STPlatform -Mode Cloud
-                } finally {
+                }
+                finally {
                     Remove-Item env:ST_CHAOS_MODE -ErrorAction SilentlyContinue
                 }
                 Assert-MockCalled Invoke-STRequest -Times 1
@@ -160,7 +161,7 @@ Describe 'STPlatform Module' {
             InModuleScope STPlatform {
                 function Install-Module {}
                 function Import-Module {}
-                function Get-Module { param($Name,[switch]$ListAvailable) }
+                function Get-Module { param($Name, [switch]$ListAvailable) }
                 function Connect-MgGraph {}
                 function Connect-ExchangeOnline {}
                 Mock Install-Module {}
@@ -180,10 +181,11 @@ Describe 'STPlatform Module' {
                     (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
                     $json = Get-Content $log | ConvertFrom-Json
                     $json.MetricName | Should -Be 'Connect-STPlatform'
-                    $json.Details.Modules | Should -Be @('Microsoft.Graph','ExchangeOnlineManagement')
+                    $json.Details.Modules | Should -Be @('Microsoft.Graph', 'ExchangeOnlineManagement')
                     $json.Details.Connections.Graph | Should -Be 'Success'
                     $json.Details.Connections.ExchangeOnline | Should -Be 'Success'
-                } finally {
+                }
+                finally {
                     Remove-Item $log -ErrorAction SilentlyContinue
                     Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
                     Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
@@ -195,7 +197,7 @@ Describe 'STPlatform Module' {
             InModuleScope STPlatform {
                 function Install-Module {}
                 function Import-Module {}
-                function Get-Module { param($Name,[switch]$ListAvailable) }
+                function Get-Module { param($Name, [switch]$ListAvailable) }
                 function Connect-MgGraph {}
                 function Connect-ExchangeOnline {}
                 Mock Install-Module {}
@@ -215,10 +217,11 @@ Describe 'STPlatform Module' {
                     (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
                     $json = Get-Content $log | ConvertFrom-Json
                     $json.MetricName | Should -Be 'Connect-STPlatform'
-                    $json.Details.Modules | Should -Be @('Microsoft.Graph','ExchangeOnlineManagement','ActiveDirectory')
+                    $json.Details.Modules | Should -Be @('Microsoft.Graph', 'ExchangeOnlineManagement', 'ActiveDirectory')
                     $json.Details.Connections.Graph | Should -Be 'Success'
                     $json.Details.Connections.ExchangeOnline | Should -Be 'Success'
-                } finally {
+                }
+                finally {
                     Remove-Item $log -ErrorAction SilentlyContinue
                     Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
                     Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
@@ -230,7 +233,7 @@ Describe 'STPlatform Module' {
             InModuleScope STPlatform {
                 function Install-Module {}
                 function Import-Module {}
-                function Get-Module { param($Name,[switch]$ListAvailable) }
+                function Get-Module { param($Name, [switch]$ListAvailable) }
                 function Get-Command { param($Name) if ($Name -eq 'Connect-ExchangeServer') { @{ Name = $Name } } }
                 function Connect-ExchangeServer {}
                 Mock Install-Module {}
@@ -249,9 +252,10 @@ Describe 'STPlatform Module' {
                     (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
                     $json = Get-Content $log | ConvertFrom-Json
                     $json.MetricName | Should -Be 'Connect-STPlatform'
-                    $json.Details.Modules | Should -Be @('ActiveDirectory','ExchangePowerShell')
+                    $json.Details.Modules | Should -Be @('ActiveDirectory', 'ExchangePowerShell')
                     $json.Details.Connections.ExchangeOnPrem | Should -Be 'Success'
-                } finally {
+                }
+                finally {
                     Remove-Item $log -ErrorAction SilentlyContinue
                     Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
                     Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
@@ -278,27 +282,27 @@ Describe 'STPlatform Module' {
                 $env:GRAPH_CLIENT_SECRET = 'secEnv'
                 Connect-EntraID -Scopes 'User.Read'
                 Assert-MockCalled Connect-MgGraph -Times 1 -ParameterFilter { $TenantId -eq 'tidEnv' -and $ClientId -eq 'cidEnv' -and $ClientSecret -eq 'secEnv' -and $Scopes -eq 'User.Read' }
-                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                foreach ($n in 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
             }
         }
 
         Safe-It 'loads GRAPH variables from vault' {
             InModuleScope STPlatform {
                 Mock Connect-MgGraph {}
-                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                foreach ($n in 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
                 Mock Get-Secret {
                     switch ($Name) {
-                        'GRAPH_TENANT_ID'     { 'tid' }
-                        'GRAPH_CLIENT_ID'     { 'cid' }
+                        'GRAPH_TENANT_ID' { 'tid' }
+                        'GRAPH_CLIENT_ID' { 'cid' }
                         'GRAPH_CLIENT_SECRET' { 'sec' }
                     }
                 }
                 Connect-EntraID -Vault GraphVault
-                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') {
+                foreach ($n in 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET') {
                     Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n -and $Vault -eq 'GraphVault' } -Times 1
                 }
                 Assert-MockCalled Connect-MgGraph -Times 1 -ParameterFilter { $TenantId -eq 'tid' -and $ClientId -eq 'cid' -and $ClientSecret -eq 'sec' }
-                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                foreach ($n in 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
             }
         }
 
@@ -306,7 +310,7 @@ Describe 'STPlatform Module' {
             InModuleScope STPlatform {
                 Mock Connect-MgGraph { throw 'boom' }
                 Mock Write-STLog {}
-                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') {
+                foreach ($n in 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET') {
                     Set-Item -Path "env:$n" -Value $n.ToLower()
                 }
                 $log = Join-Path ([IO.Path]::GetTempPath()) ([IO.Path]::GetRandomFileName())
@@ -318,11 +322,12 @@ Describe 'STPlatform Module' {
                     (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
                     $json = Get-Content $log | ConvertFrom-Json
                     $json.Details.Result | Should -Be 'Failure'
-                } finally {
+                }
+                finally {
                     Remove-Item $log -ErrorAction SilentlyContinue
                     Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
                     Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
-                    foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                    foreach ($n in 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
                 }
             }
         }
@@ -333,9 +338,9 @@ Describe 'STPlatform Module' {
             InModuleScope STPlatform {
                 Mock Connect-MgGraph {}
                 Mock Get-Secret { $null }
-                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                foreach ($n in 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
                 { Connect-EntraID -ClientId 'cid' } | Should -Throw 'TenantId is required. Provide -TenantId or set GRAPH_TENANT_ID.'
-                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                foreach ($n in 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
             }
         }
 
@@ -343,9 +348,9 @@ Describe 'STPlatform Module' {
             InModuleScope STPlatform {
                 Mock Connect-MgGraph {}
                 Mock Get-Secret { $null }
-                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                foreach ($n in 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
                 { Connect-EntraID -TenantId 'tid' } | Should -Throw 'ClientId is required. Provide -ClientId or set GRAPH_CLIENT_ID.'
-                foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+                foreach ($n in 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
             }
         }
     }

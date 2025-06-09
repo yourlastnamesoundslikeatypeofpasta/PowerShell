@@ -43,7 +43,8 @@ while ($true) {
             Write-STStatus "Disabling user $upn (ticket $($t.Id))" -Level INFO -Log
             Disable-GraphUser -UserPrincipalName $upn -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
             $processed += $t.Id
-        } else {
+        }
+        else {
             Write-STStatus "Ticket $($t.Id) missing user info" -Level WARN -Log
         }
     }

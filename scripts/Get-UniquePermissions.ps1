@@ -69,8 +69,7 @@ Write-STStatus -Message 'Getting PnpProperties...' -Level INFO
 $itemsWithAllListItemFieldsList = [System.Collections.Generic.List[object]]::new()
 
 # Loop through each folder to get its ListItemAllFields property
-foreach ($salesSharePointFolderLvl42024SalesALLFOLDER in $salesSharePointFolderLvl42024SalesALLFOLDERS)
-{
+foreach ($salesSharePointFolderLvl42024SalesALLFOLDER in $salesSharePointFolderLvl42024SalesALLFOLDERS) {
     $itemListItemAllFields = Get-PnPProperty -ClientObject $salesSharePointFolderLvl42024SalesALLFOLDER -Property ListItemAllFields
     $itemsWithAllListItemFieldsList.Add($itemListItemAllFields)
 }
@@ -80,8 +79,7 @@ Write-STStatus -Message 'Getting PnpListItems...' -Level INFO
 $items = [System.Collections.Generic.List[object]]::new()
 
 # Loop through each item to get its ListItemAllFields properties using the retrieved ID
-foreach ($item in $itemsWithAllListItemFieldsList)
-{
+foreach ($item in $itemsWithAllListItemFieldsList) {
     try {
         $itemWithID = Get-PnPListItem -List $libraryList -Id $item.Id -Fields "HasUniqueRoleAssignments", "ID", "FileRef"
         $items.Add($itemWithID)
@@ -95,14 +93,12 @@ foreach ($item in $itemsWithAllListItemFieldsList)
 $uniqueRolesList = [System.Collections.Generic.List[object]]::new()
 
 # Loop through each item to check for unique role assignments and process them
-foreach ($item in $items)
-{
+foreach ($item in $items) {
     Write-STStatus "Processing $($item.FieldValues.FileRef)" -Level INFO
-    if ($item.HasUniqueRoleAssignments)
-    {
+    if ($item.HasUniqueRoleAssignments) {
         Write-STStatus "File has unique role assignments: $($item.FieldValues.FileRef)" -Level WARN
         $customObject = [pscustomobject]@{
-            ID = $item.FieldValues.ID
+            ID      = $item.FieldValues.ID
             FileRef = $item.FieldValues.FileRef
         }
         $uniqueRolesList.Add($customObject)

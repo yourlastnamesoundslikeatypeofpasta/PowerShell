@@ -9,7 +9,7 @@ function New-SDTicket {
     .PARAMETER RequesterEmail
         Email address of the requester.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

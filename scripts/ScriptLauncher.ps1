@@ -40,7 +40,8 @@ while ($true) {
     $index = [int]$choice - 1
     if ($index -ge 0 -and $index -lt $scriptFiles.Count) {
         & $scriptFiles[$index].Path
-    } else {
+    }
+    else {
         Write-STStatus -Message 'Invalid choice. Try again.' -Level WARN
     }
     Write-STStatus -Message '' -Level INFO

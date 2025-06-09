@@ -9,10 +9,10 @@ Describe 'Submit-SystemInfoTicket.ps1 script' {
     }
     BeforeEach {
         Mock Get-CommonSystemInfo { @{ OS = 'Windows' } }
-        Mock Get-SPToolsSettings { @{ ClientId='id'; TenantId='tid'; CertPath='cert' } }
+        Mock Get-SPToolsSettings { @{ ClientId = 'id'; TenantId = 'tid'; CertPath = 'cert' } }
         Mock Get-SPToolsSiteUrl { 'https://contoso.sharepoint.com/sites/it' }
         Mock Connect-PnPOnline {}
-        Mock Add-PnPFile { [pscustomobject]@{ ServerRelativeUrl='/docs/report.json' } }
+        Mock Add-PnPFile { [pscustomobject]@{ ServerRelativeUrl = '/docs/report.json' } }
         Mock New-SDTicket {}
         Mock Send-MailMessage {}
         Mock Write-STStatus {}

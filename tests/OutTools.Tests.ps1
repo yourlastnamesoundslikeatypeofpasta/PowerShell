@@ -6,7 +6,7 @@ Describe 'OutTools Module' {
     }
 
     Safe-It 'formats banner objects' {
-        $obj = [pscustomobject]@{ Module='TestMod'; Version='1.0' }
+        $obj = [pscustomobject]@{ Module = 'TestMod'; Version = '1.0' }
         { $obj | Out-STBanner } | Should -Not -Throw
     }
 
@@ -14,7 +14,7 @@ Describe 'OutTools Module' {
         Mock Write-STDivider {} -ModuleName Logging
         Mock Write-STStatus {} -ModuleName OutTools
         Mock Write-STLog {} -ModuleName Logging
-        Out-STBanner -Info @{ Module='TestMod' } -Color Red
+        Out-STBanner -Info @{ Module = 'TestMod' } -Color Red
         Assert-MockCalled Write-STDivider -ModuleName Logging -ParameterFilter { $Title.Contains([char]27) } -Times 1
     }
 
@@ -22,7 +22,7 @@ Describe 'OutTools Module' {
         Mock Write-STDivider {} -ModuleName Logging
         Mock Write-STStatus {} -ModuleName OutTools
         Mock Write-STLog {} -ModuleName Logging
-        Out-STBanner -Info @{ Module='TestMod' }
+        Out-STBanner -Info @{ Module = 'TestMod' }
         Assert-MockCalled Write-STDivider -ModuleName Logging -ParameterFilter { -not $Title.Contains([char]27) } -Times 1
     }
 }

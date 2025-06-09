@@ -7,17 +7,17 @@ function Add-SDTicketComment {
     .PARAMETER Comment
         Text body of the comment.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [int]$Id,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$Comment,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [switch]$ChaosMode,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory = $false)]
         [switch]$Explain
     )
 
@@ -43,7 +43,8 @@ Register-ArgumentCompleter -CommandName Add-SDTicketComment -ParameterName Id -S
             ForEach-Object {
                 [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
             }
-    } catch {
+    }
+    catch {
         # ignore completion errors
     }
 }

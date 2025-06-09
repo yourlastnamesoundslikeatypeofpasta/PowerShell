@@ -29,11 +29,13 @@ function Measure-STCommand {
     $errorObj = $null
     try {
         & $ScriptBlock
-    } catch {
+    }
+    catch {
         Write-STStatus "Measure-STCommand failed: $_" -Level ERROR -Log
         Write-STLog -Message "Measure-STCommand failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $errorObj = New-STErrorObject -Message $_.Exception.Message -Category 'Performance'
-    } finally {
+    }
+    finally {
         $sw.Stop()
     }
 
@@ -84,7 +86,7 @@ function Invoke-PerformanceAudit {
     & $scriptPath @PSBoundParameters
 }
 
-Export-ModuleMember -Function 'Measure-STCommand','Invoke-PerformanceAudit'
+Export-ModuleMember -Function 'Measure-STCommand', 'Invoke-PerformanceAudit'
 
 function Show-PerformanceToolsBanner {
     <#

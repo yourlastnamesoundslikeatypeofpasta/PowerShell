@@ -12,13 +12,13 @@ Describe 'Get-UserInfoHybrid results' {
         Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
         Mock Invoke-STRequest -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' } {
             switch -regex ($Uri) {
-                'v1\.0/users/.+\?' { @{ id='1'; displayName='Graph User'; userPrincipalName='u@test' } }
-                'licenseDetails'    { @{ value=@(@{ skuPartNumber='A1' }) } }
-                'memberOf'          { @{ value=@(@{ displayName='Group1' }) } }
-                'beta/users/.+'     { @{ signInActivity = @{ lastSignInDateTime='2024-01-01T00:00:00Z' } } }
+                'v1\.0/users/.+\?' { @{ id = '1'; displayName = 'Graph User'; userPrincipalName = 'u@test' } }
+                'licenseDetails' { @{ value = @(@{ skuPartNumber = 'A1' }) } }
+                'memberOf' { @{ value = @(@{ displayName = 'Group1' }) } }
+                'beta/users/.+' { @{ signInActivity = @{ lastSignInDateTime = '2024-01-01T00:00:00Z' } } }
             }
         }
-        Mock Get-ADUser { [pscustomobject]@{ SamAccountName='sam'; Enabled=$true; LastLogonDate='2024-02-01' } } -ModuleName EntraIDTools
+        Mock Get-ADUser { [pscustomobject]@{ SamAccountName = 'sam'; Enabled = $true; LastLogonDate = '2024-02-01' } } -ModuleName EntraIDTools
 
         $res = Get-UserInfoHybrid -UserPrincipalName 'u@test' -TenantId 'tid' -ClientId 'cid'
         $res.DisplayName    | Should -Be 'Graph User'

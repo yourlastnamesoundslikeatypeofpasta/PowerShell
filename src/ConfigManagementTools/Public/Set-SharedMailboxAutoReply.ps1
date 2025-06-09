@@ -6,7 +6,7 @@ function Set-SharedMailboxAutoReply {
         Wraps a script that manages Exchange Online auto-reply settings for a
         shared mailbox. All specified parameters are forwarded to the script.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -24,7 +24,7 @@ function Set-SharedMailboxAutoReply {
         [ValidateNotNullOrEmpty()]
         [string]$ExternalMessage,
         [Parameter(Mandatory = $false)]
-        [ValidateSet('None','Known','All')]
+        [ValidateSet('None', 'Known', 'All')]
         [ValidateNotNullOrEmpty()]
         [string]$ExternalAudience = 'All',
         [Parameter(Mandatory = $true)]
@@ -50,12 +50,14 @@ function Set-SharedMailboxAutoReply {
     try {
         if ($Logger) {
             Import-Module $Logger -Force -ErrorAction SilentlyContinue
-        } else {
+        }
+        else {
             Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
         }
         if ($TelemetryClient) {
             Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
-        } else {
+        }
+        else {
             Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
         }
         if ($Config) {
@@ -81,54 +83,59 @@ function Set-SharedMailboxAutoReply {
             return $mock
         }
 
-    if ([string]::IsNullOrWhiteSpace($ExternalMessage)) {
-        $ExternalMessage = $InternalMessage
-    }
-
-    Write-STStatus -Message 'Checking ExchangeOnlineManagement module...' -Level SUB
-    $module = Get-InstalledModule ExchangeOnlineManagement -ErrorAction SilentlyContinue
-    $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
-
-    if (-not $module) {
-        Write-STStatus -Message 'Installing Exchange Online module...' -Level INFO -Log
-        Install-Module -Name ExchangeOnlineManagement -Force
-    } elseif ($updateVersion -and $module.Version -lt $updateVersion.Version) {
-        Write-STStatus -Message 'Updating Exchange Online module...' -Level INFO -Log
-        Update-Module -Name ExchangeOnlineManagement -Force
-    }
-
-    Import-Module ExchangeOnlineManagement
-
-    try {
-        if ($UseWebLogin) {
-            Connect-ExchangeOnline -UserPrincipalName $AdminUser -UseWebLogin -ErrorAction Stop
-        } else {
-            Connect-ExchangeOnline -UserPrincipalName $AdminUser -ErrorAction Stop
+        if ([string]::IsNullOrWhiteSpace($ExternalMessage)) {
+            $ExternalMessage = $InternalMessage
         }
-    } catch {
-        throw "Failed to connect to Exchange Online: $($_.Exception.Message)"
-    }
 
-    Set-MailboxAutoReplyConfiguration -Identity $MailboxIdentity `
-        -AutoReplyState Scheduled `
-        -StartTime $StartTime `
-        -EndTime $EndTime `
-        -InternalMessage $InternalMessage `
-        -ExternalMessage $ExternalMessage `
-        -ExternalAudience $ExternalAudience
+        Write-STStatus -Message 'Checking ExchangeOnlineManagement module...' -Level SUB
+        $module = Get-InstalledModule ExchangeOnlineManagement -ErrorAction SilentlyContinue
+        $updateVersion = Find-Module -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
-    $result = Get-MailboxAutoReplyConfiguration -Identity $MailboxIdentity
+        if (-not $module) {
+            Write-STStatus -Message 'Installing Exchange Online module...' -Level INFO -Log
+            Install-Module -Name ExchangeOnlineManagement -Force
+        }
+        elseif ($updateVersion -and $module.Version -lt $updateVersion.Version) {
+            Write-STStatus -Message 'Updating Exchange Online module...' -Level INFO -Log
+            Update-Module -Name ExchangeOnlineManagement -Force
+        }
+
+        Import-Module ExchangeOnlineManagement
+
+        try {
+            if ($UseWebLogin) {
+                Connect-ExchangeOnline -UserPrincipalName $AdminUser -UseWebLogin -ErrorAction Stop
+            }
+            else {
+                Connect-ExchangeOnline -UserPrincipalName $AdminUser -ErrorAction Stop
+            }
+        }
+        catch {
+            throw "Failed to connect to Exchange Online: $($_.Exception.Message)"
+        }
+
+        Set-MailboxAutoReplyConfiguration -Identity $MailboxIdentity `
+            -AutoReplyState Scheduled `
+            -StartTime $StartTime `
+            -EndTime $EndTime `
+            -InternalMessage $InternalMessage `
+            -ExternalMessage $ExternalMessage `
+            -ExternalAudience $ExternalAudience
+
+        $result = Get-MailboxAutoReplyConfiguration -Identity $MailboxIdentity
 
         Disconnect-ExchangeOnline -Confirm:$false
 
         Write-STStatus -Message 'Auto-reply configuration complete' -Level FINAL -Log
         return $result
-    } catch {
+    }
+    catch {
         Write-STStatus "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Log
         Write-STLog -Message "Set-SharedMailboxAutoReply failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'Exchange'
-    } finally {
+    }
+    finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
         Disconnect-ExchangeOnline -Confirm:$false | Out-Null
         $sw.Stop()

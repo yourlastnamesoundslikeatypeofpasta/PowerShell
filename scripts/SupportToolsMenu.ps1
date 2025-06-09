@@ -13,7 +13,7 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -
 Import-Module (Join-Path $PSScriptRoot '..' 'src/SupportTools/SupportTools.psd1') -Force -ErrorAction SilentlyContinue
 
 param(
-    [ValidateSet('Helpdesk','Site Admin')]
+    [ValidateSet('Helpdesk', 'Site Admin')]
     [string]$UserRole = 'Helpdesk'
 )
 
@@ -28,7 +28,8 @@ if ($UserRole -eq 'Helpdesk') {
             $desc = Read-Host 'Description'
             $email = Read-Host 'Requester email'
             New-SDTicket -Subject $subject -Description $desc -RequesterEmail $email
-        } }
+        } 
+    }
 }
 
 if ($UserRole -eq 'Site Admin') {
@@ -51,7 +52,8 @@ while ($true) {
     $index = [int]$choice - 1
     if ($index -ge 0 -and $index -lt $Menu.Count) {
         & $Menu[$index].Action
-    } else {
+    }
+    else {
         Write-STStatus -Message 'Invalid choice. Try again.' -Level WARN
     }
     Write-STStatus -Message '' -Level INFO

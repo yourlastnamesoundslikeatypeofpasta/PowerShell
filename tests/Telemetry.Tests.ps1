@@ -19,7 +19,8 @@ Describe 'Telemetry Opt-In' {
                 Invoke-ScriptFile -Name 'TelemetryTest.ps1'
             }
             Test-Path $log | Should -Be $false
-        } finally {
+        }
+        finally {
             Remove-Item $scriptFile -ErrorAction SilentlyContinue
             Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
         }
@@ -42,7 +43,8 @@ Describe 'Telemetry Opt-In' {
             $telemetry.Script | Should -Be 'TelemetryTest.ps1'
             $telemetry.Result | Should -Be 'Success'
             $metric.MetricName | Should -Be 'ExecutionSeconds'
-        } finally {
+        }
+        finally {
             Remove-Item $scriptFile -ErrorAction SilentlyContinue
             Remove-Item $log -ErrorAction SilentlyContinue
             Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
@@ -57,7 +59,8 @@ Describe 'Telemetry Opt-In' {
             $env:ST_TELEMETRY_PATH = $log
             Write-STTelemetryEvent -ScriptName 'Foo.ps1' -Result 'Success' -Duration ([timespan]::FromSeconds(1))
             Test-Path $log | Should -Be $false
-        } finally {
+        }
+        finally {
             Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
         }
     }
@@ -72,7 +75,8 @@ Describe 'Telemetry Opt-In' {
             $json = Get-Content $log | ConvertFrom-Json
             $json.Script | Should -Be 'Foo.ps1'
             $json.Result | Should -Be 'Failure'
-        } finally {
+        }
+        finally {
             Remove-Item $log -ErrorAction SilentlyContinue
             Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
             Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
@@ -89,18 +93,19 @@ Describe 'Telemetry Metrics Summary' {
     Safe-It 'aggregates telemetry data' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         $events = @(
-            @{Timestamp='2024-01-01T00:00:00Z'; Script='Test.ps1'; Result='Success'; Duration=2},
-            @{Timestamp='2024-01-01T00:00:01Z'; Script='Test.ps1'; Result='Failure'; Duration=4}
+            @{Timestamp = '2024-01-01T00:00:00Z'; Script = 'Test.ps1'; Result = 'Success'; Duration = 2 },
+            @{Timestamp = '2024-01-01T00:00:01Z'; Script = 'Test.ps1'; Result = 'Failure'; Duration = 4 }
         ) | ForEach-Object { $_ | ConvertTo-Json -Compress }
         Set-Content -Path $log -Value $events
 
         try {
             $metrics = Get-STTelemetryMetrics -LogPath $log
-            $test = $metrics | Where-Object Script -eq 'Test.ps1'
+            $test = $metrics | Where-Object Script -EQ 'Test.ps1'
             $test.Executions | Should -Be 2
             $test.Failures   | Should -Be 1
             $test.AverageSeconds | Should -Be 3
-        } finally {
+        }
+        finally {
             Remove-Item $log -ErrorAction SilentlyContinue
         }
     }
@@ -116,7 +121,8 @@ Describe 'Telemetry Metrics Summary' {
             $json.MetricName | Should -Be 'TestMetric'
             $json.Category | Should -Be 'Audit'
             $json.Value | Should -Be 1.5
-        } finally {
+        }
+        finally {
             Remove-Item $log -ErrorAction SilentlyContinue
             Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
             Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
@@ -125,27 +131,28 @@ Describe 'Telemetry Metrics Summary' {
 
     Safe-It 'writes metrics to a sqlite database' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
-        $db  = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+        $db = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         $events = @(
-            @{Timestamp='2024-01-01T00:00:00Z'; Script='Test.ps1'; Result='Success'; Duration=1},
-            @{Timestamp='2024-01-01T00:00:01Z'; Script='Test.ps1'; Result='Failure'; Duration=3}
+            @{Timestamp = '2024-01-01T00:00:00Z'; Script = 'Test.ps1'; Result = 'Success'; Duration = 1 },
+            @{Timestamp = '2024-01-01T00:00:01Z'; Script = 'Test.ps1'; Result = 'Failure'; Duration = 3 }
         ) | ForEach-Object { $_ | ConvertTo-Json -Compress }
         Set-Content -Path $log -Value $events
 
         try {
-            Mock sqlite3 { param($path,$sql) Add-Content -Path $path -Value $sql } -ModuleName Telemetry
+            Mock sqlite3 { param($path, $sql) Add-Content -Path $path -Value $sql } -ModuleName Telemetry
 
             Get-STTelemetryMetrics -LogPath $log -SqlitePath $db | Out-Null
             $content = Get-Content $db -Raw
             $content | Should -Match 'CREATE TABLE'
             ($content -split "`n" | Where-Object { $_ -match 'INSERT OR REPLACE' }).Count | Should -Be 1
 
-            $events += (@{Timestamp='2024-01-02T00:00:00Z'; Script='Test.ps1'; Result='Success'; Duration=2} | ConvertTo-Json -Compress)
+            $events += (@{Timestamp = '2024-01-02T00:00:00Z'; Script = 'Test.ps1'; Result = 'Success'; Duration = 2 } | ConvertTo-Json -Compress)
             Set-Content -Path $log -Value $events
             Get-STTelemetryMetrics -LogPath $log -SqlitePath $db | Out-Null
             $content = Get-Content $db -Raw
             ($content -split "`n" | Where-Object { $_ -match 'INSERT OR REPLACE' }).Count | Should -Be 2
-        } finally {
+        }
+        finally {
             Remove-Item $log -ErrorAction SilentlyContinue
             Remove-Item $db -ErrorAction SilentlyContinue
         }

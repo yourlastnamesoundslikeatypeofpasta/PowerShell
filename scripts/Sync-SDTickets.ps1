@@ -49,14 +49,16 @@ while ($true) {
         Write-STStatus -Message 'Running full ticket sync...' -Level INFO -Log
         $tickets = Get-AllTickets
         $lastFullSync = Get-Date
-    } else {
+    }
+    else {
         $latest = ($tickets | Sort-Object created_at | Select-Object -Last 1).created_at
         if ($latest) {
             $new = Get-NewTickets -Since ([datetime]$latest)
             if ($new) {
                 $tickets.AddRange($new)
                 Write-STStatus "Added $($new.Count) new tickets to cache." -Level SUCCESS -Log
-            } else {
+            }
+            else {
                 Write-STStatus -Message 'No new tickets found.' -Level SUB -Log
             }
         }

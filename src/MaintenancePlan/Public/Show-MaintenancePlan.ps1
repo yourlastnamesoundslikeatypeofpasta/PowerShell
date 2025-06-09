@@ -5,7 +5,7 @@ function Show-MaintenancePlan {
     .PARAMETER Plan
         Plan object created by New-MaintenancePlan or Import-MaintenancePlan.
     #>
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateNotNull()]

@@ -5,7 +5,7 @@ function Submit-Ticket {
     .DESCRIPTION
         Wrapper around New-SDTicket providing a simpler command name.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

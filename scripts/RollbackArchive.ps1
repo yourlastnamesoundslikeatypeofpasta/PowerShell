@@ -33,10 +33,12 @@ foreach ($item in $data) {
         try {
             Restore-PnPRecycleBinItem -Identity $item.RecycleBinItemId -Force
             Write-STStatus "Restored $($item.ServerRelativeUrl)" -Level INFO
-        } catch {
+        }
+        catch {
             Write-STStatus "Failed to restore $($item.ServerRelativeUrl): $($_.Exception.Message)" -Level WARN
         }
-    } else {
+    }
+    else {
         Write-STStatus "No recycle bin id for $($item.ServerRelativeUrl)" -Level WARN
     }
 }

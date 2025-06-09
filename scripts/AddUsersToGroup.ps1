@@ -29,7 +29,7 @@ This script requires Microsoft Graph API permissions and assumes the user has th
 This example runs the script with explicit parameters to process the provided CSV file and add the listed users to the specified Microsoft 365 group.
 #>
 
-[CmdletBinding(SupportsShouldProcess=$true)]
+[CmdletBinding(SupportsShouldProcess = $true)]
 param(
     [Parameter()]
     [string]$CsvPath,
@@ -39,7 +39,7 @@ param(
     [string]$GroupName,
 
     [Parameter()]
-    [ValidateSet('Entra','AD')]
+    [ValidateSet('Entra', 'AD')]
     [string]$Cloud = 'Entra'
 )
 
@@ -61,7 +61,8 @@ if ($Cloud -eq 'Entra') {
     # Import Microsoft Graph module
     Write-STStatus -Message 'Importing Microsoft Graph...this might take awhile...' -Level INFO
     Import-Module Microsoft.Graph -Verbose
-} else {
+}
+else {
     Import-Module ActiveDirectory -ErrorAction Stop
 }
 
@@ -73,8 +74,7 @@ function Get-CSVFilePath {
     $openFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*"
     $dialogResult = $openFileDialog.ShowDialog()
 
-    if ($dialogResult -eq "True")
-    {
+    if ($dialogResult -eq "True") {
         $filePath = Get-ChildItem -Path $openFileDialog.FileName
         return $filePath
     }
@@ -92,10 +92,11 @@ function Get-GroupNames {
 function Connect-MicrosoftGraph {
     # Connect to Microsoft Graph API
     Write-STStatus -Message 'Connecting to Microsoft Graph...' -Level INFO
-    $scopes = 'User.Read.All','Group.ReadWrite.All','Directory.ReadWrite.All'
+    $scopes = 'User.Read.All', 'Group.ReadWrite.All', 'Directory.ReadWrite.All'
     try {
         Connect-MgGraph -Scopes $scopes -NoWelcome
-    } catch {
+    }
+    catch {
         Write-Error -Message "Error: $_.Exception.Message"
         throw "Error: Cannot connect to Microsoft Graph"
     }
@@ -114,7 +115,7 @@ function Get-Group {
     if ($GroupName) {
         $grp = Get-MgGroup -Filter "displayName eq '$GroupName'" | Select-Object -First 1
         if (-not $grp) { throw "Group '$GroupName' not found." }
-            Write-STStatus "Using group: $($grp.DisplayName)" -Level SUB
+        Write-STStatus "Using group: $($grp.DisplayName)" -Level SUB
         return $grp
     }
 
@@ -130,7 +131,8 @@ function Get-Group {
     try {
         $selectedGroup = $allGroupNames[$groupSelection]
         Write-STStatus "You have selected: $($selectedGroup.DisplayName)" -Level SUB
-    } catch {
+    }
+    catch {
         Write-Error "Error: $($_.Exception.Message)"
         throw "Error: There was an error with your selection..."
     }
@@ -146,8 +148,7 @@ function Get-GroupExistingMembers {
     $existingMembers = Get-MgGroupMember -GroupId $group.Id
 
     $existingMemberUPNList = [System.Collections.Generic.List[object]]::new()
-    foreach ($id in $existingMembers.Id)
-    {
+    foreach ($id in $existingMembers.Id) {
         $UPN = Get-MgUser -UserId $id | select UserPrincipalName
         $existingMemberUPNList.Add($UPN.UserPrincipalName)
     }
@@ -171,7 +172,7 @@ function Get-UserID {
 }
 
 function Start-Main {
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [string]$CsvPath,
         [string]$GroupName,
@@ -191,7 +192,8 @@ function Start-Main {
         # Get all groups and query the user for a group index
         $group = Get-Group -GroupName $GroupName
         $groupExistingMembers = Get-GroupExistingMembers -Group $group
-    } else {
+    }
+    else {
         $group = Get-ADGroup -Identity $GroupName -ErrorAction Stop
         $groupExistingMembers = (Get-ADGroupMember -Identity $group.DistinguishedName -Recursive | Select-Object -ExpandProperty SamAccountName)
     }
@@ -206,15 +208,15 @@ function Start-Main {
     $skippedUsers = [System.Collections.Generic.List[object]]::new()
 
     # Check if user is in the group and add the user if not
-    foreach ($user in $users)
-    {
+    foreach ($user in $users) {
         if ($Cloud -eq 'Entra') {
             # Pull all info | select UPN
             $userInfo = Get-UserID -UserPrincipalName $user
             $uid = $userInfo.Id
             $upn = $userInfo.UserPrincipalName
             $display = $userInfo.DisplayName
-        } else {
+        }
+        else {
             $userInfo = Get-ADUser -Filter "UserPrincipalName -eq '$user'" -ErrorAction SilentlyContinue
             if (-not $userInfo) { $userInfo = Get-ADUser -Identity $user -ErrorAction SilentlyContinue }
             $uid = $userInfo.SamAccountName
@@ -229,8 +231,7 @@ function Start-Main {
         }
 
         # Add the user to the group if they are not in the group
-        if ($groupExistingMembers -contains $upn)
-        {
+        if ($groupExistingMembers -contains $upn) {
             Write-STStatus "UserIsInGroup: $($user) - $($group.DisplayName)" -Level WARN
             $skippedUsers.Add($upn)
         }
@@ -240,7 +241,8 @@ function Start-Main {
                 try {
                     if ($Cloud -eq 'Entra') {
                         New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $uid -ErrorAction Stop
-                    } else {
+                    }
+                    else {
                         Add-ADGroupMember -Identity $group.DistinguishedName -Members $uid -ErrorAction Stop
                     }
                     Write-STStatus "[SUCCESS] AddingUserToGroup: User: $display - Group: $($group.DisplayName)" -Level SUCCESS
@@ -250,7 +252,8 @@ function Start-Main {
                     Write-Error "[FAIL] Error adding $($user) to $($group.Id)..."
                     throw "ErrorAddingUserToGroup: $($user): $display"
                 }
-            } else {
+            }
+            else {
                 Write-STStatus "WouldAddUserToGroup: User: $display - Group: $($group.DisplayName)" -Level SUB
             }
         }

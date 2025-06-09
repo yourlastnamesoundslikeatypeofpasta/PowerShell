@@ -10,7 +10,7 @@ Import-Module $telemetryModule -Force -ErrorAction SilentlyContinue -DisableName
 Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 
-Export-ModuleMember -Function 'Add-UserToGroup','Invoke-GroupMembershipCleanup','Install-Font','Install-MaintenanceTasks','Invoke-CompanyPlaceManagement','Invoke-DeploymentTemplate','Invoke-ExchangeCalendarManager','Invoke-PostInstall','Set-ComputerIPAddress','Set-NetAdapterMetering','Set-SharedMailboxAutoReply','Set-TimeZoneEasternStandardTime','Test-Drift','Out-CompanyPlace'
+Export-ModuleMember -Function 'Add-UserToGroup', 'Invoke-GroupMembershipCleanup', 'Install-Font', 'Install-MaintenanceTasks', 'Invoke-CompanyPlaceManagement', 'Invoke-DeploymentTemplate', 'Invoke-ExchangeCalendarManager', 'Invoke-PostInstall', 'Set-ComputerIPAddress', 'Set-NetAdapterMetering', 'Set-SharedMailboxAutoReply', 'Set-TimeZoneEasternStandardTime', 'Test-Drift', 'Out-CompanyPlace'
 
 function Show-ConfigManagementToolsBanner {
     [CmdletBinding()]

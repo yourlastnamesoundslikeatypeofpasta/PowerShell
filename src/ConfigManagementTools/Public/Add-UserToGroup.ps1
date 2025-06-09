@@ -10,7 +10,7 @@ function Add-UserToGroup {
     .PARAMETER GroupName
         Name of the Microsoft 365 group to modify.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
@@ -30,7 +30,7 @@ function Add-UserToGroup {
         [Parameter(Mandatory = $false)]
         [object]$TelemetryClient,
         [Parameter(Mandatory = $false)]
-        [ValidateSet('Entra','AD')]
+        [ValidateSet('Entra', 'AD')]
         [string]$Cloud = 'Entra',
         [Parameter(Mandatory = $false)]
         [object]$Config
@@ -60,7 +60,8 @@ function Add-UserToGroup {
             }
 
             Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
-        } catch {
+        }
+        catch {
             return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
         }
     }

@@ -11,7 +11,7 @@ function New-MaintenancePlan {
     .PARAMETER Schedule
         Optional description of the schedule.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -24,8 +24,8 @@ function New-MaintenancePlan {
     Assert-ParameterNotNull $Name 'Name'
     Assert-ParameterNotNull $Steps 'Steps'
     [pscustomobject]@{
-        Name = $Name
-        Steps = $Steps
+        Name     = $Name
+        Steps    = $Steps
         Schedule = $Schedule
     }
 }

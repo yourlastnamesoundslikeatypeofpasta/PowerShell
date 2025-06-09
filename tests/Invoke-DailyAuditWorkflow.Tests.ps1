@@ -14,7 +14,7 @@ Describe 'Invoke-DailyAuditWorkflow.ps1 script' {
         Mock Write-STStatus {}
         Mock Get-SPPermissionsReport {
             $script:order += 'Get-SPPermissionsReport'
-            @([pscustomobject]@{ User='U' })
+            @([pscustomobject]@{ User = 'U' })
         }
         Mock Export-Csv {
             $script:order += 'Export-Csv'
@@ -33,7 +33,7 @@ Describe 'Invoke-DailyAuditWorkflow.ps1 script' {
 
     Safe-It 'runs the workflow and records telemetry' {
         & $ScriptPath -SiteUrl 'https://contoso.sharepoint.com' -RequesterEmail 'admin@contoso.com' | Out-Null
-        $script:order | Should -Be @('Get-SPPermissionsReport','Export-Csv','New-SDTicket','Write-STTelemetryEvent')
+        $script:order | Should -Be @('Get-SPPermissionsReport', 'Export-Csv', 'New-SDTicket', 'Write-STTelemetryEvent')
         Assert-MockCalled Write-STTelemetryEvent -Times 1
     }
 }

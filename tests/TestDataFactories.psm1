@@ -47,4 +47,4 @@ function New-TestAuditResult {
     return $obj
 }
 
-Export-ModuleMember -Function 'New-TestUser','New-TestAuditResult'
+Export-ModuleMember -Function 'New-TestUser', 'New-TestAuditResult'

@@ -6,7 +6,7 @@ function Get-CPUUsage {
         Uses Get-Counter when available to calculate average CPU usage.
         Each call also records a structured log entry via Write-STRichLog.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param()
 
     if (-not $PSCmdlet.ShouldProcess('CPU usage')) { return }
@@ -16,8 +16,9 @@ function Get-CPUUsage {
     $cpu = $null
     if (Get-Command Get-Counter -ErrorAction SilentlyContinue) {
         $samples = Get-Counter '\\Processor(_Total)\\% Processor Time' -SampleInterval 1 -MaxSamples 3
-        $cpu = [math]::Round(($samples.CounterSamples | Measure-Object -Property CookedValue -Average).Average,2)
-    } else {
+        $cpu = [math]::Round(($samples.CounterSamples | Measure-Object -Property CookedValue -Average).Average, 2)
+    }
+    else {
         Write-STStatus -Message 'Get-Counter not available.' -Level WARN
     }
     $json = @{ ComputerName = $computer; CpuPercent = $cpu; Timestamp = $timestamp } | ConvertTo-Json -Compress

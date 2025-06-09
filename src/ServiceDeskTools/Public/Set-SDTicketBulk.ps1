@@ -7,7 +7,7 @@ function Set-SDTicketBulk {
     .PARAMETER Fields
         Hashtable of fields to modify on each incident.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -44,7 +44,8 @@ Register-ArgumentCompleter -CommandName Set-SDTicketBulk -ParameterName Id -Scri
             ForEach-Object {
                 [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
             }
-    } catch {
+    }
+    catch {
         # ignore completion errors
     }
 }

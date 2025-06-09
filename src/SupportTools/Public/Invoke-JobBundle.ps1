@@ -11,7 +11,7 @@ function Invoke-JobBundle {
         Optional path to save the resulting log archive. Defaults to
         '<bundle>.logs.zip'.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [ValidateNotNullOrEmpty()]
@@ -23,7 +23,7 @@ function Invoke-JobBundle {
 
     process {
         if (-not $LogArchivePath) {
-            $LogArchivePath = $Path -replace '\\.zip$','-logs.zip'
+            $LogArchivePath = $Path -replace '\\.zip$', '-logs.zip'
         }
 
         $transcript = [IO.Path]::GetTempFileName()
@@ -32,7 +32,8 @@ function Invoke-JobBundle {
 
         $logFile = if ($env:ST_LOG_PATH) {
             $env:ST_LOG_PATH
-        } else {
+        }
+        else {
             $profile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
             Join-Path (Join-Path $profile 'SupportToolsLogs') 'supporttools.log'
         }

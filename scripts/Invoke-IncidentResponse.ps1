@@ -45,7 +45,8 @@ try {
             try {
                 $sig = Get-AuthenticodeSignature -FilePath $path
                 if ($sig.SignerCertificate) { $signer = $sig.SignerCertificate.Subject }
-            } catch {}
+            }
+            catch {}
         }
         [pscustomobject]@{
             Name   = $_.ProcessName
@@ -63,34 +64,36 @@ try {
     catch { Write-STStatus "qwinsta failed: $_" -Level WARN -Log }
 
     Write-STStatus "Listing network connections" -Level INFO -Log
-    Get-NetTCPConnection | Select-Object LocalAddress,LocalPort,RemoteAddress,RemotePort,State |
+    Get-NetTCPConnection | Select-Object LocalAddress, LocalPort, RemoteAddress, RemotePort, State |
         Export-Csv -NoTypeInformation -Path (Join-Path $OutputDirectory 'NetConnections.csv') -Encoding utf8
 
     Write-STStatus "Enumerating local administrators" -Level INFO -Log
     try {
         Get-LocalGroupMember -Group 'Administrators' |
-            Select-Object Name,SID |
+            Select-Object Name, SID |
             Export-Csv -NoTypeInformation -Path (Join-Path $OutputDirectory 'LocalAdmins.csv') -Encoding utf8
-    } catch {
+    }
+    catch {
         Write-STStatus "Failed to list local admins: $_" -Level WARN -Log
     }
 
     Write-STStatus "Recording services and startup items" -Level INFO -Log
-    Get-Service | Select-Object Name,DisplayName,Status,StartType |
+    Get-Service | Select-Object Name, DisplayName, Status, StartType |
         Export-Csv -NoTypeInformation -Path (Join-Path $OutputDirectory 'Services.csv') -Encoding utf8
-    Get-CimInstance Win32_StartupCommand | Select-Object Name,Command,Location,User |
+    Get-CimInstance Win32_StartupCommand | Select-Object Name, Command, Location, User |
         Export-Csv -NoTypeInformation -Path (Join-Path $OutputDirectory 'StartupItems.csv') -Encoding utf8
 
     $highRisk = $processes | Where-Object { -not $_.Signer -and $_.Path -match '(?i)\\temp\\' }
     if ($highRisk.Count -gt 0 -and $RequesterEmail) {
         Write-STStatus "High-risk processes detected" -Level ERROR -Log
         $desc = "Unsigned processes found in temp locations on $env:COMPUTERNAME.`n`n" +
-                 ($highRisk | Format-Table Name,Path -AutoSize | Out-String) +
-                 "`nReport folder: $OutputDirectory"
+        ($highRisk | Format-Table Name, Path -AutoSize | Out-String) +
+        "`nReport folder: $OutputDirectory"
         Submit-Ticket -Subject "Incident Response - $env:COMPUTERNAME" -Description $desc -RequesterEmail $RequesterEmail | Out-Null
     }
 
     Write-STStatus "Incident response data saved to $OutputDirectory" -Level SUCCESS -Log
-} finally {
+}
+finally {
     if ($TranscriptPath) { Stop-Transcript | Out-Null }
 }

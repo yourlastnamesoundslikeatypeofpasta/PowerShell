@@ -15,7 +15,7 @@
 #>
 param(
     [string]$SupportToolsVersion,
-    [ValidateSet('CurrentUser','AllUsers')]
+    [ValidateSet('CurrentUser', 'AllUsers')]
     [string]$Scope = 'CurrentUser'
 )
 
@@ -35,7 +35,8 @@ foreach ($module in $modules) {
     if (Test-Path $localPath) {
         Import-Module $localPath -Force -DisableNameChecking
         Write-Warning "Imported $module from $localPath"
-    } else {
+    }
+    else {
         Write-Warning "Could not find $module in src"
     }
 }

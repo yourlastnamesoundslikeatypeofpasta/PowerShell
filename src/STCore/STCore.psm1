@@ -69,7 +69,8 @@ function Test-IsElevated {
         $id = [Security.Principal.WindowsIdentity]::GetCurrent()
         $principal = New-Object Security.Principal.WindowsPrincipal($id)
         return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-    } else {
+    }
+    else {
         try { return ((id -u) -eq 0) } catch { return $false }
     }
 }
@@ -89,7 +90,8 @@ function Get-STConfig {
             '.psd1' { return Import-PowerShellDataFile $Path }
             default { throw "Unsupported config type: $ext" }
         }
-    } catch {
+    }
+    catch {
         Write-STDebug "Failed to read config ${Path}: $_"
         return @{}
     }
@@ -124,7 +126,8 @@ function Invoke-STRequest {
 
     $json = if ($PSBoundParameters.ContainsKey('Body')) {
         if ($ContentType -match 'json') { $Body | ConvertTo-Json -Depth 10 } else { $Body }
-    } else { $null }
+    }
+    else { $null }
 
     $maxRetries = 3
     $attempt = 1
@@ -132,14 +135,16 @@ function Invoke-STRequest {
         try {
             if ($json) {
                 $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers -Body $json -ContentType $ContentType
-            } else {
+            }
+            else {
                 $response = Invoke-RestMethod -Method $Method -Uri $Uri -Headers $Headers
             }
             Write-STLog -Message "SUCCESS $Method $Uri" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             return $response
-        } catch [System.Net.WebException],[Microsoft.PowerShell.Commands.HttpResponseException] {
+        }
+        catch [System.Net.WebException], [Microsoft.PowerShell.Commands.HttpResponseException] {
             $status = $_.Exception.Response.StatusCode.value__
-            $msg    = $_.Exception.Message
+            $msg = $_.Exception.Message
             Write-STLog -Message "HTTP $status $msg" -Level 'ERROR' -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             if ($status -eq 429 -or ($status -ge 500 -and $status -lt 600)) {
                 if ($attempt -lt $maxRetries) {
@@ -154,14 +159,15 @@ function Invoke-STRequest {
             }
             $errorObj = New-STErrorObject -Message "HTTP $status $msg" -Category 'HTTP'
             throw $errorObj
-        } catch {
+        }
+        catch {
             Write-STLog -Message "ERROR $Method $Uri :: $_" -Level 'ERROR' -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
             throw
         }
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest'
+Export-ModuleMember -Function 'Assert-ParameterNotNull', 'New-STErrorObject', 'New-STErrorRecord', 'Write-STDebug', 'Test-IsElevated', 'Get-STConfig', 'Invoke-STRequest'
 
 function Show-STCoreBanner {
     <#

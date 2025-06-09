@@ -6,7 +6,7 @@ function Invoke-PostInstall {
         Runs PostInstallScript.ps1 from the scripts folder, forwarding any
         arguments provided.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

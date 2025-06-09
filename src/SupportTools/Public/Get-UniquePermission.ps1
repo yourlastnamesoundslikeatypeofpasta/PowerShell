@@ -6,7 +6,7 @@ function Get-UniquePermission {
         Calls the Get-UniquePermissions.ps1 script contained in the scripts
         directory and outputs its results.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

@@ -6,7 +6,7 @@ function Invoke-FullSystemAudit {
         Executes Get-CommonSystemInfo, Generate-SPUsageReport, Get-FailedLogin and Invoke-PerformanceAudit in sequence.
         Progress and errors are logged, telemetry recorded, and a combined report is saved as JSON or HTML.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
@@ -20,11 +20,11 @@ function Invoke-FullSystemAudit {
         [switch]$Simulate,
         [Parameter(Mandatory = $false)]
         [switch]$Explain
-        ,[Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [object]$Logger
-        ,[Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [object]$TelemetryClient
-        ,[Parameter(Mandatory = $false)]
+        , [Parameter(Mandatory = $false)]
         [object]$Config
     )
 
@@ -32,7 +32,8 @@ function Invoke-FullSystemAudit {
         if ($Logger) { Import-Module $Logger -Force -ErrorAction SilentlyContinue }
         if ($TelemetryClient) {
             Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
-        } else {
+        }
+        else {
             Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
         }
         if ($Config) { Import-Module $Config -Force -ErrorAction SilentlyContinue }
@@ -42,7 +43,7 @@ function Invoke-FullSystemAudit {
         }
 
         $summary = [ordered]@{}
-        $errors  = @()
+        $errors = @()
 
         function Run-Step {
             param(
@@ -56,11 +57,13 @@ function Invoke-FullSystemAudit {
             try {
                 $out = & $Action
                 Write-STStatus "Completed $Name" -Level SUCCESS -Log
-            } catch {
+            }
+            catch {
                 Write-STStatus "$Name failed: $_" -Level ERROR -Log
                 $errors += [pscustomobject]@{ Stage = $Name; Error = $_.ToString() }
                 $result = 'Failure'
-            } finally {
+            }
+            finally {
                 $sw.Stop()
                 $opId = [guid]::NewGuid().ToString()
                 Write-STTelemetryEvent -ScriptName $Name -Result $result -Duration $sw.Elapsed -Category 'Audit' -OperationId $opId
@@ -70,10 +73,10 @@ function Invoke-FullSystemAudit {
         }
 
         $summary.CommonSystemInfo = Run-Step 'Get-CommonSystemInfo' { Get-CommonSystemInfo }
-        $summary.SPUsageReport    = Run-Step 'Generate-SPUsageReport' {
+        $summary.SPUsageReport = Run-Step 'Generate-SPUsageReport' {
             Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Generate-SPUsageReport.ps1' -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         }
-        $summary.FailedLogin      = Run-Step 'Get-FailedLogin' { Get-FailedLogin }
+        $summary.FailedLogin = Run-Step 'Get-FailedLogin' { Get-FailedLogin }
         $summary.PerformanceAudit = Run-Step 'Invoke-PerformanceAudit' {
             Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Invoke-PerformanceAudit.ps1' -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         }
@@ -82,7 +85,8 @@ function Invoke-FullSystemAudit {
 
         if ($Html) {
             $summary | ConvertTo-Html -PreContent '<h1>Full System Audit</h1>' | Out-File -FilePath $OutputPath -Encoding utf8
-        } else {
+        }
+        else {
             $summary | ConvertTo-Json -Depth 5 | Out-File -FilePath $OutputPath -Encoding utf8
         }
 

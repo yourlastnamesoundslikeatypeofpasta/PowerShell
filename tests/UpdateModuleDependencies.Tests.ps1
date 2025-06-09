@@ -33,7 +33,8 @@ Describe 'Update-ModuleDependencies script' {
             param($FilePath)
             if ($FilePath -like "$badModule.psd1") {
                 [pscustomobject]@{ Status = 'BadSignature'; StatusMessage = 'Bad signature' }
-            } else {
+            }
+            else {
                 [pscustomobject]@{ Status = 'Valid'; StatusMessage = 'Valid' }
             }
         } -Verifiable -Force

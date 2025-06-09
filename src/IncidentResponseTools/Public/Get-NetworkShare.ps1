@@ -6,7 +6,7 @@ function Get-NetworkShare {
         Executes the Get-NetworkShares.ps1 script from the scripts folder and
         returns its results.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,

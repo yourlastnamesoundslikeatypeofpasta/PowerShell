@@ -34,7 +34,7 @@ function Get-Fonts {
         $FontFolder
     )
     $FontItem = Get-Item -Path $FontFolder
-    $FontList = Get-ChildItem -Path "$FontItem\*" -Include ('*.fon','*.otf','*.ttc','*.ttf')
+    $FontList = Get-ChildItem -Path "$FontItem\*" -Include ('*.fon', '*.otf', '*.ttc', '*.ttf')
 
     return $FontList
 }
@@ -45,8 +45,7 @@ function Install-Fonts {
         $Fonts
     )
 
-    foreach ($font in $Fonts)
-    {
+    foreach ($font in $Fonts) {
         $fontName = $font.Name
         Copy-Item -Path $font.FullName -Destination "C:\Windows\Fonts" -Force
         New-ItemProperty -Name $font.BaseName -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Fonts" -PropertyType string -Value $font.Name -Force

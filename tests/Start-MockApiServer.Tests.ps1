@@ -1,7 +1,7 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'Start-MockApiServer script' {
     Safe-It 'serves one Graph request and stops' {
-        function Write-STStatus { param([string]$Message,[string]$Level) }
+        function Write-STStatus { param([string]$Message, [string]$Level) }
         class FakeResponse {
             [System.IO.MemoryStream]$OutputStream = [System.IO.MemoryStream]::new()
             [string]$ContentType

@@ -11,7 +11,8 @@ Import-Module $telemetryModule -Force -ErrorAction SilentlyContinue -DisableName
 $manifestPath = Join-Path $PSScriptRoot 'SupportTools.psd1'
 $STModuleVersion = try {
     (Import-PowerShellDataFile $manifestPath).ModuleVersion
-} catch {
+}
+catch {
     'unknown'
 }
 

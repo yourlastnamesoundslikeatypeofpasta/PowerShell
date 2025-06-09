@@ -59,27 +59,27 @@ try {
     # CPU usage
     $cpuSamples = Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 1 -MaxSamples 3
     $cpuSampleValues = $cpuSamples.CounterSamples | Select-Object -ExpandProperty CookedValue
-    $cpuUsage = [math]::Round(($cpuSampleValues | Measure-Object -Average).Average,2)
+    $cpuUsage = [math]::Round(($cpuSampleValues | Measure-Object -Average).Average, 2)
     Write-STLog -Metric 'CPUPercent' -Value $cpuUsage -Structured
     Send-STMetric -MetricName 'CPUPercent' -Category 'Audit' -Value $cpuUsage
 
     # Memory usage
     $os = Get-CimInstance -ClassName Win32_OperatingSystem
-    $memUsedPct = [math]::Round((($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / $os.TotalVisibleMemorySize) * 100,2)
+    $memUsedPct = [math]::Round((($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / $os.TotalVisibleMemorySize) * 100, 2)
     Write-STLog -Metric 'MemoryPercent' -Value $memUsedPct -Structured
     Send-STMetric -MetricName 'MemoryPercent' -Category 'Audit' -Value $memUsedPct
 
     # Disk utilisation
     $diskSamples = Get-Counter '\PhysicalDisk(_Total)\% Disk Time' -SampleInterval 1 -MaxSamples 3
     $diskSampleValues = $diskSamples.CounterSamples | Select-Object -ExpandProperty CookedValue
-    $diskUsage = [math]::Round(($diskSampleValues | Measure-Object -Average).Average,2)
+    $diskUsage = [math]::Round(($diskSampleValues | Measure-Object -Average).Average, 2)
     Write-STLog -Metric 'DiskPercent' -Value $diskUsage -Structured
     Send-STMetric -MetricName 'DiskPercent' -Category 'Audit' -Value $diskUsage
 
     # Network usage (Mbps)
     $netSamples = Get-Counter '\Network Interface(*)\Bytes Total/sec' -SampleInterval 1 -MaxSamples 3
     $netBytes = ($netSamples.CounterSamples | Measure-Object -Property CookedValue -Sum).Sum / $netSamples.CounterSamples.Count
-    $netMbps = [math]::Round(($netBytes * 8) / 1MB,2)
+    $netMbps = [math]::Round(($netBytes * 8) / 1MB, 2)
     Write-STLog -Metric 'NetworkMbps' -Value $netMbps -Structured
     Send-STMetric -MetricName 'NetworkMbps' -Category 'Audit' -Value $netMbps
 
@@ -88,26 +88,27 @@ try {
     Write-STLog -Message "Uptime: $uptime" -Structured
 
     $report = [pscustomobject]@{
-        CpuPercent     = $cpuUsage
-        CpuSamples     = $cpuSampleValues
-        MemoryPercent  = $memUsedPct
-        DiskPercent    = $diskUsage
-        DiskSamples    = $diskSampleValues
-        NetworkMbps    = $netMbps
-        Uptime         = $uptime
+        CpuPercent    = $cpuUsage
+        CpuSamples    = $cpuSampleValues
+        MemoryPercent = $memUsedPct
+        DiskPercent   = $diskUsage
+        DiskSamples   = $diskSampleValues
+        NetworkMbps   = $netMbps
+        Uptime        = $uptime
     }
 
     Write-STBlock -Data $report
 
-    if ($cpuUsage -gt $CpuThreshold)    { $alerts += "CPU usage $cpuUsage% > $CpuThreshold%" }
+    if ($cpuUsage -gt $CpuThreshold) { $alerts += "CPU usage $cpuUsage% > $CpuThreshold%" }
     if ($memUsedPct -gt $MemoryThreshold) { $alerts += "Memory usage $memUsedPct% > $MemoryThreshold%" }
-    if ($diskUsage -gt $DiskThreshold)  { $alerts += "Disk usage $diskUsage% > $DiskThreshold%" }
+    if ($diskUsage -gt $DiskThreshold) { $alerts += "Disk usage $diskUsage% > $DiskThreshold%" }
     if ($netMbps -gt $NetworkThreshold) { $alerts += "Network usage $netMbps Mbps > $NetworkThreshold Mbps" }
 
     if ($alerts.Count -gt 0) {
         Write-STStatus -Message 'Performance thresholds exceeded:' -Level WARN -Log
         foreach ($alert in $alerts) { Write-STStatus -Message $alert -Level WARN -Log }
-    } else {
+    }
+    else {
         Write-STStatus -Message 'All metrics within thresholds.' -Level SUCCESS -Log
     }
 
@@ -121,11 +122,13 @@ try {
     }
 
     $report
-} catch {
+}
+catch {
     Write-STStatus -Message "Audit failed: $_" -Level ERROR -Log
     $result = 'Failure'
     throw
-} finally {
+}
+finally {
     $stopwatch.Stop()
     $opId = [guid]::NewGuid().ToString()
     Write-STTelemetryEvent -ScriptName $scriptName -Result $result -Duration $stopwatch.Elapsed -Category 'Audit' -OperationId $opId

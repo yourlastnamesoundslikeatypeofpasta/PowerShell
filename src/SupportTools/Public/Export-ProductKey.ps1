@@ -8,7 +8,7 @@ function Export-ProductKey {
     .PARAMETER OutputPath
         Path to the file where the product key should be written.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -33,7 +33,8 @@ function Export-ProductKey {
             ProductKey = $key
             OutputPath = $OutputPath
         }
-    } finally {
+    }
+    finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
 }

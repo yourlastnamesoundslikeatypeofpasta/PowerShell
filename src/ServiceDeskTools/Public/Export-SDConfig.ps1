@@ -11,7 +11,7 @@ function Export-SDConfig {
     .EXAMPLE
         Export-SDConfig -Path './sdconfig.json'
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]

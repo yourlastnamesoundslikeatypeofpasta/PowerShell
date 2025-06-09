@@ -9,7 +9,7 @@ function Link-SDTicketToSPTask {
     .PARAMETER FieldName
         Name of the incident field storing the task URL.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

@@ -7,7 +7,7 @@ function Set-SDTicket {
     .PARAMETER Fields
         Hashtable of fields to modify.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -43,7 +43,8 @@ Register-ArgumentCompleter -CommandName Set-SDTicket -ParameterName Id -ScriptBl
             ForEach-Object {
                 [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
             }
-    } catch {
+    }
+    catch {
         # ignore completion errors
     }
 }

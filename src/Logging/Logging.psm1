@@ -12,28 +12,28 @@ if ($SupportToolsConfig.maintenanceMode) {
 }
 
 function Sanitize-STMessage {
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory)][string]$Message
     )
     $sanitized = $Message
     # mask email addresses
-    $sanitized = [regex]::Replace($sanitized,'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}','[REDACTED]')
+    $sanitized = [regex]::Replace($sanitized, '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}', '[REDACTED]')
     # mask key=value or token patterns
-    $sanitized = [regex]::Replace($sanitized,'(?i)(apikey|token|password|secret|pwd|key)[=:]\s*([^\s]+)','$1=[REDACTED]')
+    $sanitized = [regex]::Replace($sanitized, '(?i)(apikey|token|password|secret|pwd|key)[=:]\s*([^\s]+)', '$1=[REDACTED]')
     # mask long random strings that may be secrets
-    $sanitized = [regex]::Replace($sanitized,'[A-Za-z0-9+/]{20,}','[REDACTED]')
+    $sanitized = [regex]::Replace($sanitized, '[A-Za-z0-9+/]{20,}', '[REDACTED]')
     return $sanitized
 }
 
 function Write-STLog {
-    [CmdletBinding(DefaultParameterSetName='Message', PositionalBinding=$false)]
+    [CmdletBinding(DefaultParameterSetName = 'Message', PositionalBinding = $false)]
     param(
         [Parameter(Mandatory = $true, ParameterSetName = 'Message')]
         [ValidateNotNullOrEmpty()]
         [string]$Message,
         [Parameter(Mandatory = $false)]
-        [ValidateSet('INFO','WARN','ERROR')]
+        [ValidateSet('INFO', 'WARN', 'ERROR')]
         [ValidateNotNullOrEmpty()]
         [string]$Level = 'INFO',
         [Parameter(Mandatory = $false)]
@@ -53,16 +53,16 @@ function Write-STLog {
         [ValidateNotNullOrEmpty()]
         [double]$Value,
         [Parameter(Mandatory = $false)]
-        [ValidateRange(1,[int]::MaxValue)]
+        [ValidateRange(1, [int]::MaxValue)]
         [int]$MaxSizeMB = 1,
         [Parameter(Mandatory = $false)]
-        [ValidateRange(1,[int]::MaxValue)]
+        [ValidateRange(1, [int]::MaxValue)]
         [int]$MaxFiles = 1
     )
     if ($PSCmdlet.ParameterSetName -eq 'Metric') {
         if (-not $Metadata) { $Metadata = @{} }
         $Metadata.metric = $Metric
-        $Metadata.value  = $Value
+        $Metadata.value = $Value
         $Message = $Metric
         if (-not $Structured) { $Structured = $true }
     }
@@ -73,16 +73,19 @@ function Write-STLog {
     $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
     if ($Path) {
         $logFile = $Path
-    } elseif ($env:ST_LOG_PATH) {
+    }
+    elseif ($env:ST_LOG_PATH) {
         $logFile = $env:ST_LOG_PATH
-    } else {
+    }
+    else {
         $logDir = Join-Path $userProfile 'SupportToolsLogs'
         $logFile = Join-Path $logDir 'supporttools.log'
     }
     if (-not $ForwardUri -and $env:ST_LOG_FORWARD_URI) { $ForwardUri = $env:ST_LOG_FORWARD_URI }
     if ($env:ST_DEBUG -ne '1') {
         Write-STDebug "Logging to $logFile"
-    } else {
+    }
+    else {
         Write-Host "[DEBUG] Logging to $logFile" -ForegroundColor DarkCyan
     }
     $dir = Split-Path -Path $logFile -Parent
@@ -91,9 +94,11 @@ function Write-STLog {
     }
     if ($PSBoundParameters.ContainsKey('MaxSizeMB')) {
         $maxBytes = [int64]($MaxSizeMB * 1MB)
-    } elseif ($env:ST_LOG_MAX_BYTES) {
+    }
+    elseif ($env:ST_LOG_MAX_BYTES) {
         $maxBytes = [int64]$env:ST_LOG_MAX_BYTES
-    } else {
+    }
+    else {
         $maxBytes = 1MB
     }
     if (Test-Path $logFile) {
@@ -109,15 +114,16 @@ function Write-STLog {
             }
             try {
                 Rename-Item -Path $logFile -NewName "$logFile.1" -Force
-            } catch {
+            }
+            catch {
                 Write-STDebug "Failed to rotate log: $_"
             }
         }
     }
     $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $user = if ($env:USERNAME) { $env:USERNAME } else { $env:USER }
-    $stack  = Get-PSCallStack
-    $caller = $stack | Where-Object { $_.InvocationInfo.MyCommand.Name -notin 'Write-STLog','Write-STStatus' } | Select-Object -First 1
+    $stack = Get-PSCallStack
+    $caller = $stack | Where-Object { $_.InvocationInfo.MyCommand.Name -notin 'Write-STLog', 'Write-STStatus' } | Select-Object -First 1
     $module = $null
     if ($caller) {
         $module = $caller.InvocationInfo.MyCommand.ModuleName
@@ -138,18 +144,20 @@ function Write-STLog {
         if ($ForwardUri) {
             try {
                 Invoke-RestMethod -Uri $ForwardUri -Method Post -Body $json -ContentType 'application/json' | Out-Null
-            } catch {
+            }
+            catch {
                 Write-STDebug "Failed to forward log to ${ForwardUri}: $_"
             }
         }
-    } else {
+    }
+    else {
         "$timestamp [$module] [$user] [$Level] $Message" | Out-File -FilePath $logFile -Append -Encoding utf8
     }
 }
 
 # Writes a structured JSON log entry following a common schema.
 function Write-STRichLog {
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -173,9 +181,11 @@ function Write-STRichLog {
     $userProfile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
     if ($Path) {
         $logFile = $Path
-    } elseif ($env:ST_LOG_PATH) {
+    }
+    elseif ($env:ST_LOG_PATH) {
         $logFile = $env:ST_LOG_PATH
-    } else {
+    }
+    else {
         $logDir = Join-Path $userProfile 'SupportToolsLogs'
         $logFile = Join-Path $logDir 'supporttools.log'
     }
@@ -189,9 +199,9 @@ function Write-STRichLog {
         tool      = $Tool
         status    = $Status
     }
-    if ($PSBoundParameters.ContainsKey('User'))     { $entry.user = Sanitize-STMessage -Message $User }
+    if ($PSBoundParameters.ContainsKey('User')) { $entry.user = Sanitize-STMessage -Message $User }
     if ($PSBoundParameters.ContainsKey('Duration')) { $entry.duration = $Duration.ToString() }
-    if ($PSBoundParameters.ContainsKey('Details'))  {
+    if ($PSBoundParameters.ContainsKey('Details')) {
         $entry.details = @()
         foreach ($d in $Details) { $entry.details += Sanitize-STMessage -Message $d }
     }
@@ -200,13 +210,13 @@ function Write-STRichLog {
 }
 
 function Write-STStatus {
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$Message,
         [Parameter(Mandatory = $false)]
-        [ValidateSet('INFO','SUCCESS','ERROR','WARN','SUB','FINAL','FATAL')]
+        [ValidateSet('INFO', 'SUCCESS', 'ERROR', 'WARN', 'SUB', 'FINAL', 'FATAL')]
         [ValidateNotNullOrEmpty()]
         [string]$Level = 'INFO',
         [Parameter(Mandatory = $false)]
@@ -214,21 +224,21 @@ function Write-STStatus {
     )
 
     $levelTable = @{ INFO = 1; WARN = 2; ERROR = 3 }
-    $msgTable   = @{ INFO = 1; SUCCESS = 1; SUB = 1; FINAL = 1; WARN = 2; ERROR = 3; FATAL = 3 }
-    $envLevel   = $env:ST_LOG_LEVEL
-    $envValue   = if ($envLevel) { $levelTable[$envLevel.ToUpper()] } else { 1 }
+    $msgTable = @{ INFO = 1; SUCCESS = 1; SUB = 1; FINAL = 1; WARN = 2; ERROR = 3; FATAL = 3 }
+    $envLevel = $env:ST_LOG_LEVEL
+    $envValue = if ($envLevel) { $levelTable[$envLevel.ToUpper()] } else { 1 }
     if (-not $envValue) { $envValue = 1 }
-    $msgValue   = $msgTable[$Level]
+    $msgValue = $msgTable[$Level]
     if ($msgValue -lt $envValue) { return }
 
     switch ($Level) {
         'SUCCESS' { $prefix = '[+]'; $color = 'Green' }
-        'ERROR'   { $prefix = '[-]'; $color = 'Red' }
-        'WARN'    { $prefix = '[!]'; $color = 'Yellow' }
-        'SUB'     { $prefix = '[>]'; $color = 'DarkCyan' }
-        'FINAL'   { $prefix = '[✔]'; $color = 'Green' }
-        'FATAL'   { $prefix = '[✘]'; $color = 'Red' }
-        default   { $prefix = '[*]'; $color = 'Cyan' }
+        'ERROR' { $prefix = '[-]'; $color = 'Red' }
+        'WARN' { $prefix = '[!]'; $color = 'Yellow' }
+        'SUB' { $prefix = '[>]'; $color = 'DarkCyan' }
+        'FINAL' { $prefix = '[✔]'; $color = 'Green' }
+        'FATAL' { $prefix = '[✘]'; $color = 'Red' }
+        default { $prefix = '[*]'; $color = 'Cyan' }
     }
 
     Write-Host "$prefix $Message" -ForegroundColor $color
@@ -236,7 +246,7 @@ function Write-STStatus {
 }
 
 function Show-STPrompt {
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -252,13 +262,13 @@ function Show-STPrompt {
 }
 
 function Write-STDivider {
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$Title,
         [Parameter(Mandatory = $false)]
-        [ValidateSet('light','heavy')]
+        [ValidateSet('light', 'heavy')]
         [ValidateNotNullOrEmpty()]
         [string]$Style = 'light'
     )
@@ -272,7 +282,7 @@ function Write-STDivider {
 }
 
 function Write-STBlock {
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -286,7 +296,7 @@ function Write-STBlock {
 }
 
 function Write-STClosing {
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
@@ -295,14 +305,14 @@ function Write-STClosing {
     Write-Host "┌──[ $Message ]──────────────" -ForegroundColor DarkGray
 }
 
-Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing','Sanitize-STMessage'
+Export-ModuleMember -Function 'Write-STLog', 'Write-STRichLog', 'Write-STStatus', 'Show-STPrompt', 'Write-STDivider', 'Write-STBlock', 'Write-STClosing', 'Sanitize-STMessage'
 
 function Show-LoggingBanner {
     <#
     .SYNOPSIS
         Returns Logging module metadata for banner display.
     #>
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
     param()
     $manifestPath = Join-Path $PSScriptRoot 'Logging.psd1'
     [pscustomobject]@{

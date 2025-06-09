@@ -51,14 +51,17 @@ $start = Get-Date
 try {
     if ($job.Parameters) {
         & $scriptPath @($job.Parameters)
-    } else {
+    }
+    else {
         & $scriptPath
     }
-} catch {
+}
+catch {
     Write-STLog -Message "Job bundle execution failed: $_" -Level 'ERROR'
     $result = 'Failure'
     throw
-} finally {
+}
+finally {
     $duration = (Get-Date) - $start
     Write-STTelemetryEvent -ScriptName (Split-Path $scriptPath -Leaf) -Result $result -Duration $duration
     Pop-Location

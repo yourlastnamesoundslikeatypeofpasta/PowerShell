@@ -42,7 +42,7 @@ function Get-GraphSignInLogs {
     )
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
-    Write-STLog -Message "Get-GraphSignInLogs" -Structured -Metadata @{ user=$UserPrincipalName; start=$StartTime; end=$EndTime }
+    Write-STLog -Message "Get-GraphSignInLogs" -Structured -Metadata @{ user = $UserPrincipalName; start = $StartTime; end = $EndTime }
     $result = 'Success'
     try {
         $token = Get-GraphAccessToken -TenantId $TenantId -ClientId $ClientId -ClientSecret $ClientSecret
@@ -58,11 +58,13 @@ function Get-GraphSignInLogs {
         }
         $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
         return $response.value
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STLog -Message "Get-GraphSignInLogs failed: $_" -Level ERROR
         throw
-    } finally {
+    }
+    finally {
         $sw.Stop()
         Write-STTelemetryEvent -ScriptName 'Get-GraphSignInLogs' -Result $result -Duration $sw.Elapsed
     }

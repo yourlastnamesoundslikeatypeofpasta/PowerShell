@@ -14,12 +14,12 @@ Import-SupportToolsLogging
 param(
     [Parameter(Mandatory)][string]$CsvPath,
     [Parameter(Mandatory)][string]$GroupName,
-    [ValidateSet('Entra','AD')][string]$Cloud = 'Entra'
+    [ValidateSet('Entra', 'AD')][string]$Cloud = 'Entra'
 )
 
 if ($Cloud -eq 'Entra') {
     Write-STStatus -Message 'Connecting to Microsoft Graph...' -Level INFO
-    Connect-MgGraph -Scopes "User.Read.All","Group.ReadWrite.All" -NoWelcome
+    Connect-MgGraph -Scopes "User.Read.All", "Group.ReadWrite.All" -NoWelcome
 
     $group = Get-MgGroup -Filter "displayName eq '$GroupName'" | Select-Object -First 1
     if (-not $group) { throw "Group '$GroupName' not found." }
@@ -31,13 +31,15 @@ if ($Cloud -eq 'Entra') {
         try {
             Remove-MgGroupMemberByRef -GroupId $group.Id -DirectoryObjectId $obj.Id -ErrorAction Stop
             Write-STStatus "Removed $($obj.UserPrincipalName)" -Level SUCCESS
-        } catch {
+        }
+        catch {
             Write-STStatus "Failed to remove $user: $_" -Level ERROR
         }
     }
 
     Disconnect-MgGraph | Out-Null
-} else {
+}
+else {
     Import-Module ActiveDirectory -ErrorAction Stop
     $group = Get-ADGroup -Identity $GroupName -ErrorAction Stop
 
@@ -49,7 +51,8 @@ if ($Cloud -eq 'Entra') {
         try {
             Remove-ADGroupMember -Identity $group.DistinguishedName -Members $obj.SamAccountName -Confirm:$false -ErrorAction Stop
             Write-STStatus "Removed $($obj.UserPrincipalName)" -Level SUCCESS
-        } catch {
+        }
+        catch {
             Write-STStatus "Failed to remove $user: $_" -Level ERROR
         }
     }

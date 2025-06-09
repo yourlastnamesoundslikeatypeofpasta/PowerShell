@@ -6,7 +6,7 @@ Import-Module $telemetryModule -Force -ErrorAction SilentlyContinue -DisableName
 
 Get-ChildItem -Path "$PublicDir/*.ps1" -ErrorAction SilentlyContinue | ForEach-Object { . $_.FullName }
 
-Export-ModuleMember -Function 'Get-CPUUsage','Get-DiskSpaceInfo','Get-EventLogSummary','Get-SystemHealth','Start-HealthMonitor','Stop-HealthMonitor'
+Export-ModuleMember -Function 'Get-CPUUsage', 'Get-DiskSpaceInfo', 'Get-EventLogSummary', 'Get-SystemHealth', 'Start-HealthMonitor', 'Stop-HealthMonitor'
 
 function Show-MonitoringToolsBanner {
     <#

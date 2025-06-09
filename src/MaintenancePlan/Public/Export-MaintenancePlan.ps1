@@ -7,9 +7,9 @@ function Export-MaintenancePlan {
     .PARAMETER Path
         Destination path for the JSON file.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
-        [Parameter(Mandatory,ValueFromPipeline)]
+        [Parameter(Mandatory, ValueFromPipeline)]
         [ValidateNotNull()]
         [object]$Plan,
         [Parameter(Mandatory)]

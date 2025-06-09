@@ -5,9 +5,9 @@ function Get-SDUser {
     .PARAMETER Id
         User ID to retrieve.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [int]$Id,
         [switch]$ChaosMode,

@@ -10,7 +10,7 @@ function Sync-SupportTools {
     .PARAMETER InstallPath
         Directory to clone or update the repository.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
@@ -35,12 +35,14 @@ function Sync-SupportTools {
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
         if ($Logger) {
             Import-Module $Logger -Force -ErrorAction SilentlyContinue
-        } else {
+        }
+        else {
             Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
         }
         if ($TelemetryClient) {
             Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
-        } else {
+        }
+        else {
             Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
         }
         if ($Config) {
@@ -73,12 +75,14 @@ function Sync-SupportTools {
             InstallPath   = $InstallPath
             Result        = 'Success'
         }
-    } catch {
+    }
+    catch {
         Write-STStatus "Sync-SupportTools failed: $_" -Level ERROR -Log
         Write-STLog -Message "Sync-SupportTools failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
         return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
-    } finally {
+    }
+    finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
         $sw.Stop()
         Send-STMetric -MetricName 'Sync-SupportTools' -Category 'Deployment' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }

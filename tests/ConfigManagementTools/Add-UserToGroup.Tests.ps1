@@ -18,7 +18,7 @@ Describe 'Add-UserToGroup function' {
     Safe-It 'accepts pipeline input' {
         InModuleScope ConfigManagementTools {
             Mock Invoke-ScriptFile {} -ModuleName ConfigManagementTools
-            [pscustomobject]@{ CsvPath='input.csv'; GroupName='G1' } | Add-UserToGroup
+            [pscustomobject]@{ CsvPath = 'input.csv'; GroupName = 'G1' } | Add-UserToGroup
             Assert-MockCalled Invoke-ScriptFile -ModuleName ConfigManagementTools -Times 1 -ParameterFilter {
                 $Name -eq 'AddUsersToGroup.ps1'
             }

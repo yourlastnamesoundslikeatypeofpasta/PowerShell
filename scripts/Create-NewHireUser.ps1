@@ -33,8 +33,8 @@ function Get-UserDetailsFromTicket {
     param([object]$Ticket)
     $json = $Ticket.RawJson | ConvertFrom-Json
     [pscustomobject]@{
-        FirstName        = $json.custom_fields.firstName
-        LastName         = $json.custom_fields.lastName
+        FirstName         = $json.custom_fields.firstName
+        LastName          = $json.custom_fields.lastName
         UserPrincipalName = $json.custom_fields.userPrincipalName
     }
 }
@@ -47,11 +47,11 @@ function Create-EntraUser {
     Import-Module Microsoft.Graph.Users -ErrorAction Stop
     Connect-MgGraph -Scopes 'User.ReadWrite.All' -NoWelcome
     $params = @{ 
-        DisplayName     = "$($Details.FirstName) $($Details.LastName)" 
-        MailNickname    = $Details.FirstName
+        DisplayName       = "$($Details.FirstName) $($Details.LastName)" 
+        MailNickname      = $Details.FirstName
         UserPrincipalName = $Details.UserPrincipalName
-        AccountEnabled  = $true
-        PasswordProfile = @{ ForceChangePasswordNextSignIn = $true; Password = [guid]::NewGuid().ToString() }
+        AccountEnabled    = $true
+        PasswordProfile   = @{ ForceChangePasswordNextSignIn = $true; Password = [guid]::NewGuid().ToString() }
     }
     New-MgUser @params | Out-Null
     Disconnect-MgGraph | Out-Null
@@ -59,7 +59,7 @@ function Create-EntraUser {
 }
 
 function Start-Main {
-    param([int]$PollMinutes,[switch]$Once)
+    param([int]$PollMinutes, [switch]$Once)
     while ($true) {
         $tickets = Get-NewHireTickets
         foreach ($t in $tickets) {
@@ -72,7 +72,8 @@ function Start-Main {
                 Create-EntraUser -Details $info
                 Set-SDTicket -Id $t.Id -Fields @{ state = 'Resolved' } | Out-Null
                 Write-STStatus "Resolved ticket $($t.Id)" -Level SUCCESS -Log
-            } catch {
+            }
+            catch {
                 Write-STStatus "Failed processing ticket $($t.Id): $_" -Level ERROR -Log
             }
         }
@@ -84,7 +85,8 @@ function Start-Main {
 if ($MyInvocation.InvocationName -ne '.') {
     try {
         Start-Main -PollMinutes $PollMinutes -Once:$Once
-    } finally {
+    }
+    finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
 }

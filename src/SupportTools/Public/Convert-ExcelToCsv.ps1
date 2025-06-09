@@ -8,7 +8,7 @@ function Convert-ExcelToCsv {
     .PARAMETER XlsxFilePath
         Path to the Excel workbook to convert.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory)]
         [string]$XlsxFilePath,
@@ -42,9 +42,11 @@ function Convert-ExcelToCsv {
 
         Write-STStatus "CSV saved to $csvFilePath" -Level SUCCESS
         return (Import-Csv $csvFilePath)
-    } catch {
+    }
+    catch {
         return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
-    } finally {
+    }
+    finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
 }

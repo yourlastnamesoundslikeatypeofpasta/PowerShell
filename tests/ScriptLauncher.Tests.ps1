@@ -22,7 +22,8 @@ Describe 'ScriptLauncher' {
             . ./ScriptLauncher.ps1
             $FirstRun | Should -Be 1
             $script:input | Should -Be 2
-        } finally {
+        }
+        finally {
             Pop-Location
             Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             Remove-Item function:Write-STDivider -ErrorAction SilentlyContinue

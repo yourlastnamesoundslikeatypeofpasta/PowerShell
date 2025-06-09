@@ -12,16 +12,16 @@ Describe 'Get-GraphUserDetails exports' {
         Mock Get-GraphAccessToken { 't' } -ModuleName EntraIDTools
         Mock Invoke-STRequest -ModuleName EntraIDTools -ParameterFilter { $Method -eq 'GET' } {
             switch -regex ($Uri) {
-                'v1\.0/users/.+\?' { @{ id='1'; displayName='User'; userPrincipalName='u@test' } }
-                'licenseDetails'    { @{ value=@(@{ skuPartNumber='A1' }) } }
-                'memberOf'          { @{ value=@(@{ displayName='Group1' }) } }
-                'beta/users/.+'     { @{ signInActivity = @{ lastSignInDateTime='2024-01-01T00:00:00Z' } } }
+                'v1\.0/users/.+\?' { @{ id = '1'; displayName = 'User'; userPrincipalName = 'u@test' } }
+                'licenseDetails' { @{ value = @(@{ skuPartNumber = 'A1' }) } }
+                'memberOf' { @{ value = @(@{ displayName = 'Group1' }) } }
+                'beta/users/.+' { @{ signInActivity = @{ lastSignInDateTime = '2024-01-01T00:00:00Z' } } }
             }
         }
         Mock Write-STLog {} -ModuleName EntraIDTools
         Mock Write-STTelemetryEvent {} -ModuleName EntraIDTools
 
-        $csv  = Join-Path ([IO.Path]::GetTempPath()) ([IO.Path]::GetRandomFileName() + '.csv')
+        $csv = Join-Path ([IO.Path]::GetTempPath()) ([IO.Path]::GetRandomFileName() + '.csv')
         $html = Join-Path ([IO.Path]::GetTempPath()) ([IO.Path]::GetRandomFileName() + '.html')
         try {
             Get-GraphUserDetails -UserPrincipalName 'u@test' -TenantId 'tid' -ClientId 'cid' -CsvPath $csv -HtmlPath $html | Out-Null
@@ -30,7 +30,8 @@ Describe 'Get-GraphUserDetails exports' {
             Test-Path $html | Should -Be $true
             (Get-Content $html -Raw) | Should -Match 'User Details'
             Assert-MockCalled Write-STTelemetryEvent -ModuleName EntraIDTools -Times 1
-        } finally {
+        }
+        finally {
             Remove-Item $csv -ErrorAction SilentlyContinue
             Remove-Item $html -ErrorAction SilentlyContinue
         }

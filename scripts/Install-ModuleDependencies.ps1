@@ -9,10 +9,10 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
 $requiredModules = @{ 
-    'PnP.PowerShell' = 'SharePoint cleanup functions';
+    'PnP.PowerShell'           = 'SharePoint cleanup functions';
     'ExchangeOnlineManagement' = 'mailbox automation commands';
-    'MicrosoftPlaces' = 'Invoke-CompanyPlaceManagement';
-    'MSAL.PS' = 'EntraIDTools authentication';
+    'MicrosoftPlaces'          = 'Invoke-CompanyPlaceManagement';
+    'MSAL.PS'                  = 'EntraIDTools authentication';
 }
 
 foreach ($name in $requiredModules.Keys) {
@@ -23,13 +23,16 @@ foreach ($name in $requiredModules.Keys) {
             try {
                 Install-Module -Name $name -Scope CurrentUser -Force -ErrorAction Stop
                 Write-STStatus -Message "Installed $name" -Level SUCCESS
-            } catch {
+            }
+            catch {
                 Write-STStatus -Message "Failed to install ${name}: $($_.Exception.Message)" -Level ERROR
             }
-        } else {
+        }
+        else {
             Write-STStatus -Message "$name was not installed. Some commands may not work." -Level WARN
         }
-    } else {
+    }
+    else {
         Write-STStatus -Message "Module '$name' already installed." -Level SUCCESS
     }
 }

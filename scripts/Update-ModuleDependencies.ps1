@@ -20,7 +20,8 @@ foreach ($module in $modules) {
     try {
         Update-Module -Name $module -Force -ErrorAction Stop
         Write-STLog -Message "Updated $module" -Level INFO
-    } catch {
+    }
+    catch {
         Write-STLog -Message "Failed to update $module: $($_.Exception.Message)" -Level ERROR
         continue
     }
@@ -34,10 +35,12 @@ foreach ($module in $modules) {
         $sig = Get-AuthenticodeSignature -FilePath $manifest
         if ($sig.Status -eq 'Valid') {
             Write-STLog -Message "$module signature valid" -Level INFO
-        } else {
+        }
+        else {
             Write-STLog -Message "$module signature invalid: $($sig.StatusMessage)" -Level ERROR
         }
-    } catch {
+    }
+    catch {
         Write-STLog -Message "Failed to validate $module: $($_.Exception.Message)" -Level ERROR
     }
 }

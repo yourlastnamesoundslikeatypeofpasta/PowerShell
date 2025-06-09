@@ -34,13 +34,14 @@ $cert = Get-PfxCertificate -FilePath $CertificatePath
 
 Write-STDivider 'SIGNING FILES'
 
-$folders = @('src','scripts') | ForEach-Object { Join-Path $repoRoot $_ }
+$folders = @('src', 'scripts') | ForEach-Object { Join-Path $repoRoot $_ }
 foreach ($folder in $folders) {
-    Get-ChildItem -Path $folder -Recurse -Include '*.ps1','*.psm1','*.psd1' | ForEach-Object {
+    Get-ChildItem -Path $folder -Recurse -Include '*.ps1', '*.psm1', '*.psd1' | ForEach-Object {
         Write-STStatus "Signing $($_.FullName)" -Level INFO
         try {
             Set-AuthenticodeSignature -FilePath $_.FullName -Certificate $cert | Out-Null
-        } catch {
+        }
+        catch {
             Write-STStatus "Failed to sign $($_.FullName): $_" -Level ERROR
         }
     }

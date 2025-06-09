@@ -17,7 +17,8 @@ Describe 'MaintenancePlan Module' {
             $imported = Import-MaintenancePlan -Path $temp
             $imported.Name | Should -Be 'Test'
             $imported.Steps[0] | Should -Be 'Write-Host "hi"'
-        } finally {
+        }
+        finally {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
@@ -30,13 +31,14 @@ Describe 'MaintenancePlan Module' {
             $script:ran = $false
             Invoke-MaintenancePlan -Plan $plan
             $script:ran | Should -Be $true
-        } finally {
+        }
+        finally {
             Remove-Item $scriptPath -ErrorAction SilentlyContinue
         }
     }
 
     Safe-It 'shows plan summary' {
-        $plan = New-MaintenancePlan -Name Demo -Steps @('step1','step2') -Schedule 'Daily'
+        $plan = New-MaintenancePlan -Name Demo -Steps @('step1', 'step2') -Schedule 'Daily'
         { Show-MaintenancePlan -Plan $plan } | Should -Not -Throw
     }
 
@@ -44,8 +46,8 @@ Describe 'MaintenancePlan Module' {
         InModuleScope MaintenancePlan {
             Set-Variable -Name IsWindows -Value $true -Scope Script -Force
             function Register-ScheduledTask {}
-            function New-ScheduledTaskAction { param($Execute,$Argument) $script:arg = $Argument; [pscustomobject]@{Execute=$Execute;Argument=$Argument} }
-            function New-ScheduledTaskTrigger { param([string]$Daily,[string]$At) [pscustomobject]@{At=$At} }
+            function New-ScheduledTaskAction { param($Execute, $Argument) $script:arg = $Argument; [pscustomobject]@{Execute = $Execute; Argument = $Argument } }
+            function New-ScheduledTaskTrigger { param([string]$Daily, [string]$At) [pscustomobject]@{At = $At } }
             Schedule-MaintenancePlan -PlanPath '/tmp/p.json' -Cron '5 1 * * *' -Name 'MP'
             $expectedModule = Join-Path (Get-Module MaintenancePlan).ModuleBase 'MaintenancePlan.psd1'
             $script:arg | Should -Match [Regex]::Escape($expectedModule)

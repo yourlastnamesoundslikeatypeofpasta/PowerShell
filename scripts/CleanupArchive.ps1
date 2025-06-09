@@ -60,8 +60,7 @@ function Test-PathIsArchived {
         [object]$ArchivedFileItem
     )
     $DirectoryPath = 'zzz_Archive_Production'
-    if (!$ArchivedFileItem.ServerRelativeUrl.Contains($DirectoryPath))
-    {
+    if (!$ArchivedFileItem.ServerRelativeUrl.Contains($DirectoryPath)) {
         Write-Error -Message "This is not an archived directory!"
         throw "STOPPING!"
     }
@@ -91,45 +90,39 @@ Write-STStatus ($ZzzArchiveProductionSharePointFolderItems | Format-Table | Out-
 
 # Organize items into separate lists for files and folders
 
-[System.Collections.Generic.List[object]]$Folders = $ZzzArchiveProductionSharePointFolderItems | where {$_.GetType().Name -eq "Folder"}
-[System.Collections.Generic.List[object]]$Files = $ZzzArchiveProductionSharePointFolderItems | where {$_.GetType().Name -eq "File"}
+[System.Collections.Generic.List[object]]$Folders = $ZzzArchiveProductionSharePointFolderItems | where { $_.GetType().Name -eq "Folder" }
+[System.Collections.Generic.List[object]]$Files = $ZzzArchiveProductionSharePointFolderItems | where { $_.GetType().Name -eq "File" }
 
 # snapshot data list
 $snapshot = [System.Collections.Generic.List[object]]::new()
 
 # Delete all files
-foreach ($file in $Files)
-{
+foreach ($file in $Files) {
     Test-PathIsArchived -ArchivedFileItem $file
-    $record = [pscustomobject]@{ Type='File'; ServerRelativeUrl=$file.ServerRelativeUrl; RecycleBinItemId=$null }
-    if ($Commit)
-    {
+    $record = [pscustomobject]@{ Type = 'File'; ServerRelativeUrl = $file.ServerRelativeUrl; RecycleBinItemId = $null }
+    if ($Commit) {
         $result = Remove-PnPFile -ServerRelativeUrl $file.ServerRelativeUrl -Force -Recycle
         $record.RecycleBinItemId = $result.RecycleBinItemId
         Write-STStatus "DeletedFile: $($file.ServerRelativeUrl)" -Level INFO
     }
-    else
-    {
+    else {
         Write-STStatus "WouldDeleteFile: $($file.ServerRelativeUrl)" -Level SUB
     }
     $snapshot.Add($record)
 }
 
 # Delete folders
-while ($Folders)
-{
+while ($Folders) {
     $folder = $Folders | Get-Random
     try {
         Test-PathIsArchived -ArchivedFileItem $folder
-        $record = [pscustomobject]@{ Type='Folder'; ServerRelativeUrl=$folder.ServerRelativeUrl; RecycleBinItemId=$null }
-        if ($Commit)
-        {
+        $record = [pscustomobject]@{ Type = 'Folder'; ServerRelativeUrl = $folder.ServerRelativeUrl; RecycleBinItemId = $null }
+        if ($Commit) {
             $result = Remove-PnPFolder -Name $folder.Name -Folder $folder.ParentFolder -Force -Recycle
             $record.RecycleBinItemId = $result.RecycleBinItemId
             Write-STStatus "Deleted: $($folder.Name)" -Level INFO
         }
-        else
-        {
+        else {
             Write-STStatus "WouldDelete: $($folder.Name)" -Level SUB
         }
         $snapshot.Add($record)
@@ -141,39 +134,31 @@ while ($Folders)
 }
 
 # Delete root folders and files within 'zzz_Archive_Production'
-foreach ($folder in $ZzzArchiveProductionSharePointFolder)
-{
-    if ($folder.Name -eq "zzz_Archive_Production")
-    {
-        Continue
+foreach ($folder in $ZzzArchiveProductionSharePointFolder) {
+    if ($folder.Name -eq "zzz_Archive_Production") {
+        continue
     }
     Test-PathIsArchived -ArchivedFileItem $folder
-    if ($folder.GetType().Name -eq 'File')
-    {
-        $record = [pscustomobject]@{ Type='File'; ServerRelativeUrl=$folder.ServerRelativeUrl; RecycleBinItemId=$null }
-        if ($Commit)
-        {
+    if ($folder.GetType().Name -eq 'File') {
+        $record = [pscustomobject]@{ Type = 'File'; ServerRelativeUrl = $folder.ServerRelativeUrl; RecycleBinItemId = $null }
+        if ($Commit) {
             $result = Remove-PnPFile -ServerRelativeUrl $folder.ServerRelativeUrl -Force -Recycle
             $record.RecycleBinItemId = $result.RecycleBinItemId
             Write-STStatus "RemovedFile: $($folder.ServerRelativeUrl)" -Level INFO
         }
-        else
-        {
+        else {
             Write-STStatus "WouldRemoveFile: $($folder.ServerRelativeUrl)" -Level SUB
         }
         $snapshot.Add($record)
     }
-    if ($folder.GetType().Name -eq 'Folder')
-    {
-        $record = [pscustomobject]@{ Type='Folder'; ServerRelativeUrl=$folder.ServerRelativeUrl; RecycleBinItemId=$null }
-        if ($Commit)
-        {
+    if ($folder.GetType().Name -eq 'Folder') {
+        $record = [pscustomobject]@{ Type = 'Folder'; ServerRelativeUrl = $folder.ServerRelativeUrl; RecycleBinItemId = $null }
+        if ($Commit) {
             $result = Remove-PnPFolder -Name $folder.Name -Folder $folder.ParentFolder -Force -Recycle
             $record.RecycleBinItemId = $result.RecycleBinItemId
             Write-STStatus "RemovedFile: $($folder.ServerRelativeUrl)" -Level INFO
         }
-        else
-        {
+        else {
             Write-STStatus "WouldRemoveFolder: $($folder.ServerRelativeUrl)" -Level SUB
         }
         $snapshot.Add($record)
@@ -182,11 +167,9 @@ foreach ($folder in $ZzzArchiveProductionSharePointFolder)
 
 # save snapshot for rollback
 $snapshot | ConvertTo-Json -Depth 10 | Out-File -FilePath $SnapshotPath -Encoding utf8
-if (-not $Commit)
-{
+if (-not $Commit) {
     Write-STStatus "Dry run complete. Snapshot saved to $SnapshotPath" -Level FINAL
 }
-else
-{
+else {
     Write-STStatus "Deletion complete. Snapshot saved to $SnapshotPath" -Level FINAL
 }

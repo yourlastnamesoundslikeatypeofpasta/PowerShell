@@ -7,12 +7,12 @@ Describe 'ConfigManagementTools public functions' {
     }
 
     $wrappers = @{
-        'Install-Font' = 'Install-Fonts.ps1'
-        'Install-MaintenanceTasks' = 'Setup-ScheduledMaintenance.ps1'
-        'Invoke-DeploymentTemplate' = 'SS_DEPLOYMENT_TEMPLATE.ps1'
-        'Invoke-PostInstall' = 'PostInstallScript.ps1'
-        'Set-ComputerIPAddress' = 'Set-ComputerIPAddress.ps1'
-        'Set-NetAdapterMetering' = 'Set-NetAdapterMetering.ps1'
+        'Install-Font'                    = 'Install-Fonts.ps1'
+        'Install-MaintenanceTasks'        = 'Setup-ScheduledMaintenance.ps1'
+        'Invoke-DeploymentTemplate'       = 'SS_DEPLOYMENT_TEMPLATE.ps1'
+        'Invoke-PostInstall'              = 'PostInstallScript.ps1'
+        'Set-ComputerIPAddress'           = 'Set-ComputerIPAddress.ps1'
+        'Set-NetAdapterMetering'          = 'Set-NetAdapterMetering.ps1'
         'Set-TimeZoneEasternStandardTime' = 'Set-TimeZoneEasternStandardTime.ps1'
     }
 
@@ -22,7 +22,8 @@ Describe 'ConfigManagementTools public functions' {
             Mock Invoke-ScriptFile {} -ModuleName ConfigManagementTools
             if ($case.Key -eq 'Install-MaintenanceTasks') {
                 & $case.Key -Register
-            } else {
+            }
+            else {
                 & $case.Key
             }
             Assert-MockCalled Invoke-ScriptFile -ModuleName ConfigManagementTools -Times 1 -ParameterFilter { $Name -eq $case.Value }
@@ -54,7 +55,7 @@ Describe 'ConfigManagementTools public functions' {
     }
 
     Context 'Set-SharedMailboxAutoReply' {
-        $commonParams = @{ MailboxIdentity='mb'; StartTime=(Get-Date); EndTime=(Get-Date).AddHours(1); InternalMessage='msg'; AdminUser='admin' }
+        $commonParams = @{ MailboxIdentity = 'mb'; StartTime = (Get-Date); EndTime = (Get-Date).AddHours(1); InternalMessage = 'msg'; AdminUser = 'admin' }
         Safe-It 'returns simulation object' {
             InModuleScope ConfigManagementTools {
                 Mock Write-STStatus {}

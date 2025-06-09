@@ -24,7 +24,7 @@ function Test-SPToolsSiteAdmin {
         [ValidatePattern('^https?://')]
         [string]$SiteUrl,
         [string]$ClientId = $SharePointToolsSettings.ClientId,
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId = $SharePointToolsSettings.TenantId,
         [string]$CertPath = $SharePointToolsSettings.CertPath
     )
@@ -38,7 +38,8 @@ function Test-SPToolsSiteAdmin {
         $resp = Invoke-WebRequest -Uri $SiteUrl -Method Head -UseBasicParsing -ErrorAction Stop
         $status = [int]$resp.StatusCode
         Write-STStatus "HTTP status: $status" -Level SUB
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STLog -Message "HTTP check failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         throw
@@ -50,11 +51,13 @@ function Test-SPToolsSiteAdmin {
         $info = Invoke-PnPSPRestMethod -Url '/_api/web/CurrentUser' -Method Get
         $isAdmin = [bool]$info.IsSiteAdmin
         Write-STStatus "Site admin: $isAdmin" -Level SUB
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STLog -Message "Admin rights check failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         throw
-    } finally {
+    }
+    finally {
         Disconnect-PnPOnline -ErrorAction SilentlyContinue
         $sw.Stop()
         Write-STTelemetryEvent -ScriptName 'Test-SPToolsSiteAdmin' -Result $result -Duration $sw.Elapsed -Category 'SharePointTools'

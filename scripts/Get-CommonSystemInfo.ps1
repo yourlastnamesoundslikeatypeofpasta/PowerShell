@@ -1,41 +1,47 @@
+<#+
+.SYNOPSIS
+    Generate library usage reports and create Service Desk tickets when thresholds are exceeded.
+.DESCRIPTION
+    Runs Get-SPToolsAllLibraryReports from the SharePointTools module and exports the results to CSV.
+    Libraries with an ItemCount greater than the specified threshold trigger a Service Desk ticket.
+.PARAMETER ItemThreshold
+    Number of items that must be exceeded before a ticket is created.
+.PARAMETER RequesterEmail
+    Email address for the ticket requester.
+.PARAMETER CsvPath
+    Path to save the CSV report. Defaults to LibraryReport_<timestamp>.csv in the current directory.
+.PARAMETER TranscriptPath
+    Optional transcript log path.
+#>
+param(
+    [int]$ItemThreshold = 5000,
+    [string]$RequesterEmail,
+    [string]$CsvPath = $(Join-Path (Get-Location) "LibraryReport_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"),
+    [string]$TranscriptPath
+)
+
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/SharePointTools/SharePointTools.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -Force -ErrorAction SilentlyContinue
 
-function Get-CommonSystemInfo {
-    <#
-    .SYNOPSIS
-    Gather OS version, processor details, memory and disk space.
-    
-    .DESCRIPTION
-    Using Get-CimInstance -Class Win32_OperatingSystem, Win32_Processor, Win32_LogicalDisk and Win32_PhysicalMemory to gather OS version, processor details, memory and disk space.
-    
-    .EXAMPLE
-    Get-CommonSystemInfo    
-    
-    .NOTES
-    Running this function will return a custom object with the following properties:
-    - ComputerName
-    - OSVersion
-    - OSBuild
-    - Processor
-    - Memory
-    - DiskSpace
-    #>
+if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
-    Write-STStatus -Message 'Collecting system information...' -Level INFO
+try {
+    Write-STStatus -Message 'Generating library usage report...' -Level INFO -Log
+    $report = Get-SPToolsAllLibraryReports
+    $report | Export-Csv -Path $CsvPath -NoTypeInformation
+    Write-STStatus "Report saved to $CsvPath" -Level SUCCESS -Log
 
-    $operatingSystemInfo = Get-CimInstance -ClassName Win32_OperatingSystem
-    $processorInfo = Get-CimInstance -ClassName Win32_Processor
-    $diskInfo = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType = 3"
-    $memoryInfo = Get-CimInstance -ClassName Win32_PhysicalMemory
-
-    $commonSystemInfoObj = [pscustomobject]@{
-        ComputerName = $operatingSystemInfo.CSName
-        OSVersion = $operatingSystemInfo.Caption
-        OSBuild = $operatingSystemInfo.BuildNumber
-        Processor = $processorInfo.Name
-        Memory = $operatingSystemInfo.TotalVisibleMemorySize / 1MB
-        DiskSpace = $diskInfo | Select-Object -Property DeviceID, @{Name = "Size"; Expression = { "{0:N2}" -f ($_.Size / 1GB) }}, @{Name = "FreeSpace"; Expression = { "{0:N2}" -f ($_.FreeSpace / 1GB) }}
+    if ($RequesterEmail) {
+        $over = $report | Where-Object { $_.ItemCount -gt $ItemThreshold }
+        foreach ($siteGroup in $over | Group-Object SiteName) {
+            $subject = "SharePoint library usage over $ItemThreshold items - $($siteGroup.Name)"
+            $desc = ($siteGroup.Group | Format-Table LibraryName, ItemCount -AutoSize | Out-String)
+            Write-STStatus "Creating ticket for site $($siteGroup.Name)..." -Level INFO -Log
+            New-SDTicket -Subject $subject -Description $desc -RequesterEmail $RequesterEmail | Out-Null
+        }
     }
-    Write-STStatus -Message 'System information collected.' -Level SUCCESS
-    return $commonSystemInfoObj
+}
+finally {
+    if ($TranscriptPath) { Stop-Transcript | Out-Null }
 }

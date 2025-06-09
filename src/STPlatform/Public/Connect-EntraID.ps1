@@ -30,7 +30,7 @@ function Connect-EntraID {
     try {
         Write-STStatus 'Connecting to Microsoft Graph' -Level INFO -Log
 
-        $required = 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET'
+        $required = 'GRAPH_TENANT_ID', 'GRAPH_CLIENT_ID', 'GRAPH_CLIENT_SECRET'
         foreach ($name in $required) {
             if (-not $env:$name) {
                 $getParams = @{ Name = $name; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
@@ -39,14 +39,15 @@ function Connect-EntraID {
                 if ($val) {
                     $env:$name = $val
                     Write-STStatus "Loaded $name from vault" -Level SUB -Log
-                } else {
+                }
+                else {
                     Write-STStatus "$name not found in vault" -Level WARN -Log
                 }
             }
         }
 
-        if (-not $TenantId)     { $TenantId     = $env:GRAPH_TENANT_ID }
-        if (-not $ClientId)     { $ClientId     = $env:GRAPH_CLIENT_ID }
+        if (-not $TenantId) { $TenantId = $env:GRAPH_TENANT_ID }
+        if (-not $ClientId) { $ClientId = $env:GRAPH_CLIENT_ID }
         if (-not $ClientSecret) { $ClientSecret = $env:GRAPH_CLIENT_SECRET }
 
         if (-not $TenantId) { throw 'TenantId is required. Provide -TenantId or set GRAPH_TENANT_ID.' }
@@ -57,7 +58,8 @@ function Connect-EntraID {
 
         Connect-MgGraph @params
         Write-STStatus -Message 'Graph connection established.' -Level SUCCESS -Log
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STStatus "Connect-EntraID failed: $_" -Level ERROR -Log
         Write-STLog -Message "Connect-EntraID failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')

@@ -21,7 +21,7 @@ param(
     [Parameter(Mandatory)]
     [string]$Path,
 
-    [ValidateSet('Graphviz','Mermaid')]
+    [ValidateSet('Graphviz', 'Mermaid')]
     [string]$Format = 'Graphviz',
 
     [string]$OutputFile
@@ -47,7 +47,7 @@ foreach ($fn in $ast.FindAll({ param($n) $n -is [System.Management.Automation.La
 
 $edges = foreach ($name in $functions.Keys) {
     foreach ($target in $functions[$name]) {
-        [pscustomobject]@{ From=$name; To=$target }
+        [pscustomobject]@{ From = $name; To = $target }
     }
 }
 

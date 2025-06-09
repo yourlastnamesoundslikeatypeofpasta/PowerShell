@@ -19,7 +19,7 @@ function Get-GraphRiskySignIns {
     param(
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId,
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -38,11 +38,13 @@ function Get-GraphRiskySignIns {
         $url = 'https://graph.microsoft.com/beta/identityProtection/riskySignIns'
         $response = Invoke-STRequest -Uri $url -Headers $headers -Method 'GET'
         return $response.value
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STLog -Message "Get-GraphRiskySignIns failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         throw
-    } finally {
+    }
+    finally {
         $sw.Stop()
         Write-STTelemetryEvent -ScriptName 'Get-GraphRiskySignIns' -Result $result -Duration $sw.Elapsed
     }

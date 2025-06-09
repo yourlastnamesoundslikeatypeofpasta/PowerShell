@@ -32,10 +32,11 @@ function Schedule-MaintenancePlan {
         $parts = $Cron -split '\s+'
         if ($parts.Length -lt 2) { throw 'Cron expression must include minute and hour' }
         $time = '{0:D2}:{1:D2}' -f [int]$parts[1], [int]$parts[0]
-        $action  = New-ScheduledTaskAction -Execute 'pwsh' -Argument "-NoProfile -Command \"$command\""
+        $action = New-ScheduledTaskAction -Execute 'pwsh' -Argument "-NoProfile -Command \"$command\""
         $trigger = New-ScheduledTaskTrigger -Daily -At $time
         Register-ScheduledTask -TaskName $Name -Action $action -Trigger $trigger -Force | Out-Null
-    } else {
+    }
+    else {
         $entry = "$Cron pwsh -NoProfile -Command \"$command\" # $Name"
         Write-STStatus "Cron entry generated" -Level INFO -Log
         return $entry

@@ -13,17 +13,17 @@ function Invoke-CompanyPlaceManagement {
     .PARAMETER AutoAddFloor
         When creating a building, adds a default floor 1.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Get','Create','Edit')]
+        [ValidateSet('Get', 'Create', 'Edit')]
         [ValidateNotNullOrEmpty()]
         [string]$Action,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$DisplayName,
         [Parameter(Mandatory = $false)]
-        [ValidateSet('Building','Floor','Section','Desk')]
+        [ValidateSet('Building', 'Floor', 'Section', 'Desk')]
         [ValidateNotNullOrEmpty()]
         [string]$Type = 'Building',
         [Parameter(Mandatory = $false)]
@@ -63,12 +63,14 @@ function Invoke-CompanyPlaceManagement {
     try {
         if ($Logger) {
             Import-Module $Logger -Force -ErrorAction SilentlyContinue
-        } else {
+        }
+        else {
             Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
         }
         if ($TelemetryClient) {
             Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
-        } else {
+        }
+        else {
             Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
         }
         if ($Config) {
@@ -96,11 +98,13 @@ function Invoke-CompanyPlaceManagement {
             try {
                 Import-Module MicrosoftPlaces -ErrorAction Stop
                 Connect-MicrosoftPlaces -ErrorAction Stop
-            } catch {
+            }
+            catch {
                 Write-Error "Failed to load MicrosoftPlaces module or connect: $_"
                 return
             }
-        } else {
+        }
+        else {
             Connect-MicrosoftPlaces -ErrorAction SilentlyContinue | Out-Null
         }
         switch ($Action) {
@@ -112,7 +116,8 @@ function Invoke-CompanyPlaceManagement {
                 $results = Get-PlaceV3 -Type $Type | Where-Object { $_.DisplayName -like "$DisplayName" }
                 if ($results) {
                     return $results
-                } else {
+                }
+                else {
                     Write-STStatus "No matching places found for '$DisplayName' of type '$Type'" -Level WARN
                 }
             }
@@ -149,12 +154,14 @@ function Invoke-CompanyPlaceManagement {
         }
 
         Write-STStatus -Message 'Invoke-CompanyPlaceManagement completed' -Level FINAL -Log
-    } catch {
+    }
+    catch {
         Write-STStatus "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Log
         Write-STLog -Message "Invoke-CompanyPlaceManagement failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         $result = 'Failure'
         return New-STErrorObject -Message $_.Exception.Message -Category 'SharePoint'
-    } finally {
+    }
+    finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
         $sw.Stop()
         Send-STMetric -MetricName 'Invoke-CompanyPlaceManagement' -Category 'Deployment' -Value $sw.Elapsed.TotalSeconds -Details @{ Result = $result }

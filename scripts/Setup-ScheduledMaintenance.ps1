@@ -37,7 +37,7 @@ function New-MaintenanceTaskXml {
   </Triggers>
 "@
 
-    $encodedScript = $ScriptPath.Replace('&','&amp;')
+    $encodedScript = $ScriptPath.Replace('&', '&amp;')
     $xml = @"
 <Task xmlns='http://schemas.microsoft.com/windows/2004/02/mit/task'>
   <RegistrationInfo><Description>$TaskName</Description></RegistrationInfo>
@@ -76,7 +76,8 @@ foreach ($name in $tasks.Keys) {
     if ($Register) {
         Write-STStatus "Registering task $name" -Level INFO -Log
         Register-ScheduledTask -TaskName $name -Xml $xml -Force | Out-Null
-    } else {
+    }
+    else {
         $file = "$($name -replace ' ', '')Task.xml"
         Write-STStatus "Writing $file" -Level INFO -Log
         $xml | Set-Content -Path $file -Encoding UTF8

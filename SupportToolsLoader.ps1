@@ -25,7 +25,7 @@ if (-not $script:SupportToolsLoaderLoaded) {
     }
 
     $repoRoot = $PSScriptRoot
-    $srcPath  = Join-Path $repoRoot 'src'
+    $srcPath = Join-Path $repoRoot 'src'
     if (-not (Test-Path $srcPath)) {
         Write-Warning "Source folder '$srcPath' not found."
         return
@@ -48,7 +48,8 @@ if (-not $script:SupportToolsLoaderLoaded) {
                     & $bannerFunc | Out-STBanner
                 }
             }
-        } catch {
+        }
+        catch {
             Write-Warning "Failed to import module from $($moduleFile.FullName): $($_.Exception.Message)"
         }
     }

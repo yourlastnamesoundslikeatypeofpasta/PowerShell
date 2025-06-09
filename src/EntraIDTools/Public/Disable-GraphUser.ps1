@@ -15,7 +15,7 @@ function Disable-GraphUser {
     .PARAMETER Cloud
         Target environment: Entra (default) or AD.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -30,7 +30,7 @@ function Disable-GraphUser {
         [ValidateNotNullOrEmpty()]
         [string]$ClientSecret,
         [Parameter()]
-        [ValidateSet('Entra','AD')]
+        [ValidateSet('Entra', 'AD')]
         [string]$Cloud = 'Entra'
     )
 
@@ -46,19 +46,22 @@ function Disable-GraphUser {
             if ($PSCmdlet.ShouldProcess($UserPrincipalName, 'Disable user')) {
                 Invoke-RestMethod -Uri $url -Headers $headers -Method Patch -Body $body -ContentType 'application/json'
             }
-        } else {
+        }
+        else {
             Import-Module ActiveDirectory -ErrorAction Stop
             if ($PSCmdlet.ShouldProcess($UserPrincipalName, 'Disable user')) {
                 Set-ADUser -Identity $UserPrincipalName -Enabled:$false -ErrorAction Stop
             }
         }
         Write-STStatus "Disabled user $UserPrincipalName" -Level SUCCESS -Log
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STStatus "Failed to disable $UserPrincipalName: $_" -Level ERROR -Log
         Write-STLog -Message "Disable-GraphUser failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         throw
-    } finally {
+    }
+    finally {
         $sw.Stop()
         Write-STTelemetryEvent -ScriptName 'Disable-GraphUser' -Result $result -Duration $sw.Elapsed
     }

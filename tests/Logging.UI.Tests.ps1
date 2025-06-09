@@ -11,8 +11,9 @@ Describe 'Logging UI Functions' {
             $env:USERNAME = 'tester'
             $env:COMPUTERNAME = 'demo'
             { Show-STPrompt -Command './script.ps1' -Path '/tmp' } |
-                Should -Output '┌──(tester@demo)-[/tmp]','└─$ ./script.ps1'
-        } finally {
+                Should -Output '┌──(tester@demo)-[/tmp]', '└─$ ./script.ps1'
+        }
+        finally {
             if ($null -ne $oldUser) { $env:USERNAME = $oldUser } else { Remove-Item env:USERNAME -ErrorAction SilentlyContinue }
             if ($null -ne $oldComp) { $env:COMPUTERNAME = $oldComp } else { Remove-Item env:COMPUTERNAME -ErrorAction SilentlyContinue }
         }
@@ -34,7 +35,7 @@ Describe 'Logging UI Functions' {
     }
 
     Safe-It 'aligns block fields correctly' {
-        $data = @{ Name='Alice'; Email='alice@example.com'; Dept='IT' }
+        $data = @{ Name = 'Alice'; Email = 'alice@example.com'; Dept = 'IT' }
         function FormatBlock([hashtable]$d) {
             $max = ($d.Keys | Measure-Object -Property Length -Maximum).Maximum
             foreach ($k in $d.Keys) {
@@ -61,7 +62,8 @@ Describe 'Logging UI Functions' {
             $env:ST_LOG_LEVEL = 'WARN'
             { Write-STStatus -Message 'info hidden' -Level INFO } | Should -BeNullOrEmpty
             { Write-STStatus -Message 'show warn' -Level WARN } | Should -Output '[!] show warn'
-        } finally {
+        }
+        finally {
             Remove-Item env:ST_LOG_LEVEL -ErrorAction SilentlyContinue
         }
     }

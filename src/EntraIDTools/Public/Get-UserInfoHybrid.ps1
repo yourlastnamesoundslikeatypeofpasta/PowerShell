@@ -19,14 +19,14 @@ function Get-UserInfoHybrid {
     .EXAMPLE
         Get-UserInfoHybrid -UserPrincipalName user@contoso.com -TenantId 00000000-0000-0000-0000-000000000000 -ClientId 11111111-1111-1111-1111-111111111111
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$UserPrincipalName,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -35,7 +35,7 @@ function Get-UserInfoHybrid {
         [ValidateNotNullOrEmpty()]
         [string]$ClientSecret,
         [Parameter(Mandatory = $false)]
-        [string[]]$ADProperties = @('SamAccountName','Enabled','LastLogonDate')
+        [string[]]$ADProperties = @('SamAccountName', 'Enabled', 'LastLogonDate')
     )
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
@@ -56,11 +56,13 @@ function Get-UserInfoHybrid {
             $combined[$prop] = $adUser.$prop
         }
         return [pscustomobject]$combined
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STLog -Message "Get-UserInfoHybrid failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         throw
-    } finally {
+    }
+    finally {
         $sw.Stop()
         Write-STTelemetryEvent -ScriptName 'Get-UserInfoHybrid' -Result $result -Duration $sw.Elapsed
     }

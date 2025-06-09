@@ -1,7 +1,7 @@
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [string]$IndicatorList
 )
 
@@ -16,7 +16,7 @@ function Search-Indicators {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)][string]$IndicatorList
+        [Parameter(Mandatory = $true)][string]$IndicatorList
     )
 
     if (-not (Test-Path $IndicatorList)) { throw "Indicator list '$IndicatorList' not found." }
@@ -24,17 +24,17 @@ function Search-Indicators {
     $indicators = Import-Csv -Path $IndicatorList | Select-Object -ExpandProperty Indicator
     $results = foreach ($ind in $indicators) {
         Write-STStatus "Searching for '$ind'" -Level SUB
-        $eventHits = Get-WinEvent -LogName Security,Application,System -ErrorAction SilentlyContinue |
+        $eventHits = Get-WinEvent -LogName Security, Application, System -ErrorAction SilentlyContinue |
             Where-Object { $_.Message -match [regex]::Escape($ind) }
-        $regHits = Get-ChildItem -Path HKLM:\,HKCU:\ -Recurse -ErrorAction SilentlyContinue |
+        $regHits = Get-ChildItem -Path HKLM:\, HKCU:\ -Recurse -ErrorAction SilentlyContinue |
             Where-Object { $_.Name -match [regex]::Escape($ind) }
         $fileHits = Get-ChildItem -Path C:\ -Recurse -ErrorAction SilentlyContinue -Force |
             Where-Object { $_.FullName -match [regex]::Escape($ind) }
         [pscustomobject]@{
-            Indicator      = $ind
-            EventMatches   = $eventHits.Count
-            RegistryMatches= $regHits.Count
-            FileMatches    = $fileHits.Count
+            Indicator       = $ind
+            EventMatches    = $eventHits.Count
+            RegistryMatches = $regHits.Count
+            FileMatches     = $fileHits.Count
         }
     }
     Write-STStatus -Message 'Search complete.' -Level SUCCESS

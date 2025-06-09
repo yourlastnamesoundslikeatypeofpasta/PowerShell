@@ -19,7 +19,7 @@ function Get-ServiceDeskStats {
 
         Returns counts of incidents created in the last seven days grouped by status.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory)]
         [datetime]$StartDate,
@@ -36,9 +36,9 @@ function Get-ServiceDeskStats {
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = 'Success'
-    Write-STLog -Message "Get-ServiceDeskStats" -Structured:$($env:ST_LOG_STRUCTURED -eq '1') -Metadata @{ start=$StartDate; end=$EndDate }
+    Write-STLog -Message "Get-ServiceDeskStats" -Structured:$($env:ST_LOG_STRUCTURED -eq '1') -Metadata @{ start = $StartDate; end = $EndDate }
     try {
-        $after  = [uri]::EscapeDataString($StartDate.ToString('yyyy-MM-dd'))
+        $after = [uri]::EscapeDataString($StartDate.ToString('yyyy-MM-dd'))
         $before = [uri]::EscapeDataString($EndDate.ToString('yyyy-MM-dd'))
         $path = "/incidents.json?created_after=$after&created_before=$before"
         if ($PSCmdlet.ShouldProcess('incidents', 'Get stats')) {

@@ -11,7 +11,7 @@ Describe 'Create-NewHireUser script' {
         . $PSScriptRoot/../scripts/Create-NewHireUser.ps1
     }
     BeforeEach {
-        Mock Search-SDTicket { @([pscustomobject]@{ Id=1; RawJson='{"custom_fields":{"firstName":"John","lastName":"Doe","userPrincipalName":"john.doe@contoso.com"}}' }) }
+        Mock Search-SDTicket { @([pscustomobject]@{ Id = 1; RawJson = '{"custom_fields":{"firstName":"John","lastName":"Doe","userPrincipalName":"john.doe@contoso.com"}}' }) }
         Mock Set-SDTicket {}
         Mock Install-Module {}
         Mock Import-Module {}

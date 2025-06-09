@@ -17,9 +17,9 @@ function Connect-STPlatform {
     .EXAMPLE
         Connect-STPlatform -Mode Hybrid -InstallMissing
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
-        [Parameter(Mandatory)][ValidateSet('Cloud','Hybrid','OnPrem')][string]$Mode,
+        [Parameter(Mandatory)][ValidateSet('Cloud', 'Hybrid', 'OnPrem')][string]$Mode,
         [switch]$InstallMissing,
         [string]$Vault,
         [switch]$ChaosMode
@@ -35,7 +35,7 @@ function Connect-STPlatform {
             Invoke-STRequest -Method 'GET' -Uri 'https://example.com' -ChaosMode -ErrorAction Stop | Out-Null
         }
 
-        $requiredVars = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
+        $requiredVars = 'SPTOOLS_CLIENT_ID', 'SPTOOLS_TENANT_ID', 'SPTOOLS_CERT_PATH', 'SD_API_TOKEN', 'SD_BASE_URI'
         foreach ($name in $requiredVars) {
             if (-not $env:$name) {
                 $getParams = @{ Name = $name; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
@@ -44,15 +44,16 @@ function Connect-STPlatform {
                 if ($val) {
                     $env:$name = $val
                     Write-STStatus "Loaded $name from vault" -Level SUB -Log
-                } else {
+                }
+                else {
                     Write-STStatus "$name not found in vault" -Level WARN -Log
                 }
             }
         }
         $modules = switch ($Mode) {
-            'Cloud'  { @('Microsoft.Graph','ExchangeOnlineManagement') }
-            'Hybrid' { @('Microsoft.Graph','ExchangeOnlineManagement','ActiveDirectory') }
-            'OnPrem' { @('ActiveDirectory','ExchangePowerShell') }
+            'Cloud' { @('Microsoft.Graph', 'ExchangeOnlineManagement') }
+            'Hybrid' { @('Microsoft.Graph', 'ExchangeOnlineManagement', 'ActiveDirectory') }
+            'OnPrem' { @('ActiveDirectory', 'ExchangePowerShell') }
         }
         $connectionResults = @{}
         foreach ($m in $modules) {
@@ -60,7 +61,8 @@ function Connect-STPlatform {
                 if ($InstallMissing) {
                     Write-STStatus "Installing $m" -Level SUB -Log
                     Install-Module -Name $m -Scope CurrentUser -Force -ErrorAction Stop
-                } else {
+                }
+                else {
                     Write-STStatus "$m module missing." -Level WARN -Log
                 }
             }
@@ -70,32 +72,36 @@ function Connect-STPlatform {
         switch ($Mode) {
             'Cloud' {
                 try {
-                    Connect-MgGraph -Scopes 'User.Read.All','Group.ReadWrite.All' -NoWelcome
+                    Connect-MgGraph -Scopes 'User.Read.All', 'Group.ReadWrite.All' -NoWelcome
                     $connectionResults.Graph = 'Success'
-                } catch {
+                }
+                catch {
                     $connectionResults.Graph = 'Failure'
                     throw
                 }
                 try {
                     Connect-ExchangeOnline -ErrorAction Stop
                     $connectionResults.ExchangeOnline = 'Success'
-                } catch {
+                }
+                catch {
                     $connectionResults.ExchangeOnline = 'Failure'
                     throw
                 }
             }
             'Hybrid' {
                 try {
-                    Connect-MgGraph -Scopes 'User.Read.All','Group.ReadWrite.All' -NoWelcome
+                    Connect-MgGraph -Scopes 'User.Read.All', 'Group.ReadWrite.All' -NoWelcome
                     $connectionResults.Graph = 'Success'
-                } catch {
+                }
+                catch {
                     $connectionResults.Graph = 'Failure'
                     throw
                 }
                 try {
                     Connect-ExchangeOnline -ErrorAction Stop
                     $connectionResults.ExchangeOnline = 'Success'
-                } catch {
+                }
+                catch {
                     $connectionResults.ExchangeOnline = 'Failure'
                     throw
                 }
@@ -105,7 +111,8 @@ function Connect-STPlatform {
                     try {
                         Connect-ExchangeServer -Auto
                         $connectionResults.ExchangeOnPrem = 'Success'
-                    } catch {
+                    }
+                    catch {
                         $connectionResults.ExchangeOnPrem = 'Failure'
                         throw
                     }
@@ -114,7 +121,8 @@ function Connect-STPlatform {
         }
 
         Write-STStatus -Message 'Connections initialized.' -Level SUCCESS -Log
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STStatus "Connect-STPlatform failed: $_" -Level ERROR -Log
         Write-STLog -Message "Connect-STPlatform failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')

@@ -6,7 +6,7 @@ function Get-SDTicket {
     .PARAMETER Id
         Incident ID to retrieve.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     [OutputType([TicketObject])]
     param(
         [Parameter(Mandatory = $true)]
@@ -40,7 +40,8 @@ Register-ArgumentCompleter -CommandName Get-SDTicket -ParameterName Id -ScriptBl
             ForEach-Object {
                 [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
             }
-    } catch {
+    }
+    catch {
         # ignore completion errors
     }
 }

@@ -2,7 +2,7 @@ function Out-STStatus {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$Message,
-        [Parameter()][ValidateSet('INFO','SUCCESS','ERROR','WARN','SUB','FINAL','FATAL')][string]$Level = 'INFO',
+        [Parameter()][ValidateSet('INFO', 'SUCCESS', 'ERROR', 'WARN', 'SUB', 'FINAL', 'FATAL')][string]$Level = 'INFO',
         [switch]$Log
     )
     Write-STStatus -Message $Message -Level $Level -Log:$Log
@@ -12,7 +12,7 @@ function Out-STBanner {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][pscustomobject]$Info,
-        [ValidateSet('Black','DarkBlue','DarkGreen','DarkCyan','DarkRed','DarkMagenta','DarkYellow','Gray','DarkGray','Blue','Green','Cyan','Red','Magenta','Yellow','White')]
+        [ValidateSet('Black', 'DarkBlue', 'DarkGreen', 'DarkCyan', 'DarkRed', 'DarkMagenta', 'DarkYellow', 'Gray', 'DarkGray', 'Blue', 'Green', 'Cyan', 'Red', 'Magenta', 'Yellow', 'White')]
         [string]$Color
     )
     if (-not $Info.Module) { throw 'Module property required' }
@@ -31,4 +31,4 @@ function Out-STBanner {
     Write-STLog -Message "$($Info.Module) module loaded" -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
 }
 
-Export-ModuleMember -Function 'Out-STStatus','Out-STBanner'
+Export-ModuleMember -Function 'Out-STStatus', 'Out-STBanner'

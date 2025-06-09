@@ -12,8 +12,8 @@ Describe 'System Scripts' {
             function Write-STStatus {}
             Mock Get-CimInstance {
                 @(
-                    [pscustomobject]@{ Name='Share1'; Path='C:\\Share1'; Description='d1'; Type=0 }
-                    [pscustomobject]@{ Name='Share2'; Path='D:\\Share2'; Description='d2'; Type=1 }
+                    [pscustomobject]@{ Name = 'Share1'; Path = 'C:\\Share1'; Description = 'd1'; Type = 0 }
+                    [pscustomobject]@{ Name = 'Share2'; Path = 'D:\\Share2'; Description = 'd2'; Type = 1 }
                 )
             }
             Mock Write-STStatus {}
@@ -31,8 +31,8 @@ Describe 'System Scripts' {
             function Write-STStatus {}
             Mock Get-WinEvent {
                 @(
-                    [pscustomobject]@{ TimeCreated='t1'; Message='m1' }
-                    [pscustomobject]@{ TimeCreated='t2'; Message='m2' }
+                    [pscustomobject]@{ TimeCreated = 't1'; Message = 'm1' }
+                    [pscustomobject]@{ TimeCreated = 't2'; Message = 'm2' }
                 )
             }
             Mock Write-STStatus {}

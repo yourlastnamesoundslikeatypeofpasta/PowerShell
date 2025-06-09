@@ -33,8 +33,8 @@ Describe 'SharePointTools Module' {
             'Get-SPToolsAllPreservationHoldReports',
             'Get-SPPermissionsReport',
             'Clean-SPVersionHistory',
-            'Find-OrphanedSPFiles','Get-SPToolsFileReport',
-            'Select-SPToolsFolder','List-OneDriveUsage'
+            'Find-OrphanedSPFiles', 'Get-SPToolsFileReport',
+            'Select-SPToolsFolder', 'List-OneDriveUsage'
         )
         $exported = (Get-Command -Module SharePointTools).Name
         foreach ($cmd in $expected) {
@@ -107,7 +107,7 @@ Describe 'SharePointTools Module' {
         BeforeEach {
             $script:tempCfg = [System.IO.Path]::GetTempFileName()
             InModuleScope SharePointTools {
-                $SharePointToolsSettings = @{ ClientId=''; TenantId=''; CertPath=''; Sites=@{} }
+                $SharePointToolsSettings = @{ ClientId = ''; TenantId = ''; CertPath = ''; Sites = @{} }
                 $script:settingsFile = $tempCfg
                 Mock Write-SPToolsHacker {}
             }

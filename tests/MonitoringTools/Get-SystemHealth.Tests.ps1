@@ -8,9 +8,9 @@ Describe 'Get-SystemHealth function' {
 
     Safe-It 'returns expected health object' {
         Mock Get-CPUUsage { 42 } -ModuleName MonitoringTools
-        $disk = @([pscustomobject]@{ Drive='C:'; SizeGB=100; FreeGB=50 })
+        $disk = @([pscustomobject]@{ Drive = 'C:'; SizeGB = 100; FreeGB = 50 })
         Mock Get-DiskSpaceInfo { $disk } -ModuleName MonitoringTools
-        $events = @([pscustomobject]@{ Name='Error'; Count=1 })
+        $events = @([pscustomobject]@{ Name = 'Error'; Count = 1 })
         Mock Get-EventLogSummary { $events } -ModuleName MonitoringTools
 
         $result = Get-SystemHealth

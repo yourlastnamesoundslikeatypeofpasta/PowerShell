@@ -7,7 +7,8 @@ Describe 'Invoke-PerformanceAudit.ps1 script' {
         Import-Module $PSScriptRoot/../../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force
     }
     BeforeEach {
-        function Get-Counter { param([string]$CounterPath,[int]$SampleInterval,[int]$MaxSamples)
+        function Get-Counter {
+            param([string]$CounterPath, [int]$SampleInterval, [int]$MaxSamples)
             [pscustomobject]@{ CounterSamples = @(1..$MaxSamples | ForEach-Object { [pscustomobject]@{ CookedValue = 10 } }) }
         }
         function Get-CimInstance { [pscustomobject]@{ TotalVisibleMemorySize = 100; FreePhysicalMemory = 50 } }

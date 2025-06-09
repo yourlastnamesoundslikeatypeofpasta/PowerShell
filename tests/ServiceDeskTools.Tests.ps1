@@ -8,9 +8,9 @@ Describe 'ServiceDeskTools Module' {
 
     Context 'Exported commands' {
         $expected = @(
-            'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
-            'Add-SDTicketComment','Search-SDTicket','Get-ServiceDeskAsset',
-            'Get-SDUser','Set-SDTicketBulk','Link-SDTicketToSPTask','Export-SDConfig'
+            'Get-SDTicket', 'Get-SDTicketHistory', 'New-SDTicket', 'Set-SDTicket',
+            'Add-SDTicketComment', 'Search-SDTicket', 'Get-ServiceDeskAsset',
+            'Get-SDUser', 'Set-SDTicketBulk', 'Link-SDTicketToSPTask', 'Export-SDConfig'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -51,7 +51,7 @@ Describe 'ServiceDeskTools Module' {
         }
         Safe-It 'Set-SDTicket calls Invoke-SDRequest' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
-            Set-SDTicket -Id 2 -Fields @{status='Open'}
+            Set-SDTicket -Id 2 -Fields @{status = 'Open' }
             Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
                 $Method -eq 'PUT' -and
                 $Path -eq '/incidents/2.json' -and
@@ -113,7 +113,7 @@ Describe 'ServiceDeskTools Module' {
         }
         Safe-It 'Set-SDTicketBulk calls Set-SDTicket for each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
-            Set-SDTicketBulk -Id 10,11 -Fields @{status='Closed'}
+            Set-SDTicketBulk -Id 10, 11 -Fields @{status = 'Closed' }
             Assert-MockCalled Set-SDTicket -ModuleName ServiceDeskTools -ParameterFilter { $Id -eq 10 } -Times 1
             Assert-MockCalled Set-SDTicket -ModuleName ServiceDeskTools -ParameterFilter { $Id -eq 11 } -Times 1
         }
@@ -142,7 +142,7 @@ Describe 'ServiceDeskTools Module' {
         Safe-It 'Set-SDTicket logs the request' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
             Mock Write-STLog {} -ModuleName ServiceDeskTools
-            Set-SDTicket -Id 3 -Fields @{status='Closed'}
+            Set-SDTicket -Id 3 -Fields @{status = 'Closed' }
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Set-SDTicket 3' } -Times 1
         }
         Safe-It 'Search-SDTicket logs the request' {
@@ -166,7 +166,7 @@ Describe 'ServiceDeskTools Module' {
         Safe-It 'Set-SDTicketBulk logs each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
             Mock Write-STLog {} -ModuleName ServiceDeskTools
-            Set-SDTicketBulk -Id 7,8 -Fields @{priority='High'}
+            Set-SDTicketBulk -Id 7, 8 -Fields @{priority = 'High' }
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Set-SDTicketBulk 7' } -Times 1
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Set-SDTicketBulk 8' } -Times 1
         }
@@ -322,7 +322,7 @@ Describe 'ServiceDeskTools Module' {
         }
         Safe-It 'Set-SDTicket does not invoke request when -WhatIf used' {
             Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
-            Set-SDTicket -Id 1 -Fields @{status='Open'} -WhatIf
+            Set-SDTicket -Id 1 -Fields @{status = 'Open' } -WhatIf
             Assert-MockCalled Invoke-SDRequest -Times 0 -ModuleName ServiceDeskTools
         }
     }

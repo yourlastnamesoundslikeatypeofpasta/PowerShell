@@ -40,7 +40,7 @@ function New-STDashboard {
         }
 
         $logLines = if (Test-Path $LogPath) { Get-Content $LogPath -Tail $LogLines } else { @() }
-        $metrics  = if (Test-Path $TelemetryLogPath) { Get-STTelemetryMetrics -LogPath $TelemetryLogPath } else { @() }
+        $metrics = if (Test-Path $TelemetryLogPath) { Get-STTelemetryMetrics -LogPath $TelemetryLogPath } else { @() }
 
         $html = @()
         $html += '<html><head><title>Support Tools Dashboard</title></head><body>'
@@ -48,9 +48,10 @@ function New-STDashboard {
         $html += '<h2>Recent Log Entries</h2>'
         if ($logLines.Count -gt 0) {
             $html += '<pre>'
-            $html += ($logLines | ForEach-Object { $_ -replace '<','&lt;' -replace '>','&gt;' }) -join "`n"
+            $html += ($logLines | ForEach-Object { $_ -replace '<', '&lt;' -replace '>', '&gt;' }) -join "`n"
             $html += '</pre>'
-        } else {
+        }
+        else {
             $html += '<p>No log entries found.</p>'
         }
         $html += '<h2>Telemetry Metrics</h2>'
@@ -60,7 +61,8 @@ function New-STDashboard {
                 $html += "<tr><td>$($m.Script)</td><td>$($m.Executions)</td><td>$($m.Successes)</td><td>$($m.Failures)</td><td>$($m.AverageSeconds)</td><td>$($m.LastRun)</td></tr>"
             }
             $html += '</table>'
-        } else {
+        }
+        else {
             $html += '<p>No telemetry metrics found.</p>'
         }
         $html += '</body></html>'
@@ -68,7 +70,8 @@ function New-STDashboard {
         $html -join "`n" | Out-File -FilePath $OutputPath -Encoding utf8
         Write-STStatus "Dashboard saved to $OutputPath" -Level SUCCESS
         return $OutputPath
-    } catch {
+    }
+    catch {
         return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     }
 }

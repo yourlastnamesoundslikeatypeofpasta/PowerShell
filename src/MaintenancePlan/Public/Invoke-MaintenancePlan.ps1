@@ -7,7 +7,7 @@ function Invoke-MaintenancePlan {
     .PARAMETER WhatIf
         Display commands without executing.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory)]
         [ValidateNotNull()]
@@ -20,7 +20,8 @@ function Invoke-MaintenancePlan {
         if (-not $WhatIf) {
             if (Test-Path $step) {
                 & $step
-            } else {
+            }
+            else {
                 Invoke-Expression $step
             }
         }

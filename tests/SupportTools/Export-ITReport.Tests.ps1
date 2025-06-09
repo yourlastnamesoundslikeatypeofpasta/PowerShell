@@ -10,23 +10,25 @@ Describe 'Export-ITReport function' {
             Mock Get-CimInstance { [pscustomobject]@{ BuildNumber = '12345' } }
             $path = Join-Path ([IO.Path]::GetTempPath()) ([guid]::NewGuid().ToString() + '.csv')
             try {
-                @([pscustomobject]@{A=1;B=2}) | Export-ITReport -Format CSV -OutputPath $path
+                @([pscustomobject]@{A = 1; B = 2 }) | Export-ITReport -Format CSV -OutputPath $path
                 Test-Path $path | Should -Be $true
                 $lines = Get-Content $path
                 $lines[0] | Should -Match 'A,B,OsBuild'
                 $lines[1] | Should -Match '1,2,12345'
-            } finally {
+            }
+            finally {
                 Remove-Item $path -ErrorAction SilentlyContinue
             }
         }
     }
 
     Safe-It 'returns generated path when OutputPath not provided' {
-        $path = @([pscustomobject]@{A=1}) | Export-ITReport -Format JSON
+        $path = @([pscustomobject]@{A = 1 }) | Export-ITReport -Format JSON
         try {
             Test-Path $path | Should -Be $true
             $path | Should -Match '\.json$'
-        } finally {
+        }
+        finally {
             Remove-Item $path -ErrorAction SilentlyContinue
         }
     }

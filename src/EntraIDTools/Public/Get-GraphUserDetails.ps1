@@ -43,14 +43,14 @@ function Get-GraphUserDetails {
         Retrieves the user information and exports the results to both CSV and
         HTML files.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$UserPrincipalName,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [Alias('TenantID','tenantId')]
+        [Alias('TenantID', 'tenantId')]
         [string]$TenantId,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -66,7 +66,7 @@ function Get-GraphUserDetails {
         [string]$HtmlPath
         ,
         [Parameter()]
-        [ValidateSet('Entra','AD')]
+        [ValidateSet('Entra', 'AD')]
         [string]$Cloud = 'Entra'
     )
 
@@ -97,9 +97,10 @@ function Get-GraphUserDetails {
                 Groups            = ($groups.value.displayName -join ',')
                 LastSignIn        = $sign.signInActivity.lastSignInDateTime
             }
-        } else {
+        }
+        else {
             Import-Module ActiveDirectory -ErrorAction Stop
-            $user = Get-ADUser -Filter "UserPrincipalName -eq '$UserPrincipalName'" -Properties MemberOf,LastLogonDate -ErrorAction Stop
+            $user = Get-ADUser -Filter "UserPrincipalName -eq '$UserPrincipalName'" -Properties MemberOf, LastLogonDate -ErrorAction Stop
             $groups = $user.MemberOf | Get-ADGroup | Select-Object -ExpandProperty Name
             $details = [pscustomobject]@{
                 UserPrincipalName = $user.UserPrincipalName
@@ -110,15 +111,17 @@ function Get-GraphUserDetails {
             }
         }
 
-        if ($CsvPath)  { $details | Export-Csv -Path $CsvPath -NoTypeInformation }
+        if ($CsvPath) { $details | Export-Csv -Path $CsvPath -NoTypeInformation }
         if ($HtmlPath) { $details | ConvertTo-Html -Title 'User Details' | Out-File -FilePath $HtmlPath }
 
         return $details
-    } catch {
+    }
+    catch {
         $result = 'Failure'
         Write-STLog -Message "Get-GraphUserDetails failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
         throw
-    } finally {
+    }
+    finally {
         $sw.Stop()
         Write-STTelemetryEvent -ScriptName 'Get-GraphUserDetails' -Result $result -Duration $sw.Elapsed
     }

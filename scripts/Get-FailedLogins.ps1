@@ -21,7 +21,7 @@ function Get-FailedLogins {
 
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$ComputerName
     )
 
@@ -31,7 +31,7 @@ function Get-FailedLogins {
         $ComputerName = $env:COMPUTERNAME
     }
 
-    $failedLogins = Get-WinEvent -FilterHashTable @{LogName="Security"; ID=4625} -ComputerName $ComputerName |
+    $failedLogins = Get-WinEvent -FilterHashTable @{LogName = "Security"; ID = 4625 } -ComputerName $ComputerName |
         Select-Object TimeCreated, Message
 
     Write-STStatus "Retrieved $($failedLogins.Count) events." -Level SUCCESS

@@ -24,7 +24,8 @@ Describe 'ChaosTools Module' {
         try {
             $env:CHAOSTOOLS_ENABLED = '0'
             Invoke-ChaosTest -ScriptBlock { $script:ran = $true } -FailureRate 1 -MaxDelaySeconds 0
-        } finally {
+        }
+        finally {
             Remove-Item env:CHAOSTOOLS_ENABLED -ErrorAction SilentlyContinue
         }
         $script:ran | Should -BeTrue
@@ -35,7 +36,8 @@ Describe 'ChaosTools Module' {
         try {
             $env:CHAOSTOOLS_ENABLED = 'False'
             Invoke-ChaosTest -ScriptBlock { $script:ran = $true } -FailureRate 1 -MaxDelaySeconds 0
-        } finally {
+        }
+        finally {
             Remove-Item env:CHAOSTOOLS_ENABLED -ErrorAction SilentlyContinue
         }
         $script:ran | Should -BeTrue
