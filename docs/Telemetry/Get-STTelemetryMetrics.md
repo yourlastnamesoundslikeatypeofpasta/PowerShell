@@ -46,3 +46,4 @@ A list of objects with Script, Executions, Successes, Failures, AverageSeconds a
 
 ## NOTES
 The `sqlite3` command line tool must be available when using `-SqlitePath`.
+Use `Send-TelemetrySummary.ps1` to email the resulting metrics.
