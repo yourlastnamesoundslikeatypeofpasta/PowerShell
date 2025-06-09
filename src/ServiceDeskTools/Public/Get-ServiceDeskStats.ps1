@@ -37,6 +37,12 @@ function Get-ServiceDeskStats {
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = 'Success'
     Write-STLog -Message "Get-ServiceDeskStats" -Metadata @{ start=$StartDate; end=$EndDate }
+
+    if ($StartDate -gt $EndDate) {
+        Write-STStatus 'StartDate must be earlier than EndDate.' -Level ERROR -Log
+        throw 'StartDate must be earlier than EndDate.'
+    }
+
     try {
         $after  = [uri]::EscapeDataString($StartDate.ToString('yyyy-MM-dd'))
         $before = [uri]::EscapeDataString($EndDate.ToString('yyyy-MM-dd'))
