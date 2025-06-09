@@ -8,7 +8,7 @@ Describe 'ServiceDeskTools Module' {
         $expected = @(
             'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
             'Add-SDTicketComment','Search-SDTicket','Get-ServiceDeskAsset',
-            'Set-SDTicketBulk','Link-SDTicketToSPTask'
+            'Get-ServiceDeskAssetRelationship','Set-SDTicketBulk','Link-SDTicketToSPTask'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -95,6 +95,20 @@ Describe 'ServiceDeskTools Module' {
                 $ChaosMode -eq $true -and $Method -eq 'GET' -and $Path -eq '/assets/4.json'
             } -Times 1
         }
+        It 'Get-ServiceDeskAssetRelationship builds query parameters' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskAssetRelationship -AssetId 5 -Type 'Linked'
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $Method -eq 'GET' -and $Path -eq '/asset_relationships.json?asset_id=5&relationship_type=Linked'
+            } -Times 1
+        }
+        It 'Get-ServiceDeskAssetRelationship passes ChaosMode' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskAssetRelationship -AssetId 5 -ChaosMode
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $ChaosMode -eq $true -and $Method -eq 'GET' -and $Path -eq '/asset_relationships.json?asset_id=5'
+            } -Times 1
+        }
         It 'Set-SDTicketBulk calls Set-SDTicket for each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools
             Set-SDTicketBulk -Id 10,11 -Fields @{status='Closed'}
@@ -140,6 +154,12 @@ Describe 'ServiceDeskTools Module' {
             Mock Write-STLog {} -ModuleName ServiceDeskTools
             Get-ServiceDeskAsset -Id 6
             Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Get-ServiceDeskAsset 6' } -Times 1
+        }
+        It 'Get-ServiceDeskAssetRelationship logs the request' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Mock Write-STLog {} -ModuleName ServiceDeskTools
+            Get-ServiceDeskAssetRelationship -AssetId 7 -Type Linked
+            Assert-MockCalled Write-STLog -ModuleName ServiceDeskTools -ParameterFilter { $Message -eq 'Get-ServiceDeskAssetRelationship 7 Linked' } -Times 1
         }
         It 'Set-SDTicketBulk logs each id' {
             Mock Set-SDTicket {} -ModuleName ServiceDeskTools

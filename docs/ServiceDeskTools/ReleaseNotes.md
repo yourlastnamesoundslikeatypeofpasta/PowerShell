@@ -13,3 +13,6 @@
 
 ## 1.4.0 - 2025-06-10
 - Added `Get-ServiceDeskStats` to summarize incidents by status and record telemetry.
+
+## 1.5.0 - 2025-06-11
+- Added `Get-ServiceDeskAssetRelationship` for retrieving asset relationships.

@@ -13,6 +13,7 @@ Commands for interacting with the Service Desk ticketing API. **ServiceDeskTools
 | `Add-SDTicketComment` | Add a comment to an incident | `Add-SDTicketComment -Id 42 -Comment 'Investigating'` |
 | `Search-SDTicket` | Search incidents by keyword | `Search-SDTicket -Query 'printer'` |
 | `Get-ServiceDeskAsset` | Retrieve an asset by ID | `Get-ServiceDeskAsset -Id 99` |
+| `Get-ServiceDeskAssetRelationship` | Retrieve asset relationships | `Get-ServiceDeskAssetRelationship -AssetId 99` |
 | `Get-ServiceDeskStats` | Summarize incidents by status | `Get-ServiceDeskStats -StartDate (Get-Date).AddDays(-1) -EndDate (Get-Date)` |
 | `Set-SDTicketBulk` | Apply updates to multiple incidents | `Set-SDTicketBulk -Id 1,2,3 -Fields @{ status='Closed' }` |
 | `Link-SDTicketToSPTask` | Add a related SharePoint task link | `Link-SDTicketToSPTask -TicketId 42 -TaskUrl 'https://contoso.sharepoint.com/tasks/1'` |
