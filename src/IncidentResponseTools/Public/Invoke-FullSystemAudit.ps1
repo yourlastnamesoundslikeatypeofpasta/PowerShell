@@ -29,6 +29,7 @@ function Invoke-FullSystemAudit {
     )
 
     process {
+        if (-not $PSCmdlet.ShouldProcess('full system audit')) { return }
         if ($Logger) { Import-Module $Logger -Force -ErrorAction SilentlyContinue }
         if ($TelemetryClient) {
             Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue

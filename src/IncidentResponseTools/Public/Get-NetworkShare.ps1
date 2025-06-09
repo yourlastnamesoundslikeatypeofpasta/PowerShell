@@ -25,6 +25,7 @@ function Get-NetworkShare {
         [object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('network share enumeration')) { return }
         Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "Get-NetworkShares.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
     }
 }
