@@ -46,11 +46,33 @@ Describe 'MaintenancePlan Module' {
             Set-Variable -Name IsWindows -Value $true -Scope Script -Force
             function Register-ScheduledTask {}
             function New-ScheduledTaskAction { param($Execute,$Argument) $script:arg = $Argument; [pscustomobject]@{Execute=$Execute;Argument=$Argument} }
-            function New-ScheduledTaskTrigger { param([string]$Daily,[string]$At) [pscustomobject]@{At=$At} }
+            function New-ScheduledTaskTrigger {
+                param($At,$Daily,$Weekly,$DaysOfWeek)
+                $script:trigger = @{ At=$At;Daily=$Daily;Weekly=$Weekly;DaysOfWeek=$DaysOfWeek }
+                [pscustomobject]@{ At=$At }
+            }
             Schedule-MaintenancePlan -PlanPath '/tmp/p.json' -Cron '5 1 * * *' -Name 'MP'
             $expectedModule = Join-Path (Get-Module MaintenancePlan).ModuleBase 'MaintenancePlan.psd1'
             $script:arg | Should -Match [Regex]::Escape($expectedModule)
             $script:arg | Should -Match '/tmp/p.json'
+            $script:trigger.At | Should -Be '01:05'
+            $script:trigger.Daily | Should -Be $true
+        }
+    }
+
+    Safe-It 'uses day-of-week from cron' {
+        InModuleScope MaintenancePlan {
+            Set-Variable -Name IsWindows -Value $true -Scope Script -Force
+            function Register-ScheduledTask {}
+            function New-ScheduledTaskAction { param($Execute,$Argument) }
+            function New-ScheduledTaskTrigger {
+                param($At,$Weekly,$DaysOfWeek)
+                $script:trigger = @{ At=$At;Weekly=$Weekly;DaysOfWeek=$DaysOfWeek }
+                [pscustomobject]@{ At=$At }
+            }
+            Schedule-MaintenancePlan -PlanPath '/tmp/p.json' -Cron '5 1 * * 0' -Name 'MP'
+            $script:trigger.Weekly | Should -Be $true
+            $script:trigger.DaysOfWeek | Should -Be [System.DayOfWeek]::Sunday
         }
     }
 
