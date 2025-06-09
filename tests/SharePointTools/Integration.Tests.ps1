@@ -132,6 +132,23 @@ Describe 'SharePointTools Integration Functions' {
                 $r.TotalSizeMB | Should -Be 2
             }
         }
+        Safe-It 'returns expected fields' {
+            InModuleScope SharePointTools {
+                function Connect-PnPOnline {}
+                function Get-PnPListItem {}
+                function Get-PnPProperty {}
+                function Disconnect-PnPOnline {}
+                Mock Connect-PnPOnline {}
+                Mock Disconnect-PnPOnline {}
+                Mock Get-PnPListItem { @(1) }
+                Mock Get-PnPProperty { param($ClientObject,$Property) [pscustomobject]@{ Length = 1MB } }
+                $result = Get-SPToolsPreservationHoldReport -SiteName 'A' -SiteUrl 'https://c'
+                $props = $result.PSObject.Properties.Name
+                $props | Should -Contain 'SiteName'
+                $props | Should -Contain 'ItemCount'
+                $props | Should -Contain 'TotalSizeMB'
+            }
+        }
     }
 
     Context 'Get-SPPermissionsReport' {
