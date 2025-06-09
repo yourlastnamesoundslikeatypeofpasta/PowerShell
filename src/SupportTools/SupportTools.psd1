@@ -37,4 +37,8 @@
         'Sync-SupportTools',
         'Invoke-NewHireUserAutomation'
     )
+
+    AliasesToExport = @(
+        'NewHire-Automation'
+    )
 }

@@ -20,6 +20,9 @@ Get-ChildItem -Path "$PrivateDir/*.ps1" -ErrorAction SilentlyContinue |
 Get-ChildItem -Path "$PublicDir" -Filter *.ps1 -ErrorAction SilentlyContinue |
     ForEach-Object { . $_.FullName }
 
+# Alias mappings
+Set-Alias -Name 'NewHire-Automation' -Value 'Invoke-NewHireUserAutomation'
+
 
 Export-ModuleMember -Function @(
     'Clear-ArchiveFolder',
@@ -37,7 +40,7 @@ Export-ModuleMember -Function @(
     'New-STDashboard',
     'Sync-SupportTools',
     'Invoke-NewHireUserAutomation'
-)
+) -Alias 'NewHire-Automation'
 
 
 function Show-SupportToolsBanner {
