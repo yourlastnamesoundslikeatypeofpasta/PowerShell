@@ -49,6 +49,35 @@ Describe 'Telemetry Opt-In' {
             Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
         }
     }
+
+    Safe-It 'Write-STTelemetryEvent does nothing when telemetry disabled' {
+        $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+        try {
+            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
+            $env:ST_TELEMETRY_PATH = $log
+            Write-STTelemetryEvent -ScriptName 'Foo.ps1' -Result 'Success' -Duration ([timespan]::FromSeconds(1))
+            Test-Path $log | Should -Be $false
+        } finally {
+            Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
+        }
+    }
+
+    Safe-It 'Write-STTelemetryEvent logs a json entry when enabled' {
+        $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+        try {
+            $env:ST_ENABLE_TELEMETRY = '1'
+            $env:ST_TELEMETRY_PATH = $log
+            Write-STTelemetryEvent -ScriptName 'Foo.ps1' -Result 'Failure' -Duration ([timespan]::FromSeconds(2))
+            (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
+            $json = Get-Content $log | ConvertFrom-Json
+            $json.Script | Should -Be 'Foo.ps1'
+            $json.Result | Should -Be 'Failure'
+        } finally {
+            Remove-Item $log -ErrorAction SilentlyContinue
+            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
+            Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
+        }
+    }
 }
 
 Describe 'Telemetry Metrics Summary' {
