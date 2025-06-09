@@ -172,9 +172,37 @@ Describe 'ServiceDeskTools Module' {
     }
 
     Context 'Invoke-SDRequest behavior' {
-        It 'throws when SD_API_TOKEN is missing' {
+        It 'includes Vault parameter' {
+            InModuleScope ServiceDeskTools {
+                (Get-Command Invoke-SDRequest).Parameters.Keys | Should -Contain 'Vault'
+            }
+        }
+        It 'loads token from vault when variable missing' {
             InModuleScope ServiceDeskTools {
                 Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Mock Get-Secret { 'fromvault' }
+                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json'
+                Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq 'SD_API_TOKEN' } -Times 1
+                Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -Times 1
+                $env:SD_API_TOKEN | Should -Be 'fromvault'
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+            }
+        }
+        It 'passes Vault to Get-Secret when specified' {
+            InModuleScope ServiceDeskTools {
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Mock Get-Secret { 'vaultvalue' }
+                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json' -Vault 'TestVault'
+                Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq 'SD_API_TOKEN' -and $Vault -eq 'TestVault' } -Times 1
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+            }
+        }
+        It 'throws when token missing from env and vault' {
+            InModuleScope ServiceDeskTools {
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Mock Get-Secret { $null }
                 { Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json' } | Should -Throw
             }
         }
