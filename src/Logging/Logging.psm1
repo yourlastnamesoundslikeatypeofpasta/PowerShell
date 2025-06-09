@@ -33,7 +33,13 @@ function Write-STLog {
         [string]$Metric,
         [Parameter(Mandatory = $true, ParameterSetName = 'Metric')]
         [ValidateNotNullOrEmpty()]
-        [double]$Value
+        [double]$Value,
+        [Parameter(Mandatory = $false)]
+        [ValidateRange(1,[int]::MaxValue)]
+        [int]$MaxSizeMB = 1,
+        [Parameter(Mandatory = $false)]
+        [ValidateRange(1,[int]::MaxValue)]
+        [int]$MaxFiles = 1
     )
     if ($PSCmdlet.ParameterSetName -eq 'Metric') {
         if (-not $Metadata) { $Metadata = @{} }
@@ -59,14 +65,26 @@ function Write-STLog {
     if (-not (Test-Path $dir)) {
         New-Item -Path $dir -ItemType Directory -Force | Out-Null
     }
-    $maxBytes = if ($env:ST_LOG_MAX_BYTES) { [int64]$env:ST_LOG_MAX_BYTES } else { 1048576 }
+    if ($PSBoundParameters.ContainsKey('MaxSizeMB')) {
+        $maxBytes = [int64]($MaxSizeMB * 1MB)
+    } elseif ($env:ST_LOG_MAX_BYTES) {
+        $maxBytes = [int64]$env:ST_LOG_MAX_BYTES
+    } else {
+        $maxBytes = 1MB
+    }
     if (Test-Path $logFile) {
         $currentBytes = (Get-Item $logFile).Length
         if ($currentBytes -gt $maxBytes) {
-            $archive = "$logFile.1"
+            for ($i = $MaxFiles; $i -ge 1; $i--) {
+                $old = "$logFile.$i"
+                $new = "$logFile." + ($i + 1)
+                if (Test-Path $old) {
+                    if ($i -eq $MaxFiles) { Remove-Item $new -Force -ErrorAction SilentlyContinue }
+                    Rename-Item -Path $old -NewName $new -Force
+                }
+            }
             try {
-                if (Test-Path $archive) { Remove-Item $archive -Force }
-                Rename-Item -Path $logFile -NewName $archive -Force
+                Rename-Item -Path $logFile -NewName "$logFile.1" -Force
             } catch {
                 Write-STDebug "Failed to rotate log: $_"
             }

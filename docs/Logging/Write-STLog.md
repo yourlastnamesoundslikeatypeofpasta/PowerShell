@@ -138,6 +138,34 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -MaxSizeMB
+Maximum size in megabytes before the log rotates.
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: 1
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MaxFiles
+Number of rotated log files to keep.
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: 1
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ProgressAction
 Specifies how this cmdlet responds to progress updates.
 
@@ -164,8 +192,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ### System.Object
 ## NOTES
 
-Logs rotate automatically when their size exceeds `ST_LOG_MAX_BYTES` (default
-1 MB). The current file is renamed with a `.1` extension and a fresh log is
-started.
+Logs rotate automatically when their size exceeds `-MaxSizeMB` (default 1 MB).
+Older files are preserved up to `-MaxFiles` with incrementing numeric
+extensions.
 
 ## RELATED LINKS
