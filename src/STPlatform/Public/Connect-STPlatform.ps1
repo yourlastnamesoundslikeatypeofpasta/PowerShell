@@ -21,13 +21,19 @@ function Connect-STPlatform {
     param(
         [Parameter(Mandatory)][ValidateSet('Cloud','Hybrid','OnPrem')][string]$Mode,
         [switch]$InstallMissing,
-        [string]$Vault
+        [string]$Vault,
+        [switch]$ChaosMode
     )
+
+    if (-not $ChaosMode) { $ChaosMode = [bool]$env:ST_CHAOS_MODE }
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = 'Success'
     try {
         Write-STStatus "Initializing platform for $Mode" -Level INFO -Log
+        if ($ChaosMode) {
+            Invoke-STRequest -Method 'GET' -Uri 'https://example.com' -ChaosMode -ErrorAction Stop | Out-Null
+        }
 
         $requiredVars = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
         foreach ($name in $requiredVars) {

@@ -12,7 +12,7 @@ Initializes modules and service connections for the specified environment.
 
 ## SYNTAX
 ```
-Connect-STPlatform [-Mode] <String> [-InstallMissing] [-Vault <String>] [<CommonParameters>]
+Connect-STPlatform [-Mode] <String> [-InstallMissing] [-Vault <String>] [-ChaosMode] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,6 +46,10 @@ Automatically install missing modules when this switch is specified.
 Secret vault name used to retrieve environment variables when they are
 not already set.
 
+### -ChaosMode
+Simulate connection delays and random failures for testing. Equivalent to
+setting the `ST_CHAOS_MODE` environment variable to `1`.
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable,
 -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable,
@@ -61,5 +65,7 @@ When telemetry is enabled via `$env:ST_ENABLE_TELEMETRY = '1'`, each run records
 the list of imported modules and the outcome of connection attempts. These
 values appear in the Details field of the `Connect-STPlatform` metric as
 `Modules` and `Connections`.
+Use `-ChaosMode` or set `ST_CHAOS_MODE=1` to randomly delay or fail the initial
+connection check for testing resilience.
 
 ## RELATED LINKS
