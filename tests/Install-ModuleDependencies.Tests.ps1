@@ -19,4 +19,10 @@ Describe 'Install-ModuleDependencies script' {
         Assert-MockCalled Get-Module -Times $modules.Count
         Assert-VerifiableMocks
     }
+
+    AfterEach {
+        Remove-Item function:Get-Module -ErrorAction SilentlyContinue
+        Remove-Item function:Install-Module -ErrorAction SilentlyContinue
+        Remove-Item function:Read-Host -ErrorAction SilentlyContinue
+    }
 }
