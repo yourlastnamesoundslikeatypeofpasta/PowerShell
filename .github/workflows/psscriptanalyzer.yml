@@ -36,7 +36,7 @@ jobs:
           name: PSScriptAnalyzerResults
           path: PSScriptAnalyzerResults.sarif
       - name: Fail if lint issues
-        if: steps.analyze.outputs.count -gt '0'
+        if: ${{ steps.analyze.outputs.count > '0' }}
         run: |
           echo "::error ::PSScriptAnalyzer found issues."
           exit 1
