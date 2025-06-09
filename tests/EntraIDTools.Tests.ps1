@@ -9,6 +9,7 @@ Describe 'EntraIDTools Module' {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
         Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
         Import-Module $PSScriptRoot/../src/EntraIDTools/EntraIDTools.psd1 -Force
+        Import-Module $PSScriptRoot/../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force
         . $PSScriptRoot/../src/EntraIDTools/Private/Get-GraphAccessToken.ps1
     }
 
@@ -24,6 +25,9 @@ Describe 'EntraIDTools Module' {
         }
         It 'Exports Get-GraphSignInLogs' {
             (Get-Command -Module EntraIDTools).Name | Should -Contain 'Get-GraphSignInLogs'
+        }
+        It 'Exports Watch-GraphSignIns' {
+            (Get-Command -Module EntraIDTools).Name | Should -Contain 'Watch-GraphSignIns'
         }
     }
 
@@ -129,6 +133,24 @@ Describe 'EntraIDTools Module' {
             } finally {
                 Remove-Item $cache -ErrorAction SilentlyContinue
             }
+        }
+    }
+
+    Context 'Watch-GraphSignIns' {
+        It 'creates a ticket when risk exceeds threshold and passes ChaosMode' {
+            Mock Get-GraphSignInLogs { @([pscustomobject]@{ riskLevelAggregated='high' }) } -ModuleName EntraIDTools
+            Mock New-SDTicket { @{ id = 42 } } -ModuleName ServiceDeskTools
+            $res = Watch-GraphSignIns -TenantId 'tid' -ClientId 'cid' -RequesterEmail 'r@contoso.com' -Threshold Low -ChaosMode
+            Assert-MockCalled Get-GraphSignInLogs -ModuleName EntraIDTools -Times 1
+            Assert-MockCalled New-SDTicket -ModuleName ServiceDeskTools -Times 1 -ParameterFilter { $ChaosMode -eq $true }
+            $res.id | Should -Be 42
+        }
+        It 'returns null when no events exceed the threshold' {
+            Mock Get-GraphSignInLogs { @([pscustomobject]@{ riskLevelAggregated='low' }) } -ModuleName EntraIDTools
+            Mock New-SDTicket {} -ModuleName ServiceDeskTools
+            $res = Watch-GraphSignIns -TenantId 'tid' -ClientId 'cid' -RequesterEmail 'r@contoso.com' -Threshold High
+            Assert-MockCalled New-SDTicket -ModuleName ServiceDeskTools -Times 0
+            $res | Should -Be $null
         }
     }
 
