@@ -20,7 +20,8 @@ Write-STLog [-Message] <String> [[-Level] <String>] [[-Path] <String>] [-Progres
 ```
 
 ## DESCRIPTION
-Used by scripts and modules to record log messages in a consistent format.
+Records log messages in a consistent format. Logs are written to `%USERPROFILE%\SupportToolsLogs\supporttools.log` or `$env:ST_LOG_PATH` if set.
+Set `ST_LOG_STRUCTURED=1` or use `-Structured` to output JSON lines. The structure is described in [RichLogFormat.md](./RichLogFormat.md).
 
 ## EXAMPLES
 
@@ -197,3 +198,4 @@ Older files are preserved up to `-MaxFiles` with incrementing numeric
 extensions.
 
 ## RELATED LINKS
+[RichLogFormat.md](./RichLogFormat.md)

@@ -27,6 +27,11 @@ if ($result -is [System.Management.Automation.ErrorRecord]) {
 }
 ```
 
+### Logging
+
+Commands record their activity to `%USERPROFILE%\SupportToolsLogs\supporttools.log` by default or to `$env:ST_LOG_PATH` if set.
+Use `-Structured` or set `ST_LOG_STRUCTURED=1` to output JSON events. See [../Logging/RichLogFormat.md](../Logging/RichLogFormat.md) for an example of the structure.
+
 ## Available Commands
 
 The table below lists each command and the script it invokes. Arguments not listed are forwarded to the underlying script unchanged.
