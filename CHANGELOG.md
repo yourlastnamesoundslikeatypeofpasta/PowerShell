@@ -16,8 +16,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Detailed scenario documentation for the SharePointTools module
 - SharePointTools module graduated from Beta to Stable with version 1.2.0
 - `Out-STBanner` now accepts `-Color` to output ANSI colored titles
-### Breaking Changes
-- None in this release
 
 ### Changed
 - Updated Pester invocation to align with v5 parameter requirements
