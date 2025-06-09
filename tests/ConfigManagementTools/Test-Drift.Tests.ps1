@@ -38,4 +38,21 @@ Describe 'Test-Drift function' {
             }
         }
     }
+
+    Safe-It 'accepts baseline file from pipeline' {
+        InModuleScope ConfigManagementTools {
+            $baseline = @{ timezone='UTC'; hostname='HOST1'; services=@{ svc1='Running' } }
+            $file = [System.IO.Path]::GetTempFileName()
+            $baseline | ConvertTo-Json | Set-Content -Path $file
+            Mock Get-TimeZone { [pscustomobject]@{ Id='EST' } }
+            Mock Get-Service { [pscustomobject]@{ Status='Stopped' } }
+            $env:COMPUTERNAME = 'HOST2'
+            try {
+                $result = [pscustomobject]@{ BaselinePath = $file } | Test-Drift
+                $result.Count | Should -Be 3
+            } finally {
+                Remove-Item $file -ErrorAction SilentlyContinue
+            }
+        }
+    }
 }
