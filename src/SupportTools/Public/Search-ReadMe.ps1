@@ -25,10 +25,15 @@ function Search-ReadMe {
         [string]$TranscriptPath
     )
 
+    $repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
+    $defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+    $STDefaults = Get-STConfig -Path $defaultsFile
+    $pattern = Get-STConfigValue -Config $STDefaults -Key 'ReadmePattern'
+
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     try {
         Write-STStatus -Message 'Searching for readme files...' -Level INFO
-        $results = Get-ChildItem -Path C:\*readme*.txt -Recurse -File -ErrorAction SilentlyContinue
+        $results = Get-ChildItem -Path $pattern -Recurse -File -ErrorAction SilentlyContinue
         Write-STStatus "Found $($results.Count) file(s)." -Level SUCCESS
         return $results
     } catch {

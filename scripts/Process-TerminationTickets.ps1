@@ -16,9 +16,14 @@
 .PARAMETER ClientSecret
     Optional client secret for Graph authentication.
 #>
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
+$defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+$STDefaults = Get-STConfig -Path $defaultsFile
+$defaultState = Join-Path $repoRoot (Get-STConfigValue -Config $STDefaults -Key 'TerminatedState')
+
 param(
     [int]$PollMinutes = 5,
-    [string]$StatePath = "$PSScriptRoot/../config/terminated.json",
+    [string]$StatePath = $defaultState,
     [string]$TenantId = $env:GRAPH_TENANT_ID,
     [string]$ClientId = $env:GRAPH_CLIENT_ID,
     [string]$ClientSecret = $env:GRAPH_CLIENT_SECRET

@@ -1,7 +1,9 @@
 $repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
 $coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
 Import-Module $coreModule -Force -ErrorAction SilentlyContinue -DisableNameChecking
-$configFile = Join-Path $repoRoot 'config/supporttools.json'
+$defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+$STDefaults = Get-STConfig -Path $defaultsFile
+$configFile = Join-Path $repoRoot (Get-STConfigValue -Config $STDefaults -Key 'SupportToolsConfig')
 $SupportToolsConfig = Get-STConfig -Path $configFile
 if (-not $SupportToolsConfig.ContainsKey('maintenanceMode')) {
     $SupportToolsConfig.maintenanceMode = $false
