@@ -5,25 +5,62 @@
     Reads telemetry events produced by Write-STTelemetryEvent and forwards them
     to Log Analytics using the HTTP Data Collector API.
 .PARAMETER WorkspaceId
-    The Log Analytics workspace ID.
+    The Log Analytics workspace ID. If not supplied, the script
+    looks for `$env:ST_WORKSPACE_ID` or retrieves `ST_WORKSPACE_ID`
+    from the specified secret vault.
 .PARAMETER WorkspaceKey
-    The primary or secondary key for the workspace.
+    The primary or secondary key for the workspace. If omitted,
+    `$env:ST_WORKSPACE_KEY` or the `ST_WORKSPACE_KEY` secret is used.
+.PARAMETER Vault
+    Secret vault name used with `Get-Secret` when loading
+    `ST_WORKSPACE_ID` and `ST_WORKSPACE_KEY`.
 .EXAMPLE
     ./Send-TelemetryToLogAnalytics.ps1 -WorkspaceId "<id>" -WorkspaceKey "<key>"
+.EXAMPLE
+    ./Send-TelemetryToLogAnalytics.ps1 -Vault CompanyVault
 .NOTES
     Telemetry is only sent when ST_ENABLE_TELEMETRY=1.
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)]
     [string]$WorkspaceId,
-
-    [Parameter(Mandatory)]
-    [string]$WorkspaceKey
+    [string]$WorkspaceKey,
+    [string]$Vault
 )
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+
+# Load workspace settings from environment or secret store
+if (-not $WorkspaceId) {
+    $WorkspaceId = $env:ST_WORKSPACE_ID
+    if (-not $WorkspaceId) {
+        $getParams = @{ Name = 'ST_WORKSPACE_ID'; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
+        if ($PSBoundParameters.ContainsKey('Vault')) { $getParams.Vault = $Vault }
+        $WorkspaceId = Get-Secret @getParams
+        if ($WorkspaceId) {
+            $env:ST_WORKSPACE_ID = $WorkspaceId
+            Write-STStatus "Loaded ST_WORKSPACE_ID from vault" -Level SUB -Log
+        } else {
+            throw 'WorkspaceId is required.'
+        }
+    }
+}
+
+if (-not $WorkspaceKey) {
+    $WorkspaceKey = $env:ST_WORKSPACE_KEY
+    if (-not $WorkspaceKey) {
+        $getParams = @{ Name = 'ST_WORKSPACE_KEY'; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
+        if ($PSBoundParameters.ContainsKey('Vault')) { $getParams.Vault = $Vault }
+        $WorkspaceKey = Get-Secret @getParams
+        if ($WorkspaceKey) {
+            $env:ST_WORKSPACE_KEY = $WorkspaceKey
+            Write-STStatus "Loaded ST_WORKSPACE_KEY from vault" -Level SUB -Log
+        } else {
+            throw 'WorkspaceKey is required.'
+        }
+    }
+}
 
 if ($env:ST_ENABLE_TELEMETRY -ne '1') {
     Write-STStatus -Message 'ST_ENABLE_TELEMETRY is not set. Telemetry will not be sent.' -Level WARN
