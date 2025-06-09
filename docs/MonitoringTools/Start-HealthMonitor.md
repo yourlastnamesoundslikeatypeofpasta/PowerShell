@@ -27,7 +27,8 @@ Collects five health samples thirty seconds apart.
 
 ## PARAMETERS
 ### -IntervalSeconds
-Seconds between health checks. Default is 60.
+Seconds between health checks. Default is 60. Set `$env:ST_HEALTH_INTERVAL` to
+define the interval when the parameter is not provided.
 ### -Count
 Number of samples to capture before exiting. Zero runs indefinitely.
 

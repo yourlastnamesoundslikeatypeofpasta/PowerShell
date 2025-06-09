@@ -33,4 +33,19 @@ Describe 'MonitoringTools Module' {
         Start-HealthMonitor -IntervalSeconds 0 -Count 2
         Assert-MockCalled Write-STRichLog -ModuleName MonitoringTools -Times 10
     }
+
+    Safe-It 'honors ST_HEALTH_INTERVAL environment variable' {
+        InModuleScope MonitoringTools {
+            Mock Get-SystemHealth { @{ CpuPercent=1; DiskInfo=@(); EventLogSummary=@() } }
+            Mock Write-STRichLog {}
+            Mock Start-Sleep {}
+            try {
+                $env:ST_HEALTH_INTERVAL = '2'
+                Start-HealthMonitor -Count 1
+            } finally {
+                Remove-Item env:ST_HEALTH_INTERVAL -ErrorAction SilentlyContinue
+            }
+            Assert-MockCalled Start-Sleep -ParameterFilter { $Seconds -eq 2 } -Times 1
+        }
+    }
 }
