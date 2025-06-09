@@ -210,4 +210,15 @@ Describe 'Logging Module' {
             Remove-Item $temp -ErrorAction SilentlyContinue
         }
     }
+
+    Safe-It 'forwards logs to ST_LOG_FORWARD_URI' {
+        Mock Invoke-RestMethod {} -ModuleName Logging
+        try {
+            $env:ST_LOG_FORWARD_URI = 'https://example.com/forward'
+            Write-STLog -Message 'test'
+            Assert-MockCalled Invoke-RestMethod -ModuleName Logging -Times 1 -ParameterFilter { $Uri -eq 'https://example.com/forward' }
+        } finally {
+            Remove-Item env:ST_LOG_FORWARD_URI -ErrorAction SilentlyContinue
+        }
+    }
 }
