@@ -24,6 +24,36 @@ Describe 'STPlatform Module' {
         }
     }
 
+    It 'loads all required secrets from the vault' {
+        InModuleScope STPlatform {
+            $names = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
+            foreach ($n in $names) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+
+            Mock Get-Secret {
+                switch ($Name) {
+                    'SPTOOLS_CLIENT_ID'   { 'cid' }
+                    'SPTOOLS_TENANT_ID'  { 'tenant' }
+                    'SPTOOLS_CERT_PATH'  { 'cert' }
+                    'SD_API_TOKEN'       { 'token' }
+                    'SD_BASE_URI'        { 'uri' }
+                }
+            }
+
+            Connect-STPlatform -Mode Cloud -Vault TestVault
+
+            foreach ($n in $names) {
+                Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n -and $Vault -eq 'TestVault' } -Times 1
+            }
+            $env:SPTOOLS_CLIENT_ID  | Should -Be 'cid'
+            $env:SPTOOLS_TENANT_ID | Should -Be 'tenant'
+            $env:SPTOOLS_CERT_PATH | Should -Be 'cert'
+            $env:SD_API_TOKEN      | Should -Be 'token'
+            $env:SD_BASE_URI       | Should -Be 'uri'
+
+            foreach ($n in $names) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+        }
+    }
+
     Context 'Mode connections' {
         It 'initializes Cloud mode and logs metrics' {
             InModuleScope STPlatform {
