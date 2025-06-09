@@ -10,3 +10,6 @@
 
 ## 1.3.0 - 2025-06-09
 - Added `Add-SDTicketComment` to post comments on incidents.
+
+## 1.4.0 - 2025-06-10
+- Added `Get-ServiceDeskStats` to summarize incidents by status and record telemetry.
