@@ -92,4 +92,47 @@ Describe 'Telemetry Metrics Summary' {
             Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
         }
     }
+
+    It 'writes metrics to a sqlite database' {
+        $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+        $db  = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+        $events = @(
+            @{Timestamp='2024-01-01T00:00:00Z'; Script='Test.ps1'; Result='Success'; Duration=1},
+            @{Timestamp='2024-01-01T00:00:01Z'; Script='Test.ps1'; Result='Failure'; Duration=3}
+        ) | ForEach-Object { $_ | ConvertTo-Json -Compress }
+        Set-Content -Path $log -Value $events
+
+        try {
+            Mock sqlite3 { param($path,$sql) Add-Content -Path $path -Value $sql } -ModuleName Telemetry
+
+            Get-STTelemetryMetrics -LogPath $log -SqlitePath $db | Out-Null
+            $content = Get-Content $db -Raw
+            $content | Should -Match 'CREATE TABLE'
+            ($content -split "`n" | Where-Object { $_ -match 'INSERT OR REPLACE' }).Count | Should -Be 1
+
+            $events += (@{Timestamp='2024-01-02T00:00:00Z'; Script='Test.ps1'; Result='Success'; Duration=2} | ConvertTo-Json -Compress)
+            Set-Content -Path $log -Value $events
+            Get-STTelemetryMetrics -LogPath $log -SqlitePath $db | Out-Null
+            $content = Get-Content $db -Raw
+            ($content -split "`n" | Where-Object { $_ -match 'INSERT OR REPLACE' }).Count | Should -Be 2
+        } finally {
+            Remove-Item $log -ErrorAction SilentlyContinue
+            Remove-Item $db -ErrorAction SilentlyContinue
+        }
+    }
+}
+
+Describe 'Telemetry Banner' {
+    BeforeAll {
+        Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
+    }
+
+    It 'returns module and version data' {
+        InModuleScope Telemetry {
+            $expected = (Import-PowerShellDataFile "$PSScriptRoot/../src/Telemetry/Telemetry.psd1").ModuleVersion
+            $banner = Show-TelemetryBanner
+            $banner.Module  | Should -Be 'Telemetry'
+            $banner.Version | Should -Be $expected
+        }
+    }
 }
