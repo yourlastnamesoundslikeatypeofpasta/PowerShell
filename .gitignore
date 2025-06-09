@@ -1,3 +1,25 @@
 powershell-*.tar.gz
 TestResults.xml
 coverage.xml
+
+# Ignore log files and local log directory
+SupportToolsLogs/
+*.log
+
+# Packaging artifacts
+*.nupkg
+*.snupkg
+
+# Editor and OS artifacts
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build output
+bin/
+obj/
+
+# Signed script artifacts
+*signed.ps1
+*signed.psd1
