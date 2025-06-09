@@ -52,3 +52,5 @@ You can also set the following environment variables so parameters aren't requir
 
 When these variables are present, `Get-GraphUserDetails` and other commands will use them automatically.
 
+Authentication tokens are cached by the **MSAL.PS** module. `Get-GraphAccessToken` first attempts a silent token lookup and only prompts for interactive or device login when required.
+

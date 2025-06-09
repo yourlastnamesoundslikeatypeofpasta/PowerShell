@@ -86,10 +86,9 @@ Describe 'EntraIDTools Module' {
             $env:GRAPH_TENANT_ID = 'tidEnv'
             $env:GRAPH_CLIENT_ID = 'cidEnv'
             $env:GRAPH_CLIENT_SECRET = 'secEnv'
-            $cache = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
             try {
                 function Get-MsalToken { @{ AccessToken='tok'; ExpiresOn=(Get-Date).AddMinutes(30) } }
-                $token = Get-GraphAccessToken -CachePath $cache
+                $token = Get-GraphAccessToken
                 $token | Should -Be 'tok'
             } finally {
                 Remove-Item env:GRAPH_TENANT_ID -ErrorAction SilentlyContinue
@@ -99,53 +98,15 @@ Describe 'EntraIDTools Module' {
         }
 
         It 'uses device login when switch provided' {
-            $cache = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
-            try {
-                $deviceUsed = $false
-                function Get-MsalToken {
-                    param([switch]$DeviceCode)
-                    $script:deviceUsed = $DeviceCode.IsPresent
-                    @{ AccessToken='tok'; ExpiresOn=(Get-Date).AddMinutes(30) }
-                }
-                $token = Get-GraphAccessToken -TenantId 'tid' -ClientId 'cid' -ClientSecret 'sec' -DeviceLogin -CachePath $cache
-                $token | Should -Be 'tok'
-                $script:deviceUsed | Should -Be $true
-            } finally {
-                Remove-Item $cache -ErrorAction SilentlyContinue
+            $deviceUsed = $false
+            function Get-MsalToken {
+                param([switch]$DeviceCode)
+                $script:deviceUsed = $DeviceCode.IsPresent
+                @{ AccessToken='tok'; ExpiresOn=(Get-Date).AddMinutes(30) }
             }
-        }
-    }
-
-    Context 'Token caching' {
-        Safe-It 'returns cached token when not expired' {
-            $cache = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
-            try {
-                @{ accessToken='cached'; expiresOn=(Get-Date).AddMinutes(10) } |
-                    ConvertTo-Json | Out-File -FilePath $cache -Encoding utf8
-                $script:called = 0
-                function Get-MsalToken { $script:called++; throw 'should not call' }
-                $token = Get-GraphAccessToken -TenantId 'tid' -ClientId 'cid' -ClientSecret 'sec' -CachePath $cache
-                $token | Should -Be 'cached'
-                $script:called | Should -Be 0
-            } finally {
-                Remove-Item $cache -ErrorAction SilentlyContinue
-            }
-        }
-
-        Safe-It 'refreshes expired token' {
-            $cache = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
-            try {
-                @{ accessToken='old'; expiresOn=(Get-Date).AddMinutes(-10) } |
-                    ConvertTo-Json | Out-File -FilePath $cache -Encoding utf8
-                $script:called = 0
-                function Get-MsalToken { $script:called++; @{ AccessToken='new'; ExpiresOn=(Get-Date).AddMinutes(30) } }
-                $token = Get-GraphAccessToken -TenantId 'tid' -ClientId 'cid' -ClientSecret 'sec' -CachePath $cache
-                $token | Should -Be 'new'
-                $script:called | Should -Be 1
-                (Get-Content $cache | ConvertFrom-Json).accessToken | Should -Be 'new'
-            } finally {
-                Remove-Item $cache -ErrorAction SilentlyContinue
-            }
+            $token = Get-GraphAccessToken -TenantId 'tid' -ClientId 'cid' -ClientSecret 'sec' -DeviceLogin
+            $token | Should -Be 'tok'
+            $script:deviceUsed | Should -Be $true
         }
     }
 
