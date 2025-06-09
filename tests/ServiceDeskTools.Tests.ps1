@@ -7,7 +7,8 @@ Describe 'ServiceDeskTools Module' {
     Context 'Exported commands' {
         $expected = @(
             'Get-SDTicket','Get-SDTicketHistory','New-SDTicket','Set-SDTicket',
-            'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask'
+            'Search-SDTicket','Set-SDTicketBulk','Link-SDTicketToSPTask',
+            'Submit-Ticket'
         )
         $exported = (Get-Command -Module ServiceDeskTools).Name
         foreach ($cmd in $expected) {
@@ -66,6 +67,17 @@ Describe 'ServiceDeskTools Module' {
             Link-SDTicketToSPTask -TicketId 12 -TaskUrl 'https://contoso/tasks/1'
             Assert-MockCalled Set-SDTicket -ModuleName ServiceDeskTools -ParameterFilter {
                 $Id -eq 12 -and $Fields.sharepoint_task_url -eq 'https://contoso/tasks/1'
+            } -Times 1
+        }
+        It 'Submit-Ticket calls Invoke-SDRequest' {
+            Mock Invoke-SDRequest {} -ModuleName ServiceDeskTools
+            Submit-Ticket -Subject 'S' -Description 'D' -RequesterEmail 'a@b.com'
+            Assert-MockCalled Invoke-SDRequest -ModuleName ServiceDeskTools -ParameterFilter {
+                $Method -eq 'POST' -and
+                $Path -eq '/incidents.json' -and
+                $Body.incident.name -eq 'S' -and
+                $Body.incident.description -eq 'D' -and
+                $Body.incident.requester_email -eq 'a@b.com'
             } -Times 1
         }
     }
