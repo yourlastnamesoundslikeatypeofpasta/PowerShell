@@ -30,7 +30,9 @@ This repository packages a collection of scripts into reusable modules.
 
 ## Requirements 📋
 
-* **PowerShell 7 or later** must be installed to import these modules.
+* **PowerShell 7 or later** must be installed to import these modules. Check your
+  version with `$PSVersionTable.PSVersion` and upgrade if the major version is
+  less than 7.
 * Specific commands rely on additional modules:
   * `PnP.PowerShell` for SharePoint cleanup functions. See the [official PnP PowerShell documentation](https://pnp.github.io/powershell/index.html) for connection and usage guidance.
   * `ExchangeOnlineManagement` for mailbox automation such as `Set-SharedMailboxAutoReply`.
@@ -39,13 +41,25 @@ This repository packages a collection of scripts into reusable modules.
 
 ## First-Time Install 🚀
 
-For a brand new environment clone the repo and run the helper scripts to set up dependencies and install the modules:
+For a brand new environment clone the repo and run the helper scripts to set up dependencies and install the modules. Wrapping the commands in a `try/catch` block helps surface any errors during setup:
 
 ```powershell
 git clone https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git
 cd PowerShell
-./scripts/Install-ModuleDependencies.ps1
-./scripts/Install-SupportTools.ps1
+try {
+    ./scripts/Install-ModuleDependencies.ps1
+    ./scripts/Install-SupportTools.ps1
+
+} catch {
+    Write-Error $_
+}
+```
+
+Ensure the `PSReadLine` module is loaded to enable tab completion of parameter
+names when working interactively:
+
+```powershell
+Import-Module PSReadLine
 ```
 
 `Install-SupportTools.ps1` imports the modules directly from the `src` folder. Next run the SharePoint configuration script if you plan to use those commands:
@@ -54,6 +68,10 @@ cd PowerShell
 ./scripts/Test-SPToolsPrereqs.ps1 -Install
 ./scripts/Configure-SharePointTools.ps1 -ClientId <appId> -TenantId <tenantId> -CertPath <path>
 ```
+
+You can provide `-ClientId`, `-TenantId` and `-CertPath` via the environment
+variables `SPTOOLS_CLIENT_ID`, `SPTOOLS_TENANT_ID` and `SPTOOLS_CERT_PATH` or by
+loading them from your SecretManagement vault.
 
 
 ## Installation 📦
@@ -75,13 +93,28 @@ If you'd rather work from source, clone the repo and import the manifests:
 
 ```powershell
 git clone https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git
-Import-Module ./src/SupportTools/SupportTools.psd1
-Import-Module ./src/SharePointTools/SharePointTools.psd1
-Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
-Import-Module ./src/PerformanceTools/PerformanceTools.psd1
-Import-Module ./src/EntraIDTools/EntraIDTools.psd1
-Import-Module ./src/ChaosTools/ChaosTools.psd1
+if (Test-Path ./src/SupportTools/SupportTools.psd1) {
+    Import-Module ./src/SupportTools/SupportTools.psd1
+}
+if (Test-Path ./src/SharePointTools/SharePointTools.psd1) {
+    Import-Module ./src/SharePointTools/SharePointTools.psd1
+}
+if (Test-Path ./src/ServiceDeskTools/ServiceDeskTools.psd1) {
+    Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1
+}
+if (Test-Path ./src/PerformanceTools/PerformanceTools.psd1) {
+    Import-Module ./src/PerformanceTools/PerformanceTools.psd1
+}
+if (Test-Path ./src/EntraIDTools/EntraIDTools.psd1) {
+    Import-Module ./src/EntraIDTools/EntraIDTools.psd1
+}
+if (Test-Path ./src/ChaosTools/ChaosTools.psd1) {
+    Import-Module ./src/ChaosTools/ChaosTools.psd1
+}
 ```
+
+Each `Import-Module` call verifies the module path first to avoid errors when a
+directory is missing.
 
 For SharePoint operations run:
 
@@ -120,6 +153,9 @@ Invoke-ChaosTest -ScriptBlock { Get-Service } -FailureRate 0.2
 Get-GraphUserDetails -UserPrincipalName 'user@contoso.com' -TenantId <tenantId> -ClientId <appId> -CsvPath ./details.csv
 ```
 The command gathers basic profile information, assigned licenses, group membership and last sign-in time. Results can be exported to CSV or HTML for reporting.
+`Get-GraphUserDetails` also accepts `TenantId` and `ClientId` via the
+`SPTOOLS_TENANT_ID` and `SPTOOLS_CLIENT_ID` environment variables or through a
+SecretManagement vault.
 
 See [docs/SupportTools.md](docs/SupportTools.md), [docs/IncidentResponseTools.md](docs/IncidentResponseTools.md), [docs/ConfigManagementTools.md](docs/ConfigManagementTools.md), [docs/SharePointTools.md](docs/SharePointTools.md), [docs/ServiceDeskTools.md](docs/ServiceDeskTools.md), [docs/PerformanceTools.md](docs/PerformanceTools.md), [docs/EntraIDTools.md](docs/EntraIDTools.md), [docs/ChaosTools.md](docs/ChaosTools.md) and [docs/STPlatform/Connect-STPlatform.md](docs/STPlatform/Connect-STPlatform.md) for a full list of commands. For a short introduction refer to [docs/Quickstart.md](docs/Quickstart.md). For detailed deployment guidance see [docs/UserGuide.md](docs/UserGuide.md).
 
@@ -193,6 +229,7 @@ Install Pester if it's not already available and run the suite from the reposito
 Install-Module Pester -MinimumVersion 5.0 -Scope CurrentUser
 Invoke-Pester -Configuration ./PesterConfiguration.psd1
 ```
+For conventions on writing new tests see [docs/TestingGuidelines.md](docs/TestingGuidelines.md).
 
 ## Roadmap 🛣️
 
@@ -201,7 +238,9 @@ Potential areas for improvement and extension include:
 1. ~~**Dependency Management**
    Automate installation or checks for required modules to streamline setup and
    provide clear guidance when dependencies are missing.~~ - Dependencies can now
-   be installed with [scripts/Install-ModuleDependencies.ps1](scripts/Install-ModuleDependencies.ps1).
+   be installed with [scripts/Install-ModuleDependencies.ps1](scripts/Install-ModuleDependencies.ps1). A
+   proposed improvement is a preflight script that verifies required modules are
+   present and offers to install any that are missing.
 2. ~~**Testing and Continuous Integration**
    Add more Pester tests to cover complex functions and configure CI to run them
    automatically.~~ - Tests automated with GitHub Actions.
@@ -226,8 +265,10 @@ workflow added ([docs/CredentialStorage.md](docs/CredentialStorage.md)).
 10. ~~**Linting and Code Quality**
    Check scripts with PSScriptAnalyzer on each commit.~~ - Linting automated via GitHub Actions.
 11. **Cmdlet Design Improvements**
-    Convert module functions into full advanced functions with parameter validation,
-    `SupportsShouldProcess`, and dynamic argument completers for easier interactive use.
+    Convert module functions into full advanced functions with `[CmdletBinding(SupportsShouldProcess)]`,
+    parameter validation attributes such as `ValidateSet` and `ValidateNotNullOrEmpty`,
+    and support for pipeline input. Add dynamic argument completers for easier
+    interactive use.
 
 ## License
 
