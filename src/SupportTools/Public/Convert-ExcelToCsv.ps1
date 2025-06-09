@@ -37,24 +37,31 @@ function Convert-ExcelToCsv {
         $excel = New-Object -ComObject Excel.Application
         $workbook = $excel.Workbooks.Open($XlsxFilePath)
 
-        $xlsxFile = Get-ChildItem $XlsxFilePath
-        $directory = $xlsxFile.DirectoryName
-        $basename = $xlsxFile.BaseName
-        $csvFilePath = Join-Path $directory "$basename.csv"
+        try {
+            $xlsxFile = Get-ChildItem $XlsxFilePath
+            $directory = $xlsxFile.DirectoryName
+            $basename = $xlsxFile.BaseName
+            $csvFilePath = Join-Path $directory "$basename.csv"
 
-        $xlCSV = 6
-        foreach ($worksheet in $workbook.Worksheets) {
-            $worksheet.SaveAs($csvFilePath, $xlCSV)
+            $xlCSV = 6
+            foreach ($worksheet in $workbook.Worksheets) {
+                $worksheet.SaveAs($csvFilePath, $xlCSV)
+            }
+
+            Write-STStatus "CSV saved to $csvFilePath" -Level SUCCESS
+            return (Import-Csv $csvFilePath)
+        } finally {
+            if ($null -ne $workbook) { $workbook.Close($false) }
+            if ($null -ne $excel) { $excel.Quit() }
+            if ($null -ne $workbook) {
+                [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($workbook)
+            }
+            if ($null -ne $excel) {
+                [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel)
+            }
+            [GC]::Collect()
+            [GC]::WaitForPendingFinalizers()
         }
-        $workbook.Close($false)
-        $excel.Quit()
-        [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($workbook)
-        [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($excel)
-        [GC]::Collect()
-        [GC]::WaitForPendingFinalizers()
-
-        Write-STStatus "CSV saved to $csvFilePath" -Level SUCCESS
-        return (Import-Csv $csvFilePath)
     } catch {
         return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
     } finally {
