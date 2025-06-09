@@ -21,7 +21,7 @@ function Search-Indicators {
 
     if (-not (Test-Path $IndicatorList)) { throw "Indicator list '$IndicatorList' not found." }
     Write-STStatus "Loading indicators from $IndicatorList" -Level INFO
-    $indicators = Import-Csv -Path $IndicatorList | Select-Object -ExpandProperty Indicator
+    $indicators = Import-STCsv -Path $IndicatorList | Select-Object -ExpandProperty Indicator
     $results = foreach ($ind in $indicators) {
         Write-STStatus "Searching for '$ind'" -Level SUB
         $eventHits = Get-WinEvent -LogName Security,Application,System -ErrorAction SilentlyContinue |

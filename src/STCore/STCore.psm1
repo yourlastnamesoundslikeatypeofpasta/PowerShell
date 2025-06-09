@@ -161,7 +161,25 @@ function Invoke-STRequest {
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest'
+function Import-STCsv {
+    <#
+    .SYNOPSIS
+        Imports a CSV file after validating the path.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Path
+    )
+
+    Assert-ParameterNotNull $Path 'Path'
+    if (-not (Test-Path -Path $Path)) {
+        throw "CSV path '$Path' not found."
+    }
+
+    return Import-Csv -Path $Path
+}
+
+Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest','Import-STCsv'
 
 function Show-STCoreBanner {
     <#

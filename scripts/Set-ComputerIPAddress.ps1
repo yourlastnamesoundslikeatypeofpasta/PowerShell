@@ -27,7 +27,7 @@ function Set-ComputerIPAddress {
         $CSVPath
     )
 
-    $CSV = Import-Csv -Path $CSVPath
+    $CSV = Import-STCsv -Path $CSVPath
 
     if ($csv)
     {

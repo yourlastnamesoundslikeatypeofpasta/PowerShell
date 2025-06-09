@@ -7,4 +7,7 @@ Describe 'STCore Module' {
     Safe-It 'exports Invoke-STRequest' {
         (Get-Command -Module STCore).Name | Should -Contain 'Invoke-STRequest'
     }
+    Safe-It 'exports Import-STCsv' {
+        (Get-Command -Module STCore).Name | Should -Contain 'Import-STCsv'
+    }
 }

@@ -79,6 +79,23 @@ Describe 'STCore Helper Functions' {
         }
     }
 
+    Context 'Import-STCsv' {
+        Safe-It 'throws when file missing' {
+            $path = Join-Path $TestDrive 'missing.csv'
+            { Import-STCsv -Path $path } | Should -Throw
+        }
+        Safe-It 'returns imported objects' {
+            $path = Join-Path $TestDrive 'good.csv'
+            "UPN`nuser@contoso.com" | Set-Content -Path $path
+            try {
+                $res = Import-STCsv -Path $path
+                $res[0].UPN | Should -Be 'user@contoso.com'
+            } finally {
+                Remove-Item $path -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
     Context 'Invoke-STRequest' {
         Safe-It 'invokes once on success' {
             InModuleScope STCore {

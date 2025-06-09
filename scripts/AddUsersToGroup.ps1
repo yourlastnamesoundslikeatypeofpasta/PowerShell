@@ -199,7 +199,7 @@ function Start-Main {
     # Import the CSV file with UPN header
     if (-not $CsvPath) { $CsvPath = Get-CSVFilePath }
     $filePath = $CsvPath
-    $file = Import-Csv $filePath
+    $file = Import-STCsv -Path $filePath
     $users = $file.UPN
 
     $addedUsers = [System.Collections.Generic.List[object]]::new()

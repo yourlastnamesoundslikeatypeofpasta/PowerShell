@@ -24,7 +24,7 @@ if ($Cloud -eq 'Entra') {
     $group = Get-MgGroup -Filter "displayName eq '$GroupName'" | Select-Object -First 1
     if (-not $group) { throw "Group '$GroupName' not found." }
 
-    $users = Import-Csv $CsvPath
+    $users = Import-STCsv -Path $CsvPath
     foreach ($user in $users.UPN) {
         $obj = Get-MgUser -UserId $user -ErrorAction SilentlyContinue
         if (-not $obj) { Write-STStatus "User not found: $user" -Level WARN; continue }
@@ -41,7 +41,7 @@ if ($Cloud -eq 'Entra') {
     Import-Module ActiveDirectory -ErrorAction Stop
     $group = Get-ADGroup -Identity $GroupName -ErrorAction Stop
 
-    $users = Import-Csv $CsvPath
+    $users = Import-STCsv -Path $CsvPath
     foreach ($user in $users.UPN) {
         $obj = Get-ADUser -Filter "UserPrincipalName -eq '$user'" -ErrorAction SilentlyContinue
         if (-not $obj) { $obj = Get-ADUser -Identity $user -ErrorAction SilentlyContinue }
