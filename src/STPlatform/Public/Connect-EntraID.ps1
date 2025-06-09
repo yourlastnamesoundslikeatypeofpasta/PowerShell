@@ -59,8 +59,7 @@ function Connect-EntraID {
         Write-STStatus -Message 'Graph connection established.' -Level SUCCESS -Log
     } catch {
         $result = 'Failure'
-        Write-STStatus "Connect-EntraID failed: $_" -Level ERROR -Log
-        Write-STLog -Message "Connect-EntraID failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STFailure "Connect-EntraID failed: $_"
         throw
     } finally {
         $sw.Stop()

@@ -62,6 +62,17 @@ function Write-STDebug {
     }
 }
 
+function Write-STFailure {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Message
+    )
+    Write-STStatus -Message $Message -Level ERROR -Log
+    Write-STLog -Message $Message -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+}
+
 function Test-IsElevated {
     [CmdletBinding()]
     param()
@@ -161,7 +172,7 @@ function Invoke-STRequest {
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Invoke-STRequest'
+Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Write-STFailure','Test-IsElevated','Get-STConfig','Invoke-STRequest'
 
 function Show-STCoreBanner {
     <#

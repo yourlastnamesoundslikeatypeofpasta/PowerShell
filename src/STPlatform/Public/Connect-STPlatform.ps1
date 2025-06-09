@@ -116,8 +116,7 @@ function Connect-STPlatform {
         Write-STStatus -Message 'Connections initialized.' -Level SUCCESS -Log
     } catch {
         $result = 'Failure'
-        Write-STStatus "Connect-STPlatform failed: $_" -Level ERROR -Log
-        Write-STLog -Message "Connect-STPlatform failed: $_" -Level ERROR -Structured:$($env:ST_LOG_STRUCTURED -eq '1')
+        Write-STFailure "Connect-STPlatform failed: $_"
         throw
     } finally {
         $sw.Stop()
