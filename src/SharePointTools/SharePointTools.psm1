@@ -61,7 +61,13 @@ function Write-SPToolsHacker {
         if ($Level -in @('SUCCESS','ERROR','WARN','FATAL')) {
             $meta = @{ tool = 'SharePointTools'; level = $Level }
             if ($Metadata) { foreach ($k in $Metadata.Keys) { $meta[$k] = $Metadata[$k] } }
-            Write-STLog -Message $Message -Level $Level -Structured -Metadata $meta
+            switch ($Level) {
+                'ERROR' { $logLevel = 'ERROR' }
+                'FATAL' { $logLevel = 'ERROR' }
+                'WARN'  { $logLevel = 'WARN'  }
+                default { $logLevel = 'INFO'  }
+            }
+            Write-STLog -Message $Message -Level $logLevel -Structured -Metadata $meta
         }
 
     }
