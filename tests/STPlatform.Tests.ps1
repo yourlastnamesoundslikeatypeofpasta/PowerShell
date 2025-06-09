@@ -55,6 +55,55 @@ Describe 'STPlatform Module' {
         }
     }
 
+
+    It 'loads missing secrets when some variables exist' {
+        InModuleScope STPlatform {
+            $names = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
+            $env:SPTOOLS_CLIENT_ID = 'existing'
+            $env:SD_BASE_URI = 'uri-env'
+            foreach ($n in $names | Where-Object { $_ -notin 'SPTOOLS_CLIENT_ID','SD_BASE_URI' }) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+
+            Mock Get-Secret {
+                switch ($Name) {
+                    'SPTOOLS_TENANT_ID' { 'tenant' }
+                    'SPTOOLS_CERT_PATH' { 'cert' }
+                    'SD_API_TOKEN'      { 'token' }
+                }
+            }
+            Mock Write-STStatus {}
+
+            Connect-STPlatform -Mode Cloud -Vault CustomVault
+
+            foreach ($n in 'SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN') {
+                Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n -and $Vault -eq 'CustomVault' } -Times 1
+            }
+            foreach ($n in 'SPTOOLS_CLIENT_ID','SD_BASE_URI') {
+                Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n } -Times 0
+            }
+
+            $env:SPTOOLS_CLIENT_ID  | Should -Be 'existing'
+            $env:SPTOOLS_TENANT_ID | Should -Be 'tenant'
+            $env:SPTOOLS_CERT_PATH | Should -Be 'cert'
+            $env:SD_API_TOKEN      | Should -Be 'token'
+            $env:SD_BASE_URI       | Should -Be 'uri-env'
+
+            foreach ($n in $names) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
+        }
+    }
+
+    It 'logs secret retrieval with Write-STStatus' {
+        InModuleScope STPlatform {
+            Remove-Item env:SPTOOLS_TENANT_ID -ErrorAction SilentlyContinue
+            Mock Get-Secret { 'tenant' }
+            Mock Write-STStatus {}
+
+            Connect-STPlatform -Mode Cloud -Vault LogVault
+
+            Assert-MockCalled Write-STStatus -ParameterFilter { $Message -eq 'Loaded SPTOOLS_TENANT_ID from vault' -and $Level -eq 'SUB' -and $Log } -Times 1
+            Remove-Item env:SPTOOLS_TENANT_ID -ErrorAction SilentlyContinue
+        }
+    }
+
     Context 'Mode connections' {
         Safe-It 'initializes Cloud mode and logs metrics' {
             InModuleScope STPlatform {

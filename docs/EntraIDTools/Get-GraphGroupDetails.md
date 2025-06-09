@@ -12,7 +12,7 @@ Retrieves the group's name, description and members via the Microsoft Graph API.
 
 ## SYNTAX
 ```powershell
-Get-GraphGroupDetails [-GroupId] <String> [-TenantId] <String> [-ClientId] <String> [-ClientSecret <String>] [<CommonParameters>]
+Get-GraphGroupDetails [-GroupId] <String> [-TenantId] <String> [-ClientId] <String> [-ClientSecret <String>] [-DeviceLogin] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -24,7 +24,7 @@ recorded.
 
 ### Example 1
 ```powershell
-PS C:\> Get-GraphGroupDetails -GroupId 00000000-0000-0000-0000-000000000000 -TenantId <tenant-id> -ClientId <app-id>
+PS C:\> Get-GraphGroupDetails -GroupId 00000000-0000-0000-0000-000000000000 -TenantId <tenant-id> -ClientId <app-id> -DeviceLogin
 ```
 Retrieves details for the group and displays them in the console.
 
@@ -42,6 +42,9 @@ Application (client) ID used for Microsoft Graph authentication.
 
 ### -ClientSecret
 Optional client secret for app-only authentication.
+
+### -DeviceLogin
+Use device code authentication instead of a client secret.
 
 ### CommonParameters
 This cmdlet supports the common parameters: `-Debug`, `-ErrorAction`, `-ErrorVariable`, `-InformationAction`, `-InformationVariable`, `-OutVariable`, `-OutBuffer`, `-PipelineVariable`, `-Verbose`, `-WarningAction`, and `-WarningVariable`.

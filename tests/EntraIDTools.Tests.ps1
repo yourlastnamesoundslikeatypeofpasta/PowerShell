@@ -97,6 +97,23 @@ Describe 'EntraIDTools Module' {
                 Remove-Item env:GRAPH_CLIENT_SECRET -ErrorAction SilentlyContinue
             }
         }
+
+        It 'uses device login when switch provided' {
+            $cache = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
+            try {
+                $deviceUsed = $false
+                function Get-MsalToken {
+                    param([switch]$DeviceCode)
+                    $script:deviceUsed = $DeviceCode.IsPresent
+                    @{ AccessToken='tok'; ExpiresOn=(Get-Date).AddMinutes(30) }
+                }
+                $token = Get-GraphAccessToken -TenantId 'tid' -ClientId 'cid' -ClientSecret 'sec' -DeviceLogin -CachePath $cache
+                $token | Should -Be 'tok'
+                $script:deviceUsed | Should -Be $true
+            } finally {
+                Remove-Item $cache -ErrorAction SilentlyContinue
+            }
+        }
     }
 
     Context 'Token caching' {

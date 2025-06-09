@@ -12,7 +12,7 @@ Retrieves details such as display name, licenses, groups and sign-in activity fo
 
 ## SYNTAX
 ```powershell
-Get-GraphUserDetails [-UserPrincipalName] <String> [-TenantId] <String> [-ClientId] <String> [-ClientSecret <String>] [-CsvPath <String>] [-HtmlPath <String>] [<CommonParameters>]
+Get-GraphUserDetails [-UserPrincipalName] <String> [-TenantId] <String> [-ClientId] <String> [-ClientSecret <String>] [-DeviceLogin] [-CsvPath <String>] [-HtmlPath <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -22,7 +22,7 @@ Authenticates using MSAL and queries Graph for the user's basic information, ass
 
 ### Example 1
 ```powershell
-PS C:\> Get-GraphUserDetails -UserPrincipalName user@contoso.com -TenantId <tenant-id> -ClientId <app-id>
+PS C:\> Get-GraphUserDetails -UserPrincipalName user@contoso.com -TenantId <tenant-id> -ClientId <app-id> -DeviceLogin
 ```
 Retrieves the user's details and displays them in the console.
 
@@ -46,6 +46,9 @@ Application (client) ID used for Microsoft Graph authentication.
 
 ### -ClientSecret
 Optional client secret for app-only authentication.
+
+### -DeviceLogin
+Use device code authentication instead of a client secret.
 
 ### -CsvPath
 Optional file path to save the returned details as a CSV file.
