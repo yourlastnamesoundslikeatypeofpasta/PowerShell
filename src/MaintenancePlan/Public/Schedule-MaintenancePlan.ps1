@@ -14,7 +14,7 @@ function Schedule-MaintenancePlan {
     .EXAMPLE
         Schedule-MaintenancePlan -PlanPath plan.json -Cron '0 3 * * 0' -Name Weekly
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true)]
     param(
         [Parameter(Mandatory)][string]$PlanPath,
         [Parameter(Mandatory)][string]$Cron,
@@ -26,6 +26,8 @@ function Schedule-MaintenancePlan {
 
     $modulePath = Join-Path (Split-Path $PSScriptRoot -Parent) 'MaintenancePlan.psd1'
     $command = "Import-Module '$modulePath'; `$plan = Import-MaintenancePlan -Path '$PlanPath'; Invoke-MaintenancePlan -Plan `$plan"
+
+    if (-not $PSCmdlet.ShouldProcess($Name,'Register scheduled task')) { return }
 
     if ($IsWindows) {
         Write-STStatus "Registering scheduled task $Name" -Level INFO -Log

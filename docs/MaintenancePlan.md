@@ -20,3 +20,4 @@ Import-Module ./src/MaintenancePlan/MaintenancePlan.psd1
 ### Scheduling
 `Schedule-MaintenancePlan` registers a Windows scheduled task when running on Windows.
 On Linux or macOS it outputs a cron line you can add with `crontab -e`.
+The command supports `-WhatIf` and `-Confirm` to preview or approve the registration.
