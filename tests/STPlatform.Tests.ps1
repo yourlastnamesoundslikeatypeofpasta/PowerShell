@@ -16,6 +16,9 @@ Describe 'STPlatform Module' {
 
     Safe-It 'loads secrets when variables missing' {
         InModuleScope STPlatform {
+            Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
+            Mock Connect-MgGraph {}
+            Mock Connect-ExchangeOnline {}
             Remove-Item env:SPTOOLS_CLIENT_ID -ErrorAction SilentlyContinue
             Mock Get-Secret { 'fromvault' }
             Connect-STPlatform -Mode Cloud -Vault 'Test'
@@ -27,6 +30,9 @@ Describe 'STPlatform Module' {
 
     Safe-It 'loads all required secrets from the vault' {
         InModuleScope STPlatform {
+            Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
+            Mock Connect-MgGraph {}
+            Mock Connect-ExchangeOnline {}
             $names = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
             foreach ($n in $names) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
 
@@ -58,6 +64,9 @@ Describe 'STPlatform Module' {
 
     It 'loads missing secrets when some variables exist' {
         InModuleScope STPlatform {
+            Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
+            Mock Connect-MgGraph {}
+            Mock Connect-ExchangeOnline {}
             $names = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
             $env:SPTOOLS_CLIENT_ID = 'existing'
             $env:SD_BASE_URI = 'uri-env'
@@ -93,6 +102,9 @@ Describe 'STPlatform Module' {
 
     It 'logs secret retrieval with Write-STStatus' {
         InModuleScope STPlatform {
+            Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
+            Mock Connect-MgGraph {}
+            Mock Connect-ExchangeOnline {}
             Remove-Item env:SPTOOLS_TENANT_ID -ErrorAction SilentlyContinue
             Mock Get-Secret { 'tenant' }
             Mock Write-STStatus {}

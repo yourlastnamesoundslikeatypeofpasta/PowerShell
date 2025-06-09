@@ -2,6 +2,7 @@
 Describe 'ServiceDeskTools Module' {
     BeforeAll {
         Import-Module $PSScriptRoot/../src/Logging/Logging.psd1 -Force
+        Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
         Import-Module $PSScriptRoot/../src/ServiceDeskTools/ServiceDeskTools.psd1 -Force
     }
 
