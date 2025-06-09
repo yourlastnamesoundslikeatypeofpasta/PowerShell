@@ -55,7 +55,7 @@ If your repository isn't registered yet, run `Register-PSRepository` with the fe
 If you'd rather work from source, clone the repo and import the manifests:
 
 ```powershell
-git clone <internal repo URL>
+git clone https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git
 Import-Module ./src/SupportTools/SupportTools.psd1
 Import-Module ./src/SharePointTools/SharePointTools.psd1
 Import-Module ./src/ServiceDeskTools/ServiceDeskTools.psd1

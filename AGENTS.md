@@ -1,7 +1,7 @@
 # AGENTS Instructions
 
 ## Scope
-These instructions apply to the entire repository.
+These instructions apply to the entire repository at <https://github.com/yourlastnamesoundslikeatypeofpasta/PowerShell.git>.
 
 ## Testing
 Run Pester tests from the repository root before committing. In PowerShell run:
