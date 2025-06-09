@@ -8,18 +8,23 @@
     The Log Analytics workspace ID.
 .PARAMETER WorkspaceKey
     The primary or secondary key for the workspace.
+.PARAMETER Vault
+    Secret vault name to pull WorkspaceId and WorkspaceKey from when they are
+    not provided.
 .EXAMPLE
     ./Send-TelemetryToLogAnalytics.ps1 -WorkspaceId "<id>" -WorkspaceKey "<key>"
+.EXAMPLE
+    ./Send-TelemetryToLogAnalytics.ps1 -Vault "CompanyVault"
 .NOTES
     Telemetry is only sent when ST_ENABLE_TELEMETRY=1.
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)]
     [string]$WorkspaceId,
 
-    [Parameter(Mandatory)]
-    [string]$WorkspaceKey
+    [string]$WorkspaceKey,
+
+    [string]$Vault
 )
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
@@ -27,6 +32,35 @@ Import-Module (Join-Path $PSScriptRoot '..' 'src/Telemetry/Telemetry.psd1') -Err
 
 if ($env:ST_ENABLE_TELEMETRY -ne '1') {
     Write-STStatus -Message 'ST_ENABLE_TELEMETRY is not set. Telemetry will not be sent.' -Level WARN
+    return
+}
+
+# Load secrets when parameters missing
+if (-not $WorkspaceId) {
+    $getParams = @{ Name = 'WorkspaceId'; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
+    if ($PSBoundParameters.ContainsKey('Vault')) { $getParams.Vault = $Vault }
+    $val = Get-Secret @getParams
+    if ($val) {
+        $WorkspaceId = $val
+        Write-STStatus 'Loaded WorkspaceId from vault' -Level SUB -Log
+    } else {
+        Write-STStatus 'WorkspaceId not found in vault' -Level WARN -Log
+    }
+}
+if (-not $WorkspaceKey) {
+    $getParams = @{ Name = 'WorkspaceKey'; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
+    if ($PSBoundParameters.ContainsKey('Vault')) { $getParams.Vault = $Vault }
+    $val = Get-Secret @getParams
+    if ($val) {
+        $WorkspaceKey = $val
+        Write-STStatus 'Loaded WorkspaceKey from vault' -Level SUB -Log
+    } else {
+        Write-STStatus 'WorkspaceKey not found in vault' -Level WARN -Log
+    }
+}
+
+if (-not $WorkspaceId -or -not $WorkspaceKey) {
+    Write-STStatus -Message 'WorkspaceId and WorkspaceKey are required.' -Level ERROR
     return
 }
 
