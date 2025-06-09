@@ -19,16 +19,16 @@ param(
     [string]$Scope = 'CurrentUser'
 )
 
+# Load Logging first so status functions are available
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
+
 $modules = @(
-    'Logging',
     'Telemetry',
     'IncidentResponseTools',
     'SharePointTools',
     'ServiceDeskTools',
     'SupportTools'
 )
-
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
 
 Show-STPrompt -Command './scripts/Install-SupportTools.ps1'
 
