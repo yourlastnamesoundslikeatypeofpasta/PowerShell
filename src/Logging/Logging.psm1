@@ -11,6 +11,21 @@ if ($SupportToolsConfig.maintenanceMode) {
     exit 1
 }
 
+function Sanitize-STMessage {
+    [CmdletBinding(PositionalBinding=$false)]
+    param(
+        [Parameter(Mandatory)][string]$Message
+    )
+    $sanitized = $Message
+    # mask email addresses
+    $sanitized = [regex]::Replace($sanitized,'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}','[REDACTED]')
+    # mask key=value or token patterns
+    $sanitized = [regex]::Replace($sanitized,'(?i)(apikey|token|password|secret|pwd|key)[=:]\s*([^\s]+)','$1=[REDACTED]')
+    # mask long random strings that may be secrets
+    $sanitized = [regex]::Replace($sanitized,'[A-Za-z0-9+/]{20,}','[REDACTED]')
+    return $sanitized
+}
+
 function Write-STLog {
     [CmdletBinding(DefaultParameterSetName='Message', PositionalBinding=$false)]
     param(
@@ -51,6 +66,7 @@ function Write-STLog {
         $Message = $Metric
         if (-not $Structured) { $Structured = $true }
     }
+    $Message = Sanitize-STMessage -Message $Message
     if (-not $Structured -and $env:ST_LOG_STRUCTURED -eq '1') {
         $Structured = $true
     }
@@ -169,9 +185,12 @@ function Write-STRichLog {
         tool      = $Tool
         status    = $Status
     }
-    if ($PSBoundParameters.ContainsKey('User'))     { $entry.user = $User }
+    if ($PSBoundParameters.ContainsKey('User'))     { $entry.user = Sanitize-STMessage -Message $User }
     if ($PSBoundParameters.ContainsKey('Duration')) { $entry.duration = $Duration.ToString() }
-    if ($PSBoundParameters.ContainsKey('Details'))  { $entry.details  = $Details }
+    if ($PSBoundParameters.ContainsKey('Details'))  {
+        $entry.details = @()
+        foreach ($d in $Details) { $entry.details += Sanitize-STMessage -Message $d }
+    }
 
     ($entry | ConvertTo-Json -Depth 5 -Compress) | Out-File -FilePath $logFile -Append -Encoding utf8
 }
@@ -264,7 +283,7 @@ function Write-STClosing {
     Write-Host "┌──[ $Message ]──────────────" -ForegroundColor DarkGray
 }
 
-Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing'
+Export-ModuleMember -Function 'Write-STLog','Write-STRichLog','Write-STStatus','Show-STPrompt','Write-STDivider','Write-STBlock','Write-STClosing','Sanitize-STMessage'
 
 function Show-LoggingBanner {
     <#
