@@ -24,6 +24,7 @@ Set-Secret -Name SPTOOLS_TENANT_ID  -Secret '<tenant-id>'
 Set-Secret -Name SPTOOLS_CERT_PATH  -Secret '<path-to-pfx>'
 Set-Secret -Name SD_API_TOKEN       -Secret '<service-desk-token>'
 Set-Secret -Name SD_BASE_URI        -Secret 'https://helpdesk.contoso.com'
+Set-Secret -Name SD_ASSET_BASE_URI  -Secret 'https://assets.contoso.com'
 ```
 
 ## Load environment variables
@@ -36,6 +37,7 @@ $env:SPTOOLS_TENANT_ID = Get-Secret SPTOOLS_TENANT_ID -AsPlainText
 $env:SPTOOLS_CERT_PATH = Get-Secret SPTOOLS_CERT_PATH -AsPlainText
 $env:SD_API_TOKEN      = Get-Secret SD_API_TOKEN -AsPlainText
 $env:SD_BASE_URI       = Get-Secret SD_BASE_URI -AsPlainText
+$env:SD_ASSET_BASE_URI = Get-Secret SD_ASSET_BASE_URI -AsPlainText
 ```
 
 With the variables set, you can import the modules and run the commands normally.

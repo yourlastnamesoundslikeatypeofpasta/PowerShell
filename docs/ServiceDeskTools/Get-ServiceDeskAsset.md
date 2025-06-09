@@ -38,5 +38,5 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 Asset returned from the Service Desk API.
 
 ## NOTES
-
+`SD_ASSET_BASE_URI` can be set to override the default Service Desk base URL for asset requests.
 ## RELATED LINKS
