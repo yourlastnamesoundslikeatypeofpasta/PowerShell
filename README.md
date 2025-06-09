@@ -48,7 +48,7 @@ cd PowerShell
 ./scripts/Install-SupportTools.ps1
 ```
 
-`Install-SupportTools.ps1` pulls the latest module versions from your internal feed when available and falls back to importing them from the `src` folder. Next run the SharePoint configuration script if you plan to use those commands:
+`Install-SupportTools.ps1` imports the modules directly from the `src` folder. Next run the SharePoint configuration script if you plan to use those commands:
 
 ```powershell
 ./scripts/Test-SPToolsPrereqs.ps1 -Install
