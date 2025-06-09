@@ -34,4 +34,13 @@ Describe 'Invoke-ArchiveCleanup' {
             Assert-MockCalled Remove-PnPFolder -Times 1
         }
     }
+
+    Safe-It 'suppresses telemetry when NoTelemetry is used' {
+        InModuleScope SharePointTools {
+            $script:testItems = @()
+            Mock Write-STTelemetryEvent {} -ModuleName SharePointTools
+            Invoke-ArchiveCleanup -SiteName 'SiteA' -SiteUrl 'https://contoso' -NoTelemetry -Confirm:$false | Out-Null
+            Assert-MockCalled Write-STTelemetryEvent -ModuleName SharePointTools -Times 0
+        }
+    }
 }

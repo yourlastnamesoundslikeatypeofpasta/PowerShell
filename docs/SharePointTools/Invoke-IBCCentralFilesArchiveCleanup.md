@@ -13,7 +13,7 @@ Removes archive items from the IBCCentralFiles site.
 ## SYNTAX
 
 ```
-Invoke-IBCCentralFilesArchiveCleanup [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Invoke-IBCCentralFilesArchiveCleanup [-NoTelemetry] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,21 @@ PS C:\> Invoke-IBCCentralFilesArchiveCleanup
 Demonstrates typical usage of Invoke-IBCCentralFilesArchiveCleanup.
 
 ## PARAMETERS
+
+### -NoTelemetry
+Suppress telemetry events for this run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -ProgressAction
 Specifies how progress is displayed.

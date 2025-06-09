@@ -13,7 +13,7 @@ Removes sharing links from the MexCentralFiles site.
 ## SYNTAX
 
 ```
-Invoke-MexCentralFilesSharingLinkCleanup [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Invoke-MexCentralFilesSharingLinkCleanup [-NoTelemetry] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,21 @@ PS C:\> Invoke-MexCentralFilesSharingLinkCleanup
 Demonstrates typical usage of Invoke-MexCentralFilesSharingLinkCleanup.
 
 ## PARAMETERS
+
+### -NoTelemetry
+Suppress telemetry events for this run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -ProgressAction
 Specifies how progress is displayed.

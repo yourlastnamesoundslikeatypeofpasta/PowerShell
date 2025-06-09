@@ -13,7 +13,7 @@ Removes old file versions from the MexCentralFiles site.
 ## SYNTAX
 
 ```
-Invoke-MexCentralFilesFileVersionCleanup [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Invoke-MexCentralFilesFileVersionCleanup [-NoTelemetry] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,21 @@ PS C:\> Invoke-MexCentralFilesFileVersionCleanup
 Demonstrates typical usage of Invoke-MexCentralFilesFileVersionCleanup.
 
 ## PARAMETERS
+
+### -NoTelemetry
+Suppress telemetry events for this run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -ProgressAction
 Specifies how progress is displayed.

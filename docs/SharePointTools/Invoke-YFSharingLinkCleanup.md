@@ -13,7 +13,7 @@ Removes sharing links from the YF site.
 ## SYNTAX
 
 ```
-Invoke-YFSharingLinkCleanup [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Invoke-YFSharingLinkCleanup [-NoTelemetry] [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,6 +29,21 @@ PS C:\> Invoke-YFSharingLinkCleanup
 Demonstrates typical usage of Invoke-YFSharingLinkCleanup.
 
 ## PARAMETERS
+
+### -NoTelemetry
+Suppress telemetry events for this run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -ProgressAction
 Specifies how progress is displayed.

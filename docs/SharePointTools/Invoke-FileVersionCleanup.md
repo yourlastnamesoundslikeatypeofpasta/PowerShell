@@ -14,7 +14,7 @@ Reports files with multiple versions.
 
 ```
 Invoke-FileVersionCleanup [[-SiteName] <String>] [[-SiteUrl] <String>] [[-LibraryName] <String>]
- [[-ClientId] <String>] [[-TenantId] <String>] [[-CertPath] <String>] [[-ReportPath] <String>]
+ [[-ClientId] <String>] [[-TenantId] <String>] [[-CertPath] <String>] [[-ReportPath] <String>] [-NoTelemetry]
  [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
@@ -133,6 +133,21 @@ Aliases:
 Required: False
 Position: 7
 Default value: ExportedReport.csv
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NoTelemetry
+Suppress telemetry events for this run.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
