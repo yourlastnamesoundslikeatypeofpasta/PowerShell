@@ -80,7 +80,11 @@ function Write-STLog {
         $logFile = Join-Path $logDir 'supporttools.log'
     }
     if (-not $ForwardUri -and $env:ST_LOG_FORWARD_URI) { $ForwardUri = $env:ST_LOG_FORWARD_URI }
-    Write-STDebug "Logging to $logFile"
+    if ($env:ST_DEBUG -ne '1') {
+        Write-STDebug "Logging to $logFile"
+    } else {
+        Write-Host "[DEBUG] Logging to $logFile" -ForegroundColor DarkCyan
+    }
     $dir = Split-Path -Path $logFile -Parent
     if (-not (Test-Path $dir)) {
         New-Item -Path $dir -ItemType Directory -Force | Out-Null
