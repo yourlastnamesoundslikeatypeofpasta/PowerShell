@@ -24,9 +24,9 @@ param(
     [string]$ClientSecret = $env:GRAPH_CLIENT_SECRET
 )
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
-Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -ErrorAction SilentlyContinue
-Import-Module (Join-Path $PSScriptRoot '..' 'src/EntraIDTools/EntraIDTools.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/EntraIDTools/EntraIDTools.psd1') -Force -ErrorAction SilentlyContinue
 
 if (Test-Path $StatePath) { $processed = Get-Content $StatePath | ConvertFrom-Json } else { $processed = @() }
 

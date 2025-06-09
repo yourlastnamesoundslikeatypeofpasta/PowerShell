@@ -6,7 +6,7 @@
     Prompts to install from the PowerShell Gallery when a module is missing.
 #>
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 $requiredModules = @{ 
     'PnP.PowerShell' = 'SharePoint cleanup functions';

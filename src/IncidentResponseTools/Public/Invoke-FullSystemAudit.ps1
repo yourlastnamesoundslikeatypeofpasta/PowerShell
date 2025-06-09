@@ -29,13 +29,13 @@ function Invoke-FullSystemAudit {
     )
 
     process {
-        if ($Logger) { Import-Module $Logger -ErrorAction SilentlyContinue }
+        if ($Logger) { Import-Module $Logger -Force -ErrorAction SilentlyContinue }
         if ($TelemetryClient) {
-            Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+            Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
         } else {
-            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
         }
-        if ($Config) { Import-Module $Config -ErrorAction SilentlyContinue }
+        if ($Config) { Import-Module $Config -Force -ErrorAction SilentlyContinue }
         if (-not $OutputPath) {
             $ext = if ($Html) { 'html' } else { 'json' }
             $OutputPath = Join-Path (Get-Location) "SystemAudit_$((Get-Date).ToString('yyyyMMdd_HHmmss')).$ext"

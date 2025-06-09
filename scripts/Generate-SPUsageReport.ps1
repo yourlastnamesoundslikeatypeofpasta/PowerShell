@@ -20,9 +20,9 @@ param(
     [string]$TranscriptPath
 )
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
-Import-Module (Join-Path $PSScriptRoot '..' 'src/SharePointTools/SharePointTools.psd1') -ErrorAction SilentlyContinue
-Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/SharePointTools/SharePointTools.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -Force -ErrorAction SilentlyContinue
 
 if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 

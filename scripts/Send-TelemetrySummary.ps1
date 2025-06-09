@@ -34,8 +34,8 @@ param(
     [string]$Subject = 'Telemetry Summary'
 )
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
 
 Show-STPrompt './scripts/Send-TelemetrySummary.ps1'
 

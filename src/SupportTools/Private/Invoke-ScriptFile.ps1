@@ -30,19 +30,19 @@ function Invoke-ScriptFile {
     }
 
     if ($Logger) {
-        Import-Module $Logger -ErrorAction SilentlyContinue
+        Import-Module $Logger -Force -ErrorAction SilentlyContinue
     } elseif ($loggingModule) {
-        Import-Module $loggingModule -ErrorAction SilentlyContinue
+        Import-Module $loggingModule -Force -ErrorAction SilentlyContinue
     }
 
     if ($TelemetryClient) {
-        Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+        Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
     } elseif ($telemetryModule) {
-        Import-Module $telemetryModule -ErrorAction SilentlyContinue
+        Import-Module $telemetryModule -Force -ErrorAction SilentlyContinue
     }
 
     if ($Config) {
-        Import-Module $Config -ErrorAction SilentlyContinue
+        Import-Module $Config -Force -ErrorAction SilentlyContinue
     }
     $Path = Join-Path $PSScriptRoot '..' |
             Join-Path -ChildPath '..' |

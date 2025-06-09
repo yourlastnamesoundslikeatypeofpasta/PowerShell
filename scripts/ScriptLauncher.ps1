@@ -9,7 +9,7 @@
     ./ScriptLauncher.ps1
 #>
 
-Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -ErrorAction SilentlyContinue
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 function Get-ScriptInfo {
     param([string]$Path)

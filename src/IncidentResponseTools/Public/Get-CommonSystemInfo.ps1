@@ -24,17 +24,17 @@ function Get-CommonSystemInfo {
         $result = 'Success'
         try {
             if ($Logger) {
-                Import-Module $Logger -ErrorAction SilentlyContinue
+                Import-Module $Logger -Force -ErrorAction SilentlyContinue
             } else {
-                Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
+                Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
             }
             if ($TelemetryClient) {
-                Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+                Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
             } else {
-                Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+                Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
             }
             if ($Config) {
-                Import-Module $Config -ErrorAction SilentlyContinue
+                Import-Module $Config -Force -ErrorAction SilentlyContinue
             }
 
             Write-STStatus -Message 'Collecting system information...' -Level INFO

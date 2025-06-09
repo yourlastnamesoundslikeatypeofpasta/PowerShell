@@ -34,17 +34,17 @@ function Sync-SupportTools {
     try {
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
         if ($Logger) {
-            Import-Module $Logger -ErrorAction SilentlyContinue
+            Import-Module $Logger -Force -ErrorAction SilentlyContinue
         } else {
-            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -ErrorAction SilentlyContinue
+            Import-Module (Join-Path $PSScriptRoot '../../Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
         }
         if ($TelemetryClient) {
-            Import-Module $TelemetryClient -ErrorAction SilentlyContinue
+            Import-Module $TelemetryClient -Force -ErrorAction SilentlyContinue
         } else {
-            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -ErrorAction SilentlyContinue
+            Import-Module (Join-Path $PSScriptRoot '../../Telemetry/Telemetry.psd1') -Force -ErrorAction SilentlyContinue
         }
         if ($Config) {
-            Import-Module $Config -ErrorAction SilentlyContinue
+            Import-Module $Config -Force -ErrorAction SilentlyContinue
         }
 
         if ($Explain) {
@@ -63,9 +63,9 @@ function Sync-SupportTools {
 
         Import-Module (Join-Path $InstallPath 'src/SupportTools/SupportTools.psd1') -Force
         $sp = Join-Path $InstallPath 'src/SharePointTools/SharePointTools.psd1'
-        if (Test-Path $sp) { Import-Module $sp -ErrorAction SilentlyContinue }
+        if (Test-Path $sp) { Import-Module $sp -Force -ErrorAction SilentlyContinue }
         $sd = Join-Path $InstallPath 'src/ServiceDeskTools/ServiceDeskTools.psd1'
-        if (Test-Path $sd) { Import-Module $sd -ErrorAction SilentlyContinue }
+        if (Test-Path $sd) { Import-Module $sd -Force -ErrorAction SilentlyContinue }
 
         Write-STStatus -Message 'SupportTools synchronized' -Level FINAL
         return [pscustomobject]@{
