@@ -201,6 +201,31 @@ Describe 'ServiceDeskTools Module' {
                 Remove-Item env:SD_BASE_URI
             }
         }
+        It 'uses SD_BASE_URI for assets when SD_ASSET_BASE_URI not set' {
+            InModuleScope ServiceDeskTools {
+                $env:SD_API_TOKEN = 't'
+                $env:SD_BASE_URI = 'https://custom.example.com/api/'
+                Remove-Item env:SD_ASSET_BASE_URI -ErrorAction SilentlyContinue
+                Mock Write-STLog {} -ModuleName ServiceDeskTools
+                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Get-ServiceDeskAsset -Id 3
+                Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://custom.example.com/api/assets/3.json' } -Times 1
+                Remove-Item env:SD_API_TOKEN
+                Remove-Item env:SD_BASE_URI
+            }
+        }
+        It 'uses SD_ASSET_BASE_URI when set' {
+            InModuleScope ServiceDeskTools {
+                $env:SD_API_TOKEN = 't'
+                $env:SD_ASSET_BASE_URI = 'https://assets.example.com/api/'
+                Mock Write-STLog {} -ModuleName ServiceDeskTools
+                Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
+                Get-ServiceDeskAsset -Id 4
+                Assert-MockCalled Invoke-RestMethod -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://assets.example.com/api/assets/4.json' } -Times 1
+                Remove-Item env:SD_API_TOKEN
+                Remove-Item env:SD_ASSET_BASE_URI
+            }
+        }
         It 'converts body to JSON' {
             InModuleScope ServiceDeskTools {
                 $env:SD_API_TOKEN = 't'

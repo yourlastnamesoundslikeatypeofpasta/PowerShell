@@ -23,6 +23,8 @@ function Get-ServiceDeskAsset {
 
     Write-STLog -Message "Get-ServiceDeskAsset $Id"
     if ($PSCmdlet.ShouldProcess("asset $Id", 'Get')) {
-        return Invoke-SDRequest -Method 'GET' -Path "/assets/$Id.json" -ChaosMode:$ChaosMode
+        $params = @{ Method = 'GET'; Path = "/assets/$Id.json"; ChaosMode = $ChaosMode }
+        if ($env:SD_ASSET_BASE_URI) { $params.BaseUri = $env:SD_ASSET_BASE_URI }
+        return Invoke-SDRequest @params
     }
 }
