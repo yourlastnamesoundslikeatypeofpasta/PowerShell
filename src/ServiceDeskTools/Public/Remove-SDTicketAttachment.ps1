@@ -7,7 +7,7 @@ function Remove-SDTicketAttachment {
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
         [int]$Id,
         [Parameter(Mandatory=$false)]
@@ -24,5 +24,7 @@ function Remove-SDTicketAttachment {
     Write-STLog -Message "Remove-SDTicketAttachment $Id"
     if ($PSCmdlet.ShouldProcess("attachment $Id", 'Remove')) {
         Invoke-SDRequest -Method 'DELETE' -Path "/attachments/$Id.json" -ChaosMode:$ChaosMode
+        Write-STStatus "Removed attachment $Id" -Level SUCCESS -Log
+        return [pscustomobject]@{ Id = $Id }
     }
 }
