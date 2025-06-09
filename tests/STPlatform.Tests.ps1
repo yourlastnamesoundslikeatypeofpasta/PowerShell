@@ -14,6 +14,10 @@ Describe 'STPlatform Module' {
         (Get-Command Connect-STPlatform).Parameters.Keys | Should -Contain 'Vault'
     }
 
+    Safe-It 'includes ChaosMode parameter' {
+        (Get-Command Connect-STPlatform).Parameters.Keys | Should -Contain 'ChaosMode'
+    }
+
     Safe-It 'loads secrets when variables missing' {
         InModuleScope STPlatform {
             Import-Module $PSScriptRoot/../src/Telemetry/Telemetry.psd1 -Force
@@ -113,6 +117,33 @@ Describe 'STPlatform Module' {
 
             Assert-MockCalled Write-STStatus -ParameterFilter { $Message -eq 'Loaded SPTOOLS_TENANT_ID from vault' -and $Level -eq 'SUB' -and $Log } -Times 1
             Remove-Item env:SPTOOLS_TENANT_ID -ErrorAction SilentlyContinue
+        }
+    }
+
+    Context 'Chaos mode' {
+        Safe-It 'passes ChaosMode to Invoke-STRequest' {
+            InModuleScope STPlatform {
+                Mock Connect-MgGraph {}
+                Mock Connect-ExchangeOnline {}
+                Mock Invoke-STRequest {}
+                Connect-STPlatform -Mode Cloud -ChaosMode
+                Assert-MockCalled Invoke-STRequest -Times 1 -ParameterFilter { $ChaosMode -eq $true }
+            }
+        }
+
+        Safe-It 'honors ST_CHAOS_MODE environment variable' {
+            InModuleScope STPlatform {
+                Mock Connect-MgGraph {}
+                Mock Connect-ExchangeOnline {}
+                Mock Invoke-STRequest {}
+                try {
+                    $env:ST_CHAOS_MODE = '1'
+                    Connect-STPlatform -Mode Cloud
+                } finally {
+                    Remove-Item env:ST_CHAOS_MODE -ErrorAction SilentlyContinue
+                }
+                Assert-MockCalled Invoke-STRequest -Times 1
+            }
         }
     }
 
