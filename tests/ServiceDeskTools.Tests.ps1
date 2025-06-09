@@ -268,6 +268,17 @@ Describe 'ServiceDeskTools Module' {
                 Remove-Item env:SD_API_TOKEN
             }
         }
+
+        It 'uses retry helper for requests' {
+            InModuleScope ServiceDeskTools {
+                $env:SD_API_TOKEN = 't'
+                Mock Write-STLog {} -ModuleName ServiceDeskTools
+                Mock Invoke-SDRestWithRetry {} -ModuleName ServiceDeskTools
+                Invoke-SDRequest -Method 'GET' -Path '/test'
+                Assert-MockCalled Invoke-SDRestWithRetry -ModuleName ServiceDeskTools -Times 1
+                Remove-Item env:SD_API_TOKEN
+            }
+        }
     }
 
     Context 'WhatIf support' {
@@ -296,12 +307,14 @@ Describe 'ServiceDeskTools Module' {
                 $i = 0
                 Mock Get-Date { $dates[$i++] } -ModuleName ServiceDeskTools
                 Mock Start-Sleep {} -ModuleName ServiceDeskTools
+                Mock Wait-SDRateLimit { } -ModuleName ServiceDeskTools
                 Mock Invoke-RestMethod {} -ModuleName ServiceDeskTools
 
                 Invoke-SDRequest -Method 'GET' -Path '/one'
                 Invoke-SDRequest -Method 'GET' -Path '/two'
                 Invoke-SDRequest -Method 'GET' -Path '/three'
 
+                Assert-MockCalled Wait-SDRateLimit -ModuleName ServiceDeskTools -Times 3
                 Assert-MockCalled Start-Sleep -ModuleName ServiceDeskTools -Times 1
 
                 Remove-Item env:SD_API_TOKEN
