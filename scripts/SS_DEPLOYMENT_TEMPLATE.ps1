@@ -157,8 +157,12 @@ function Export-Client {
     if (!$isXmlExportDir){
         New-Item -Path $xmlExportDir -ItemType Directory | Out-Null
     }
-    $xmlExportPath = "$($xmlExportDir)\$($ComputerName)_$($UpdateVersion).xml"
-    $clientObject | Export-Clixml $xmlExportPath
+    $xmlExportPath = "$($xmlExportDir)\$($env:COMPUTERNAME)_$($UpdateVersion).xml"
+    try {
+        $clientObject | Export-Clixml $xmlExportPath
+    } catch {
+        Write-STStatus "Export-Clixml failed: $_" -Level WARN
+    }
 }
 
 function Get-WHVersions {

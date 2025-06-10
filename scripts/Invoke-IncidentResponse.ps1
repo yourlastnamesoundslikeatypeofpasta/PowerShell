@@ -32,8 +32,18 @@ if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null
 try {
     New-Item -Path $OutputDirectory -ItemType Directory -Force | Out-Null
     Write-STStatus "Collecting event logs" -Level INFO -Log
-    Get-WinEvent -LogName Security -MaxEvents 200 | Export-Clixml -Path (Join-Path $OutputDirectory 'Security.xml')
-    Get-WinEvent -LogName System   -MaxEvents 200 | Export-Clixml -Path (Join-Path $OutputDirectory 'System.xml')
+    try {
+        Get-WinEvent -LogName Security -MaxEvents 200 |
+            Export-Clixml -Path (Join-Path $OutputDirectory 'Security.xml')
+    } catch {
+        Write-STStatus "Failed to export Security log: $_" -Level WARN -Log
+    }
+    try {
+        Get-WinEvent -LogName System -MaxEvents 200 |
+            Export-Clixml -Path (Join-Path $OutputDirectory 'System.xml')
+    } catch {
+        Write-STStatus "Failed to export System log: $_" -Level WARN -Log
+    }
 
     Write-STStatus "Gathering process information" -Level INFO -Log
     $processes = Get-Process | ForEach-Object {
