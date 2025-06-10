@@ -71,7 +71,9 @@ function Invoke-NewHireUserAutomation {
             $args = @('-PollMinutes', $PollMinutes)
             if ($Once) { $args += '-Once' }
             if ($PSBoundParameters.ContainsKey('TranscriptPath')) { $args += '-TranscriptPath'; $args += $TranscriptPath }
-            Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Create-NewHireUser.ps1' -Args $args -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+            if ($PSCmdlet.ShouldProcess('Create-NewHireUser.ps1')) {
+                Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Create-NewHireUser.ps1' -Args $args -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+            }
         } catch {
             return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
         }

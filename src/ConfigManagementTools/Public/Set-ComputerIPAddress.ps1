@@ -24,6 +24,8 @@ function Set-ComputerIPAddress {
         [object]$Config
     )
     process {
-        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "Set-ComputerIPAddress.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        if ($PSCmdlet.ShouldProcess('Set-ComputerIPAddress.ps1')) {
+            Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "Set-ComputerIPAddress.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }

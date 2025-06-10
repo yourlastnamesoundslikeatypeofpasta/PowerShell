@@ -9,6 +9,8 @@ function Add-UserToGroup {
         Path to the CSV file containing user principal names.
     .PARAMETER GroupName
         Name of the Microsoft 365 group to modify.
+    .NOTES
+        Supports `-WhatIf` and `-Confirm`.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
@@ -52,14 +54,11 @@ function Add-UserToGroup {
                 $arguments += $Cloud
             }
 
-            if ($PSBoundParameters.ContainsKey('WhatIf')) {
-                $arguments += '-WhatIf'
+            if ($PSCmdlet.ShouldProcess($GroupName, 'Add users')) {
+                if ($PSBoundParameters.ContainsKey('WhatIf')) { $arguments += '-WhatIf' }
+                if ($PSBoundParameters.ContainsKey('Confirm')) { $arguments += '-Confirm' }
+                Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
             }
-            if ($PSBoundParameters.ContainsKey('Confirm')) {
-                $arguments += '-Confirm'
-            }
-
-            Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'AddUsersToGroup.ps1' -Args $arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         } catch {
             return New-STErrorRecord -Message $_.Exception.Message -Exception $_.Exception
         }

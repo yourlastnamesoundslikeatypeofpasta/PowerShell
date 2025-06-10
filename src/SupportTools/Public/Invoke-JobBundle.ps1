@@ -35,29 +35,31 @@ function Invoke-JobBundle {
             $LogArchivePath = $Path -replace '\\.zip$','-logs.zip'
         }
 
-        $transcript = [IO.Path]::GetTempFileName()
-        $args = @('-BundlePath', $Path)
-        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Run-JobBundle.ps1' -Args $args -TranscriptPath $transcript
+        if ($PSCmdlet.ShouldProcess('Run-JobBundle.ps1')) {
+            $transcript = [IO.Path]::GetTempFileName()
+            $args = @('-BundlePath', $Path)
+            Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Run-JobBundle.ps1' -Args $args -TranscriptPath $transcript
 
-        $logFile = if ($env:ST_LOG_PATH) {
-            $env:ST_LOG_PATH
-        } else {
-            $profile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
-            Join-Path (Join-Path $profile 'SupportToolsLogs') 'supporttools.log'
-        }
+            $logFile = if ($env:ST_LOG_PATH) {
+                $env:ST_LOG_PATH
+            } else {
+                $profile = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
+                Join-Path (Join-Path $profile 'SupportToolsLogs') 'supporttools.log'
+            }
 
-        $files = @($transcript)
-        if (Test-Path $logFile) { $files += $logFile }
-        try {
-            Compress-Archive -Path $files -DestinationPath $LogArchivePath -Force -ErrorAction Stop
-            Remove-Item $transcript -Force -ErrorAction Stop
-        } catch {
-            Write-Error $_.Exception.Message
-            throw
-        }
-        Write-STStatus "Logs archived to $LogArchivePath" -Level SUCCESS
-        return [pscustomobject]@{
-            LogArchivePath = $LogArchivePath
+            $files = @($transcript)
+            if (Test-Path $logFile) { $files += $logFile }
+            try {
+                Compress-Archive -Path $files -DestinationPath $LogArchivePath -Force -ErrorAction Stop
+                Remove-Item $transcript -Force -ErrorAction Stop
+            } catch {
+                Write-Error $_.Exception.Message
+                throw
+            }
+            Write-STStatus "Logs archived to $LogArchivePath" -Level SUCCESS
+            return [pscustomobject]@{
+                LogArchivePath = $LogArchivePath
+            }
         }
     }
 }
