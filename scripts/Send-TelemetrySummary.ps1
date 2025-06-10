@@ -69,7 +69,10 @@ if (-not $metrics) {
 $body = $metrics | Format-Table -AutoSize | Out-String
 
 Write-STStatus -Message 'Sending email...' -Level INFO -Log
-Send-MailMessage -To $To -From $From -Subject $Subject -Body $body -SmtpServer $SmtpServer
-
-Write-STStatus -Message 'Telemetry summary sent.' -Level SUCCESS -Log
+try {
+    Send-MailMessage -To $To -From $From -Subject $Subject -Body $body -SmtpServer $SmtpServer
+    Write-STStatus -Message 'Telemetry summary sent.' -Level SUCCESS -Log
+} catch {
+    Write-STStatus -Message "Failed to send telemetry summary: $_" -Level ERROR -Log
+}
 Write-STClosing
