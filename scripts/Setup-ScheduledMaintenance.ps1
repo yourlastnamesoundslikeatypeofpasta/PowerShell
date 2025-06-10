@@ -76,7 +76,11 @@ foreach ($name in $tasks.Keys) {
     $xml = New-MaintenanceTaskXml -TaskName $name -ScriptPath $tasks[$name]
     if ($Register) {
         Write-STStatus "Registering task $name" -Level INFO -Log
-        Register-ScheduledTask -TaskName $name -Xml $xml -Force | Out-Null
+        try {
+            Register-ScheduledTask -TaskName $name -Xml $xml -Force | Out-Null
+        } catch {
+            Write-STStatus "Failed registering task $name: $_" -Level ERROR -Log
+        }
     } else {
         $file = "$($name -replace ' ', '')Task.xml"
         Write-STStatus "Writing $file" -Level INFO -Log
