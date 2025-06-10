@@ -14,11 +14,12 @@ function Invoke-MaintenancePlan {
     Assert-ParameterNotNull $Plan 'Plan'
     foreach ($step in $Plan.Steps) {
         Write-STStatus "Running $step" -Level INFO -Log
-        if (-not $PSCmdlet.ShouldProcess($step)) { continue }
-        if (Test-Path $step) {
-            & $step
-        } else {
-            Invoke-Expression $step
+        if ($PSCmdlet.ShouldProcess($step)) {
+            if (Test-Path $step) {
+                & $step
+            } else {
+                Invoke-Expression $step
+            }
         }
     }
 }
