@@ -24,8 +24,7 @@ jobs:
       - name: Run Pester tests
         shell: pwsh
         run: |
-          $cfg = Import-PowerShellDataFile ./PesterConfiguration.psd1
-          Invoke-Pester -Configuration $cfg
+          Invoke-Pester -Configuration (Import-PowerShellDataFile ./PesterConfiguration.psd1)
       - name: Ensure all functions have tests
         shell: pwsh
         run: |
