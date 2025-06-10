@@ -320,4 +320,5 @@ function Start-Main {
 
 if ($MyInvocation.InvocationName -ne '.') {
     Start-Main -CsvPath $CsvPath -GroupName $GroupName -GroupId $GroupId -Cloud $Cloud
+    Write-STClosing
 }
