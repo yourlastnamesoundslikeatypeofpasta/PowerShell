@@ -55,7 +55,6 @@ function MSStoreAppInstallerUpdate {
     }
 }
 
-
 function Install-Chrome {
     [CmdletBinding()]
     param()
@@ -471,5 +470,9 @@ function Main {
 
     Write-STStatus -Message 'Restart computer to apply changes...' -Level INFO
 
+}
+
+if ($MyInvocation.InvocationName -ne '.') {
+    Main @PSBoundParameters
 }
 
