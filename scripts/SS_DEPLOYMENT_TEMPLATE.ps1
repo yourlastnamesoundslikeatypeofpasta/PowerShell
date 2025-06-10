@@ -19,8 +19,10 @@
     - Get-Service
     - Get-NetAdapter
     - Get-NetAdapterStatistics
-    - Get-NetIPConfiguration
+- Get-NetIPConfiguration
 #>
+
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
 
 function Install-Something {
@@ -78,13 +80,17 @@ function Confirm-ServiceRunning {
 
     # confirm services
     foreach ($service in $ServiceList) {
-        $currentService = Get-Service -Name $service
+        $currentService = Get-Service -Name $service -ErrorAction SilentlyContinue
+        if (-not $currentService) {
+            Write-STStatus "Service '$service' not found." -Level WARN
+            continue
+        }
+
         $currentServiceDisplayName = $currentService.DisplayName
         $currentServiceStatus = $currentService.Status
         $runningStatusCode = 'Running'
         $isCurrentServiceRunning = $currentServiceStatus -eq $runningStatusCode
-    
-        # confirm sentinal is running
+
         if ($isCurrentServiceRunning) {
             Write-STStatus "$($currentServiceDisplayName) - Running" -Level INFO
         }
