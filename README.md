@@ -227,7 +227,7 @@ Install Pester if it's not already available and run the suite from the reposito
 
 ```powershell
 Install-Module Pester -MinimumVersion 5.0 -Scope CurrentUser
-Invoke-Pester -Configuration ./PesterConfiguration.psd1
+Invoke-Pester -Configuration (Import-PowerShellDataFile ./PesterConfiguration.psd1)
 ```
 For conventions on writing new tests see [docs/TestingGuidelines.md](docs/TestingGuidelines.md).
 
