@@ -4,11 +4,18 @@ function Wait-SDRateLimit {
         [int]$RateLimit
     )
     if (-not $RateLimit) { return }
-    if (-not $script:SDRequestHistory) { $script:SDRequestHistory = @() }
+    if (-not $script:SDRequestHistory) {
+        $script:SDRequestHistory = [System.Collections.Generic.Queue[datetime]]::new()
+    }
+
     $now = Get-Date
-    $script:SDRequestHistory = $script:SDRequestHistory | Where-Object { $_ -gt $now.AddMinutes(-1) }
+
+    while ($script:SDRequestHistory.Count -gt 0 -and $script:SDRequestHistory.Peek() -le $now.AddMinutes(-1)) {
+        $null = $script:SDRequestHistory.Dequeue()
+    }
+
     if ($script:SDRequestHistory.Count -ge $RateLimit) {
-        $oldest = $script:SDRequestHistory[0]
+        $oldest = $script:SDRequestHistory.Peek()
         if ($oldest) {
             $wait = 60 - ($now - $oldest).TotalSeconds
             if ($wait -gt 0) {
@@ -17,5 +24,6 @@ function Wait-SDRateLimit {
             }
         }
     }
-    $script:SDRequestHistory += $now
+
+    $script:SDRequestHistory.Enqueue($now)
 }
