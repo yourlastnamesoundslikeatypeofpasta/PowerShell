@@ -111,8 +111,12 @@ $headers = @{
 }
 
 Write-STStatus "Sending $($events.Count) events to Log Analytics" -Level INFO -Log
-Invoke-RestMethod -Method Post -Uri $uri -Headers $headers -Body $body -ContentType 'application/json' | Out-Null
-Write-STStatus -Message 'Telemetry sent successfully.' -Level SUCCESS -Log
+try {
+    Invoke-RestMethod -Method Post -Uri $uri -Headers $headers -Body $body -ContentType 'application/json' -ErrorAction Stop | Out-Null
+    Write-STStatus -Message 'Telemetry sent successfully.' -Level SUCCESS -Log
+} catch {
+    Write-STStatus -Message "Failed to send telemetry: $_" -Level ERROR -Log
+}
 
 Write-STDivider -Title 'TELEMETRY SUMMARY'
 $summary = Get-STTelemetryMetrics -LogPath $logPath
