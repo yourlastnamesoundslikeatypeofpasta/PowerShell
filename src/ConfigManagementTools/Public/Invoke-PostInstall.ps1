@@ -25,6 +25,8 @@ function Invoke-PostInstall {
         [object]$Config
     )
     process {
-        Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "PostInstallScript.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        if ($PSCmdlet.ShouldProcess('PostInstallScript.ps1')) {
+            Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "PostInstallScript.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+        }
     }
 }
