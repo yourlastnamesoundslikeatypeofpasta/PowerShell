@@ -69,7 +69,11 @@ function Schedule-MaintenancePlan {
         }
 
         $action  = New-ScheduledTaskAction -Execute 'pwsh' -Argument "-NoProfile -Command \"$command\""
-        Register-ScheduledTask -TaskName $Name -Action $action -Trigger $trigger -Force | Out-Null
+        try {
+            Register-ScheduledTask -TaskName $Name -Action $action -Trigger $trigger -Force | Out-Null
+        } catch {
+            Write-STStatus "Failed registering scheduled task $Name: $_" -Level ERROR -Log
+        }
     } else {
         $entry = "$Cron pwsh -NoProfile -Command \"$command\" # $Name"
         Write-STStatus "Cron entry generated" -Level INFO -Log
