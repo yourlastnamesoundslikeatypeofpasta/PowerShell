@@ -66,3 +66,7 @@ function Install-Fonts {
     }
     
 }
+
+if ($MyInvocation.InvocationName -ne '.') {
+    Main @args
+}
