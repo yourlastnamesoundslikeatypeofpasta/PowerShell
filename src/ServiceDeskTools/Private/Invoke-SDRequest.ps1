@@ -14,13 +14,9 @@ function Invoke-SDRequest {
     $baseUri = if ($BaseUri) { $BaseUri } else { $env:SD_BASE_URI }
     if (-not $baseUri) { $baseUri = 'https://api.samanage.com' }
 
-    $token = $env:SD_API_TOKEN
-    if (-not $token) {
-        $getParams = @{ Name = 'SD_API_TOKEN'; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
-        if ($PSBoundParameters.ContainsKey('Vault')) { $getParams.Vault = $Vault }
-        $token = Get-Secret @getParams
-        if ($token) { $env:SD_API_TOKEN = $token } else { throw 'SD_API_TOKEN environment variable must be set.' }
-    }
+    $params = @{ Name = 'SD_API_TOKEN'; Required = $true }
+    if ($PSBoundParameters.ContainsKey('Vault')) { $params.Vault = $Vault }
+    $token = Get-STSecret @params
 
     $rateLimit = if ($env:SD_RATE_LIMIT_PER_MINUTE) { [int]$env:SD_RATE_LIMIT_PER_MINUTE } else { $null }
     Wait-SDRateLimit -RateLimit $rateLimit

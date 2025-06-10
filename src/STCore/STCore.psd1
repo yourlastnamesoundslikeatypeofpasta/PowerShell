@@ -4,5 +4,5 @@
     GUID = 'b6b7e080-4ad4-4d58-8b8c-000000000000'
     Author = 'Contoso'
     Description = 'Core utility functions.'
-    FunctionsToExport = @('Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Get-STConfigValue','Invoke-STRequest')
+    FunctionsToExport = @('Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Get-STConfigValue','Invoke-STRequest','Get-STSecret')
 }

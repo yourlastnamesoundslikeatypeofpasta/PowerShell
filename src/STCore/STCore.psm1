@@ -173,7 +173,47 @@ function Invoke-STRequest {
     }
 }
 
-Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Get-STConfigValue','Invoke-STRequest'
+function Get-STSecret {
+    <#
+    .SYNOPSIS
+        Retrieves an environment variable or secret from a vault.
+    .DESCRIPTION
+        Returns the environment variable value when present. If missing,
+        calls Get-Secret with -AsPlainText to load the value optionally from
+        the specified vault. When retrieved from a vault the value is written
+        back to the environment and a status message is logged.
+    .PARAMETER Name
+        Name of the environment variable and secret.
+    .PARAMETER Vault
+        Optional SecretManagement vault name.
+    .PARAMETER Required
+        Throw if the value cannot be resolved.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [string]$Vault,
+        [switch]$Required
+    )
+
+    if ($env:$Name) { return $env:$Name }
+
+    $params = @{ Name = $Name; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
+    if ($PSBoundParameters.ContainsKey('Vault')) { $params.Vault = $Vault }
+    $val = Get-Secret @params
+
+    if ($val) {
+        $env:$Name = $val
+        Write-STStatus "Loaded $Name from vault" -Level SUB -Log
+        return $val
+    }
+
+    Write-STStatus "$Name not found in vault" -Level WARN -Log
+    if ($Required) { throw "$Name environment variable must be set." }
+    return $null
+}
+
+Export-ModuleMember -Function 'Assert-ParameterNotNull','New-STErrorObject','New-STErrorRecord','Write-STDebug','Test-IsElevated','Get-STConfig','Get-STConfigValue','Invoke-STRequest','Get-STSecret'
 
 function Show-STCoreBanner {
     <#

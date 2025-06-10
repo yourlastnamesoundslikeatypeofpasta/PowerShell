@@ -14,7 +14,8 @@ Describe 'STCore Module' {
             'Test-IsElevated',
             'Get-STConfig',
             'Get-STConfigValue',
-            'Invoke-STRequest'
+            'Invoke-STRequest',
+            'Get-STSecret'
         )
 
         $exported = (Get-Command -Module STCore).Name

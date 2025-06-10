@@ -92,6 +92,55 @@ Describe 'STCore Helper Functions' {
         }
     }
 
+    Context 'Get-STSecret' {
+        Safe-It 'returns environment variable when set' {
+            InModuleScope STCore {
+                Mock Get-Secret {}
+                $env:VAR1 = 'abc'
+                try {
+                    Get-STSecret -Name VAR1 -Vault TestVault | Should -Be 'abc'
+                    Assert-MockCalled Get-Secret -Times 0
+                } finally {
+                    Remove-Item env:VAR1 -ErrorAction SilentlyContinue
+                }
+            }
+        }
+
+        Safe-It 'loads value from vault and sets env' {
+            InModuleScope STCore {
+                Mock Get-Secret { 'vaultval' }
+                Mock Write-STStatus {}
+                Remove-Item env:VAR2 -ErrorAction SilentlyContinue
+                try {
+                    Get-STSecret -Name VAR2 -Vault V | Should -Be 'vaultval'
+                    $env:VAR2 | Should -Be 'vaultval'
+                    Assert-MockCalled Get-Secret -Times 1 -ParameterFilter { $Name -eq 'VAR2' -and $Vault -eq 'V' }
+                    Assert-MockCalled Write-STStatus -Times 1 -ParameterFilter { $Message -eq 'Loaded VAR2 from vault' -and $Level -eq 'SUB' -and $Log }
+                } finally {
+                    Remove-Item env:VAR2 -ErrorAction SilentlyContinue
+                }
+            }
+        }
+
+        Safe-It 'warns when secret missing' {
+            InModuleScope STCore {
+                Mock Get-Secret { $null }
+                Mock Write-STStatus {}
+                Remove-Item env:VAR3 -ErrorAction SilentlyContinue
+                Get-STSecret -Name VAR3 -Vault V | Should -Be $null
+                Assert-MockCalled Write-STStatus -Times 1 -ParameterFilter { $Message -eq 'VAR3 not found in vault' -and $Level -eq 'WARN' -and $Log }
+            }
+        }
+
+        Safe-It 'throws when Required and missing' {
+            InModuleScope STCore {
+                Mock Get-Secret { $null }
+                Remove-Item env:VAR4 -ErrorAction SilentlyContinue
+                { Get-STSecret -Name VAR4 -Vault V -Required } | Should -Throw 'VAR4 environment variable must be set.'
+            }
+        }
+    }
+
     Context 'Invoke-STRequest' {
         Safe-It 'invokes once on success' {
             InModuleScope STCore {

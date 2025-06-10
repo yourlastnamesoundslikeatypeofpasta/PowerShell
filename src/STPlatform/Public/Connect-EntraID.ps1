@@ -32,17 +32,9 @@ function Connect-EntraID {
 
         $required = 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET'
         foreach ($name in $required) {
-            if (-not $env:$name) {
-                $getParams = @{ Name = $name; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
-                if ($PSBoundParameters.ContainsKey('Vault')) { $getParams.Vault = $Vault }
-                $val = Get-Secret @getParams
-                if ($val) {
-                    $env:$name = $val
-                    Write-STStatus "Loaded $name from vault" -Level SUB -Log
-                } else {
-                    Write-STStatus "$name not found in vault" -Level WARN -Log
-                }
-            }
+            $params = @{ Name = $name }
+            if ($PSBoundParameters.ContainsKey('Vault')) { $params.Vault = $Vault }
+            Get-STSecret @params | Out-Null
         }
 
         if (-not $TenantId)     { $TenantId     = $env:GRAPH_TENANT_ID }
