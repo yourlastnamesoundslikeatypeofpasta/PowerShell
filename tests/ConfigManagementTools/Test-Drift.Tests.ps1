@@ -13,13 +13,11 @@ Describe 'Test-Drift function' {
             $baseline | ConvertTo-Json | Set-Content -Path $file
             Mock Get-TimeZone { [pscustomobject]@{ Id='EST' } }
             Mock Get-Service { [pscustomobject]@{ Status='Stopped' } }
-            $env:COMPUTERNAME = 'HOST2'
-            try {
+            With-TestEnvironmentVariable -Name COMPUTERNAME -Value 'HOST2' -ScriptBlock {
                 $result = Test-Drift -BaselinePath $file
                 $result.Count | Should -Be 3
-            } finally {
-                Remove-Item $file -ErrorAction SilentlyContinue
             }
+            Remove-Item $file -ErrorAction SilentlyContinue
         }
     }
 
@@ -30,13 +28,11 @@ Describe 'Test-Drift function' {
             $baseline | ConvertTo-Json | Set-Content -Path $file
             Mock Get-TimeZone { [pscustomobject]@{ Id='UTC' } }
             Mock Get-Service { [pscustomobject]@{ Status='Running' } }
-            $env:COMPUTERNAME = 'HOST1'
-            try {
+            With-TestEnvironmentVariable -Name COMPUTERNAME -Value 'HOST1' -ScriptBlock {
                 $result = Test-Drift -BaselinePath $file
                 $result.Count | Should -Be 0
-            } finally {
-                Remove-Item $file -ErrorAction SilentlyContinue
             }
+            Remove-Item $file -ErrorAction SilentlyContinue
         }
     }
 
@@ -47,13 +43,11 @@ Describe 'Test-Drift function' {
             $baseline | ConvertTo-Json | Set-Content -Path $file
             Mock Get-TimeZone { [pscustomobject]@{ Id='EST' } }
             Mock Get-Service { [pscustomobject]@{ Status='Stopped' } }
-            $env:COMPUTERNAME = 'HOST2'
-            try {
+            With-TestEnvironmentVariable -Name COMPUTERNAME -Value 'HOST2' -ScriptBlock {
                 $result = [pscustomobject]@{ BaselinePath = $file } | Test-Drift
                 $result.Count | Should -Be 3
-            } finally {
-                Remove-Item $file -ErrorAction SilentlyContinue
             }
+            Remove-Item $file -ErrorAction SilentlyContinue
         }
     }
 }

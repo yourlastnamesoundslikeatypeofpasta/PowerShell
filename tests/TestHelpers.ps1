@@ -34,3 +34,27 @@ function Initialize-TestDrive {
     }
 }
 
+function With-TestEnvironmentVariable {
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [string]$Value,
+        [Parameter(Mandatory)][scriptblock]$ScriptBlock
+    )
+
+    $existing = Get-Item "env:$Name" -ErrorAction SilentlyContinue
+    try {
+        if ($PSBoundParameters.ContainsKey('Value')) {
+            Set-Item -Path "env:$Name" -Value $Value
+        } else {
+            Remove-Item "env:$Name" -ErrorAction SilentlyContinue
+        }
+        & $ScriptBlock
+    } finally {
+        if ($null -ne $existing) {
+            Set-Item -Path "env:$Name" -Value $existing.Value
+        } else {
+            Remove-Item "env:$Name" -ErrorAction SilentlyContinue
+        }
+    }
+}
+

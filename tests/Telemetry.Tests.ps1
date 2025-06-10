@@ -14,15 +14,16 @@ Describe 'Telemetry Opt-In' {
         $scriptFile = Join-Path $PSScriptRoot/.. 'scripts/TelemetryTest.ps1'
         Set-Content $scriptFile "Write-Host 'test'"
         try {
-            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
-            $env:ST_TELEMETRY_PATH = $log
-            InModuleScope SupportTools {
-                Invoke-ScriptFile -Name 'TelemetryTest.ps1'
+            With-TestEnvironmentVariable -Name ST_ENABLE_TELEMETRY -ScriptBlock {
+                With-TestEnvironmentVariable -Name ST_TELEMETRY_PATH -Value $log -ScriptBlock {
+                    InModuleScope SupportTools {
+                        Invoke-ScriptFile -Name 'TelemetryTest.ps1'
+                    }
+                }
             }
             Test-Path $log | Should -Be $false
         } finally {
             Remove-Item $scriptFile -ErrorAction SilentlyContinue
-            Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
         }
     }
 
@@ -31,10 +32,12 @@ Describe 'Telemetry Opt-In' {
         $scriptFile = Join-Path $PSScriptRoot/.. 'scripts/TelemetryTest.ps1'
         Set-Content $scriptFile "Write-Host 'test'"
         try {
-            $env:ST_ENABLE_TELEMETRY = '1'
-            $env:ST_TELEMETRY_PATH = $log
-            InModuleScope SupportTools {
-                Invoke-ScriptFile -Name 'TelemetryTest.ps1'
+            With-TestEnvironmentVariable -Name ST_ENABLE_TELEMETRY -Value '1' -ScriptBlock {
+                With-TestEnvironmentVariable -Name ST_TELEMETRY_PATH -Value $log -ScriptBlock {
+                    InModuleScope SupportTools {
+                        Invoke-ScriptFile -Name 'TelemetryTest.ps1'
+                    }
+                }
             }
             (Get-Content $log | Measure-Object -Line).Lines | Should -Be 2
             $entries = Get-Content $log | ForEach-Object { $_ | ConvertFrom-Json }
@@ -46,37 +49,36 @@ Describe 'Telemetry Opt-In' {
         } finally {
             Remove-Item $scriptFile -ErrorAction SilentlyContinue
             Remove-Item $log -ErrorAction SilentlyContinue
-            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
-            Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
         }
     }
 
     Safe-It 'Write-STTelemetryEvent does nothing when telemetry disabled' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         try {
-            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
-            $env:ST_TELEMETRY_PATH = $log
-            Write-STTelemetryEvent -ScriptName 'Foo.ps1' -Result 'Success' -Duration ([timespan]::FromSeconds(1))
+            With-TestEnvironmentVariable -Name ST_ENABLE_TELEMETRY -ScriptBlock {
+                With-TestEnvironmentVariable -Name ST_TELEMETRY_PATH -Value $log -ScriptBlock {
+                    Write-STTelemetryEvent -ScriptName 'Foo.ps1' -Result 'Success' -Duration ([timespan]::FromSeconds(1))
+                }
+            }
             Test-Path $log | Should -Be $false
         } finally {
-            Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
         }
     }
 
     Safe-It 'Write-STTelemetryEvent logs a json entry when enabled' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         try {
-            $env:ST_ENABLE_TELEMETRY = '1'
-            $env:ST_TELEMETRY_PATH = $log
-            Write-STTelemetryEvent -ScriptName 'Foo.ps1' -Result 'Failure' -Duration ([timespan]::FromSeconds(2))
+            With-TestEnvironmentVariable -Name ST_ENABLE_TELEMETRY -Value '1' -ScriptBlock {
+                With-TestEnvironmentVariable -Name ST_TELEMETRY_PATH -Value $log -ScriptBlock {
+                    Write-STTelemetryEvent -ScriptName 'Foo.ps1' -Result 'Failure' -Duration ([timespan]::FromSeconds(2))
+                }
+            }
             (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
             $json = Get-Content $log | ConvertFrom-Json
             $json.Script | Should -Be 'Foo.ps1'
             $json.Result | Should -Be 'Failure'
         } finally {
             Remove-Item $log -ErrorAction SilentlyContinue
-            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
-            Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
         }
     }
 }
@@ -110,9 +112,11 @@ Describe 'Telemetry Metrics Summary' {
     Safe-It 'records metrics using Send-STMetric' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         try {
-            $env:ST_ENABLE_TELEMETRY = '1'
-            $env:ST_TELEMETRY_PATH = $log
-            Send-STMetric -MetricName 'TestMetric' -Category 'Audit' -Value 1.5
+            With-TestEnvironmentVariable -Name ST_ENABLE_TELEMETRY -Value '1' -ScriptBlock {
+                With-TestEnvironmentVariable -Name ST_TELEMETRY_PATH -Value $log -ScriptBlock {
+                    Send-STMetric -MetricName 'TestMetric' -Category 'Audit' -Value 1.5
+                }
+            }
             (Get-Content $log | Measure-Object -Line).Lines | Should -Be 1
             $json = Get-Content $log | ConvertFrom-Json
             $json.MetricName | Should -Be 'TestMetric'
@@ -120,8 +124,6 @@ Describe 'Telemetry Metrics Summary' {
             $json.Value | Should -Be 1.5
         } finally {
             Remove-Item $log -ErrorAction SilentlyContinue
-            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
-            Remove-Item env:ST_TELEMETRY_PATH -ErrorAction SilentlyContinue
         }
     }
 

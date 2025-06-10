@@ -8,16 +8,16 @@ Describe 'Send-TelemetryToLogAnalytics.ps1' {
         Set-Content -Path $log -Value $event
         Mock Invoke-RestMethod {} -Verifiable
         try {
-            $env:ST_ENABLE_TELEMETRY = '1'
-            & $PSScriptRoot/../scripts/Send-TelemetryToLogAnalytics.ps1 -WorkspaceId 'ws123' -WorkspaceKey 'Zg==' -LogPath $log
-            Assert-MockCalled Invoke-RestMethod -ParameterFilter {
-                $Method -eq 'Post' -and
-                $Uri -eq 'https://ws123.ods.opinsights.azure.com/api/logs?api-version=2016-04-01' -and
-                $Body -is [string] -and (($Body | ConvertFrom-Json)[0].Script -eq 'Test.ps1')
-            } -Times 1
+            With-TestEnvironmentVariable -Name ST_ENABLE_TELEMETRY -Value '1' -ScriptBlock {
+                & $PSScriptRoot/../scripts/Send-TelemetryToLogAnalytics.ps1 -WorkspaceId 'ws123' -WorkspaceKey 'Zg==' -LogPath $log
+                Assert-MockCalled Invoke-RestMethod -ParameterFilter {
+                    $Method -eq 'Post' -and
+                    $Uri -eq 'https://ws123.ods.opinsights.azure.com/api/logs?api-version=2016-04-01' -and
+                    $Body -is [string] -and (($Body | ConvertFrom-Json)[0].Script -eq 'Test.ps1')
+                } -Times 1
+            }
         } finally {
             Remove-Item $log -ErrorAction SilentlyContinue
-            Remove-Item env:ST_ENABLE_TELEMETRY -ErrorAction SilentlyContinue
         }
     }
 }
