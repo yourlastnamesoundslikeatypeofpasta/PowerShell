@@ -68,8 +68,12 @@ try {
         Write-STStatus -Message 'Sending summary email...' -Level INFO -Log
         $mailSubject = "System info ticket created on $env:COMPUTERNAME"
         $mailBody = "A Service Desk ticket has been opened with subject '$Subject'.`nReport: $fileUrl"
-        Send-MailMessage -To $RequesterEmail -From $RequesterEmail -Subject $mailSubject -Body $mailBody -SmtpServer $SmtpServer
-        Write-STStatus -Message 'Summary email sent.' -Level SUCCESS -Log
+        try {
+            Send-MailMessage -To $RequesterEmail -From $RequesterEmail -Subject $mailSubject -Body $mailBody -SmtpServer $SmtpServer
+            Write-STStatus -Message 'Summary email sent.' -Level SUCCESS -Log
+        } catch {
+            Write-STStatus -Message "Failed to send summary email: $_" -Level ERROR -Log
+        }
     }
 }
 finally {
