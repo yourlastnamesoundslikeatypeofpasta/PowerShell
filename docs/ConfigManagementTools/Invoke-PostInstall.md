@@ -13,7 +13,7 @@ Executes the automated post installation script.
 ## SYNTAX
 
 ```
-Invoke-PostInstall [[-Arguments] <Object[]>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
+Invoke-PostInstall [[-Arguments] <Object[]>] [[-DomainName] <String>] [[-TranscriptPath] <String>] [-ProgressAction <ActionPreference>]
  [<CommonParameters>]
 ```
 
@@ -25,7 +25,7 @@ arguments provided.
 
 ### Example 1
 ```powershell
-PS C:\> Invoke-PostInstall -ConfigPath './install.json'
+PS C:\> Invoke-PostInstall -ConfigPath './install.json' -DomainName corp.example.com
 ```
 
 Demonstrates typical usage of Invoke-PostInstall.
@@ -47,6 +47,21 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
+### -DomainName
+Fully qualified domain name used when joining the computer to the domain.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -TranscriptPath
 File path used to capture a transcript of this command's output and actions.
 
@@ -56,7 +71,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 2
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

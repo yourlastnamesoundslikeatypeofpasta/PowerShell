@@ -13,10 +13,16 @@
 
 # Functions listed here
 
+[CmdletBinding()]
+param(
+    [string]$DomainName
+)
+
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $defaultsFile = Join-Path $repoRoot 'config/config.psd1'
 $STDefaults = Get-STConfig -Path $defaultsFile
+$DomainName = if ($DomainName) { $DomainName } else { Get-STConfigValue -Config $STDefaults -Key 'DomainName' }
 $publicDesktop = Get-STConfigValue -Config $STDefaults -Key 'PublicDesktop'
 
 function MSStoreAppInstallerUpdate {
@@ -449,7 +455,7 @@ function Main {
 
     # add computer to domain
     Write-STStatus -Message 'Adding Computer to domain...Press [CTRL] + [C] to abort...' -Level WARN
-    Add-Computer -NewName $NewComputerName -DomainName "myus.local" -DomainCredential (Get-Credential) -Force
+    Add-Computer -NewName $NewComputerName -DomainName $DomainName -DomainCredential (Get-Credential) -Force
 
     Write-STStatus -Message 'Restart computer to apply changes...' -Level INFO
 
