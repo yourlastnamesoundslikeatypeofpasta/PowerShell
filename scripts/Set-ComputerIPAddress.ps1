@@ -1,3 +1,5 @@
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+
 function Set-ComputerIPAddress {
     [CmdletBinding()]
     <#
@@ -23,14 +25,20 @@ function Set-ComputerIPAddress {
     
     [CmdletBinding()]
     param (
-        [Parameter()]
+        [Parameter(Mandatory)]
         [string]
         $CSVPath
     )
 
+    if (-not (Test-Path $CSVPath))
+    {
+        Write-STStatus -Message 'CSV file not found.' -Level ERROR
+        return
+    }
+
     $CSV = Import-Csv -Path $CSVPath
 
-    if ($csv)
+    if ($CSV)
     {
         # set ip address here
         $MaskBits = 24 # set subnet mask to 255.255.255.0
@@ -41,6 +49,7 @@ function Set-ComputerIPAddress {
         # grab the adapter to change
         # changing ethernet
         $adapter = Get-NetAdapter -Name "Ethernet"
+        $matched = $false
         foreach ($Computer in $CSV)
         {
             if ($Computer.ComputerName -eq $ENV:COMPUTERNAME)
@@ -71,9 +80,13 @@ function Set-ComputerIPAddress {
             Restart-NetAdapter -Name "Ethernet"
             Clear-DnsClientCache
 
-            return
+            $matched = $true
+            break
         }
-        Write-STStatus -Message 'No matching computer name found in CSV file.' -Level WARN
+        if (-not $matched)
+        {
+            Write-STStatus -Message 'No matching computer name found in CSV file.' -Level WARN
+        }
         
     }
     else
