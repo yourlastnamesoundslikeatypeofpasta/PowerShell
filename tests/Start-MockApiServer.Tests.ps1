@@ -30,10 +30,7 @@ Describe 'Start-MockApiServer script' {
         }
         $listener = [FakeHttpListener]::new([FakeContext]::new('/graph/test'))
         $scriptPath = Join-Path $PSScriptRoot/.. 'scripts/Start-MockApiServer.ps1'
-        $code = Get-Content $scriptPath -Raw -Encoding UTF8
-        $code = ($code -split "`n") | Where-Object { $_ -notmatch 'Import-Module' } | Out-String
-        $code = $code -replace '\[System.Net.HttpListener\]::new\(\)', '$listener'
-        & ([scriptblock]::Create($code))
+        & $scriptPath -Listener $listener -Port 8080
         $listener.StopCount | Should -Be 1
         $listener.Context.Response.OutputStream.Position = 0
         $body = [System.Text.Encoding]::UTF8.GetString($listener.Context.Response.OutputStream.ToArray())

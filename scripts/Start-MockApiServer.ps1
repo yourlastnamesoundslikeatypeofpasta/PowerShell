@@ -1,17 +1,21 @@
 param(
-    [int]$Port = 8080
+    [int]$Port = 8080,
+    [System.Net.HttpListener]$Listener
 )
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
-$listener = [System.Net.HttpListener]::new()
-$listener.Prefixes.Add("http://localhost:$Port/")
+if (-not $PSBoundParameters.ContainsKey('Listener') -or -not $Listener) {
+    $Listener = [System.Net.HttpListener]::new()
+}
+
+$Listener.Prefixes.Add("http://localhost:$Port/")
 
 try {
-    $listener.Start()
+    $Listener.Start()
     Write-STStatus "Mock API server listening on http://localhost:$Port/" -Level SUCCESS
-    while ($listener.IsListening) {
-        $context = $listener.GetContext()
+    while ($Listener.IsListening) {
+        $context = $Listener.GetContext()
         $path = $context.Request.RawUrl
         switch -Wildcard ($path) {
             '/graph/*' {
@@ -36,5 +40,5 @@ try {
     }
 }
 finally {
-    $listener.Stop()
+    $Listener.Stop()
 }
