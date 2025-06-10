@@ -33,9 +33,9 @@ Describe 'STPlatform Module' {
             Mock Connect-MgGraph {}
             Mock Connect-ExchangeOnline {}
             Remove-Item env:SPTOOLS_CLIENT_ID -ErrorAction SilentlyContinue
-            Mock Get-Secret { 'fromvault' }
+            Mock Get-STSecret { param($Name,$Vault) 'fromvault' }
             Connect-STPlatform -Mode Cloud -Vault 'Test'
-            Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq 'SPTOOLS_CLIENT_ID' -and $Vault -eq 'Test' } -Times 1
+            Assert-MockCalled Get-STSecret -ParameterFilter { $Name -eq 'SPTOOLS_CLIENT_ID' -and $Vault -eq 'Test' } -Times 1
             $env:SPTOOLS_CLIENT_ID | Should -Be 'fromvault'
             Remove-Item env:SPTOOLS_CLIENT_ID -ErrorAction SilentlyContinue
         }
@@ -49,7 +49,7 @@ Describe 'STPlatform Module' {
             $names = 'SPTOOLS_CLIENT_ID','SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN','SD_BASE_URI'
             foreach ($n in $names) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
 
-            Mock Get-Secret {
+            Mock Get-STSecret {
                 switch ($Name) {
                     'SPTOOLS_CLIENT_ID'   { 'cid' }
                     'SPTOOLS_TENANT_ID'  { 'tenant' }
@@ -62,7 +62,7 @@ Describe 'STPlatform Module' {
             Connect-STPlatform -Mode Cloud -Vault TestVault
 
             foreach ($n in $names) {
-                Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n -and $Vault -eq 'TestVault' } -Times 1
+                Assert-MockCalled Get-STSecret -ParameterFilter { $Name -eq $n -and $Vault -eq 'TestVault' } -Times 1
             }
             $env:SPTOOLS_CLIENT_ID  | Should -Be 'cid'
             $env:SPTOOLS_TENANT_ID | Should -Be 'tenant'
@@ -85,7 +85,7 @@ Describe 'STPlatform Module' {
             $env:SD_BASE_URI = 'uri-env'
             foreach ($n in $names | Where-Object { $_ -notin 'SPTOOLS_CLIENT_ID','SD_BASE_URI' }) { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
 
-            Mock Get-Secret {
+            Mock Get-STSecret {
                 switch ($Name) {
                     'SPTOOLS_TENANT_ID' { 'tenant' }
                     'SPTOOLS_CERT_PATH' { 'cert' }
@@ -97,10 +97,10 @@ Describe 'STPlatform Module' {
             Connect-STPlatform -Mode Cloud -Vault CustomVault
 
             foreach ($n in 'SPTOOLS_TENANT_ID','SPTOOLS_CERT_PATH','SD_API_TOKEN') {
-                Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n -and $Vault -eq 'CustomVault' } -Times 1
+                Assert-MockCalled Get-STSecret -ParameterFilter { $Name -eq $n -and $Vault -eq 'CustomVault' } -Times 1
             }
             foreach ($n in 'SPTOOLS_CLIENT_ID','SD_BASE_URI') {
-                Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n } -Times 0
+                Assert-MockCalled Get-STSecret -ParameterFilter { $Name -eq $n } -Times 0
             }
 
             $env:SPTOOLS_CLIENT_ID  | Should -Be 'existing'
@@ -119,7 +119,7 @@ Describe 'STPlatform Module' {
             Mock Connect-MgGraph {}
             Mock Connect-ExchangeOnline {}
             Remove-Item env:SPTOOLS_TENANT_ID -ErrorAction SilentlyContinue
-            Mock Get-Secret { 'tenant' }
+            Mock Get-STSecret { param($Name,$Vault) 'tenant' }
             Mock Write-STStatus {}
 
             Connect-STPlatform -Mode Cloud -Vault LogVault
@@ -287,7 +287,7 @@ Describe 'STPlatform Module' {
             InModuleScope STPlatform {
                 Mock Connect-MgGraph {}
                 foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
-                Mock Get-Secret {
+                Mock Get-STSecret {
                     switch ($Name) {
                         'GRAPH_TENANT_ID'     { 'tid' }
                         'GRAPH_CLIENT_ID'     { 'cid' }
@@ -296,7 +296,7 @@ Describe 'STPlatform Module' {
                 }
                 Connect-EntraID -Vault GraphVault
                 foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') {
-                    Assert-MockCalled Get-Secret -ParameterFilter { $Name -eq $n -and $Vault -eq 'GraphVault' } -Times 1
+                    Assert-MockCalled Get-STSecret -ParameterFilter { $Name -eq $n -and $Vault -eq 'GraphVault' } -Times 1
                 }
                 Assert-MockCalled Connect-MgGraph -Times 1 -ParameterFilter { $TenantId -eq 'tid' -and $ClientId -eq 'cid' -and $ClientSecret -eq 'sec' }
                 foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
@@ -333,7 +333,7 @@ Describe 'STPlatform Module' {
         Safe-It 'throws when TenantId missing and env vars absent' {
             InModuleScope STPlatform {
                 Mock Connect-MgGraph {}
-                Mock Get-Secret { $null }
+                Mock Get-STSecret { $null }
                 foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
                 { Connect-EntraID -ClientId 'cid' } | Should -Throw 'TenantId is required. Provide -TenantId or set GRAPH_TENANT_ID.'
                 foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
@@ -343,7 +343,7 @@ Describe 'STPlatform Module' {
         Safe-It 'throws when ClientId missing and env vars absent' {
             InModuleScope STPlatform {
                 Mock Connect-MgGraph {}
-                Mock Get-Secret { $null }
+                Mock Get-STSecret { $null }
                 foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
                 { Connect-EntraID -TenantId 'tid' } | Should -Throw 'ClientId is required. Provide -ClientId or set GRAPH_CLIENT_ID.'
                 foreach ($n in 'GRAPH_TENANT_ID','GRAPH_CLIENT_ID','GRAPH_CLIENT_SECRET') { Remove-Item "env:$n" -ErrorAction SilentlyContinue }
