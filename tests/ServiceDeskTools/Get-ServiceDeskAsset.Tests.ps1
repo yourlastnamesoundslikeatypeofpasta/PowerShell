@@ -15,7 +15,7 @@ Describe 'Get-ServiceDeskAsset' {
             Assert-MockCalled Invoke-SDRequest -Times 1 -ParameterFilter {
                 $Method -eq 'GET' -and $Path -eq '/assets/9.json' -and $BaseUri -eq 'https://assets.example.com/api/'
             }
-            Remove-Item env:SD_ASSET_BASE_URI
+            Remove-Item env:SD_ASSET_BASE_URI -ErrorAction SilentlyContinue
         }
     }
 }

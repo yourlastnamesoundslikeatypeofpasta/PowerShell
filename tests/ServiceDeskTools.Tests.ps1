@@ -248,7 +248,7 @@ Describe 'ServiceDeskTools Module' {
                 Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 Invoke-SDRequest -Method 'GET' -Path '/incidents/1.json'
                 Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://api.samanage.com/incidents/1.json' } -Times 1
-                Remove-Item env:SD_API_TOKEN
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
             }
         }
         Safe-It 'uses SD_BASE_URI when set' {
@@ -259,8 +259,8 @@ Describe 'ServiceDeskTools Module' {
                 Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 Invoke-SDRequest -Method 'GET' -Path '/incidents/2.json'
                 Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://custom.example.com/api/incidents/2.json' } -Times 1
-                Remove-Item env:SD_API_TOKEN
-                Remove-Item env:SD_BASE_URI
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Remove-Item env:SD_BASE_URI -ErrorAction SilentlyContinue
             }
         }
         Safe-It 'uses SD_BASE_URI for assets when SD_ASSET_BASE_URI not set' {
@@ -272,8 +272,8 @@ Describe 'ServiceDeskTools Module' {
                 Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 Get-ServiceDeskAsset -Id 3
                 Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://custom.example.com/api/assets/3.json' } -Times 1
-                Remove-Item env:SD_API_TOKEN
-                Remove-Item env:SD_BASE_URI
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Remove-Item env:SD_BASE_URI -ErrorAction SilentlyContinue
             }
         }
         Safe-It 'uses SD_ASSET_BASE_URI when set' {
@@ -284,8 +284,8 @@ Describe 'ServiceDeskTools Module' {
                 Mock Invoke-STRequest {} -ModuleName ServiceDeskTools
                 Get-ServiceDeskAsset -Id 4
                 Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -ParameterFilter { $Uri -eq 'https://assets.example.com/api/assets/4.json' } -Times 1
-                Remove-Item env:SD_API_TOKEN
-                Remove-Item env:SD_ASSET_BASE_URI
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Remove-Item env:SD_ASSET_BASE_URI -ErrorAction SilentlyContinue
             }
         }
         Safe-It 'converts body to JSON' {
@@ -298,7 +298,7 @@ Describe 'ServiceDeskTools Module' {
                 Assert-MockCalled Invoke-STRequest -ModuleName ServiceDeskTools -ParameterFilter {
                     $Body.value -eq 1 -and $Method -eq 'POST'
                 } -Times 1
-                Remove-Item env:SD_API_TOKEN
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
             }
         }
 
@@ -309,7 +309,7 @@ Describe 'ServiceDeskTools Module' {
                 Mock Invoke-SDRestWithRetry {} -ModuleName ServiceDeskTools
                 Invoke-SDRequest -Method 'GET' -Path '/test'
                 Assert-MockCalled Invoke-SDRestWithRetry -ModuleName ServiceDeskTools -Times 1
-                Remove-Item env:SD_API_TOKEN
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
             }
         }
     }
@@ -350,8 +350,8 @@ Describe 'ServiceDeskTools Module' {
                 Assert-MockCalled Wait-SDRateLimit -ModuleName ServiceDeskTools -Times 3
                 Assert-MockCalled Start-Sleep -ModuleName ServiceDeskTools -Times 1
 
-                Remove-Item env:SD_API_TOKEN
-                Remove-Item env:SD_RATE_LIMIT_PER_MINUTE
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Remove-Item env:SD_RATE_LIMIT_PER_MINUTE -ErrorAction SilentlyContinue
             }
         }
 
@@ -368,8 +368,8 @@ Describe 'ServiceDeskTools Module' {
 
                 Assert-MockCalled Start-Sleep -ModuleName STCore -ParameterFilter { $Milliseconds -eq 1000 } -Times 1
 
-                Remove-Item env:SD_API_TOKEN
-                Remove-Item env:ST_CHAOS_MODE
+                Remove-Item env:SD_API_TOKEN -ErrorAction SilentlyContinue
+                Remove-Item env:ST_CHAOS_MODE -ErrorAction SilentlyContinue
             }
         }
     }
