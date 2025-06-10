@@ -229,6 +229,9 @@ Install Pester if it's not already available and run the suite from the reposito
 Install-Module Pester -MinimumVersion 5.0 -Scope CurrentUser
 Invoke-Pester -Configuration ./PesterConfiguration.psd1
 ```
+For a completely clean environment run `./setup.sh` first. The script installs
+PowerShell 7.4.1, sets up Pester globally and then runs the tests using the
+same configuration.
 For conventions on writing new tests see [docs/TestingGuidelines.md](docs/TestingGuidelines.md).
 
 ## Roadmap 🛣️
