@@ -15,6 +15,15 @@ Describe 'Sign-RepositoryFiles script' {
         Assert-MockCalled Set-AuthenticodeSignature -Times 0
     }
 
+    Safe-It 'logs an error when CertificatePath is invalid' {
+        Mock Write-STStatus {}
+        Mock Set-AuthenticodeSignature {}
+        $badPath = Join-Path $TestDrive 'missing.pfx'
+        & $PSScriptRoot/../scripts/Sign-RepositoryFiles.ps1 -CertificatePath $badPath
+        Assert-MockCalled Write-STStatus -ParameterFilter { $Message -eq "Certificate not found at $badPath" -and $Level -eq 'ERROR' } -Times 1
+        Assert-MockCalled Set-AuthenticodeSignature -Times 0
+    }
+
     Safe-It 'signs files in src when certificate provided' {
         Mock Write-STStatus {}
         Mock Set-AuthenticodeSignature {}
