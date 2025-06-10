@@ -31,7 +31,7 @@
         'Get-SPToolsAllRecycleBinReports',
         'Get-SPToolsPreservationHoldReport',
         'Get-SPToolsAllPreservationHoldReports',
-        'Get-SPPermissionsReport',
+        'Get-SPPermissionsReport','Get-SPToolsUniquePermissions',
         'Clean-SPVersionHistory',
         'Find-OrphanedSPFiles',
         'Get-SPToolsFileReport',
