@@ -26,4 +26,4 @@ This guide explains how to keep the PowerShell modules healthy over time and pre
 
 ## Weekly Self-Tests
 
-Set up a cron job or scheduled task to run `Invoke-Pester` across the repository every week. Review the results and update dependencies as required.
+Set up a cron job or scheduled task to run `Invoke-Pester -Configuration (Import-PowerShellDataFile ./PesterConfiguration.psd1)` across the repository every week. Review the results and update dependencies as required.

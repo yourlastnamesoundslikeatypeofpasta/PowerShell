@@ -10,7 +10,7 @@ file lives in the repository root, so run:
 ```powershell
 # Typical local test setup
 Install-Module Pester -MinimumVersion 5.0 -Force
-Invoke-Pester -Configuration ./PesterConfiguration.psd1
+Invoke-Pester -Configuration (Import-PowerShellDataFile ./PesterConfiguration.psd1)
 ```
 
 Verify that `Invoke-Pester` returns a success exit code (0). The configuration
