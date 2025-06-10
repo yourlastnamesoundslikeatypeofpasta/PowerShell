@@ -14,6 +14,11 @@
 # Functions listed here
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+$os = $PSVersionTable.OS
+if ($MyInvocation.InvocationName -ne '.' -and ($os -notmatch 'Windows')) {
+    Write-STStatus -Message 'PostInstallScript can only run on Windows.' -Level ERROR
+    exit 1
+}
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $defaultsFile = Join-Path $repoRoot 'config/config.psd1'
 $STDefaults = Get-STConfig -Path $defaultsFile

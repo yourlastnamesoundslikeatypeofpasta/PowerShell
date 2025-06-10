@@ -20,3 +20,13 @@ Describe 'PostInstallScript Assert-WingetInstalled' {
         }
     }
 }
+
+Describe 'PostInstallScript OS Guard' {
+    Safe-It 'exits when not running on Windows' {
+        $scriptPath = Join-Path $PSScriptRoot/../scripts 'PostInstallScript.ps1'
+        $output = pwsh -NoProfile -File $scriptPath 2>&1
+        $exit = $LASTEXITCODE
+        $exit | Should -Be 1
+        ($output -join '') | Should -Match 'only run on Windows'
+    }
+}
