@@ -29,12 +29,30 @@ function Search-Indicators {
     $indicators = Import-Csv -Path $IndicatorList | Select-Object -ExpandProperty Indicator
     $results = foreach ($ind in $indicators) {
         Write-STStatus "Searching for '$ind'" -Level SUB
-        $eventHits = Get-WinEvent -LogName Security,Application,System -ErrorAction SilentlyContinue |
-            Where-Object { $_.Message -match [regex]::Escape($ind) }
-        $regHits = Get-ChildItem -Path HKLM:\,HKCU:\ -Recurse -ErrorAction SilentlyContinue |
-            Where-Object { $_.Name -match [regex]::Escape($ind) }
-        $fileHits = Get-ChildItem -Path $rootPath -Recurse -ErrorAction SilentlyContinue -Force |
-            Where-Object { $_.FullName -match [regex]::Escape($ind) }
+
+        try {
+            $eventHits = Get-WinEvent -LogName Security,Application,System -ErrorAction SilentlyContinue |
+                Where-Object { $_.Message -match [regex]::Escape($ind) }
+        } catch {
+            Write-STStatus "Event log search failed: $_" -Level ERROR
+            $eventHits = @()
+        }
+
+        try {
+            $regHits = Get-ChildItem -Path HKLM:\,HKCU:\ -Recurse -ErrorAction SilentlyContinue |
+                Where-Object { $_.Name -match [regex]::Escape($ind) }
+        } catch {
+            Write-STStatus "Registry search failed: $_" -Level ERROR
+            $regHits = @()
+        }
+
+        try {
+            $fileHits = Get-ChildItem -Path $rootPath -Recurse -ErrorAction SilentlyContinue -Force |
+                Where-Object { $_.FullName -match [regex]::Escape($ind) }
+        } catch {
+            Write-STStatus "Filesystem search failed: $_" -Level ERROR
+            $fileHits = @()
+        }
         [pscustomobject]@{
             Indicator      = $ind
             EventMatches   = $eventHits.Count
