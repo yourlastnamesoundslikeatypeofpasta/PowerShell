@@ -46,6 +46,7 @@ function Invoke-ExchangeCalendarManager {
         }
 
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        if (-not $PSCmdlet.ShouldProcess('calendar', 'Manage Exchange calendar')) { return }
         Write-STStatus -Message 'ExchangeCalendarManager launched' -Level SUCCESS -Log
         if ($Simulate) {
             Write-STStatus -Message 'Simulation mode active - no Exchange operations will occur.' -Level WARN -Log

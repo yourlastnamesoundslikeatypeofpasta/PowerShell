@@ -5,7 +5,7 @@ function Import-MaintenancePlan {
     .PARAMETER Path
         Path to the JSON file.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]

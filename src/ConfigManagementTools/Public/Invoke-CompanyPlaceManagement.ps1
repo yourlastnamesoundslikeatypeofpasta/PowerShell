@@ -81,6 +81,7 @@ function Invoke-CompanyPlaceManagement {
         }
 
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        if (-not $PSCmdlet.ShouldProcess($DisplayName, "Invoke CompanyPlaceManagement -Action $Action")) { return }
         Write-STStatus "Invoke-CompanyPlaceManagement -Action $Action" -Level SUCCESS -Log
         if ($Simulate) {
             Write-STStatus -Message 'Simulation mode active - no Microsoft Places changes will be made.' -Level WARN -Log

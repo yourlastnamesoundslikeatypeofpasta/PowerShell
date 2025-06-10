@@ -30,6 +30,7 @@ function Clear-TempFile {
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
         $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '../../..')
+        if (-not $PSCmdlet.ShouldProcess($repoRoot, 'Remove temporary files')) { return }
         Write-STStatus -Message 'Cleaning temporary files...' -Level INFO
         try {
             $tmpFiles  = Get-ChildItem -Path $repoRoot -Recurse -Include '*.tmp' -File -ErrorAction Stop

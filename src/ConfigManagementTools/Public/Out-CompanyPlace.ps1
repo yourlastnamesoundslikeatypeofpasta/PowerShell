@@ -1,5 +1,5 @@
 function Out-CompanyPlace {
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [Parameter(ValueFromPipeline)]
         [ValidateNotNull()]

@@ -10,7 +10,7 @@ function Get-CommonSystemInfo {
         PSCustomObject with ComputerName, OSVersion, OSBuild, Processor,
         MemoryGB (GB) and DiskSpace details.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNull()]

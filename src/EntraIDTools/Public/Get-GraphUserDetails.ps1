@@ -110,8 +110,16 @@ function Get-GraphUserDetails {
             }
         }
 
-        if ($CsvPath)  { $details | Export-Csv -Path $CsvPath -NoTypeInformation }
-        if ($HtmlPath) { $details | ConvertTo-Html -Title 'User Details' | Out-File -FilePath $HtmlPath }
+        if ($CsvPath)  {
+            if ($PSCmdlet.ShouldProcess($CsvPath, 'Write CSV')) {
+                $details | Export-Csv -Path $CsvPath -NoTypeInformation
+            }
+        }
+        if ($HtmlPath) {
+            if ($PSCmdlet.ShouldProcess($HtmlPath, 'Write HTML')) {
+                $details | ConvertTo-Html -Title 'User Details' | Out-File -FilePath $HtmlPath
+            }
+        }
 
         return $details
     } catch {

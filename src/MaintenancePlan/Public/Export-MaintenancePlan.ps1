@@ -17,6 +17,7 @@ function Export-MaintenancePlan {
         [string]$Path
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess($Path, 'Export maintenance plan')) { return }
         $Plan | ConvertTo-Json -Depth 5 | Set-Content -Path $Path
         Write-STStatus "Plan exported to $Path" -Level SUCCESS -Log
     }

@@ -11,7 +11,7 @@ function New-MaintenancePlan {
     .PARAMETER Schedule
         Optional description of the schedule.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]

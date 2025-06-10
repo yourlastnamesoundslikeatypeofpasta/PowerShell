@@ -33,6 +33,7 @@ function Convert-ExcelToCsv {
     try {
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
+        if (-not $PSCmdlet.ShouldProcess($XlsxFilePath, 'Convert to CSV')) { return }
         Write-STStatus "Converting $XlsxFilePath to CSV..." -Level INFO
         $excel = New-Object -ComObject Excel.Application
         $workbook = $excel.Workbooks.Open($XlsxFilePath)
