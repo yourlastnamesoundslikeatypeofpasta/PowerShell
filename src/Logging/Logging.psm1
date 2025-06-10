@@ -1,21 +1,4 @@
-$repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
-$coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
-try {
-    Import-Module $coreModule -Force -ErrorAction Stop -DisableNameChecking
-} catch {
-    Write-STStatus -Message "Failed to import STCore module: $($_.Exception.Message)" -Level WARN
-}
-$defaultsFile = Join-Path $repoRoot 'config/config.psd1'
-$STDefaults = Get-STConfig -Path $defaultsFile
-$configFile = Join-Path $repoRoot (Get-STConfigValue -Config $STDefaults -Key 'SupportToolsConfig')
-$SupportToolsConfig = Get-STConfig -Path $configFile
-if (-not $SupportToolsConfig.ContainsKey('maintenanceMode')) {
-    $SupportToolsConfig.maintenanceMode = $false
-}
-if ($SupportToolsConfig.maintenanceMode) {
-    Write-STStatus -Message 'SupportTools is currently in maintenance mode. Exiting.' -Level WARN -Log
-    exit 1
-}
+
 
 function Sanitize-STMessage {
     [CmdletBinding(PositionalBinding=$false)]
@@ -314,3 +297,22 @@ function Show-LoggingBanner {
         Version = (Import-PowerShellDataFile $manifestPath).ModuleVersion
     }
 }
+$repoRoot = Split-Path -Path $PSScriptRoot -Parent | Split-Path -Parent
+$coreModule = Join-Path $PSScriptRoot '..' | Join-Path -ChildPath 'STCore/STCore.psd1'
+try {
+    Import-Module $coreModule -Force -ErrorAction Stop -DisableNameChecking
+} catch {
+    Write-STStatus -Message "Failed to import STCore module: $($_.Exception.Message)" -Level WARN
+}
+$defaultsFile = Join-Path $repoRoot 'config/config.psd1'
+$STDefaults = Get-STConfig -Path $defaultsFile
+$configFile = Join-Path $repoRoot (Get-STConfigValue -Config $STDefaults -Key 'SupportToolsConfig')
+$SupportToolsConfig = Get-STConfig -Path $configFile
+if (-not $SupportToolsConfig.ContainsKey('maintenanceMode')) {
+    $SupportToolsConfig.maintenanceMode = $false
+}
+if ($SupportToolsConfig.maintenanceMode) {
+    Write-STStatus -Message 'SupportTools is currently in maintenance mode. Exiting.' -Level WARN -Log
+    exit 1
+}
+
