@@ -59,6 +59,7 @@ function Export-ITReport {
                 }
                 $OutputPath = Join-Path (Get-Location) "ITReport_$((Get-Date).ToString('yyyyMMdd_HHmmss')).$ext"
             }
+            if (-not $PSCmdlet.ShouldProcess($OutputPath, 'Export IT report')) { return }
             switch ($Format) {
                 'HTML' {
                     $items | ConvertTo-Html -PreContent '<h1>IT Report</h1>' | Out-File -FilePath $OutputPath -Encoding utf8

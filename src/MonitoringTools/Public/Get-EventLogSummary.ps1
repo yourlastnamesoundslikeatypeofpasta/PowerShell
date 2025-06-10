@@ -6,7 +6,7 @@ function Get-EventLogSummary {
         Returns counts of Error and Warning events from the specified log within the last N hours.
         A structured log entry summarising the results is written.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [ValidateNotNullOrEmpty()]
         [string]$LogName = 'System',

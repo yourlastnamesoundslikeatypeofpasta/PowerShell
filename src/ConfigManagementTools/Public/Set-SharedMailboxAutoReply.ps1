@@ -68,6 +68,7 @@ function Set-SharedMailboxAutoReply {
         }
 
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+        if (-not $PSCmdlet.ShouldProcess($MailboxIdentity, 'Configure auto-reply')) { return }
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
         $result = 'Success'
         Write-STStatus -Message 'Running Set-SharedMailboxAutoReply' -Level SUCCESS -Log

@@ -26,6 +26,7 @@ function Connect-STPlatform {
     )
 
     if (-not $ChaosMode) { $ChaosMode = [bool]$env:ST_CHAOS_MODE }
+    if (-not $PSCmdlet.ShouldProcess($Mode, 'Connect-STPlatform')) { return }
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = 'Success'

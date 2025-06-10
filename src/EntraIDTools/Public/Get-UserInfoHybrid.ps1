@@ -19,7 +19,7 @@ function Get-UserInfoHybrid {
     .EXAMPLE
         Get-UserInfoHybrid -UserPrincipalName user@contoso.com -TenantId 00000000-0000-0000-0000-000000000000 -ClientId 11111111-1111-1111-1111-111111111111
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

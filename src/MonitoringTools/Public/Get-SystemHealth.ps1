@@ -6,7 +6,7 @@ function Get-SystemHealth {
         Returns CPU usage, disk free space and recent event log summary.
         The combined snapshot is also written to the structured log.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param()
 
     $computer = Get-STComputerName

@@ -69,6 +69,7 @@ function Sync-SupportTools {
             return
         }
 
+        if (-not $PSCmdlet.ShouldProcess($InstallPath, 'Synchronize SupportTools repository')) { return }
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
         $result = 'Success'
         if (-not (Get-Command git -ErrorAction SilentlyContinue)) {

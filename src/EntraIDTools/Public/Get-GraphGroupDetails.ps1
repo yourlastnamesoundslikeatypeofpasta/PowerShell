@@ -5,7 +5,7 @@ function Get-GraphGroupDetails {
     .DESCRIPTION
         Queries Graph for the group's basic info and membership. Activity is logged and telemetry is recorded.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

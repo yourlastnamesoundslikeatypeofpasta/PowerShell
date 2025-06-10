@@ -18,7 +18,7 @@ function Search-ReadMe {
     .NOTES
         This command can take several minutes to run on large drives.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]

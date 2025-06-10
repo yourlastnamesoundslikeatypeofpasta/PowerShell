@@ -14,7 +14,7 @@ function Invoke-ChaosTest {
     .PARAMETER MaxDelaySeconds
         Maximum random delay before execution.
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [ValidateNotNull()]

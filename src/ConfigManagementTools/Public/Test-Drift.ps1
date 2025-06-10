@@ -11,7 +11,7 @@ function Test-Drift {
     .EXAMPLE
         Test-Drift -BaselinePath './baseline.json'
     #>
-    [CmdletBinding(SupportsShouldProcess=$true)]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
         [ValidateNotNullOrEmpty()]
