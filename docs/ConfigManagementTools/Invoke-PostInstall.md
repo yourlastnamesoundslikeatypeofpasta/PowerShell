@@ -21,6 +21,18 @@ Invoke-PostInstall [[-Arguments] <Object[]>] [[-DomainName] <String>] [[-Transcr
 Runs PostInstallScript.ps1 from the scripts folder, forwarding any
 arguments provided.
 
+## Prerequisites
+1. Run PowerShell as an administrator so the script can modify system
+   configuration.
+2. Install the **ConfigManagementTools** module and its dependencies.
+   Install missing modules using `Install-Module`.
+3. Ensure the `winget` package manager is installed and on the path.
+   Many post install tasks rely on `winget` to add or update
+   applications.
+
+   Set `$env:ST_ENABLE_TELEMETRY = '1'` before running the command if
+   you want to capture telemetry events.
+
 ## EXAMPLES
 
 ### Example 1
