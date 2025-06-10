@@ -11,6 +11,8 @@
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
 
+Show-STPrompt -Command './scripts/ScriptLauncher.ps1'
+
 function Get-ScriptInfo {
     [CmdletBinding()]
     param([Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$Path)
@@ -42,7 +44,11 @@ while ($true) {
     if ($choice -match '^[Qq]$') { break }
     $index = [int]$choice - 1
     if ($index -ge 0 -and $index -lt $scriptFiles.Count) {
-        & $scriptFiles[$index].Path
+        try {
+            & $scriptFiles[$index].Path
+        } catch {
+            Write-STStatus -Message "Failed to run $($scriptFiles[$index].Path): $_" -Level ERROR
+        }
     } else {
         Write-STStatus -Message 'Invalid choice. Try again.' -Level WARN
     }
