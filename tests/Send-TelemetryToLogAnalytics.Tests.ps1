@@ -1,7 +1,6 @@
 . $PSScriptRoot/TestHelpers.ps1
 Describe 'Send-TelemetryToLogAnalytics.ps1' {
     Initialize-TestDrive
-    Initialize-TestDrive
     Safe-It 'posts JSON telemetry to workspace URI' {
         $log = Join-Path ([System.IO.Path]::GetTempPath()) ([System.IO.Path]::GetRandomFileName())
         $event = @{Timestamp='2024-01-01T00:00:00Z'; Script='Test.ps1'; Result='Success'; Duration=1} | ConvertTo-Json -Compress
