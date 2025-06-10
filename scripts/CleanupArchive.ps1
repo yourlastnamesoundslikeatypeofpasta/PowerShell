@@ -34,6 +34,9 @@ param(
     [switch]$Commit
 )
 
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Show-STPrompt -Command $MyInvocation.Line
+
 if ($Commit) {
     $response = Read-Host 'This will permanently delete items from the archive. Continue? (y/N)'
     if ($response -notmatch '^[Yy]$') {
@@ -193,3 +196,4 @@ else
 {
     Write-STStatus "Deletion complete. Snapshot saved to $SnapshotPath" -Level FINAL
 }
+Write-STClosing

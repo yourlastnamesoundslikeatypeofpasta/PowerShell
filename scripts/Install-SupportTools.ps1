@@ -13,14 +13,17 @@
 .EXAMPLE
     ./Install-SupportTools.ps1
 #>
+
 param(
     [string]$SupportToolsVersion,
     [ValidateSet('CurrentUser','AllUsers')]
     [string]$Scope = 'CurrentUser'
 )
 
-# Load Logging first so status functions are available
-# Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue -DisableNameChecking
+# Import Logging so style helpers are available
+Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+
+Show-STPrompt -Command $MyInvocation.Line
 
 $modules = @(
     'Telemetry',
@@ -30,17 +33,17 @@ $modules = @(
     'IncidentResponseTools'
 )
 
-Write-Host '$ ./scripts/Install-SupportTools.ps1'
+Write-STStatus -Message '$ ./scripts/Install-SupportTools.ps1' -Level INFO
 
 foreach ($module in $modules) {
     $localPath = Join-Path $PSScriptRoot '..' 'src' $module "$module.psd1"
     if (Test-Path $localPath) {
-        Write-Host "Importing $module..."
+        Write-STStatus -Message "Importing $module..." -Level INFO
         Import-Module $localPath -Force -DisableNameChecking
-        Write-Host "Imported $module from $localPath"
+        Write-STStatus -Message "Imported $module from $localPath" -Level SUCCESS
     } else {
-        Write-Host "Could not find $module in src"
+        Write-STStatus -Message "Could not find $module in src" -Level WARN
     }
 }
 
-Write-Host 'Module import complete'
+Write-STClosing 'Module import complete'

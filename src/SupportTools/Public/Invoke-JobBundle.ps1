@@ -30,6 +30,8 @@ function Invoke-JobBundle {
         [string]$LogArchivePath
     )
 
+    Show-STPrompt -Command $MyInvocation.Line
+
     process {
         if (-not $LogArchivePath) {
             $LogArchivePath = $Path -replace '\\.zip$','-logs.zip'
@@ -56,6 +58,7 @@ function Invoke-JobBundle {
             throw
         }
         Write-STStatus "Logs archived to $LogArchivePath" -Level SUCCESS
+        Write-STClosing
         return [pscustomobject]@{
             LogArchivePath = $LogArchivePath
         }

@@ -10,6 +10,7 @@
 
 . $PSScriptRoot/Common.ps1
 Import-SupportToolsLogging
+Show-STPrompt -Command $MyInvocation.Line
 
 param(
     [Parameter(Mandatory)][string]$CsvPath,
@@ -56,3 +57,4 @@ if ($Cloud -eq 'Entra') {
 }
 
 Write-STStatus -Message 'Group membership cleanup finished.' -Level SUCCESS
+Write-STClosing

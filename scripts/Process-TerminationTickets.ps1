@@ -30,6 +30,7 @@ param(
 )
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Show-STPrompt -Command $MyInvocation.Line
 Import-Module (Join-Path $PSScriptRoot '..' 'src/ServiceDeskTools/ServiceDeskTools.psd1') -Force -ErrorAction SilentlyContinue
 Import-Module (Join-Path $PSScriptRoot '..' 'src/EntraIDTools/EntraIDTools.psd1') -Force -ErrorAction SilentlyContinue
 
@@ -61,3 +62,4 @@ while ($true) {
     $processed | ConvertTo-Json | Out-File -FilePath $StatePath -Encoding utf8
     Start-Sleep -Seconds ($PollMinutes * 60)
 }
+Write-STClosing

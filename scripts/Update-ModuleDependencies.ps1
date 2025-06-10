@@ -11,6 +11,7 @@
 #>
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Show-STPrompt -Command $MyInvocation.Line
 
 $nuspecPath = Join-Path $PSScriptRoot '..' 'SupportTools.nuspec'
 [xml]$nuspec = Get-Content $nuspecPath
@@ -41,3 +42,4 @@ foreach ($module in $modules) {
         Write-STLog -Message "Failed to validate $module: $($_.Exception.Message)" -Level ERROR
     }
 }
+Write-STClosing
