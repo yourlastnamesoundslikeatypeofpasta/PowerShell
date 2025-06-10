@@ -7,6 +7,7 @@
     FontsDir = 'C:\Windows\Fonts'
     FontsRegPath = 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Fonts'
     PublicDesktop = 'C:\Users\Public\Desktop'
+    DomainName = 'myus.local'
     ReadmePattern = 'C:\*readme*.txt'
     SystemDriveRoot = 'C:\'
 }

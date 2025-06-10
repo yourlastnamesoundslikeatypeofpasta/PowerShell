@@ -11,6 +11,8 @@ function Invoke-PostInstall {
         [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true, ValueFromPipeline = $true)]
         [object[]]$Arguments,
         [Parameter(Mandatory = $false)]
+        [string]$DomainName,
+        [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$TranscriptPath,
         [Parameter(Mandatory = $false)]
@@ -26,7 +28,10 @@ function Invoke-PostInstall {
     )
     process {
         if ($PSCmdlet.ShouldProcess('PostInstallScript.ps1')) {
-            Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "PostInstallScript.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
+            $argList = @()
+            if ($DomainName) { $argList += '-DomainName'; $argList += $DomainName }
+            if ($Arguments) { $argList += $Arguments }
+            Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "PostInstallScript.ps1" -Args $argList -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         }
     }
 }
