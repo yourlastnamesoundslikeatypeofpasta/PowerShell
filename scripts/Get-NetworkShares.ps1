@@ -1,8 +1,8 @@
 
 Import-Module (Join-Path $PSScriptRoot '..' 'src/Logging/Logging.psd1') -Force -ErrorAction SilentlyContinue
+Show-STPrompt -Command './scripts/Get-NetworkShares.ps1'
 
 function Get-NetworkShares {
-    [CmdletBinding()]
     <#
     .SYNOPSIS
         Get network shares from a computer
@@ -46,6 +46,8 @@ function Get-NetworkShares {
     Write-STStatus -Message "Found $($shareObjects.Count) shares." -Level SUCCESS
     return $result
 }
+
+Write-STClosing
 
 
 
