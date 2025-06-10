@@ -45,6 +45,7 @@ function Export-ITReport {
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
     }
     process {
+        if (-not $PSCmdlet.ShouldProcess($OutputPath, 'Export IT report')) { return }
         # Add each augmented object without reallocating an array
         $items.Add( ($Data | Add-Member -NotePropertyName OsBuild -NotePropertyValue $osBuild -PassThru) )
     }

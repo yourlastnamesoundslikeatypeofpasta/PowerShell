@@ -57,6 +57,7 @@ function Restore-ArchiveFolder {
         [object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('RollbackArchive.ps1')) { return }
         try {
             $output = Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "RollbackArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         } catch {

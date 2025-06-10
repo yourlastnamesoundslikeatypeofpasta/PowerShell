@@ -31,6 +31,7 @@ function Convert-ExcelToCsv {
     )
 
     try {
+        if (-not $PSCmdlet.ShouldProcess($XlsxFilePath, 'Convert to CSV')) { return }
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
         Write-STStatus "Converting $XlsxFilePath to CSV..." -Level INFO

@@ -49,6 +49,7 @@ function Sync-SupportTools {
     )
 
     try {
+        if (-not $PSCmdlet.ShouldProcess($InstallPath, 'Synchronize SupportTools repository')) { return }
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
         if ($Logger) {
             Import-Module $Logger -Force -ErrorAction SilentlyContinue

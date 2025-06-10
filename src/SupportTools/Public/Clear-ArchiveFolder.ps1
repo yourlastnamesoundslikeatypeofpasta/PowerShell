@@ -58,6 +58,7 @@ function Clear-ArchiveFolder {
         [object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('CleanupArchive.ps1')) { return }
         try {
             $output = Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name "CleanupArchive.ps1" -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         } catch {

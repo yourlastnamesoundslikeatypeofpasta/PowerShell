@@ -67,6 +67,7 @@ function Invoke-NewHireUserAutomation {
         [object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('New hire automation')) { return }
         try {
             $args = @('-PollMinutes', $PollMinutes)
             if ($Once) { $args += '-Once' }

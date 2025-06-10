@@ -31,6 +31,7 @@ function Invoke-JobBundle {
     )
 
     process {
+        if (-not $PSCmdlet.ShouldProcess($Path, 'Execute job bundle')) { return }
         if (-not $LogArchivePath) {
             $LogArchivePath = $Path -replace '\\.zip$','-logs.zip'
         }

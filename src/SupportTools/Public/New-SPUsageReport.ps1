@@ -54,6 +54,7 @@ function New-SPUsageReport {
         [object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('Generate-SPUsageReport.ps1')) { return }
         try {
             $output = Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Generate-SPUsageReport.ps1' -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         } catch {

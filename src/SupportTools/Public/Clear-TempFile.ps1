@@ -27,6 +27,7 @@ function Clear-TempFile {
     )
 
     try {
+        if (-not $PSCmdlet.ShouldProcess('temporary files')) { return }
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
         $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '../../..')

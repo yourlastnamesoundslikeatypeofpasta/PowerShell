@@ -31,6 +31,7 @@ function Export-ProductKey {
     )
 
     try {
+        if (-not $PSCmdlet.ShouldProcess($OutputPath, 'Export product key')) { return }
         if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
 
         try {

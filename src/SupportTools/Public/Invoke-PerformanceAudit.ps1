@@ -47,6 +47,7 @@ function Invoke-PerformanceAudit {
         [Parameter(Mandatory = $false)][object]$Config
     )
     process {
+        if (-not $PSCmdlet.ShouldProcess('Invoke-PerformanceAudit.ps1')) { return }
         try {
             $output = Invoke-ScriptFile -Logger $Logger -TelemetryClient $TelemetryClient -Config $Config -Name 'Invoke-PerformanceAudit.ps1' -Args $Arguments -TranscriptPath $TranscriptPath -Simulate:$Simulate -Explain:$Explain
         } catch {

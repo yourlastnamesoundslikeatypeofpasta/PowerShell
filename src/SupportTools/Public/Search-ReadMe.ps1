@@ -31,6 +31,7 @@ function Search-ReadMe {
     $pattern = Get-STConfigValue -Config $STDefaults -Key 'ReadmePattern'
 
     if ($TranscriptPath) { Start-Transcript -Path $TranscriptPath -Append | Out-Null }
+    if (-not $PSCmdlet.ShouldProcess('readme search')) { return }
     try {
         Write-STStatus -Message 'Searching for readme files...' -Level INFO
         $results = Get-ChildItem -Path $pattern -Recurse -File -ErrorAction SilentlyContinue
