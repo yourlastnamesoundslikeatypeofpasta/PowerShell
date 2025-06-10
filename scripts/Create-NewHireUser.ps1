@@ -98,5 +98,6 @@ if ($MyInvocation.InvocationName -ne '.') {
     } finally {
         if ($TranscriptPath) { Stop-Transcript | Out-Null }
     }
+    Write-STClosing
 }
 
