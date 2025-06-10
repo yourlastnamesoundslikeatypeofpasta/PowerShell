@@ -6,7 +6,7 @@ $publicFunctions = Get-ChildItem -Path $publicDir -Filter '*.ps1' | ForEach-Obje
 $missing = [System.Collections.Generic.List[object]]::new()
 foreach ($func in $publicFunctions) {
     $pattern = "\b$func\b"
-    $found = Select-String -Path (Join-Path $testDir '*.ps1') -Pattern $pattern -SimpleMatch -CaseSensitive -Quiet
+    $found = Select-String -Path (Join-Path $testDir '*.ps1') -Pattern $pattern -CaseSensitive -Quiet
     if (-not $found) {
         Write-Error "No tests found referencing function '$func'"
         # Use Add() to avoid array resizing in the loop
