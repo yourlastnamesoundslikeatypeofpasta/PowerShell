@@ -12,7 +12,7 @@ Describe 'AddUsersToGroup Script' {
         function Get-ADGroup {}
         function Get-ADGroupMember {}
         function Get-ADUser {}
-        function Get-Group { param([string]$GroupName) }
+        function Get-Group { param([string]$GroupName,[string]$GroupId) }
         function Get-GroupExistingMembers { param($Group) }
         function Get-CSVFilePath {}
         function Import-Csv { param([string]$Path) }
@@ -56,5 +56,10 @@ Describe 'AddUsersToGroup Script' {
         Start-Main -CsvPath 'dummy.csv' -GroupName 'Group' -Cloud 'AD' | Out-Null
         Assert-MockCalled Add-ADGroupMember -Times 1
         Assert-MockCalled Connect-MgGraph -Times 0
+    }
+
+    Safe-It 'accepts a GroupId to bypass selection' {
+        Start-Main -CsvPath 'dummy.csv' -GroupId '1' | Out-Null
+        Assert-MockCalled Get-Group -ParameterFilter { $GroupId -eq '1' } -Times 1
     }
 }

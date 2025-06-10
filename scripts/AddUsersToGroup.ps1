@@ -14,19 +14,25 @@ The script performs the following actions:
 
 The script includes several helper functions to manage tasks such as connecting to Microsoft Graph, retrieving groups and users, and handling the CSV file selection.
 
-.PARAMETER siteUrl
-The URL of the SharePoint site containing the document library.
+.PARAMETER CsvPath
+Path to a CSV file containing a `UPN` column. When not provided, a file dialog prompts for a file.
 
-.PARAMETER libraries
-The name of the document library to be processed.
+.PARAMETER GroupName
+The display name of the target group. Ignored when **GroupId** is supplied.
+
+.PARAMETER GroupId
+The unique identifier of the target group. Takes precedence over **GroupName** and disables the group selection prompt when provided.
+
+.PARAMETER Cloud
+Specify `Entra` to use Microsoft Graph or `AD` for on-premises Active Directory.
 
 .NOTES
 This script requires Microsoft Graph API permissions and assumes the user has the necessary permissions to connect to Microsoft Graph and manage groups and users. It is intended for use in scenarios where bulk user management is required for Microsoft 365 groups.
 
 
 .EXAMPLE
-    .\AddUsersToGroup.ps1 -CsvPath users.csv -GroupName "Target Group"
-This example runs the script with explicit parameters to process the provided CSV file and add the listed users to the specified Microsoft 365 group.
+    .\AddUsersToGroup.ps1 -CsvPath users.csv -GroupId "<GUID>"
+Adds users from the CSV to the specified group by ID without any prompts.
 #>
 
 [CmdletBinding(SupportsShouldProcess=$true)]
@@ -37,6 +43,9 @@ param(
     [Parameter()]
     [ValidateNotNullOrEmpty()]
     [string]$GroupName,
+
+    [Parameter()]
+    [string]$GroupId,
 
     [Parameter()]
     [ValidateSet('Entra','AD')]
@@ -115,13 +124,21 @@ function Connect-MicrosoftGraph {
 function Get-Group {
     [CmdletBinding()]
     param(
-        [string]$GroupName
+        [string]$GroupName,
+        [string]$GroupId
     )
+
+    if ($GroupId) {
+        $grp = Get-MgGroup -GroupId $GroupId -ErrorAction SilentlyContinue
+        if (-not $grp) { throw "Group '$GroupId' not found." }
+        Write-STStatus "Using group: $($grp.DisplayName)" -Level SUB
+        return $grp
+    }
 
     if ($GroupName) {
         $grp = Get-MgGroup -Filter "displayName eq '$GroupName'" | Select-Object -First 1
         if (-not $grp) { throw "Group '$GroupName' not found." }
-            Write-STStatus "Using group: $($grp.DisplayName)" -Level SUB
+        Write-STStatus "Using group: $($grp.DisplayName)" -Level SUB
         return $grp
     }
 
@@ -188,6 +205,7 @@ function Start-Main {
     param(
         [string]$CsvPath,
         [string]$GroupName,
+        [string]$GroupId,
         [string]$Cloud = 'Entra'
     )
 
@@ -202,7 +220,7 @@ function Start-Main {
         }
 
         # Get all groups and query the user for a group index
-        $group = Get-Group -GroupName $GroupName
+        $group = Get-Group -GroupName $GroupName -GroupId $GroupId
         $groupExistingMembers = Get-GroupExistingMembers -Group $group
     } else {
         $group = Get-ADGroup -Identity $GroupName -ErrorAction Stop
@@ -284,5 +302,5 @@ function Start-Main {
 }
 
 if ($MyInvocation.InvocationName -ne '.') {
-    Start-Main -CsvPath $CsvPath -GroupName $GroupName -Cloud $Cloud
+    Start-Main -CsvPath $CsvPath -GroupName $GroupName -GroupId $GroupId -Cloud $Cloud
 }
