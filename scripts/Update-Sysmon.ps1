@@ -65,4 +65,5 @@ function Main {
     # export computer name to log dir
     New-Item "$($driverLetter):\LOG\$($env:COMPUTERNAME).txt"
 }
+Main @args
 
