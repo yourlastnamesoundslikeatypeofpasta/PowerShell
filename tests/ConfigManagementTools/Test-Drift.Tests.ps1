@@ -13,12 +13,14 @@ Describe 'Test-Drift function' {
             $baseline | ConvertTo-Json | Set-Content -Path $file
             Mock Get-TimeZone { [pscustomobject]@{ Id='EST' } }
             Mock Get-Service { [pscustomobject]@{ Status='Stopped' } }
+            $originalComputerName = $env:COMPUTERNAME
             $env:COMPUTERNAME = 'HOST2'
             try {
                 $result = Test-Drift -BaselinePath $file
                 $result.Count | Should -Be 3
             } finally {
                 Remove-Item $file -ErrorAction SilentlyContinue
+                $env:COMPUTERNAME = $originalComputerName
             }
         }
     }
@@ -30,12 +32,14 @@ Describe 'Test-Drift function' {
             $baseline | ConvertTo-Json | Set-Content -Path $file
             Mock Get-TimeZone { [pscustomobject]@{ Id='UTC' } }
             Mock Get-Service { [pscustomobject]@{ Status='Running' } }
+            $originalComputerName = $env:COMPUTERNAME
             $env:COMPUTERNAME = 'HOST1'
             try {
                 $result = Test-Drift -BaselinePath $file
                 $result.Count | Should -Be 0
             } finally {
                 Remove-Item $file -ErrorAction SilentlyContinue
+                $env:COMPUTERNAME = $originalComputerName
             }
         }
     }
@@ -47,12 +51,14 @@ Describe 'Test-Drift function' {
             $baseline | ConvertTo-Json | Set-Content -Path $file
             Mock Get-TimeZone { [pscustomobject]@{ Id='EST' } }
             Mock Get-Service { [pscustomobject]@{ Status='Stopped' } }
+            $originalComputerName = $env:COMPUTERNAME
             $env:COMPUTERNAME = 'HOST2'
             try {
                 $result = [pscustomobject]@{ BaselinePath = $file } | Test-Drift
                 $result.Count | Should -Be 3
             } finally {
                 Remove-Item $file -ErrorAction SilentlyContinue
+                $env:COMPUTERNAME = $originalComputerName
             }
         }
     }
