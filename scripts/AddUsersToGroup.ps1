@@ -46,8 +46,16 @@ param(
 . $PSScriptRoot/Common.ps1
 Import-SupportToolsLogging
 
-# Import necessary .NET assemblies
-Add-Type -AssemblyName PresentationFramework, System.Windows.Forms
+$assemblyLoaded = $false
+if ($IsWindows) {
+    try {
+        # Import necessary .NET assemblies for GUI prompts
+        Add-Type -AssemblyName PresentationFramework, System.Windows.Forms -ErrorAction Stop
+        $assemblyLoaded = $true
+    } catch {
+        Write-STStatus -Message 'GUI assemblies failed to load, falling back to text prompts.' -Level WARN
+    }
+}
 $InformationPreference = "Continue"
 
 if ($Cloud -eq 'Entra') {
@@ -68,21 +76,30 @@ if ($Cloud -eq 'Entra') {
 function Get-CSVFilePath {
     [CmdletBinding()]
     param()
-    Write-STStatus -Message 'Select CSV from file dialog...' -Level SUB
-    # Open file dialog to get CSV path
-    $openFileDialog = New-Object Microsoft.Win32.OpenFileDialog
-    $openFileDialog.InitialDirectory = [Environment]::GetFolderPath('MyDocuments')
-    $openFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*"
-    $dialogResult = $openFileDialog.ShowDialog()
 
-    if ($dialogResult -eq "True")
-    {
-        $filePath = Get-ChildItem -Path $openFileDialog.FileName
-        return $filePath
-    }
-    else {
-        Write-STStatus -Message 'No file selected' -Level SUB
-        return $null
+    if ($IsWindows -and $assemblyLoaded) {
+        Write-STStatus -Message 'Select CSV from file dialog...' -Level SUB
+        # Open file dialog to get CSV path
+        $openFileDialog = New-Object Microsoft.Win32.OpenFileDialog
+        $openFileDialog.InitialDirectory = [Environment]::GetFolderPath('MyDocuments')
+        $openFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*"
+        $dialogResult = $openFileDialog.ShowDialog()
+
+        if ($dialogResult -eq "True") {
+            return Get-ChildItem -Path $openFileDialog.FileName
+        }
+        else {
+            Write-STStatus -Message 'No file selected' -Level SUB
+            return $null
+        }
+    } else {
+        $path = Read-Host -Prompt 'CSV file path'
+        if ($path -and (Test-Path $path)) {
+            return Get-ChildItem -Path $path
+        } else {
+            Write-STStatus -Message 'File not found or no file provided' -Level WARN
+            return $null
+        }
     }
 }
 
