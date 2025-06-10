@@ -19,6 +19,21 @@ $defaultsFile = Join-Path $repoRoot 'config/config.psd1'
 $STDefaults = Get-STConfig -Path $defaultsFile
 $publicDesktop = Get-STConfigValue -Config $STDefaults -Key 'PublicDesktop'
 
+function Assert-WingetInstalled {
+    [CmdletBinding()]
+    param()
+    <#
+    .SYNOPSIS
+        Ensures the winget command is available.
+    #>
+    $winget = Get-Command winget -ErrorAction SilentlyContinue
+    if (-not $winget) {
+        Write-STStatus -Message 'winget not found. Install App Installer first.' -Level ERROR
+        throw 'WingetNotFound'
+    }
+    Write-STStatus -Message 'winget detected.' -Level SUCCESS
+}
+
 function MSStoreAppInstallerUpdate {
     [CmdletBinding()]
     param()
@@ -425,7 +440,10 @@ function Main {
     Write-STStatus -Message 'Update App Installer...' -Level INFO
     MSStoreAppInstallerUpdate
     Read-Host -Prompt "Press enter to continue..."
-    
+
+    # ensure winget is available before installing packages
+    Assert-WingetInstalled
+
     # install applications
     Write-STStatus -Message 'Installing Chrome, Excel Mobile, and Adobe Acrobat Reader...' -Level INFO
     Install-Chrome
