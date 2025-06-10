@@ -4,7 +4,11 @@ function Get-CommonSystemInfo {
         Returns common system information such as OS and hardware details.
     .DESCRIPTION
         Collects operating system, processor, disk and memory information using
-        CIM classes and returns it as a custom object.
+        CIM classes and returns it as a custom object. The MemoryGB value is
+        reported in gigabytes (GB).
+    .OUTPUTS
+        PSCustomObject with ComputerName, OSVersion, OSBuild, Processor,
+        MemoryGB (GB) and DiskSpace details.
     #>
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
@@ -44,11 +48,15 @@ function Get-CommonSystemInfo {
                 $processorInfo       = Get-CimInstance -ClassName Win32_Processor
                 $diskInfo            = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType = 3"
                 $memoryInfo          = Get-CimInstance -ClassName Win32_PhysicalMemory
+                $memoryGB            = $operatingSystemInfo.TotalVisibleMemorySize / 1MB
+                if ($memoryGB % 1 -eq 0) { $memoryGB = [int]$memoryGB } else { $memoryGB = [double]$memoryGB }
             } elseif (Get-Command -Name Get-WmiObject -ErrorAction SilentlyContinue) {
                 $operatingSystemInfo = Get-WmiObject -Class Win32_OperatingSystem
                 $processorInfo       = Get-WmiObject -Class Win32_Processor
                 $diskInfo            = Get-WmiObject -Class Win32_LogicalDisk -Filter "DriveType = 3"
                 $memoryInfo          = Get-WmiObject -Class Win32_PhysicalMemory
+                $memoryGB            = $operatingSystemInfo.TotalVisibleMemorySize / 1MB
+                if ($memoryGB % 1 -eq 0) { $memoryGB = [int]$memoryGB } else { $memoryGB = [double]$memoryGB }
             } else {
                 throw "CIM or WMI cmdlets are not available"
             }
@@ -58,7 +66,7 @@ function Get-CommonSystemInfo {
                 OSVersion    = $operatingSystemInfo.Caption
                 OSBuild      = $operatingSystemInfo.BuildNumber
                 Processor    = $processorInfo.Name
-                Memory       = $operatingSystemInfo.TotalVisibleMemorySize / 1MB
+                MemoryGB     = $memoryGB
                 DiskSpace    = $diskInfo | Select-Object -Property DeviceID,
                                 @{Name = 'Size'; Expression = { "{0:N2}" -f ($_.Size / 1GB) }},
                                 @{Name = 'FreeSpace'; Expression = { "{0:N2}" -f ($_.FreeSpace / 1GB) }}
