@@ -196,14 +196,14 @@ function Get-STSecret {
         [switch]$Required
     )
 
-    if ($env:$Name) { return $env:$Name }
+    if (${env:$Name}) { return ${env:$Name} }
 
     $params = @{ Name = $Name; AsPlainText = $true; ErrorAction = 'SilentlyContinue' }
     if ($PSBoundParameters.ContainsKey('Vault')) { $params.Vault = $Vault }
     $val = Get-Secret @params
 
     if ($val) {
-        $env:$Name = $val
+        ${env:$Name} = $val
         Write-STStatus "Loaded $Name from vault" -Level SUB -Log
         return $val
     }

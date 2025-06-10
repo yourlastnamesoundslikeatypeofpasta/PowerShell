@@ -1,3 +1,7 @@
+$repoRoot = Split-Path $PSScriptRoot -Parent
+$moduleRoot = Join-Path $repoRoot 'src'
+$env:PSModulePath = "$moduleRoot$([IO.Path]::PathSeparator)$($env:PSModulePath)"
+
 function Safe-It {
     param(
         [Parameter(Mandatory)][string]$Name,
@@ -24,7 +28,9 @@ function Initialize-TestDrive {
         if (Get-PSDrive -Name TestDrive -ErrorAction SilentlyContinue) {
             Remove-PSDrive -Name TestDrive -Force
         }
-        New-PSDrive -Name TestDrive -PSProvider FileSystem -Root $TestRoot | Out-Null
+        $root = $TestDrive
+        if (-not $root) { $root = [IO.Path]::GetTempPath() }
+        New-PSDrive -Name TestDrive -PSProvider FileSystem -Root $root | Out-Null
     }
 
     AfterEach {
