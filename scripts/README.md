@@ -35,3 +35,4 @@ The following table provides a brief description of each script.
 | **Invoke-DailyAuditWorkflow.ps1** | Audits SharePoint permissions, logs results and opens a Service Desk ticket. |
 | **Process-TerminationTickets.ps1** | Disables users referenced in new termination tickets using Microsoft Graph. |
 | **Create-NewHireUser.ps1** | Creates Entra ID users based on new hire Service Desk tickets. |
+| **Start-PythonOnboarding.ps1** | Interactive onboarding flow that creates a Python virtual environment, installs requirements and starts your server. |
